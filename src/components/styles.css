@@ -1,0 +1,25 @@
+/* styles.css */
+
+/* Estilo para o ícone do Heric */
+.heric-icon {
+    width: 100px;
+    height: 100px;
+    background-image: url('https://hericmr.github.io/me/imagens/heric.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+; /* Ajuste vertical para centralizar o ícone no marcador */
+  }
+  
+  /* Estilo padrão dos ícones do marcador */
+  .default-icon {
+    width: 25px;
+    height: 41px;
+    background-image: url('https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+  }
+  
