@@ -14,13 +14,12 @@
     "web-vitals": "^4.2.4"
   },
   "scripts": {
-    "homepage": "https://hericmr./github.io/gps",
-      "start": "react-scripts start",
-      "build": "react-scripts build",
-      "predeploy": "npm run build",
-      "deploy": "gh-pages -d build"
-    }
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
+  "homepage": "https://hericmr.github.io/gps",
   "eslintConfig": {
     "extends": [
       "react-app",
