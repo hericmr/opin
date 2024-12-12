@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -10,17 +10,13 @@ const pontos = [
   { lat: -23.991274504274266, lng: -46.31691750701601, desc: "Boia Verde" },
 ];
 
-// Coordenadas de Héric
-const hericLocation = { lat: -23.9876543, lng: -46.3051234 };
+// Coordenadas iniciais de Héric
+const initialHericLocation = { lat: -23.9876543, lng: -46.3051234 };
 
 const MapaSantos = () => {
   const mapRef = useRef(null);
   const [gpxData, setGpxData] = useState([]);
-
-  // Função para atualizar os pontos do GPX (diretamente chamada do GPXComponent)
-  const updateGpxData = (points) => {
-    setGpxData(points);
-  };
+  const [hericLocation, setHericLocation] = useState(initialHericLocation);
 
   // Função para criar o ícone com efeitos personalizados
   const createCustomIcon = (iconUrl, size = [40, 40], iconAnchor = [20, 40]) => {
@@ -32,6 +28,37 @@ const MapaSantos = () => {
       className: "marker-icon transition-transform duration-300 hover:scale-125", // Efeito de zoom ao passar o mouse
     });
   };
+
+  // Função para buscar a localização atualizada do Héric
+  const fetchHericLocation = async () => {
+    try {
+      const response = await fetch(
+        "https://corsproxy.io/https://www.openstreetmap.org/trace/11704581/data"
+      ); // Substitua pelo URL correto do GPX ou API
+      if (!response.ok) {
+        throw new Error("Erro ao buscar dados de localização.");
+      }
+
+      const data = await response.json(); // Caso os dados sejam JSON, ajuste conforme o formato da resposta
+      // Exemplo de como processar os dados para obter latitude e longitude
+      const newLocation = {
+        lat: data[0]?.lat || hericLocation.lat,
+        lon: data[0]?.lon || hericLocation.lon,
+      };
+
+      setHericLocation(newLocation);
+      setGpxData(data); // Atualiza os pontos do GPX
+    } catch (error) {
+      console.error("Erro ao buscar a localização do Héric:", error);
+    }
+  };
+
+  // Atualiza a localização a cada minuto
+  useEffect(() => {
+    fetchHericLocation(); // Busca inicial
+    const interval = setInterval(fetchHericLocation, 60000); // Atualiza a cada 60 segundos
+    return () => clearInterval(interval); // Limpa o intervalo ao desmontar o componente
+  }, []);
 
   return (
     <div className="relative h-screen">
@@ -83,12 +110,6 @@ const MapaSantos = () => {
             </Popup>
           </Marker>
         ))}
-
-        {/* Componente GPX, passando a função para atualizar os dados */}
-        <GPXComponent
-          gpxUrl="https://corsproxy.io/https://www.openstreetmap.org/trace/11704581/data"
-          updateGpxData={updateGpxData}
-        />
       </MapContainer>
       <div className="absolute bottom-0 left-0 w-full z-10 p-4 bg-gradient-to-t from-gray-900 via-gray-800 to-transparent text-white text-center">
         <p className="text-sm">🔍 Para localização avançada do Héric</p>
