@@ -11,7 +11,7 @@ const App = () => {
           </h1>
           <div className="flex items-center space-x-4">
             <div className="bg-green-500 w-4 h-4 rounded-full animate-ping"></div>
-            <p className="text-lg font-semibold tracking-widest text-gray-200">Rastreando...</p>
+            <p className="text-lg font-semibold tracking-widest text-gray-200">...</p>
           </div>
         </div>
       </header>

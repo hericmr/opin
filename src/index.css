@@ -12,7 +12,7 @@ code {
     monospace;
 }
 
-@import "leaflet/dist/leaflet.css";
+@import "~leaflet/dist/leaflet.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
