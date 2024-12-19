@@ -1,6 +1,5 @@
-// MapaSantos.js
 import React, { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet"; // Adicione o Tooltip aqui
 import "leaflet/dist/leaflet.css";
 import pontos from "./pontosData";
 import { customIcon } from "./CustomIcon";
@@ -42,6 +41,7 @@ const MapaSantos = () => {
               click: () => handleMarkerClick(ponto.detalhes),
             }}
           >
+            <Tooltip>{ponto.detalhes.titulo}</Tooltip> {/* Adicionando Tooltip para o título */}
             <Popup>
               <span className="text-base font-medium text-gray-700">
                 {ponto.desc}
