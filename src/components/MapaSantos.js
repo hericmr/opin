@@ -1,90 +1,38 @@
+// MapaSantos.js
 import React, { useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import "./MapaSantos.css"; // Estilos customizados
-
-// Lista de pontos no mapa
-const pontos = [
-  {
-    lat: -23.9851111,
-    lng: -46.3088611,
-    desc: "Câmera perto da estátua da Iemanjá",
-    detalhes: {
-      titulo: "Estátua da Iemanjá",
-      imagem: "https://drive.google.com/file/d/1Xmf-Z4iMi_OPjiNeA7V3uTmXBXleCnqJ",
-      descricao:
-        "A estátua de Iemanjá, localizada na Praia do José Menino, é um símbolo cultural de Santos e uma homenagem às tradições afro-brasileiras.",
-    },
-  },
-  {
-    lat: -23.986538,
-    lng: -46.31339,
-    desc: "Farolzin do Canal 6",
-    detalhes: {
-      titulo: "Farol do Canal 6",
-      imagem: "https://example.com/farol.jpg",
-      descricao:
-        "O Farol do Canal 6 é um ponto icônico de Santos, marcando a entrada do canal e oferecendo uma vista deslumbrante do oceano.",
-    },
-  },
-  {
-    lat: -23.991275,
-    lng: -46.316918,
-    desc: "Boia Verde",
-    detalhes: {
-      titulo: "Bóia Verde",
-      imagem: "https://example.com/boia-verde.jpg",
-      descricao:
-        "A Bóia Verde é uma referência náutica localizada na entrada do porto de Santos, essencial para a navegação segura na região.",
-    },
-  },
-];
-
-// Ícone personalizado para os marcadores
-const customIcon = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-  iconSize: [30, 45], // Tamanho do ícone
-  iconAnchor: [15, 45], // Ponto de ancoragem
-  popupAnchor: [1, -34], // Posição do popup em relação ao ícone
-});
+import pontos from "./pontosData";
+import { customIcon } from "./CustomIcon";
+import PainelInformacoes from "./PainelInformacoes";
+import TituloMapa from "./TituloMapa";
+import RodapeMapa from "./RodapeMapa";
+import "./MapaSantos.css";
 
 const MapaSantos = () => {
-  const [painelInfo, setPainelInfo] = useState(null); // Controle do painel de informações
+  const [painelInfo, setPainelInfo] = useState(null);
 
   const handleMarkerClick = (detalhes) => {
-    setPainelInfo(detalhes); // Atualiza o painel com os detalhes do ponto
+    setPainelInfo(detalhes);
   };
 
   const closePainel = () => {
-    setPainelInfo(null); // Fecha o painel
+    setPainelInfo(null);
   };
 
   return (
     <div className="relative h-screen">
-      {/* Título no topo */}
-      <div className="absolute top-0 left-0 w-full z-10 p-4 bg-gradient-to-b from-gray-900 via-gray-800 to-transparent text-white text-center">
-        <p className="text-lg font-semibold tracking-wide animate-pulse">
-          Cartografia da Cidade de Santos
-        </p>
-        <p className="text-sm font-light">
-          Territorialidades e lutas sociais, destacando a força das identidades coletivas e os movimentos sociais de Santos.
-        </p>
-      </div>
+      <TituloMapa />
 
-      {/* Contêiner do mapa */}
       <MapContainer
-        center={[-23.968208, -46.322742]} // Coordenadas centrais de Santos
-        zoom={13} // Nível de zoom inicial
+        center={[-23.968208, -46.322742]}
+        zoom={13}
         className="h-full w-full"
       >
-        {/* Camada de satélite da Esri */}
         <TileLayer
           url="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
           attribution='&copy; <a href="https://www.esri.com/en-us/home">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
         />
-
-        {/* Exibe os pontos no mapa */}
         {pontos.map((ponto, index) => (
           <Marker
             key={index}
@@ -103,33 +51,9 @@ const MapaSantos = () => {
         ))}
       </MapContainer>
 
-      {/* Painel de Informações */}
-      {painelInfo && (
-        <div className="absolute top-0 right-0 h-full w-1/3 bg-white shadow-lg z-20 overflow-y-auto">
-          <button
-            onClick={closePainel}
-            className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-          >
-            &#10005;
-          </button>
-          <div className="p-4">
-            <h2 className="text-lg font-bold mb-2">{painelInfo.titulo}</h2>
-            <img
-              src={painelInfo.imagem}
-              alt={painelInfo.titulo}
-              className="w-full h-40 object-cover mb-4"
-            />
-            <p className="text-sm text-gray-700">{painelInfo.descricao}</p>
-          </div>
-        </div>
-      )}
+      <PainelInformacoes painelInfo={painelInfo} closePainel={closePainel} />
 
-      {/* Rodapé no mapa */}
-      <div className="absolute bottom-0 left-0 w-full z-10 p-4 bg-gradient-to-t from-gray-900 via-gray-800 to-transparent text-white text-center">
-        <p className="text-sm">
-          Explore e conheça mais sobre os pontos destacados da cidade de Santos.
-        </p>
-      </div>
+      <RodapeMapa />
     </div>
   );
 };
