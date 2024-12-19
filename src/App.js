@@ -29,9 +29,7 @@ const App = () => {
       </main>
       <footer className="bg-gray-800 py-4">
         <div className="container mx-auto text-center text-white">
-          <p className="text-xs">
-            Desenvolvido para destacar as territorialidades e as lutas sociais, e a força dos movimentos de Santos.
-          </p>
+
           <p className="text-xs mt-1">&copy; 2024 Cartografia Social. Todos os direitos reservados.</p>
         </div>
       </footer>

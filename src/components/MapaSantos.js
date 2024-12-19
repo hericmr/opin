@@ -1,13 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "./MapaSantos.css"; // Estilos customizados
 
 // Lista de pontos no mapa
 const pontos = [
-  { lat: -23.9851111, lng: -46.3088611, desc: "Câmera perto da estátua da Iemanjá" },
-  { lat: -23.986538, lng: -46.31339, desc: "Farolzin do Canal 6" },
-  { lat: -23.991275, lng: -46.316918, desc: "Boia Verde" },
+  {
+    lat: -23.9851111,
+    lng: -46.3088611,
+    desc: "Câmera perto da estátua da Iemanjá",
+    detalhes: {
+      titulo: "Estátua da Iemanjá",
+      imagem: "https://drive.google.com/file/d/1Xmf-Z4iMi_OPjiNeA7V3uTmXBXleCnqJ",
+      descricao:
+        "A estátua de Iemanjá, localizada na Praia do José Menino, é um símbolo cultural de Santos e uma homenagem às tradições afro-brasileiras.",
+    },
+  },
+  {
+    lat: -23.986538,
+    lng: -46.31339,
+    desc: "Farolzin do Canal 6",
+    detalhes: {
+      titulo: "Farol do Canal 6",
+      imagem: "https://example.com/farol.jpg",
+      descricao:
+        "O Farol do Canal 6 é um ponto icônico de Santos, marcando a entrada do canal e oferecendo uma vista deslumbrante do oceano.",
+    },
+  },
+  {
+    lat: -23.991275,
+    lng: -46.316918,
+    desc: "Boia Verde",
+    detalhes: {
+      titulo: "Bóia Verde",
+      imagem: "https://example.com/boia-verde.jpg",
+      descricao:
+        "A Bóia Verde é uma referência náutica localizada na entrada do porto de Santos, essencial para a navegação segura na região.",
+    },
+  },
 ];
 
 // Ícone personalizado para os marcadores
@@ -19,6 +50,16 @@ const customIcon = new L.Icon({
 });
 
 const MapaSantos = () => {
+  const [painelInfo, setPainelInfo] = useState(null); // Controle do painel de informações
+
+  const handleMarkerClick = (detalhes) => {
+    setPainelInfo(detalhes); // Atualiza o painel com os detalhes do ponto
+  };
+
+  const closePainel = () => {
+    setPainelInfo(null); // Fecha o painel
+  };
+
   return (
     <div className="relative h-screen">
       {/* Título no topo */}
@@ -37,7 +78,11 @@ const MapaSantos = () => {
         zoom={13} // Nível de zoom inicial
         className="h-full w-full"
       >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        {/* Camada de satélite da Esri */}
+        <TileLayer
+          url="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          attribution='&copy; <a href="https://www.esri.com/en-us/home">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
+        />
 
         {/* Exibe os pontos no mapa */}
         {pontos.map((ponto, index) => (
@@ -45,13 +90,39 @@ const MapaSantos = () => {
             key={index}
             position={[ponto.lat, ponto.lng]}
             icon={customIcon}
+            eventHandlers={{
+              click: () => handleMarkerClick(ponto.detalhes),
+            }}
           >
             <Popup>
-              <span className="text-base font-medium text-gray-700">{ponto.desc}</span>
+              <span className="text-base font-medium text-gray-700">
+                {ponto.desc}
+              </span>
             </Popup>
           </Marker>
         ))}
       </MapContainer>
+
+      {/* Painel de Informações */}
+      {painelInfo && (
+        <div className="absolute top-0 right-0 h-full w-1/3 bg-white shadow-lg z-20 overflow-y-auto">
+          <button
+            onClick={closePainel}
+            className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+          >
+            &#10005;
+          </button>
+          <div className="p-4">
+            <h2 className="text-lg font-bold mb-2">{painelInfo.titulo}</h2>
+            <img
+              src={painelInfo.imagem}
+              alt={painelInfo.titulo}
+              className="w-full h-40 object-cover mb-4"
+            />
+            <p className="text-sm text-gray-700">{painelInfo.descricao}</p>
+          </div>
+        </div>
+      )}
 
       {/* Rodapé no mapa */}
       <div className="absolute bottom-0 left-0 w-full z-10 p-4 bg-gradient-to-t from-gray-900 via-gray-800 to-transparent text-white text-center">
