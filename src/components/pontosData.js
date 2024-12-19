@@ -7,7 +7,6 @@ const pontos = [
         titulo: "Estátua da Iemanjá",
         imagens: [
           "https://i.ibb.co/S3S5RQH/susan-hortas-0750.jpg",
-          "https://i.ibb.co/Vg23PM6/susan-hortas-1078.jpg",
           "https://i.ibb.co/j5b4QJV/susan-hortas-0713.jpg",
         ],
         descricao:

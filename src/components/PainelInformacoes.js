@@ -19,12 +19,13 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         {painelInfo.imagens && painelInfo.imagens.length > 0 && (
           <div className="mb-4">
             {painelInfo.imagens.map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                alt={`${painelInfo.titulo} - ${index + 1}`}
-                className="w-full h-40 object-cover mb-2 rounded-lg"
-              />
+              <div key={index} className="mb-4">
+                <img
+                  src={img}
+                  alt={`${painelInfo.titulo} - ${index + 1}`}
+                  className="w-full max-h-96 object-contain rounded-lg"
+                />
+              </div>
             ))}
           </div>
         )}
@@ -33,7 +34,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         {painelInfo.video && (
           <div className="mb-4">
             <iframe
-              className="w-full h-60 rounded-lg"
+              className="w-full h-72 rounded-lg"
               src={painelInfo.video}
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
