@@ -4,7 +4,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
   if (!painelInfo) return null;
 
   return (
-    <div className="absolute top-0 right-0 h-full w-1/3 bg-white shadow-lg z-20 overflow-y-auto">
+    <div className="fixed top-0 right-0 h-full w-full sm:w-1/3 bg-white shadow-lg z-20 overflow-y-auto">
       <button
         onClick={closePainel}
         className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
@@ -13,7 +13,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
       </button>
       <div className="p-4">
         <h2 className="text-lg font-bold mb-2">{painelInfo.titulo}</h2>
-        
+
         {/* Renderizar imagens */}
         {painelInfo.imagens && painelInfo.imagens.length > 0 && (
           <div className="mb-4">
