@@ -4,10 +4,11 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
   if (!painelInfo) return null;
 
   return (
-    <div className="fixed top-0 right-0 h-full w-full sm:w-1/3 bg-white shadow-lg z-20 overflow-y-auto">
+    <div className="absolute top-0 right-0 h-full w-full sm:w-2/3 lg:w-1/3 bg-white shadow-lg z-20 overflow-y-auto">
       <button
         onClick={closePainel}
         className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+        aria-label="Fechar painel"
       >
         &#10005;
       </button>
@@ -22,7 +23,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
                 key={index}
                 src={img}
                 alt={`${painelInfo.titulo} - ${index + 1}`}
-                className="w-full h-auto max-h-60 object-contain mb-2"
+                className="w-full h-40 object-cover mb-2 rounded-lg"
               />
             ))}
           </div>
@@ -32,7 +33,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         {painelInfo.video && (
           <div className="mb-4">
             <iframe
-              className="w-full h-60"
+              className="w-full h-60 rounded-lg"
               src={painelInfo.video}
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
