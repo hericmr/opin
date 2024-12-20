@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet"; // Adicione o Tooltip aqui
+import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import pontos from "./pontosData";
 import { customIcon } from "./CustomIcon";
 import PainelInformacoes from "./PainelInformacoes";
-import TituloMapa from "./TituloMapa";
-import RodapeMapa from "./RodapeMapa";
 import "./MapaSantos.css";
 
 const MapaSantos = () => {
@@ -21,11 +19,10 @@ const MapaSantos = () => {
 
   return (
     <div className="relative h-screen">
-      <TituloMapa />
-
+      {/* Mapa */}
       <MapContainer
         center={[-23.968208, -46.322742]}
-        zoom={13}
+        zoom={13.5}
         className="h-full w-full"
       >
         <TileLayer
@@ -41,7 +38,9 @@ const MapaSantos = () => {
               click: () => handleMarkerClick(ponto.detalhes),
             }}
           >
-            <Tooltip>{ponto.detalhes.titulo}</Tooltip> {/* Adicionando Tooltip para o título */}
+            <Tooltip direction="top" offset={[0, -20]} opacity={0.9}>
+              {ponto.detalhes.titulo}
+            </Tooltip>
             <Popup>
               <span className="text-base font-medium text-gray-700">
                 {ponto.desc}
@@ -51,9 +50,10 @@ const MapaSantos = () => {
         ))}
       </MapContainer>
 
-      <PainelInformacoes painelInfo={painelInfo} closePainel={closePainel} />
-
-      <RodapeMapa />
+      {/* Painel de Informações */}
+      {painelInfo && (
+        <PainelInformacoes painelInfo={painelInfo} closePainel={closePainel} />
+      )}
     </div>
   );
 };
