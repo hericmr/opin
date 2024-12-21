@@ -5,7 +5,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
 
   useEffect(() => {
     if (painelInfo) {
-      setIsVisible(true);  // Ativa a animação ao abrir o painel
+      setIsVisible(true); // Ativa a animação ao abrir o painel
     } else {
       setIsVisible(false); // Desativa a animação ao fechar
     }
@@ -15,7 +15,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
 
   return (
     <div
-      className={`absolute top-0 right-0 h-full w-full sm:w-3/4 lg:w-[45%] bg-white shadow-lg z-20 overflow-y-auto transform transition-all duration-500 ease-in-out ${
+      className={`absolute top-0 right-0 h-full w-full sm:w-3/4 lg:w-[45%] bg-green-50 rounded-xl shadow-lg z-20 overflow-y-auto transform transition-all duration-500 ease-in-out ${
         isVisible ? "translate-x-0" : "translate-x-full"
       }`}
     >
@@ -27,7 +27,9 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         &#10005;
       </button>
       <div className="p-6">
-        <h2 className="text-2xl font-bold mb-4 text-gray-900">{painelInfo.titulo}</h2>
+        <h2 className="text-2xl lg:text-3xl font-extrabold tracking-wide text-green-800 mb-6 text-center lg:text-left">
+          {painelInfo.titulo}
+        </h2>
 
         {/* Renderizar imagens */}
         {painelInfo.imagens && painelInfo.imagens.length > 0 && (
@@ -60,8 +62,9 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
 
         {/* Renderizar descrição */}
         {painelInfo.descricao && (
-          <div className="prose prose-sm sm:prose lg:prose-lg text-gray-700 mb-6">
+          <div className="prose prose-sm sm:prose lg:prose-lg text-gray-800 mb-6">
             <p
+              className="text-base lg:text-lg leading-relaxed text-gray-700 text-center lg:text-left"
               dangerouslySetInnerHTML={{ __html: painelInfo.descricao }}
             ></p>
           </div>
@@ -70,7 +73,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         {/* Renderizar links */}
         {painelInfo.links && painelInfo.links.length > 0 && (
           <div className="mt-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Referências:</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Referências:</h3>
             <ul className="list-disc pl-6 space-y-2">
               {painelInfo.links.map((link, index) => (
                 <li key={index}>
@@ -78,7 +81,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                    className="text-blue-800 hover:text-blue-800 hover:underline"
                   >
                     {link.texto}
                   </a>
