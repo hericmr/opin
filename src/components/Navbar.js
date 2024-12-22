@@ -3,7 +3,7 @@ import React from "react";
 
 const Navbar = () => {
   return (
-    <header className="bg-gradient-to-r from-green-900 via-green-800 to-green-600 shadow-md">
+    <header className="bg-green-900 text-white shadow-lg">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         <div className="flex items-center">
           <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-wide text-white">

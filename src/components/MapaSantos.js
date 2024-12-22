@@ -14,7 +14,7 @@ const MapaSantos = () => {
       <br>
      <p> O mapa destaca a presença de equipamentos sociais, culturais, religiosos, políticos, educacionais e históricos, como escolas, igrejas, unidades de saúde, espaços culturais e de lazer, além de locais carregados de memória histórica. </p>
      <br>
-     <p> Entre os elementos mapeados, estão histórias relacionadas à escravização do povo negro, à opressão e resistência à ditadura militar (1964-1984), e às lutas que moldaram e continuam moldando a identidade da região. </p>
+     <p> Entre os elementos mapeados, estão histórias relacionadas à escravização e lutas do povo negro, à opressão e resistência à ditadura empresarial-militar (1964-1984), e às lutas que moldaram e continuam moldando a identidade da região. </p>
       <br>
      <p>Os materiais cartográficos e textuais disponíveis aqui foram produzidos pelos estudantes de Serviço Social da UNIFESP, durante a Unidade Curricular de Políticas Públicas 2, em 2024 e 2025.</p>
     `,
@@ -26,7 +26,7 @@ const MapaSantos = () => {
     // Temporizador para exibir a mensagem inicial após 15 segundos
     const timer = setTimeout(() => {
       setPainelInfo(detalhesIntro);
-    }, 3000);
+    }, 3500);
 
     // Limpa o temporizador ao desmontar o componente
     return () => clearTimeout(timer);
