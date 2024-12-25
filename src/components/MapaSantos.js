@@ -60,7 +60,7 @@ const MapaSantos = () => {
   };
 
   const geoJSONStyle = {
-    fillColor: "blue",
+    fillColor: "green",
     color: "white",
     weight: 1,
     fillOpacity: 0.6,
@@ -126,7 +126,7 @@ const MapaSantos = () => {
       {/* Botão para alternar a visibilidade dos bairros */}
       <button
         onClick={toggleBairros}
-        className="absolute top-20 left-5 z-10 p-3 bg-green-7 00 text-white rounded-md shadow-lg"
+        className="absolute top-20 left-3 z-10 p-2 bg-gray-100 text-black rounded-md shadow"
       >
         {bairrosVisiveis ? "Ocultar Bairros" : "Ver Bairros"}
       </button>
