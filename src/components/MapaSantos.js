@@ -46,7 +46,7 @@ const MapaSantos = () => {
     fillColor: "green",
     color: "white",
     weight: 1,
-    fillOpacity: 0.6,
+    fillOpacity: 0.4,
   };
 
   return (
