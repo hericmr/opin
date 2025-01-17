@@ -5,28 +5,45 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
 
   useEffect(() => {
     if (painelInfo) {
-      setIsVisible(true); // Ativa a animação ao abrir o painel
+      setIsVisible(true);
+      // Impede o scroll da página
+      document.body.style.overflow = "hidden";
     } else {
-      setIsVisible(false); // Desativa a animação ao fechar
+      setIsVisible(false);
+      // Restaura o scroll da página
+      document.body.style.overflow = "";
     }
+
+    // Cleanup para restaurar o scroll ao desmontar o componente
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [painelInfo]);
 
   if (!painelInfo) return null;
 
   return (
     <div
-      className={`absolute top-0 right-0 h-full w-full sm:w-3/4 lg:w-[45%] bg-green-50 rounded-xl shadow-lg z-20 overflow-y-auto transform transition-all duration-500 ease-in-out ${
-        isVisible ? "translate-x-0" : "translate-x-full"
+      className={`fixed top-16 right-4 left-4 sm:left-auto sm:w-3/4 lg:w-[45%] bg-green-50 rounded-xl shadow-lg z-20 transform transition-transform duration-500 ease-in-out ${
+        isVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
       }`}
+      style={{
+        maxHeight: "calc(100% - 4rem)", // Garante espaçamento vertical máximo
+        transition: "opacity 0.5s ease, transform 0.5s ease", // Transições suaves para opacity e movimento
+      }}
     >
       <button
-        onClick={closePainel}
-        className="absolute top-4 right-4 text-gray-900 hover:text-gray-800"
+        onClick={() => {
+          closePainel();
+          document.body.style.overflow = ""; // Certifica-se de restaurar o scroll
+        }}
+        className="absolute top-4 right-4 text-gray-900 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600 rounded-full text-xl"
         aria-label="Fechar painel"
       >
-        &#10005;
+        ✕
       </button>
-      <div className="p-6">
+      {/* Conteúdo interno com rolagem */}
+      <div className="p-6 h-full overflow-y-auto">
         <h2 className="text-2xl lg:text-3xl font-extrabold tracking-wide text-green-800 mb-6 text-center lg:text-left">
           {painelInfo.titulo}
         </h2>
