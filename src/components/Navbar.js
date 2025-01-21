@@ -12,7 +12,7 @@ const Navbar = () => {
         </div>
         <div className="flex flex-col items-center">
           <img
-            src="https://portal.unifesp.br/web_imagens/institucional/logoUnifesp.png"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTYwtB55I-IDYaOH-GGz0ctldEZqCHa_N7aA&s"
             alt="Logo Unifesp"
             className="h-10 w-auto object-contain"
           />

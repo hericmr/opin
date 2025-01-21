@@ -10,7 +10,7 @@ const pontos = [
         Sua instalação na orla da praia foi uma conquista dos movimentos negros da região, após permanecer guardada no Teatro Municipal de Santos por vários anos.
       `,
       video: "https://www.youtube.com/embed/Br_ioeUszH0?si=uZLBcYlnhKm_a1qg",
-      imagens: [], // Adicionado array vazio por padrão
+      imagens: [], 
       links: [
         {
           texto: "Levante vai cobrar Estátua de Iemanjá em Santos - DL",
