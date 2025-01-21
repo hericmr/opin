@@ -3,8 +3,10 @@ import MapaBase from "./MapaBase";
 import Marcadores from "./Marcadores";
 import Bairros from "./Bairros";
 import BotaoAlternar from "./BotaoAlternar";
+import BotaoAssistencia from "./BotaoAssistencia";
 import PainelInformacoes from "./PainelInformacoes";
 import pontos from "./pontosData";
+import pontosAssistencia from "./pontosAssistencia"; // Importação corrigida para pontosAssistencia
 import "./MapaSantos.css";
 
 const MapaSantos = () => {
@@ -22,9 +24,11 @@ const MapaSantos = () => {
   const [painelInfo, setPainelInfo] = useState(null);
   const [geojsonData, setGeojsonData] = useState(null);
   const [bairrosVisiveis, setBairrosVisiveis] = useState(false);
+  const [assistenciaVisiveis, setAssistenciaVisiveis] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setPainelInfo(detalhesIntro), 3500);
+
     const fetchGeoJSON = async () => {
       try {
         const response = await fetch("https://raw.githubusercontent.com/hericmr/gps/main/public/bairros.geojson");
@@ -52,10 +56,12 @@ const MapaSantos = () => {
       <MapaBase>
         <Marcadores pontos={pontos} onClick={setPainelInfo} />
         {bairrosVisiveis && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
+        {assistenciaVisiveis && <Marcadores pontos={pontosAssistencia} onClick={setPainelInfo} />}
       </MapaBase>
 
       {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={() => setPainelInfo(null)} />}
       <BotaoAlternar visivel={bairrosVisiveis} onClick={() => setBairrosVisiveis(!bairrosVisiveis)} />
+      <BotaoAssistencia visivel={assistenciaVisiveis} onClick={() => setAssistenciaVisiveis(!assistenciaVisiveis)} />
     </div>
   );
 };
