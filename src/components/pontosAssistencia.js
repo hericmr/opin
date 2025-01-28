@@ -3,7 +3,7 @@ const pontosAssistencia = [
     lat: -23.93788,
     lng: -46.319121,
     desc: "Centro POP Santos",
-    tipo: "saude", // 
+    tipo: "assistencia", // 
     detalhes: {
       titulo: "Centro POP Santos",
       descricao: `
