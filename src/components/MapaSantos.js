@@ -26,11 +26,11 @@ const MapaSantos = () => {
   const [painelInfo, setPainelInfo] = useState(null);
   const [geojsonData, setGeojsonData] = useState(null);
   const [bairrosVisiveis, setBairrosVisiveis] = useState(false);
-  const [assistenciaVisiveis, setAssistenciaVisiveis] = useState(false);
-  const [historicosVisiveis, setHistoricosVisiveis] = useState(false);
+  const [assistenciaVisiveis, setAssistenciaVisiveis] = useState(true);
+  const [historicosVisiveis, setHistoricosVisiveis] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setPainelInfo(detalhesIntro), 3500);
+    setPainelInfo(detalhesIntro); // Define o painelInfo imediatamente
 
     const fetchGeoJSON = async () => {
       try {
@@ -44,7 +44,6 @@ const MapaSantos = () => {
     };
 
     fetchGeoJSON();
-    return () => clearTimeout(timer);
   }, [detalhesIntro]); // Adicionado detalhesIntro ao array de dependências
 
   const geoJSONStyle = {
@@ -53,7 +52,6 @@ const MapaSantos = () => {
     weight: 1,
     fillOpacity: 0.4,
   };
-
 
   return (
     <div className="relative h-screen">
