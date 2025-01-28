@@ -34,8 +34,11 @@ const MapaSantos = () => {
 
     const fetchGeoJSON = async () => {
       try {
-        const response = await fetch("https://raw.githubusercontent.com/hericmr/gps/main/public/bairros.geojson");
-        if (!response.ok) throw new Error(`Erro ao carregar GeoJSON: HTTP status ${response.status}`);
+        const response = await fetch(
+          "https://raw.githubusercontent.com/hericmr/gps/main/public/bairros.geojson"
+        );
+        if (!response.ok)
+          throw new Error(`Erro ao carregar GeoJSON: HTTP status ${response.status}`);
         const data = await response.json();
         setGeojsonData(data);
       } catch (error) {
@@ -44,7 +47,12 @@ const MapaSantos = () => {
     };
 
     fetchGeoJSON();
-  }, [detalhesIntro]); // Adicionado detalhesIntro ao array de dependências
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setPainelInfo(detalhesIntro), 3500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const geoJSONStyle = {
     fillColor: "green",
@@ -57,15 +65,35 @@ const MapaSantos = () => {
     <div className="relative h-screen">
       <MapaBase>
         <Marcadores pontos={pontos} onClick={setPainelInfo} />
-        {bairrosVisiveis && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
-        {assistenciaVisiveis && <Marcadores pontos={pontosAssistencia} onClick={setPainelInfo} />}
-        {historicosVisiveis && <Marcadores pontos={pontosHistoricos} onClick={setPainelInfo} />}
+        {bairrosVisiveis && geojsonData && (
+          <Bairros data={geojsonData} style={geoJSONStyle} />
+        )}
+        {assistenciaVisiveis && (
+          <Marcadores pontos={pontosAssistencia} onClick={setPainelInfo} />
+        )}
+        {historicosVisiveis && (
+          <Marcadores pontos={pontosHistoricos} onClick={setPainelInfo} />
+        )}
       </MapaBase>
 
-      {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={() => setPainelInfo(null)} />}
-      <BotaoAlternar visivel={bairrosVisiveis} onClick={() => setBairrosVisiveis(!bairrosVisiveis)} />
-      <BotaoAssistencia visivel={assistenciaVisiveis} onClick={() => setAssistenciaVisiveis(!assistenciaVisiveis)} />
-      <BotaoHistoricos visivel={historicosVisiveis} onClick={() => setHistoricosVisiveis(!historicosVisiveis)} />
+      {painelInfo && (
+        <PainelInformacoes
+          painelInfo={painelInfo}
+          closePainel={() => setPainelInfo(null)}
+        />
+      )}
+      <BotaoAlternar
+        visivel={bairrosVisiveis}
+        onClick={() => setBairrosVisiveis(!bairrosVisiveis)}
+      />
+      <BotaoAssistencia
+        visivel={assistenciaVisiveis}
+        onClick={() => setAssistenciaVisiveis(!assistenciaVisiveis)}
+      />
+      <BotaoHistoricos
+        visivel={historicosVisiveis}
+        onClick={() => setHistoricosVisiveis(!historicosVisiveis)}
+      />
     </div>
   );
 };
