@@ -13,7 +13,7 @@ import BotaoHistoricos from "./BotaoHistoricos";
 
 const MapaSantos = () => {
   const detalhesIntro = {
-    titulo: "Cartografia Social de Santos",
+    titulo: "Territórios, resistência e identidade em Santos",
     descricao: `
       <p> Esta é uma cartografia social que busca mapear as territorialidades e valorizar as lutas e conquistas dos movimentos sociais e da população na cidade de Santos. O mapa destaca a presença de equipamentos sociais, culturais, religiosos, políticos, educacionais e históricos, como escolas, unidades de saúde, espaços culturais e de lazer, além de locais carregados de memória histórica. </p>
       <br>
