@@ -8,7 +8,7 @@ const Navbar = () => {
         <div className="flex items-center">
           {/* Adicionando a imagem */}
           <img
-            src="%PUBLIC_URL%/favicon.ico" // Caminho da imagem
+            src="/gps/favicon.ico" // Caminho da imagem
             alt="Ícone" // Texto alternativo para acessibilidade
             className="h-8 w-auto mr-2" // Estilos (altura, largura automática e margem à direita)
           />
