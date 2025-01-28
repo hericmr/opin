@@ -6,7 +6,7 @@ import BotaoAlternar from "./BotaoAlternar";
 import BotaoAssistencia from "./BotaoAssistencia";
 import PainelInformacoes from "./PainelInformacoes";
 import pontos from "./pontosData";
-import pontosAssistencia from "./pontosAssistencia"; // Importação corrigida para pontosAssistencia
+import pontosAssistencia from "./pontosAssistencia";
 import "./MapaSantos.css";
 
 const MapaSantos = () => {
@@ -42,7 +42,7 @@ const MapaSantos = () => {
 
     fetchGeoJSON();
     return () => clearTimeout(timer);
-  }, []);
+  }, [detalhesIntro]); // Adicionado detalhesIntro ao array de dependências
 
   const geoJSONStyle = {
     fillColor: "green",
