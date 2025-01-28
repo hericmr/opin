@@ -6,6 +6,12 @@ const Navbar = () => {
     <header className="bg-green-900 text-white shadow-lg">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         <div className="flex items-center">
+          {/* Adicionando a imagem */}
+          <img
+            src="%PUBLIC_URL%/favicon.ico" // Caminho da imagem
+            alt="Ícone" // Texto alternativo para acessibilidade
+            className="h-8 w-auto mr-2" // Estilos (altura, largura automática e margem à direita)
+          />
           <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-wide text-white">
             Cartografia Social de Santos
           </h1>
