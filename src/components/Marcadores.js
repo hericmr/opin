@@ -1,6 +1,6 @@
 import React from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
-import { customIcon } from "./CustomIcon";
+import { customIcon, greenIcon } from "./CustomIcon"; // Importe os ícones
 
 const Marcadores = ({ pontos, onClick }) => (
   <>
@@ -8,7 +8,7 @@ const Marcadores = ({ pontos, onClick }) => (
       <Marker
         key={index}
         position={[ponto.lat, ponto.lng]}
-        icon={customIcon}
+        icon={ponto.tipo === "saude" ? greenIcon : customIcon} // Escolha o ícone com base no tipo
         eventHandlers={{
           click: () => onClick(ponto.detalhes),
         }}
