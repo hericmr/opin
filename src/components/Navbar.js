@@ -18,7 +18,7 @@ const Navbar = () => {
         </div>
         <div className="flex flex-col items-center">
           <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTYwtB55I-IDYaOH-GGz0ctldEZqCHa_N7aA&s"
+            src="/gps/logo.png"
             alt="Logo Unifesp"
             className="h-10 w-auto object-contain"
           />
