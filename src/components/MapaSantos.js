@@ -7,7 +7,9 @@ import BotaoAssistencia from "./BotaoAssistencia";
 import PainelInformacoes from "./PainelInformacoes";
 import pontos from "./pontosData";
 import pontosAssistencia from "./pontosAssistencia";
+import pontosHistoricos from "./pontosHistoricos";
 import "./MapaSantos.css";
+import BotaoHistoricos from "./BotaoHistoricos";
 
 const MapaSantos = () => {
   const detalhesIntro = {
@@ -25,6 +27,7 @@ const MapaSantos = () => {
   const [geojsonData, setGeojsonData] = useState(null);
   const [bairrosVisiveis, setBairrosVisiveis] = useState(false);
   const [assistenciaVisiveis, setAssistenciaVisiveis] = useState(false);
+  const [historicosVisiveis, setHistoricosVisiveis] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setPainelInfo(detalhesIntro), 3500);
@@ -51,17 +54,20 @@ const MapaSantos = () => {
     fillOpacity: 0.4,
   };
 
+
   return (
     <div className="relative h-screen">
       <MapaBase>
         <Marcadores pontos={pontos} onClick={setPainelInfo} />
         {bairrosVisiveis && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
         {assistenciaVisiveis && <Marcadores pontos={pontosAssistencia} onClick={setPainelInfo} />}
+        {historicosVisiveis && <Marcadores pontos={pontosHistoricos} onClick={setPainelInfo} />}
       </MapaBase>
 
       {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={() => setPainelInfo(null)} />}
       <BotaoAlternar visivel={bairrosVisiveis} onClick={() => setBairrosVisiveis(!bairrosVisiveis)} />
       <BotaoAssistencia visivel={assistenciaVisiveis} onClick={() => setAssistenciaVisiveis(!assistenciaVisiveis)} />
+      <BotaoHistoricos visivel={historicosVisiveis} onClick={() => setHistoricosVisiveis(!historicosVisiveis)} />
     </div>
   );
 };
