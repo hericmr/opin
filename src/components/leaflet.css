@@ -638,3 +638,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	margin-left: -12px;
 	border-right-color: #fff;
 	}
+	.leaflet-control-attribution {
+		background-color: rgba(255, 255, 255, 0.8); /* Fundo semi-transparente */
+		padding: 2px 5px; /* Espaçamento interno */
+		font-size: 12px; /* Tamanho da fonte */
+		color: #333; /* Cor do texto */
+		z-index: 1000; /* Garante que a atribuição fique acima de outros elementos */
+	  }

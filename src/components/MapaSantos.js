@@ -10,6 +10,9 @@ import pontosAssistencia from "./pontosAssistencia";
 import pontosHistoricos from "./pontosHistoricos";
 import "./MapaSantos.css";
 import BotaoHistoricos from "./BotaoHistoricos";
+import pontosCultura from "./pontosCultura";
+import BotaoCultura from "./BotaoCultura";
+
 
 const MapaSantos = () => {
   const detalhesIntro = {
@@ -22,7 +25,7 @@ const MapaSantos = () => {
         <ul class="list-none space-y-2">
           <li class="flex items-center">
             <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png" alt="Marcador Azul" class="w-5 h-8 mr-2" />
-            <span><strong class="text-blue-700">Azul:</strong> Equipamentos sociais, culturais, religiosos e políticos.</span>
+            <span><strong class="text-blue-700">Azul:</strong> Equipamentos sociais, culturais e de lazer.</span>
           </li>
           <li class="flex items-center">
             <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png" alt="Marcador Verde" class="w-5 h-8 mr-2" />
@@ -37,7 +40,7 @@ const MapaSantos = () => {
       
       <p class="mt-4">Entre os elementos mapeados, estão histórias relacionadas à escravização e lutas do povo negro, à opressão e resistência à ditadura empresarial-militar (1964-1984), e às lutas que moldaram e continuam moldando a identidade da região.</p>
       
-      <p class="mt-4">Os materiais cartográficos e textuais disponíveis aqui foram produzidos pelos estudantes de Serviço Social da UNIFESP, durante a Unidade Curricular de Políticas Públicas 2, em 2024 e 2025.</p>
+      <p class="mt-4">Os materiais cartográficos e textuais disponíveis aqui foram produzidos pelas(os) estudantes de Serviço Social da UNIFESP, durante a Unidade Curricular de Políticas Públicas 2, em 2024 e 2025.</p>
     `,
   };
 
@@ -46,6 +49,9 @@ const MapaSantos = () => {
   const [bairrosVisiveis, setBairrosVisiveis] = useState(false);
   const [assistenciaVisiveis, setAssistenciaVisiveis] = useState(true);
   const [historicosVisiveis, setHistoricosVisiveis] = useState(true);
+  const [culturaVisiveis, setCulturaVisiveis] = useState(true);
+
+  
 
   useEffect(() => {
     setPainelInfo(detalhesIntro); // Define o painelInfo imediatamente
@@ -92,6 +98,9 @@ const MapaSantos = () => {
         {historicosVisiveis && (
           <Marcadores pontos={pontosHistoricos} onClick={setPainelInfo} />
         )}
+        {culturaVisiveis && (
+          <Marcadores pontos={pontosCultura} onClick={setPainelInfo} />
+        )}
       </MapaBase>
 
       {painelInfo && (
@@ -112,6 +121,11 @@ const MapaSantos = () => {
         visivel={historicosVisiveis}
         onClick={() => setHistoricosVisiveis(!historicosVisiveis)}
       />
+      <BotaoCultura
+        visivel={culturaVisiveis}
+        onClick={() => setCulturaVisiveis(!culturaVisiveis)}
+      />
+
     </div>
   );
 };
