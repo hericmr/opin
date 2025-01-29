@@ -2,17 +2,13 @@ import React, { useState, useEffect } from "react";
 import MapaBase from "./MapaBase";
 import Marcadores from "./Marcadores";
 import Bairros from "./Bairros";
-import BotaoAlternar from "./BotaoAlternar";
-import BotaoAssistencia from "./BotaoAssistencia";
+import MenuCamadas from "./MenuCamadas";
 import PainelInformacoes from "./PainelInformacoes";
 import pontos from "./pontosData";
 import pontosAssistencia from "./pontosAssistencia";
 import pontosHistoricos from "./pontosHistoricos";
-import "./MapaSantos.css";
-import BotaoHistoricos from "./BotaoHistoricos";
 import pontosCultura from "./pontosCultura";
-import BotaoCultura from "./BotaoCultura";
-
+import "./MapaSantos.css";
 
 const MapaSantos = () => {
   const detalhesIntro = {
@@ -46,15 +42,15 @@ const MapaSantos = () => {
 
   const [painelInfo, setPainelInfo] = useState(null);
   const [geojsonData, setGeojsonData] = useState(null);
-  const [bairrosVisiveis, setBairrosVisiveis] = useState(false);
-  const [assistenciaVisiveis, setAssistenciaVisiveis] = useState(true);
-  const [historicosVisiveis, setHistoricosVisiveis] = useState(true);
-  const [culturaVisiveis, setCulturaVisiveis] = useState(true);
-
-  
+  const [visibilidade, setVisibilidade] = useState({
+    bairros: false,
+    assistencia: true,
+    historicos: true,
+    culturais: true,
+  });
 
   useEffect(() => {
-    setPainelInfo(detalhesIntro); // Define o painelInfo imediatamente
+    setPainelInfo(detalhesIntro);
 
     const fetchGeoJSON = async () => {
       try {
@@ -85,47 +81,32 @@ const MapaSantos = () => {
     fillOpacity: 0.4,
   };
 
+  const toggleVisibilidade = (chave) => {
+    setVisibilidade((prev) => ({ ...prev, [chave]: !prev[chave] }));
+  };
+
   return (
     <div className="relative h-screen">
       <MapaBase>
         <Marcadores pontos={pontos} onClick={setPainelInfo} />
-        {bairrosVisiveis && geojsonData && (
-          <Bairros data={geojsonData} style={geoJSONStyle} />
-        )}
-        {assistenciaVisiveis && (
-          <Marcadores pontos={pontosAssistencia} onClick={setPainelInfo} />
-        )}
-        {historicosVisiveis && (
-          <Marcadores pontos={pontosHistoricos} onClick={setPainelInfo} />
-        )}
-        {culturaVisiveis && (
-          <Marcadores pontos={pontosCultura} onClick={setPainelInfo} />
-        )}
+        {visibilidade.bairros && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
+        {visibilidade.assistencia && <Marcadores pontos={pontosAssistencia} onClick={setPainelInfo} />}
+        {visibilidade.historicos && <Marcadores pontos={pontosHistoricos} onClick={setPainelInfo} />}
+        {visibilidade.culturais && <Marcadores pontos={pontosCultura} onClick={setPainelInfo} />}
       </MapaBase>
 
-      {painelInfo && (
-        <PainelInformacoes
-          painelInfo={painelInfo}
-          closePainel={() => setPainelInfo(null)}
-        />
-      )}
-      <BotaoAlternar
-        visivel={bairrosVisiveis}
-        onClick={() => setBairrosVisiveis(!bairrosVisiveis)}
+      {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={() => setPainelInfo(null)} />}
+      
+      {/* Substituindo BotoesContainer pelo novo MenuCamadas */}
+      <MenuCamadas
+        estados={visibilidade}
+        acoes={{
+          toggleBairros: () => toggleVisibilidade("bairros"),
+          toggleAssistencia: () => toggleVisibilidade("assistencia"),
+          toggleHistoricos: () => toggleVisibilidade("historicos"),
+          toggleCulturais: () => toggleVisibilidade("culturais"),
+        }}
       />
-      <BotaoAssistencia
-        visivel={assistenciaVisiveis}
-        onClick={() => setAssistenciaVisiveis(!assistenciaVisiveis)}
-      />
-      <BotaoHistoricos
-        visivel={historicosVisiveis}
-        onClick={() => setHistoricosVisiveis(!historicosVisiveis)}
-      />
-      <BotaoCultura
-        visivel={culturaVisiveis}
-        onClick={() => setCulturaVisiveis(!culturaVisiveis)}
-      />
-
     </div>
   );
 };
