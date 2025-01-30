@@ -27,3 +27,21 @@
   .map-container {
     background: white;
   }
+/* WebKit (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 8px; /* Largura da barra de rolagem */
+}
+
+::-webkit-scrollbar-track {
+  background: #e0f2f1; /* Cor do fundo da barra */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2e7d32; /* Cor do controle da barra */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1b5e20; /* Cor ao passar o mouse */
+}
