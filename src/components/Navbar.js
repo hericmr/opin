@@ -15,7 +15,7 @@ const Navbar = ({ onTitleClick = () => {} }) => {
           <h1
             className="text-lg sm:text-xl md:text-2xl font-bold tracking-wide cursor-pointer"
             onClick={() => {
-              console.log("Título clicado! Atualizando painel...");
+              console.log("título clicado! Atualizando abrindo detalhes intro"); //aqui precisa ter o codigo pra abertura do painel de detalhes
               onTitleClick();
             }}
           >
@@ -23,10 +23,10 @@ const Navbar = ({ onTitleClick = () => {} }) => {
           </h1>
         </div>
 
-        {/* Logo Unifesp e texto */}
+
         <div className="flex flex-col items-center text-center">
           <img
-            src="/gps/logo.png"
+            src="/cartografiasocial/logo.png"
             alt="Logo da Unifesp"
             className="h-10 w-auto object-contain"
             aria-label="Logo da Unifesp"
