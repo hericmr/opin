@@ -6,9 +6,9 @@ import MenuCamadas from "./MenuCamadas";
 import PainelInformacoes from "./PainelInformacoes";
 import pontosAssistencia from "./pontosAssistencia";
 import pontosHistoricos from "./pontosHistoricos";
-import pontosCultura from "./pontosCultura";
+import pontosLazer from "./pontosLazer";
 import "./MapaSantos.css";
-import Navbar from "./Navbar";
+
 
 
 const MapaSantos = () => {
@@ -29,7 +29,7 @@ const MapaSantos = () => {
             <span><strong class="text-green-700">Verde:</strong> Unidades de assistência social e saúde.</span>
           </li>
           <li class="flex items-center">
-            <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png" alt="Marcador Amarelo" class="w-5 h-8 mr-2" />
+            <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png" alt="Marcador Amarelo" class="w-5 h-8 mr-2" />
             <span><strong class="text-yellow-600">Amarelo:</strong> Locais históricos e de memória.</span>
           </li>
         </ul>
@@ -87,7 +87,7 @@ const MapaSantos = () => {
         {visibilidade.bairros && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
         {visibilidade.assistencia && <Marcadores pontos={pontosAssistencia} onClick={setPainelInfo} />}
         {visibilidade.historicos && <Marcadores pontos={pontosHistoricos} onClick={setPainelInfo} />}
-        {visibilidade.culturais && <Marcadores pontos={pontosCultura} onClick={setPainelInfo} />}
+        {visibilidade.culturais && <Marcadores pontos={pontosLazer} onClick={setPainelInfo} />}
       </MapaBase>
 
       {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={() => setPainelInfo(null)} />}

@@ -48,7 +48,7 @@ const MenuCamadas = ({ estados, acoes }) => {
         <button
           onClick={acoes.toggleAssistencia}
           className={`w-full p-2 text-left flex items-center rounded-md transition-colors whitespace-nowrap ${
-            estados.assistencia ? 'bg-green-600 text-white' : 'bg-green-100 hover:bg-gray-100'
+            estados.assistencia ? 'bg-green-500 text-black' : 'bg-green-100 hover:bg-gray-100'
           }`}
         >
           <img 
@@ -56,7 +56,7 @@ const MenuCamadas = ({ estados, acoes }) => {
             alt="Marcador Verde" 
             className="w-3 h-5 mr-2"
           />
-          <span className={`${estados.assistencia ? "text-white" : "text-black"}`}>
+          <span className={`${estados.assistencia ? "text-black" : "text-black"}`}>
             Assistência
           </span>
         </button>
@@ -65,33 +65,34 @@ const MenuCamadas = ({ estados, acoes }) => {
         <button
           onClick={acoes.toggleHistoricos}
           className={`w-full p-2 text-left flex items-center rounded-md transition-colors whitespace-nowrap ${
-            estados.historicos ? 'bg-yellow-400' : 'bg-green-100 hover:bg-gray-100'
+            estados.historicos ? 'bg-yellow-300' : 'bg-green-100 hover:bg-gray-100'
           }`}
         >
           <img 
-            src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png" 
+            src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png" 
             alt="Marcador Amarelo" 
             className="w-3 h-5 mr-2"
           />
           <span className="text-black">Históricos</span>
         </button>
 
-        {/* Botão Cultura 
+     
         <button
-          onClick={acoes.toggleCultura}
+          onClick={acoes.toggleCulturais}
           className={`w-full p-2 text-left flex items-center rounded-md transition-colors whitespace-nowrap ${
-            estados.cultura ? 'bg-blue-500 text-white' : 'bg-green-100 hover:bg-gray-100'
+            estados.culturais ? 'bg-blue-400' : 'bg-green-100 hover:bg-gray-100'
           }`}
         >
           <img 
             src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png" 
-            alt="Marcador Azul" 
+            alt="Marcador violeta" 
             className="w-3 h-5 mr-2"
           />
-          <span className={`${estados.cultura ? "text-white" : "text-black"}`}>
-            Cultura
+          <span className={`${estados.culturais ? "text-black" : "text-black"}`}>
+
+            Lazer
           </span>
-        </button>*/}
+        </button>
 
       </div>
     </div>
