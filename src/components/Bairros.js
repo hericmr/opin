@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from 'react';
 import { GeoJSON, useMap } from "react-leaflet";
 
 const Bairros = ({ data }) => {
