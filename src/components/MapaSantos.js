@@ -9,8 +9,6 @@ import pontosHistoricos from "./pontosHistoricos";
 import pontosLazer from "./pontosLazer";
 import "./MapaSantos.css";
 
-
-
 const MapaSantos = () => {
   const detalhesIntro = {
     titulo: "Territórios, resistência e identidade em Santos",
@@ -42,8 +40,7 @@ const MapaSantos = () => {
     `,
   };
 
-
-  const [painelInfo, setPainelInfo] = useState(null);
+  const [painelInfo, setPainelInfo] = useState(detalhesIntro);
   const [geojsonData, setGeojsonData] = useState(null);
   const [visibilidade, setVisibilidade] = useState({
     bairros: false,
@@ -53,8 +50,6 @@ const MapaSantos = () => {
   });
 
   useEffect(() => {
-    setPainelInfo(detalhesIntro);
-
     const fetchGeoJSON = async () => {
       try {
         const response = await fetch(
