@@ -5,7 +5,7 @@ const pontosLazer = [
 
       tipo: "historico", 
       detalhes: {
-        titulo: 'Monumento a Iemanjá - "Rainha do Mar"',
+        titulo: 'Estátua de Iemanjá - Rainha do Mar',
         descricao: `
           A estátua de Iemanjá, localizada na Praia do José Menino, é um símbolo cultural de Santos e uma homenagem às tradições afro-brasileiras. 
           Sua instalação na orla da praia foi uma conquista dos movimentos negros da região, após permanecer guardada no Teatro Municipal de Santos por vários anos.
