@@ -2,7 +2,7 @@ const pontos = [
     {
       lat: -23.9851111,
       lng: -46.3088611,
-      desc: "Estátua de Iemanjá",
+
       tipo: "historico", 
       detalhes: {
         titulo: 'Monumento a Iemanjá - "Rainha do Mar"',
