@@ -21,7 +21,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://hericmr.github.io/gps",
+  "homepage": "https://hericmr.github.io/cartografiasocial",
   "eslintConfig": {
     "extends": [
       "react-app",
