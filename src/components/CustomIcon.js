@@ -1,7 +1,7 @@
 import L from "leaflet";
 
 // Ícone padrão (vermelho)
-export const customIcon = new L.Icon({
+export const blueIcon = new L.Icon({
   iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png", // Ícone padrão do Leaflet
   iconSize: [25, 41], // Tamanho do ícone
   iconAnchor: [12, 41], // Ponto de ancoragem do ícone

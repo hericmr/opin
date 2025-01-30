@@ -4,7 +4,6 @@ import Marcadores from "./Marcadores";
 import Bairros from "./Bairros";
 import MenuCamadas from "./MenuCamadas";
 import PainelInformacoes from "./PainelInformacoes";
-import pontos from "./pontosData";
 import pontosAssistencia from "./pontosAssistencia";
 import pontosHistoricos from "./pontosHistoricos";
 import pontosCultura from "./pontosCultura";
@@ -88,7 +87,6 @@ const MapaSantos = () => {
   return (
     <div className="relative h-screen">
       <MapaBase>
-        <Marcadores pontos={pontos} onClick={setPainelInfo} />
         {visibilidade.bairros && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
         {visibilidade.assistencia && <Marcadores pontos={pontosAssistencia} onClick={setPainelInfo} />}
         {visibilidade.historicos && <Marcadores pontos={pontosHistoricos} onClick={setPainelInfo} />}
