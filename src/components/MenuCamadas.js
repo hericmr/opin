@@ -14,67 +14,85 @@ const MenuCamadas = ({ estados, acoes }) => {
   }, []);
 
   return (
-    <div className="absolute top-20 left-3 z-10">
-      {/* Botão para alternar o menu */}
+    <div className={`absolute ${isMobile ? 'bottom-4 left-4' : 'top-20 left-3'} z-10`}>
+
+      {/* Botão para abrir/fechar o menu */}
       <button
         onClick={() => setMenuAberto(!menuAberto)}
-        className="p-2 bg-gray-200 text-black rounded-md shadow-md transition-all duration-300 hover:bg-gray-300"
-        aria-expanded={menuAberto}
-        aria-label={menuAberto ? "Minimizar menu de camadas" : "Expandir menu de camadas"}
+        className="p-2 bg-white text-black rounded shadow-lg hover:bg-gray-100 transition-all w-8 h-8 flex items-center justify-center"
+        aria-label={menuAberto ? "Fechar menu" : "Abrir menu"}
       >
-        {menuAberto ? "Minimizar Menu" : "Expandir Menu"}
+        {menuAberto ? "◀" : "▶"}
       </button>
 
-      {/* Menu suspenso com transição */}
+      {/* Menu de camadas */}
       <div
-        className={`mt-2 bg-green-900 bg-opacity-75 p-2 rounded-md shadow-lg flex flex-col space-y-2 transition-all duration-300 ${
-          menuAberto ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[-10px] pointer-events-none"
-        }`}
-        role="menu"
+        className={`bg-green-900 bg-opacity-30 p-2 rounded-lg shadow-md space-y-2 transition-all duration-200 ${
+          menuAberto 
+            ? 'ml-2 opacity-100 visible translate-x-0' 
+            : 'opacity-0 invisible -translate-x-4'
+        } ${isMobile ? 'absolute bottom-full left-0 mb-2' : 'mt-1'} w-fit min-w-0`}
       >
+
+        {/* Botão Bairros */}
         <button
           onClick={acoes.toggleBairros}
-          className={`p-2 rounded-md transition-all duration-300 ${
-            estados.bairros ? "bg-gray-300 text-black" : "bg-gray-200 hover:bg-gray-300"
+          className={`w-full p-2 text-left flex items-center rounded-md transition-colors whitespace-nowrap ${
+            estados.bairros ? 'bg-gray-200' : 'bg-green-100 hover:bg-gray-100'
           }`}
-          role="menuitem"
-          aria-pressed={estados.bairros}
         >
-          {estados.bairros ? "Ocultar Bairros" : "Ver Bairros"}
+          🏘 <span className="ml-2">Bairros</span>
         </button>
 
+        {/* Botão Assistência */}
         <button
           onClick={acoes.toggleAssistencia}
-          className={`p-2 rounded-md transition-all duration-300 ${
-            estados.assistencia ? "bg-green-500 text-black" : "bg-gray-200 hover:bg-green-500 hover:text-black"
+          className={`w-full p-2 text-left flex items-center rounded-md transition-colors whitespace-nowrap ${
+            estados.assistencia ? 'bg-green-600 text-white' : 'bg-green-100 hover:bg-gray-100'
           }`}
-          role="menuitem"
-          aria-pressed={estados.assistencia}
         >
-          {estados.assistencia ? "Ocultar Assistência" : "Ver Assistência"}
+          <img 
+            src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png" 
+            alt="Marcador Verde" 
+            className="w-3 h-5 mr-2"
+          />
+          <span className={`${estados.assistencia ? "text-white" : "text-black"}`}>
+            Assistência
+          </span>
         </button>
 
+        {/* Botão Históricos */}
         <button
           onClick={acoes.toggleHistoricos}
-          className={`p-2 rounded-md transition-all duration-300 ${
-            estados.historicos ? "bg-yellow-500 text-black" : "bg-gray-200 hover:bg-yellow-500 hover:text-black"
+          className={`w-full p-2 text-left flex items-center rounded-md transition-colors whitespace-nowrap ${
+            estados.historicos ? 'bg-yellow-400' : 'bg-green-100 hover:bg-gray-100'
           }`}
-          role="menuitem"
-          aria-pressed={estados.historicos}
         >
-          {estados.historicos ? "Ocultar Históricos" : "Ver Históricos"}
+          <img 
+            src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png" 
+            alt="Marcador Amarelo" 
+            className="w-3 h-5 mr-2"
+          />
+          <span className="text-black">Históricos</span>
         </button>
 
+        {/* Botão Cultura 
         <button
           onClick={acoes.toggleCultura}
-          className={`p-2 rounded-md transition-all duration-300 ${
-            estados.cultura ? "bg-blue-500 text-black" : "bg-gray-200 hover:bg-blue-500 hover:text-black"
+          className={`w-full p-2 text-left flex items-center rounded-md transition-colors whitespace-nowrap ${
+            estados.cultura ? 'bg-blue-500 text-white' : 'bg-green-100 hover:bg-gray-100'
           }`}
-          role="menuitem"
-          aria-pressed={estados.cultura}
         >
-          {estados.cultura ? "Ocultar Cultura" : "Ver Culturais"}
-        </button>
+          <img 
+            src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png" 
+            alt="Marcador Azul" 
+            className="w-3 h-5 mr-2"
+          />
+          <span className={`${estados.cultura ? "text-white" : "text-black"}`}>
+            Cultura
+          </span>
+        </button>*/}
+
       </div>
     </div>
   );
