@@ -43,9 +43,9 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         ✕
       </button>
 
-      {/* Conteúdo interno com rolagem */}
+      {/* Conteúdo interno  */}
       <div className="p-6 overflow-y-auto flex-1">
-        <h2 className="text-2xl lg:text-3xl font-extrabold tracking-wide text-green-800 mb-6 text-center lg:text-left">
+        <h2 className="text-2xl lg:text-3xl font-extrabold tracking-wide text-green-800 mb-6 text-center lg:text-center">
           {painelInfo.titulo}
         </h2>
 
