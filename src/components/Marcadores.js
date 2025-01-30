@@ -1,7 +1,7 @@
 import React from "react";
 import { Marker, Tooltip } from "react-leaflet";
 import { motion } from "framer-motion"; // Biblioteca de animação
-import { redIcon, blueIcon, greenIcon, yellowIcon } from "./CustomIcon"; // Ícones personalizados
+import { violetIcon, redIcon, blueIcon, greenIcon, yellowIcon } from "./CustomIcon"; // Ícones personalizados
 
 const Marcadores = ({ pontos, onClick }) => {
   if (!pontos || pontos.length === 0) {
@@ -20,12 +20,15 @@ const Marcadores = ({ pontos, onClick }) => {
           case "historico":
             icon = yellowIcon;
             break;
-          case "cultura":
-            icon = redIcon;
+          case "lazer":
+            icon = blueIcon;
+            break;
+          case "outros":
+            icon = violetIcon;
             break;
           default:
             console.warn(`Tipo desconhecido: ${ponto.tipo}, usando ícone padrão.`);
-            icon = blueIcon;
+            icon = redIcon;
         }
 
         return (

@@ -49,14 +49,14 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
           {painelInfo.titulo}
         </h2>
 
-        {painelInfo.imagens && painelInfo.imagens.length > 0 && (
+        {painelInfo.imagens?.length > 0 && (
           <div className="mb-6">
             {painelInfo.imagens.map((img, index) => (
               <div key={index} className="mb-4">
                 <img
                   src={img}
                   alt={`${painelInfo.titulo} - ${index + 1}`}
-                  className="w-full max-h-96 object-contain rounded-lg shadow-md"
+                  className="w-full max-h-96 object-contain "
                 />
               </div>
             ))}

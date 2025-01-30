@@ -1,4 +1,4 @@
-const pontos = [
+const pontosLazer = [
     {
       lat: -23.9851111,
       lng: -46.3088611,
@@ -27,4 +27,4 @@ const pontos = [
 
 ];
 
-export default pontos;
+export default pontosLazer;
