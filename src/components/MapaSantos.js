@@ -8,6 +8,8 @@ import pontosAssistencia from "./pontosAssistencia";
 import pontosHistoricos from "./pontosHistoricos";
 import pontosCultura from "./pontosCultura";
 import "./MapaSantos.css";
+import Navbar from "./Navbar";
+
 
 const MapaSantos = () => {
   const detalhesIntro = {
@@ -15,7 +17,7 @@ const MapaSantos = () => {
     descricao: `
       <p class="mb-4">Esta é uma cartografia social que busca mapear as territorialidades, as lutas e conquistas dos movimentos sociais e da população na cidade de Santos. O mapa destaca a presença de equipamentos sociais, culturais, religiosos, políticos, educacionais, como escolas, unidades de saúde, assistência social, espaços culturais e de lazer, além de locais carregados de memória histórica.</p>
       
-      <div class="border border-green-300 p-4 rounded-lg bg-green-100">
+      <div class="border border-green-200 p-4 rounded-lg bg-green-100">
         <p class="font-semibold mb-2">Os pontos estão representados por diferentes cores no mapa:</p>
         <ul class="list-none space-y-2">
           <li class="flex items-center">
@@ -56,8 +58,7 @@ const MapaSantos = () => {
         const response = await fetch(
           "https://raw.githubusercontent.com/hericmr/gps/main/public/bairros.geojson"
         );
-        if (!response.ok)
-          throw new Error(`Erro ao carregar GeoJSON: HTTP status ${response.status}`);
+        if (!response.ok) throw new Error(`Erro ao carregar GeoJSON: HTTP status ${response.status}`);
         const data = await response.json();
         setGeojsonData(data);
       } catch (error) {
@@ -68,11 +69,6 @@ const MapaSantos = () => {
     fetchGeoJSON();
   }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setPainelInfo(detalhesIntro), 3500);
-    return () => clearTimeout(timer);
-  }, []);
-
   const geoJSONStyle = {
     fillColor: "green",
     color: "white",
@@ -81,6 +77,7 @@ const MapaSantos = () => {
   };
 
   const toggleVisibilidade = (chave) => {
+    console.log(`Alterando visibilidade: ${chave}`);
     setVisibilidade((prev) => ({ ...prev, [chave]: !prev[chave] }));
   };
 
@@ -95,7 +92,6 @@ const MapaSantos = () => {
 
       {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={() => setPainelInfo(null)} />}
       
-      {/* Substituindo BotoesContainer pelo novo MenuCamadas */}
       <MenuCamadas
         estados={visibilidade}
         acoes={{
