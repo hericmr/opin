@@ -1,21 +1,5 @@
 const pontos = [
-    {
-      lat: -23.986538,
-      lng: -46.31339,
-      desc: "Farolzinho do Canal 6",
-      detalhes: {
-        titulo: "Farol do Canal 6",
-        tipo: "cultura",
-        descricao: `
-          O Farol do Canal 6 é um ponto icônico de Santos, marcando a entrada do canal e oferecendo uma vista deslumbrante do marzão.
-        `,
-        video: null, // Vídeo ausente
-        imagens: [
-          "https://s2.glbimg.com/RfVWirfUe5XAfGdGooaVIg9NQpg=/s.glbimg.com/jo/g1/f/original/2015/01/28/farol12.jpg",
-        ],
-        links: [], // Links mantidos como array vazio
-      },
-    },
+
     {
       lat: -23.944197486169877,
       lng: -46.332842733017344,
