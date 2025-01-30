@@ -17,8 +17,8 @@ const MapaSantos = () => {
     descricao: `
       <p class="mb-4">Esta é uma cartografia social que busca mapear as territorialidades, as lutas e conquistas dos movimentos sociais e da população na cidade de Santos. O mapa destaca a presença de equipamentos sociais, culturais, religiosos, políticos, educacionais, como escolas, unidades de saúde, assistência social, espaços culturais e de lazer, além de locais carregados de memória histórica.</p>
       
-      <div class="border border-green-200 p-4 rounded-lg bg-green-100">
-        <p class="font-semibold mb-2">Os pontos estão representados por diferentes cores no mapa:</p>
+      <div class="border border-green-200 p-4 rounded-lg bg-green-100 max-w-md mx-auto">
+        <p class="font-semibold mb-2 text-center">Os pontos estão representados por diferentes cores no mapa:</p>
         <ul class="list-none space-y-2">
           <li class="flex items-center">
             <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png" alt="Marcador Azul" class="w-5 h-8 mr-2" />
@@ -38,10 +38,10 @@ const MapaSantos = () => {
       <p class="mt-4">Entre os elementos mapeados, estão histórias relacionadas à escravização e lutas do povo negro, à opressão e resistência à ditadura empresarial-militar (1964-1984), e às lutas que moldaram e continuam moldando a identidade da região.</p>
       
       <p class="mt-4">Os materiais cartográficos e textuais disponíveis aqui foram produzidos pelas(os) estudantes de Serviço Social da UNIFESP, durante a Unidade Curricular de Políticas Públicas 2, em 2024 e 2025.</p>
-<img src="/fotos/turma.png" alt="Turma do Vespertino" className="h-10 w-auto object-contain" />
-
+      <img src="/fotos/turma.png" alt="Turma do Vespertino" className="h-10 w-auto object-contain" />
     `,
   };
+
 
   const [painelInfo, setPainelInfo] = useState(null);
   const [geojsonData, setGeojsonData] = useState(null);
