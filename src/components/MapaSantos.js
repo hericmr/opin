@@ -37,7 +37,7 @@ const MapaSantos = () => {
       
       <p class="mt-4">Entre os elementos mapeados, estão histórias relacionadas à escravização e lutas do povo negro, à opressão e resistência à ditadura empresarial-militar (1964-1984), e às lutas que moldaram e continuam moldando a identidade da região.</p>
       
-      <p class="mt-4">Os materiais cartográficos e textuais disponíveis aqui foram produzidos pelas(os) estudantes de Serviço Social da UNIFESP, durante a Unidade Curricular de Políticas Públicas 2, em 2024 e 2025.</p>
+      <p class="mt-4">Os materiais cartográficos e textuais disponíveis aqui foram produzidos pelas(os) estudantes de Serviço Social da UNIFESP do vespertino e noturno durante a Unidade Curricular de Políticas Públicas 2, em 2024 e 2025.</p>
       <img src="gps/fotos/turma.png" alt="Turma do Vespertino" className="h-10 w-auto object-contain" />
     `,
   };
