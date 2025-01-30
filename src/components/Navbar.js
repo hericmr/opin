@@ -7,7 +7,7 @@ const Navbar = ({ onTitleClick = () => {} }) => {
         {/* Logo e título */}
         <div className="flex items-center">
           <img
-            src="/gps/favicon.ico"
+            src="/cartografiasocial/favicon.ico"
             alt="Ícone do mapa"
             className="h-8 w-auto mr-2"
             aria-label="Ícone do mapa"
