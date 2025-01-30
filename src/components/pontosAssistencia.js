@@ -29,7 +29,7 @@ const pontosAssistencia = [
         detalhes: {
       titulo: "Complexo Esportivo e Recreativo Rebouças",
       descricao: `
-        Localizado em uma área de 23 mil m², o Rebouças oferece atividades esportivas e recreativas para todas as idades. Conta com três quadras cobertas, três piscinas (recreativa, biribol e olímpica), academia, pista de cooper, ginásio com arquibancada e salas especializadas para esportes e artes marciais.
+        Localizado em uma área de 23 mil m², o Rebouças oferece atividades esportivas e recreativas para varias as idades. Tem com três quadras cobertas, três piscinas (recreativa, biribol e olímpica), academia, pista de cooper, ginásio com arquibancada e salas especializadas para esportes e artes marciais.
         As modalidades oferecidas incluem musculação, natação, hidroginástica, futsal, voleibol, basquete, dança, pilates, artes marciais, entre outras.
         No local também funciona a Secretaria Municipal de Esportes.
       `,
