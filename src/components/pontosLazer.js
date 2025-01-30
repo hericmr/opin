@@ -28,7 +28,7 @@ const pontosLazer = [
       As modalidades oferecidas incluem musculação, natação, hidroginástica, futsal, voleibol, basquete, dança, pilates, artes marciais, entre outras.
       No local também funciona a Secretaria Municipal de Esportes.
     `,
-    imagens: [ "/gps/fotos/rebouças.jpg"],
+    imagens: [ "/cartografiasocial/fotos/rebouças.jpg"],
     links: [
       {
         texto: "Complexo Esportivo e Recreativo Rebouças - Prefeitura",
