@@ -18,19 +18,19 @@ const MapaSantos = () => {
       <p class="mb-4">Esta é uma cartografia social que busca mapear as territorialidades, as lutas e conquistas dos movimentos sociais e da população na cidade de Santos. O mapa destaca a presença de equipamentos sociais, culturais, religiosos, políticos, educacionais, como escolas, unidades de saúde, assistência social, espaços culturais e de lazer, além de locais carregados de memória histórica.</p>
       
       <div class="border border-green-200 p-4 rounded-lg bg-green-100 max-w-md mx-auto">
-        <p class="font-semibold mb-2 text-center">Os pontos estão representados por diferentes cores no mapa:</p>
+        <p class="font-semibold mb-2 text-center">Os pontos estão representados pelas cores:</p>
         <ul class="list-none space-y-2">
           <li class="flex items-center">
             <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png" alt="Marcador Azul" class="w-5 h-8 mr-2" />
-            <span><strong class="text-blue-700">Azul:</strong> Equipamentos sociais, culturais e de lazer.</span>
+            <span><strong class="text-blue-700">Lazer:</strong> Equipamentos sociais, culturais e de lazer.</span>
           </li>
           <li class="flex items-center">
             <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png" alt="Marcador Verde" class="w-5 h-8 mr-2" />
-            <span><strong class="text-green-700">Verde:</strong> Unidades de assistência social e saúde.</span>
+            <span><strong class="text-green-700">Assistência:</strong> Unidades de assistência social e saúde.</span>
           </li>
           <li class="flex items-center">
             <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png" alt="Marcador Amarelo" class="w-5 h-8 mr-2" />
-            <span><strong class="text-yellow-600">Amarelo:</strong> Locais históricos e de memória.</span>
+            <span><strong class="text-yellow-600">Históricos:</strong> Locais históricos e de memória.</span>
           </li>
         </ul>
       </div>
