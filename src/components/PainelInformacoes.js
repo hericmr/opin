@@ -1,54 +1,72 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const panelRef = useRef(null);
 
   useEffect(() => {
     if (painelInfo) {
       setIsVisible(true);
-      // Impede o scroll da página
       document.body.style.overflow = "hidden";
     } else {
       setIsVisible(false);
-      // Restaura o scroll da página
       document.body.style.overflow = "";
     }
 
-    // Cleanup para restaurar o scroll ao desmontar o componente
     return () => {
       document.body.style.overflow = "";
     };
   }, [painelInfo]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (panelRef.current && !panelRef.current.contains(event.target)) {
+        closePainel();
+      }
+    };
+
+    if (isVisible) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isVisible, closePainel]);
+
   if (!painelInfo) return null;
 
   return (
     <div
-      className={`fixed top-16 right-4 left-4 sm:left-auto sm:w-3/4 lg:w-[45%] bg-green-50 rounded-xl shadow-lg z-20 transform transition-transform duration-500 ease-in-out ${
-        isVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+      ref={panelRef}
+      className={`fixed top-20 right-2 left-2 sm:left-auto sm:w-3/4 lg:w-[50%] bg-green-50 rounded-xl shadow-lg z-30 transform transition-transform duration-700 ease-in-out ${
+        isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
       }`}
       style={{
-        maxHeight: "calc(100% - 4rem)", // Garante espaçamento vertical máximo
-        transition: "opacity 0.5s ease, transform 0.5s ease", // Transições suaves para opacity e movimento
+        height: "calc(100vh - 6rem)", // Ajusta a altura para ocupar a tela menos o espaço do topo
+        maxHeight: "90vh", // Mantém um limite máximo para evitar ultrapassar a tela
+        transition: "opacity 0.7s ease, transform 0.7s ease",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <button
         onClick={() => {
           closePainel();
-          document.body.style.overflow = ""; // Certifica-se de restaurar o scroll
+          document.body.style.overflow = "";
         }}
         className="absolute top-4 right-4 text-gray-900 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600 rounded-full text-xl"
         aria-label="Fechar painel"
       >
         ✕
       </button>
+
       {/* Conteúdo interno com rolagem */}
-      <div className="p-6 h-full overflow-y-auto">
+      <div className="p-6 overflow-y-auto flex-1">
         <h2 className="text-2xl lg:text-3xl font-extrabold tracking-wide text-green-800 mb-6 text-center lg:text-left">
           {painelInfo.titulo}
         </h2>
 
-        {/* Renderizar imagens */}
         {painelInfo.imagens && painelInfo.imagens.length > 0 && (
           <div className="mb-6">
             {painelInfo.imagens.map((img, index) => (
@@ -63,7 +81,6 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
           </div>
         )}
 
-        {/* Renderizar vídeo */}
         {painelInfo.video && (
           <div className="mb-6">
             <iframe
@@ -77,7 +94,6 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
           </div>
         )}
 
-        {/* Renderizar descrição */}
         {painelInfo.descricao && (
           <div className="prose prose-sm sm:prose lg:prose-lg text-gray-800 mb-6">
             <p
@@ -87,7 +103,6 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
           </div>
         )}
 
-        {/* Renderizar links */}
         {painelInfo.links && painelInfo.links.length > 0 && (
           <div className="mt-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Referências:</h3>

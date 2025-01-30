@@ -1,6 +1,6 @@
 import React from "react";
 import { Marker, Tooltip } from "react-leaflet";
-import { customIcon, greenIcon, yellowIcon } from "./CustomIcon"; // Ícones personalizados
+import { blueIcon, greenIcon, yellowIcon } from "./CustomIcon"; // Ícones personalizados
 
 const Marcadores = ({ pontos, onClick }) => {
   if (!pontos || pontos.length === 0) {
@@ -20,9 +20,12 @@ const Marcadores = ({ pontos, onClick }) => {
           case "historico":
             icon = yellowIcon;
             break;
-          default:
-            icon = customIcon; // Ícone padrão
+          case "cultura":
+            icon = blueIcon; 
             break;
+          default:
+            console.warn(`Tipo desconhecido: ${ponto.tipo}, usando ícone padrão.`);
+            icon = blueIcon; // Ícone padrão para casos não previstos
         }
 
         return (
