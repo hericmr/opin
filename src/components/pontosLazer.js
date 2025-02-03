@@ -19,10 +19,10 @@ const pontosLazer = [
     {
       lat: -23.9810589,
       lng: -46.3003071,
-      desc: "Complexo Esportivo e Recreativo Rebouças",
+      desc: "Complexo esportivo e recreativo Rebouças",
       tipo: "lazer",
       detalhes: {
-    titulo: "Complexo Esportivo e Recreativo Rebouças",
+    titulo: "Complexo esportivo e recreativo Rebouças",
     descricao: `
       O Rebouças oferece atividades esportivas e recreativas para varias as idades. Tem três quadras cobertas, três piscinas (recreativa, biribol e olímpica), academia, pista de cooper, ginásio com arquibancada e salas especializadas para esportes e artes marciais.
       As modalidades oferecidas incluem musculação, natação, hidroginástica, futsal, voleibol, basquete, dança, pilates, artes marciais, entre outras.
