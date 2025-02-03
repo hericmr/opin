@@ -23,6 +23,23 @@ A estátua de Iemanjá, localizada na Praia do José Menino, é um símbolo cult
         ],
       },
     },
+    { 
+      lat: -23.9916556,
+      lng: -46.3029044,
+      tipo: "historico",
+      detalhes: {
+        titulo: 'Ponte dos Práticos',
+        descricao: `A **Ponte dos Práticos**, oficialmente chamada **Ponte Edgard Perdigão**, localizada na **Ponta da Praia**, em Santos, é um tradicional atracadouro inaugurado em 11 de junho de 1968. Com uma vista privilegiada da baía de Santos, Guarujá e Ilha Porchat, recebe diariamente milhares de pessoas, sobretudo aquelas que fazem a travessia para a praia do **Góes** e **Santa Cruz dos Navegantes** que é conhecida também como Pouca Farinha. Há também um ponto de embarque para escunas turísticas e barcos pesqueiros, além de um comércio local com uma lanchonete. A Ponte dos Práticos se mantém como um importante ponto **histórico**, **turístico** e **funcional** para a cidade de Santos.`,
+        video: "",
+        imagens: ["/cartografiasocial/fotos/ponte.png"],
+        links: [
+          {
+            texto: "Uma ponte para o mar -NovoMilenio",
+            url: "http://www.novomilenio.inf.br/santos/h0288.htm"
+          }
+        ],
+      },
+    }
 
 ];
 
