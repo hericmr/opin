@@ -10,8 +10,8 @@ const pontosLazer = [
           A estátua de Iemanjá, localizada na Praia do José Menino, é um símbolo cultural de Santos e uma homenagem às tradições afro-brasileiras. 
           Sua instalação na orla da praia foi uma conquista dos movimentos negros da região, após permanecer guardada no Teatro Municipal de Santos por vários anos.
         `,
-        video: "https://www.youtube.com/embed/Br_ioeUszH0?si=uZLBcYlnhKm_a1qg",
-        imagens: [], 
+        video: "",
+        imagens: ["/cartografiasocial/fotos/yemanja.png"], 
         links: [
           {
             texto: "Levante vai cobrar Estátua de Iemanjá em Santos - DL",
