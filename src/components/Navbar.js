@@ -9,13 +9,13 @@ const Navbar = ({ onTitleClick = () => {} }) => {
           <img
             src="/cartografiasocial/favicon.ico"
             alt="Ícone do mapa"
-            className="h-8 w-auto mr-2"
+            className="h-6 sm:h-8 w-auto mr-2"
             aria-label="Ícone do mapa"
           />
           <h1
-            className="text-lg sm:text-xl md:text-2xl font-bold tracking-wide cursor-pointer"
+            className="text-base sm:text-lg md:text-2xl font-bold tracking-wide cursor-pointer"
             onClick={() => {
-              console.log("título clicado! Atualizando abrindo detalhes intro"); //aqui precisa ter o codigo pra abertura do painel de detalhes
+              console.log("título clicado! Atualizando abrindo detalhes intro");
               onTitleClick();
             }}
           >
@@ -23,15 +23,17 @@ const Navbar = ({ onTitleClick = () => {} }) => {
           </h1>
         </div>
 
-
+        {/* Logo da Unifesp */}
         <div className="flex flex-col items-center text-center">
           <img
             src="/cartografiasocial/logo.png"
             alt="Logo da Unifesp"
-            className="h-10 w-auto object-contain"
+            className="h-8 sm:h-10 w-auto object-contain"
             aria-label="Logo da Unifesp"
           />
-          <p className="text-xs tracking-wide font-serif mt-1">Serviço Social</p>
+          <p className=" text-xs tracking-wide font-serif mt-1">
+            Serviço Social
+          </p>
         </div>
       </div>
     </header>
