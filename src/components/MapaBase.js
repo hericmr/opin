@@ -2,13 +2,13 @@ import React from 'react';
 import { MapContainer, TileLayer } from "react-leaflet";
 
 const isMobile = () => {
-  return /Mobi|Android/i.test(navigator.userAgent);
+  return window.innerWidth <= 768; // Define mobile para telas menores que 768px
 };
 
 const MapaBase = ({ children }) => {
   // Define coordenadas e zoom baseados no dispositivo
-  const defaultPosition = isMobile() ? [-23.95, -46.25] : [-23.97, -46.29];
-  const defaultZoom = isMobile() ? 12 : 13;
+  const defaultPosition = isMobile() ? [-23.96, -46.36] : [-23.97, -46.29];
+  const defaultZoom = isMobile() ? 12 : 13; // Ajuste do zoom para mobile
 
   return (
     <div className="h-screen w-screen overflow-hidden">
