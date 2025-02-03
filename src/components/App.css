@@ -26,10 +26,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2e7d32; /* Cor do controle da barra */
+  background: #3b7a57; /* Cor do controle da barra */
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #1b5e20; /* Cor ao passar o mouse */
+  background: #3b7a57; /* Cor ao passar o mouse */
 }
