@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 
 const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -19,14 +20,20 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
 
   if (!painelInfo) return null;
 
+  // Função para detectar se o conteúdo é HTML
+  const isHTML = (str) => {
+    const doc = new DOMParser().parseFromString(str, "text/html");
+    return doc.body.innerHTML !== str;
+  };
+
   return (
     <div
       className={`fixed top-20 right-2 left-2 sm:left-auto sm:w-3/4 lg:w-[49%] bg-green-50 rounded-xl shadow-lg z-30 transform transition-transform duration-700 ease-in-out ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
       }`}
       style={{
-        maxHeight: "90vh", // Mantém um limite máximo para evitar ultrapassar a tela
-        height: "auto", // Ajusta a altura conforme o conteúdo
+        maxHeight: "90vh",
+        height: "auto",
         transition: "opacity 0.7s ease, transform 0.7s ease",
         display: "flex",
         flexDirection: "column",
@@ -43,7 +50,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         ✕
       </button>
 
-      {/* Conteúdo interno  */}
+      {/* Conteúdo interno */}
       <div className="p-6 overflow-y-auto flex-1">
         <h2 className="text-2xl lg:text-3xl font-extrabold tracking-wide text-green-800 mb-6 text-center lg:text-center">
           {painelInfo.titulo}
@@ -77,11 +84,17 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         )}
 
         {painelInfo.descricao && (
-          <div className="prose prose-sm sm:prose lg:prose-lg text-gray-800 mb-6">
-            <p
-              className="text-base lg:text-lg leading-relaxed text-gray-700 lg:text-left"
-              dangerouslySetInnerHTML={{ __html: painelInfo.descricao }}
-            ></p>
+          <div className="mb-6">
+            {isHTML(painelInfo.descricao) ? (
+              <div
+                className="prose prose-sm sm:prose lg:prose-lg text-gray-800"
+                dangerouslySetInnerHTML={{ __html: painelInfo.descricao }}
+              />
+            ) : (
+              <ReactMarkdown className="prose prose-sm sm:prose lg:prose-lg text-gray-800">
+                {painelInfo.descricao}
+              </ReactMarkdown>
+            )}
           </div>
         )}
 
