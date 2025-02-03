@@ -3,8 +3,8 @@ const detalhesIntro = {
   descricao: `
           <p class="mb-4">Esta é uma cartografia social que busca mapear territorialidades, lutas e conquistas dos movimentos sociais e da população na cidade de Santos. O mapa destaca a presença de equipamentos sociais, culturais, religiosos, políticos, educacionais, como escolas, unidades de saúde, assistência social, espaços culturais e de lazer, além de locais carregados de memória histórica. Os pontos estão representados por:</p>
           
-          <div class="border border-green-200 p-4 rounded-lg bg-green-100 max-w-lg mx-auto">
-            <ul class="list-none space-y-2">
+          <div class="border border-green-200 p-4 rounded-lg bg-green-100 max-w-md mx-auto">
+            <center><ul class="list-none space-y-2">
               <li class="flex items-center">
                 <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png" alt="Marcador Azul" class="w-5 h-8 mr-2" />
                 <span><strong class="text-blue-700">Lazer:</strong> equipamentos sociais, culturais e de lazer.</span>
@@ -17,6 +17,7 @@ const detalhesIntro = {
                 <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png" alt="Marcador Amarelo" class="w-5 h-8 mr-2" />
                 <span><strong class="text-yellow-600">Históricos:</strong> lugares históricos e de memória.</span>
               </li>
+              </center>
             </ul>
           </div>
           
