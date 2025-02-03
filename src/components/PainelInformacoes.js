@@ -79,7 +79,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         {painelInfo.descricao && (
           <div className="prose prose-sm sm:prose lg:prose-lg text-gray-800 mb-6">
             <p
-              className="text-base lg:text-lg leading-relaxed text-gray-700 text-center lg:text-left"
+              className="text-base lg:text-lg leading-relaxed text-gray-700 lg:text-left"
               dangerouslySetInnerHTML={{ __html: painelInfo.descricao }}
             ></p>
           </div>
