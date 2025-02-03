@@ -7,15 +7,15 @@ const detalhesIntro = {
             <ul class="list-none space-y-2">
               <li class="flex items-center">
                 <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png" alt="Marcador Azul" class="w-5 h-8 mr-2" />
-                <span><strong class="text-blue-700">Lazer:</strong> Equipamentos sociais, culturais e de lazer.</span>
+                <span><strong class="text-blue-700">Lazer:</strong> equipamentos sociais, culturais e de lazer.</span>
               </li>
               <li class="flex items-center">
                 <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png" alt="Marcador Verde" class="w-5 h-8 mr-2" />
-                <span><strong class="text-green-700">Assistência:</strong> Unidades de assistência social e saúde.</span>
+                <span><strong class="text-green-700">Assistência:</strong> unidades de assistência social e saúde.</span>
               </li>
               <li class="flex items-center">
                 <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png" alt="Marcador Amarelo" class="w-5 h-8 mr-2" />
-                <span><strong class="text-yellow-600">Históricos:</strong> Locais históricos e de memória.</span>
+                <span><strong class="text-yellow-600">Históricos:</strong> lugares históricos e de memória.</span>
               </li>
             </ul>
           </div>
