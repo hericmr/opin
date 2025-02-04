@@ -11,7 +11,7 @@ const PainelHeader = ({ titulo, closePainel }) => (
       className="absolute top-4 right-4 text-gray-900 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600 rounded-full text-xl"
       aria-label="Fechar painel"
     >
-      ✕
+      ✖
     </button>
   </div>
 );
