@@ -17,7 +17,10 @@ const detalhesIntro = {
                 <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png" alt="Marcador Amarelo" class="w-5 h-8 mr-2" />
                 <span><strong class="text-yellow-600">Históricos:</strong> lugares históricos e de memória.</span>
               </li>
-              </center>
+              <li class="flex items-center">
+              <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png" alt="Marcador Vermelho" class="w-5 h-8 mr-2" />
+              <span><strong class="text-red-600">Comunidades:</strong> territórios de comunidades.</span>
+              </li>
             </ul>
           </div>
           
