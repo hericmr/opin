@@ -57,7 +57,7 @@ const pontosLazer = [
 
 {
   lat: -23.987463,
-  lng: -46.308058,
+  lng: -46.308053,
   desc: "Chorinho no Aquário",
   tipo: "lazer",
   detalhes: {
@@ -66,7 +66,7 @@ const pontosLazer = [
       O "Chorinho no Aquário" é uma atividade musical que ocorre todos os sábados, a partir das 18h, na Praça Vereador Luiz La Scala, localizada na Ponta da Praia. As apresentações são gratuitas e destacam o melhor do choro, samba, MPB e bossa nova, com repertórios que incluem clássicos de ícones como Dona Ivone Lara, Cartola, Noel Rosa e Pixinguinha.
     `,
     video: null, // Vídeo ausente
-    imagens: [/cartografiasocial/fotos/chorinho.jpg],
+    imagens: ["/cartografiasocial/fotos/chorinho.jpg"],
     links: [
       {
         texto: "Facebook do Chorinho no Aquário",
