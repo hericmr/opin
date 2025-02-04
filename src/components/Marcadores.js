@@ -3,6 +3,7 @@ import { Marker, Tooltip } from "react-leaflet";
 import { motion } from "framer-motion"; // Biblioteca de animação
 import { violetIcon, redIcon, blueIcon, greenIcon, yellowIcon } from "./CustomIcon"; // Ícones personalizados
 
+
 const Marcadores = ({ pontos, onClick }) => {
   if (!pontos || pontos.length === 0) {
     console.warn("Nenhum ponto para exibir."); // Log para depuração
@@ -23,12 +24,12 @@ const Marcadores = ({ pontos, onClick }) => {
           case "lazer":
             icon = blueIcon;
             break;
-          case "outros":
-            icon = violetIcon;
+          case "comunidades":
+            icon = redIcon;
             break;
           default:
             console.warn(`Tipo desconhecido: ${ponto.tipo}, usando ícone padrão.`);
-            icon = redIcon;
+            icon = violetIcon;
         }
 
         return (
