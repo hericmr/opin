@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 
 const PainelHeader = ({ titulo, closePainel }) => (
-  <div className="relative p-6 border-b border-gray-200">
+  <div className="relative p-6 border-b border-gray-100">
     <h2 className="text-2xl lg:text-3xl font-extrabold tracking-wide text-green-800 text-center">
       {titulo}
     </h2>
@@ -79,6 +79,16 @@ const PainelLinks = ({ links }) => (
 
 const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (painelInfo) {
@@ -100,7 +110,13 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
       className={`fixed top-20 right-2 left-2 sm:left-auto sm:w-3/4 lg:w-[49%] bg-green-50 rounded-xl shadow-lg z-30 transform transition-transform duration-700 ease-in-out ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
       }`}
-      style={{ maxHeight: "90vh", height: "auto", transition: "opacity 0.7s ease, transform 0.7s ease", display: "flex", flexDirection: "column" }}
+      style={{ 
+        maxHeight: isMobile ? "89vh" : "90vh", 
+        height: "auto", 
+        transition: "opacity 0.7s ease, transform 0.7s ease", 
+        display: "flex", 
+        flexDirection: "column" 
+      }}
     >
       <PainelHeader titulo={painelInfo.titulo} closePainel={closePainel} />
       <div className="p-6 overflow-y-auto flex-1">
