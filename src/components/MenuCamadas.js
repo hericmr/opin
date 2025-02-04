@@ -76,6 +76,19 @@ const MenuCamadas = ({ estados, acoes }) => {
           />
           Lazer
         </button>
+        <button
+        onClick={acoes.toggleComunidades}
+        className={`w-full p-3 text-left flex items-center rounded-md transition-colors whitespace-nowrap ${
+          estados.comunidades? "bg-red-500" : "bg-green-100 hover:bg-gray-100"
+        }`}
+      >
+        <img 
+          src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png" 
+          alt="Marcador Vermelho" 
+          className="w-4 h-6 mr-2"
+        />
+        Comunidades
+      </button>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import PainelInformacoes from "./PainelInformacoes";
 import pontosAssistencia from "./pontosAssistencia";
 import pontosHistoricos from "./pontosHistoricos";
 import pontosLazer from "./pontosLazer";
+import pontosComunidades from "./pontosComunidades";
 import detalhesIntro from "./detalhesInfo"; // Importando os detalhes de introdução
 import "./MapaSantos.css";
 
@@ -18,6 +19,7 @@ const MapaSantos = () => {
     assistencia: true,
     historicos: true,
     culturais: true,
+    comunidades: true,
   });
 
   useEffect(() => {
@@ -56,6 +58,7 @@ const MapaSantos = () => {
         {visibilidade.assistencia && <Marcadores pontos={pontosAssistencia} onClick={setPainelInfo} />}
         {visibilidade.historicos && <Marcadores pontos={pontosHistoricos} onClick={setPainelInfo} />}
         {visibilidade.culturais && <Marcadores pontos={pontosLazer} onClick={setPainelInfo} />}
+        {visibilidade.comunidades && <Marcadores pontos={pontosComunidades} onClick={setPainelInfo} />}
       </MapaBase>
 
       {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={() => setPainelInfo(null)} />}
@@ -67,6 +70,7 @@ const MapaSantos = () => {
           toggleAssistencia: () => toggleVisibilidade("assistencia"),
           toggleHistoricos: () => toggleVisibilidade("historicos"),
           toggleCulturais: () => toggleVisibilidade("culturais"),
+          toggleComunidades: () => toggleVisibilidade("comunidades"),
         }}
       />
     </div>
