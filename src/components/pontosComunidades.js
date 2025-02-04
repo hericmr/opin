@@ -5,7 +5,7 @@ const pontosComunidades = [
         "tipo": "comunidades",
         "detalhes": {
           "titulo": "Vila Sapo",
-          "descricao": "A **Vila Sapo** é uma comunidade localizada na Ponta da Praia, em Santos, formada na década de 1960.\n\nO documentário **Vila Sapo: Muitas Vidas uma História** retrata a luta dos moradores por melhores condições de vida e habitação digna. Desde sua formação, os moradores da Vila Sapo enfrentam desafios relacionados à moradia adequada e à regularização fundiária. A história da Vila Sapo reflete a dinâmica da segregação socioespacial e da resistência comunitária, questões centrais da urbanização na cidade de Santos. Apesar das adversidades, a comunidade demonstra resistência e organização na busca por justiça e direito à cidade. Em 2011 foi fundada a Associação Habitacional Vila Sapo, que tem sido fundamental na defesa dos direitos dos moradores.\n\n",
+          "descricao": "A **Vila Sapo** é uma comunidade localizada na Ponta da Praia, em Santos, formada na década de 1960.\n\n Desde sua formação, os moradores da Vila Sapo enfrentam desafios relacionados à moradia adequada e à regularização fundiária. A história da Vila Sapo reflete a dinâmica da segregação socioespacial e da resistência comunitária, questões centrais da urbanização na cidade de Santos. Apesar das adversidades, a comunidade demonstra resistência e organização na busca por justiça e direito à cidade. Em 2011 foi fundada a Associação Habitacional Vila Sapo, que tem sido fundamental na defesa dos direitos dos moradores.\n\n",
           "video": "https://www.youtube.com/embed/i3nnF5DvzWk?si=i5rNU44mgtW731Hz",
           "imagens": [],
           "links": [
