@@ -66,7 +66,7 @@ const pontosLazer = [
       O "Chorinho no Aquário" é uma atividade musical que ocorre todos os sábados, a partir das 18h, na Praça Vereador Luiz La Scala, localizada na Ponta da Praia, em Santos. As apresentações são gratuitas e destacam o melhor do choro, samba, MPB e bossa nova, com repertórios que incluem clássicos de ícones como Waldir Azevedo, Cartola, Noel Rosa e Pixinguinha.
     `,
     video: null, // Vídeo ausente
-    imagens: [null]
+    imagens: [null],
     links: [
       {
         texto: "Facebook do Chorinho no Aquário",
