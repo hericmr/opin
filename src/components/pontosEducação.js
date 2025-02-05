@@ -16,20 +16,12 @@ const pontosEducação = [
           "url": "https://profprimoferreira.blogspot.com/"
         },
         {
-          "texto": "Detalhes da escola no site da Secretaria da Educação",
-          "url": "https://www.educacao.sp.gov.br/cgrh/escolas/primo-ferreira-professor/"
-        },
-        {
           "texto": "Perfil no Instagram",
           "url": "https://www.instagram.com/eeprimoferreira/"
         },
         {
           "texto": "Página no Facebook",
           "url": "https://www.facebook.com/profile.php?id=154035801319535"
-        },
-        {
-          "texto": "Informações no QEdu",
-          "url": "https://qedu.org.br/escola/35011824-primo-ferreira-professor"
         }
       ]
     }
