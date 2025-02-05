@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import { useNavigate } from "react-router-dom"; // Removido useLocation
+
 
 const PainelHeader = ({ titulo, closePainel }) => (
   <div className="relative p-6 border-b border-gray-100">
@@ -80,6 +82,8 @@ const PainelLinks = ({ links }) => (
 const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const checkMobile = () => {
@@ -90,18 +94,45 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  useEffect(() => {
-    if (painelInfo) {
-      setIsVisible(true);
-      document.body.style.overflow = "hidden";
-    } else {
-      setIsVisible(false);
-      document.body.style.overflow = "";
+useEffect(() => {
+  if (painelInfo) {
+    setIsVisible(true);
+    document.body.style.overflow = "hidden";
+
+    // Usa `desc` se existir, senão tenta `titulo`, e por último um fallback padrão
+    const baseText = painelInfo.desc || painelInfo.titulo || "painel";
+
+    // Converte o texto para snake_case
+    const snakeCaseDesc = baseText
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove acentos
+      .replace(/\s+/g, "_") // Substitui espaços por _
+      .replace(/[^\w-]/g, "") // Remove caracteres especiais
+      .toLowerCase();
+
+    // Só atualiza a URL se um identificador válido for encontrado
+    if (snakeCaseDesc) {
+      navigate(`?painel=${snakeCaseDesc}`, { replace: true });
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [painelInfo]);
+  } else {
+    setIsVisible(false);
+    document.body.style.overflow = "";
+  }
+
+  return () => {
+    document.body.style.overflow = "";
+  };
+}, [painelInfo, navigate]);
+
+  
+  const handleClose = () => {
+    navigate(".", { replace: true }); // Reseta URL ao fechar
+    closePainel();
+  };
+
+  const copiarLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Link copiado!");
+  };
 
   if (!painelInfo) return null;
 
@@ -118,11 +149,20 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         flexDirection: "column" 
       }}
     >
-      <PainelHeader titulo={painelInfo.titulo} closePainel={closePainel} />
+      <PainelHeader titulo={painelInfo.titulo} closePainel={handleClose} />
       <div className="p-6 overflow-y-auto flex-1">
         <PainelMedia imagens={painelInfo.imagens} video={painelInfo.video} titulo={painelInfo.titulo} />
         <PainelDescricao descricao={painelInfo.descricao} />
         <PainelLinks links={painelInfo.links} />
+
+        <div className="mt-4 text-center">
+          <button
+            onClick={copiarLink}
+            className="px-4 py-2 bg-green-400 text-white rounded hover:bg-green-500"
+          >
+            Compartilhar
+          </button>
+        </div>
       </div>
     </div>
   );
