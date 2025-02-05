@@ -106,7 +106,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         .toLowerCase();
 
       if (snakeCaseDesc) {
-        navigate(`/${snakeCaseDesc}`, { replace: true });
+        navigate(`/cartografiasocial/${snakeCaseDesc}`, { replace: true });
       }
     } else {
       setIsVisible(false);
