@@ -25,6 +25,10 @@ const detalhesIntro = {
               <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png" alt="Marcador Violeta" class="w-5 h-8 mr-2" />
               <span><strong class="text-violet-600">Educação:</strong> escolas e unidades de ensino.</span>
               </li>
+              <li class="flex items-center">
+              <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black.png" alt="Marcador Preto" class="w-5 h-8 mr-2" />
+              <span><strong class="text-black-600">Religião:</strong> estabelecimentos religiosos.</span>
+              </li>
             </ul>
           </div>
           
