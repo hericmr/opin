@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PainelHeader from "./PainelHeader";
 import PainelMedia from "./PainelMedia";
 import PainelDescricao from "./PainelDescricao";
@@ -8,7 +8,6 @@ import usePainelVisibility from "./usePainelVisibility";
 
 const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { isVisible, isMobile } = usePainelVisibility(painelInfo, navigate);
 
   const handleClose = () => {
