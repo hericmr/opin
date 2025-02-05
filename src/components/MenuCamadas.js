@@ -26,6 +26,7 @@ const MenuCamadas = ({ estados, acoes }) => {
     { acao: acoes.toggleCulturais, estado: estados.culturais, icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png", label: "Lazer", cor: "bg-blue-400" },
     { acao: acoes.toggleComunidades, estado: estados.comunidades, icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png", label: "Comunidades", cor: "bg-red-500" },
     { acao: acoes.toggleEducação, estado: estados.educação, icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png", label: "Educação", cor: "bg-purple-400" },
+    { acao: acoes.toggleReligiao, estado: estados.religiao, icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black.png", label: "Religião", cor: "bg-gray-400" },
   ];
 
   return (
