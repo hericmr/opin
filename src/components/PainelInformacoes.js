@@ -123,6 +123,18 @@ const PainelInformacoes = ({ painelInfo, closePainel, paineis }) => {
     closePainel();
   };
 
+  return isVisible ? (
+    <div className="fixed top-20 right-2 left-2 sm:left-auto sm:w-3/4 lg:w-[49%] bg-green-50 rounded-xl shadow-lg z-30">
+      <PainelHeader titulo={painelInfo.titulo} closePainel={handleClose} />
+      <div className="p-6 overflow-y-auto">
+        <PainelMedia imagens={painelInfo.imagens} video={painelInfo.video} titulo={painelInfo.titulo} />
+        <PainelDescricao descricao={painelInfo.descricao} />
+        <PainelLinks links={painelInfo.links} />
+      </div>
+    </div>
+  ) : null;
+};
+
   const copiarLink = () => {
     navigator.clipboard.writeText(window.location.href);
     alert("Link copiado!");
@@ -136,7 +148,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, paineis }) => {
         isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
       }`}
       style={{ 
-        maxHeight: "90vh", 
+        maxHeight: isMobile ? "89vh" : "90vh", 
         height: "auto", 
         transition: "opacity 0.7s ease, transform 0.7s ease", 
         display: "flex", 
