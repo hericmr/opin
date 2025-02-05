@@ -24,7 +24,8 @@ const MenuCamadas = ({ estados, acoes }) => {
     { acao: acoes.toggleAssistencia, estado: estados.assistencia, icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png", label: "Assistência", cor: "bg-green-500 text-black" },
     { acao: acoes.toggleHistoricos, estado: estados.historicos, icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png", label: "Históricos", cor: "bg-yellow-300" },
     { acao: acoes.toggleCulturais, estado: estados.culturais, icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png", label: "Lazer", cor: "bg-blue-400" },
-    { acao: acoes.toggleComunidades, estado: estados.comunidades, icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png", label: "Comunidades", cor: "bg-red-500" }
+    { acao: acoes.toggleComunidades, estado: estados.comunidades, icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png", label: "Comunidades", cor: "bg-red-500" },
+    { acao: acoes.toggleEducação, estado: estados.educação, icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png", label: "Educação", cor: "bg-purple-400" },
   ];
 
   return (
