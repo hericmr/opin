@@ -89,7 +89,7 @@ const pontosLazer = [
     "titulo": "E. E. Prof. Primo Ferreira",
     "descricao": "Escola pública estadual em Santos, SP, oferecendo ensino fundamental, médio e EJA.",
     "video": null,
-    "imagens": [ "/cartografiasocial/fotos/primo.jpg"],
+    "imagens": [ "/cartografiasocial/fotos/primo.jpeg"],
     "links": [
       {
         "texto": "Blog da E. E. Prof. Primo Ferreira",
