@@ -1,7 +1,7 @@
 const detalhesIntro = {
   titulo: "Territórios, resistência e identidade em Santos",
   descricao: `
-          <p class="mb-4">Esta é uma cartografia social que busca mapear territorialidades, lutas e conquistas dos movimentos sociais e da população na cidade de Santos. O mapa destaca a presença de equipamentos sociais, culturais, religiosos, políticos, educacionais, como escolas, unidades de saúde, assistência social, espaços culturais e de lazer, além de locais carregados de memória histórica. Os pontos estão representados por:</p>
+          <p class="mb-4">Esta é uma cartografia social que busca mapear territorialidades, lutas e conquistas dos movimentos sociais e da população na cidade de Santos. O mapa destaca a presença de equipamentos sociais, culturais, religiosos, políticos, educacionais, como escolas, unidades de saúde, assistência social, espaços culturais e de lazer, além de comunidades e locais carregados de memória e história. Os pontos estão representados por:</p>
           
           <div class="border border-green-200 p-4 rounded-lg bg-green-100 max-w-md mx-auto">
             <center><ul class="list-none space-y-2">
