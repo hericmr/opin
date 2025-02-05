@@ -38,7 +38,35 @@ const pontosAssistencia = [
         telefone: "(13) 3203-2903"
       }
     }
+  },
+
+  {
+    "lat": -23.9550625,
+    "lng": -46.3437202,
+    "desc": "Policlínica Campo Grande",
+    "tipo": "assistencia",
+    "detalhes": {
+      "titulo": "Policlínica Campo Grande",
+      "descricao": "Unidade de saúde pública em Santos, SP, oferecendo atendimento médico e serviços de saúde à comunidade.",
+      "video": null,
+      "imagens": [],
+      "links": [
+        {
+          "texto": "Página oficial da Policlínica Campo Grande",
+          "url": "https://www.santos.sp.gov.br/?q=local%2Fpoliclinica-do-campo-grande"
+        },
+        {
+          "texto": "Perfil no Instagram",
+          "url": "https://www.instagram.com/explore/locations/16249437/policlinica-campo-grande/"
+        },
+        {
+          "texto": "Página no Facebook",
+          "url": "https://www.facebook.com/pages/Policl%C3%ADnica-Campo-Grande/572907813100564"
+        }
+      ]
+    }
   }
+  
 ];
 
 
