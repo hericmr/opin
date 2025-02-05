@@ -78,35 +78,35 @@ const PainelLinks = ({ links }) => (
   )
 );
 
-const PainelInformacoes = ({ painelInfo, closePainel }) => {
+const PainelInformacoes = ({ painelInfo, closePainel, paineis }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 640);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+    const params = new URLSearchParams(location.search);
+    const painelParam = params.get("painel");
+
+    if (painelParam) {
+      const painelSelecionado = paineis.find(p => 
+        p.titulo.toLowerCase().replace(/\s+/g, "_") === painelParam
+      );
+
+      if (painelSelecionado) {
+        setIsVisible(true);
+      }
+    }
+  }, [location.search, paineis]);
 
   useEffect(() => {
     if (painelInfo) {
       setIsVisible(true);
       document.body.style.overflow = "hidden";
 
-      const baseText = painelInfo.desc || painelInfo.titulo || "painel";
-      const snakeCaseDesc = baseText
-        .normalize("NFD").replace(/[̀-ͯ]/g, "")
-        .replace(/\s+/g, "_")
-        .replace(/[^\w-]/g, "")
-        .toLowerCase();
+      const painelSlug = painelInfo.titulo.toLowerCase().replace(/\s+/g, "_");
 
-      if (snakeCaseDesc) {
-        navigate(`/cartografiasocial/${snakeCaseDesc}`, { replace: true });
+      if (painelSlug) {
+        navigate(`?painel=${painelSlug}`, { replace: true });
       }
     } else {
       setIsVisible(false);
@@ -117,14 +117,6 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
       document.body.style.overflow = "";
     };
   }, [painelInfo, navigate]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const painelParam = params.get("painel");
-    if (painelParam && painelInfo?.titulo) {
-      setIsVisible(true);
-    }
-  }, [location.search, painelInfo]);
 
   const handleClose = () => {
     navigate(".", { replace: true });
@@ -144,7 +136,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
       }`}
       style={{ 
-        maxHeight: isMobile ? "89vh" : "90vh", 
+        maxHeight: "90vh", 
         height: "auto", 
         transition: "opacity 0.7s ease, transform 0.7s ease", 
         display: "flex", 
