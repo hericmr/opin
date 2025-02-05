@@ -38,7 +38,7 @@ const pontosEducação = [
     "lat": -23.9524879,
     "lng": -46.3399188,
     "desc": "E. E. Azevedo Junior",
-    "tipo": "escola",
+    "tipo": "educação",
     "detalhes": {
       "titulo": "E. E. Azevedo Junior",
       "descricao": "Escola pública estadual em Santos, SP, oferecendo ensino fundamental e médio.",
@@ -59,7 +59,30 @@ const pontosEducação = [
         }
       ]
     }
+  },
+  {
+    "lat": -23.9545224,
+    "lng": -46.3432385,
+    "desc": "Colégio Lamec",
+    "tipo": "escola",
+    "detalhes": {
+      "titulo": "Colégio Lamec",
+      "descricao": "Escola particular em Santos, SP, oferecendo Educação Infantil e Ensino Fundamental.",
+      "video": null,
+      "imagens": [ "/cartografiasocial/fotos/lamec.jpeg"],
+      "links": [
+        {
+          "texto": "Perfil no Instagram",
+          "url": "https://www.instagram.com/colegiolamec/"
+        },
+        {
+          "texto": "Página no Facebook",
+          "url": "https://www.facebook.com/pages/Colegio-Lamec/179882508872891"
+        }
+      ]
+    }
   }
+  
   
 
 ];
