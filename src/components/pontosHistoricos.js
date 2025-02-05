@@ -41,6 +41,8 @@ A estátua de Iemanjá, localizada na Praia do José Menino, é um símbolo cult
       },
     }
 
+    
+
 ];
 
 export default pontosLazer;

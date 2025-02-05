@@ -10,6 +10,7 @@ import pontosHistoricos from "./pontosHistoricos";
 import pontosLazer from "./pontosLazer";
 import pontosComunidades from "./pontosComunidades";
 import pontosEducação from "./pontosEducação";
+import pontosReligiao from "./pontosReligiao";
 import detalhesIntro from "./detalhesInfo"; 
 import "./MapaSantos.css";
 
@@ -26,6 +27,7 @@ const MapaSantos = () => {
     culturais: true,
     comunidades: true,
     educação: true,
+    religiao: true,
   });
 
   useEffect(() => {
@@ -57,6 +59,7 @@ const MapaSantos = () => {
         ...pontosLazer,
         ...pontosComunidades,
         ...pontosEducação,
+        ...pontosReligiao,
       ];
       const pontoSelecionado = todosPontos.find((p) => p.id === painelId);
 
@@ -97,6 +100,7 @@ const MapaSantos = () => {
         {visibilidade.culturais && <Marcadores pontos={pontosLazer} onClick={abrirPainel} />}
         {visibilidade.comunidades && <Marcadores pontos={pontosComunidades} onClick={abrirPainel} />}
         {visibilidade.educação && <Marcadores pontos={pontosEducação} onClick={abrirPainel} />}
+        {visibilidade.religiao && <Marcadores pontos={pontosReligiao} onClick={abrirPainel} />}
       </MapaBase>
 
       {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={fecharPainel} />}
@@ -110,6 +114,7 @@ const MapaSantos = () => {
           toggleCulturais: () => toggleVisibilidade("culturais"),
           toggleComunidades: () => toggleVisibilidade("comunidades"),
           toggleEducação: () => toggleVisibilidade("educação"),
+          toggleReligiao: () => toggleVisibilidade("religiao"),
         }}
       />
     </div>
