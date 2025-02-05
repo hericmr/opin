@@ -49,7 +49,7 @@ const pontosAssistencia = [
       "titulo": "Policlínica Campo Grande",
       "descricao": "Unidade de saúde pública em Santos, SP, oferecendo atendimento médico e serviços de saúde à comunidade.",
       "video": null,
-      "imagens": [],
+      "imagens": [ "/cartografiasocial/fotos/policlinica_campo_grande.jpeg"],
       "links": [
         {
           "texto": "Página oficial da Policlínica Campo Grande",
