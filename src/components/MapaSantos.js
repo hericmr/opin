@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import MapaBase from "./MapaBase";
 import Marcadores from "./Marcadores";
 import Bairros from "./Bairros";
@@ -12,6 +13,8 @@ import detalhesIntro from "./detalhesInfo"; // Importando os detalhes de introdu
 import "./MapaSantos.css";
 
 const MapaSantos = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [painelInfo, setPainelInfo] = useState(detalhesIntro);
   const [geojsonData, setGeojsonData] = useState(null);
   const [visibilidade, setVisibilidade] = useState({
@@ -39,6 +42,36 @@ const MapaSantos = () => {
     fetchGeoJSON();
   }, []);
 
+  // Verifica se há um painel na URL ao carregar
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const painelId = params.get("painel");
+
+    if (painelId) {
+      const todosPontos = [
+        ...pontosAssistencia,
+        ...pontosHistoricos,
+        ...pontosLazer,
+        ...pontosComunidades,
+      ];
+      const pontoSelecionado = todosPontos.find((p) => p.id === painelId);
+
+      if (pontoSelecionado) {
+        setPainelInfo(pontoSelecionado);
+      }
+    }
+  }, [location.search]);
+
+  const abrirPainel = (info) => {
+    setPainelInfo(info);
+    navigate(`?painel=${info.id}`, { replace: true }); // Atualiza a URL ao abrir
+  };
+
+  const fecharPainel = () => {
+    setPainelInfo(null);
+    navigate(".", { replace: true }); // Reseta a URL ao fechar
+  };
+
   const geoJSONStyle = {
     fillColor: "green",
     color: "white",
@@ -55,13 +88,13 @@ const MapaSantos = () => {
     <div className="relative h-screen">
       <MapaBase>
         {visibilidade.bairros && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
-        {visibilidade.assistencia && <Marcadores pontos={pontosAssistencia} onClick={setPainelInfo} />}
-        {visibilidade.historicos && <Marcadores pontos={pontosHistoricos} onClick={setPainelInfo} />}
-        {visibilidade.culturais && <Marcadores pontos={pontosLazer} onClick={setPainelInfo} />}
-        {visibilidade.comunidades && <Marcadores pontos={pontosComunidades} onClick={setPainelInfo} />}
+        {visibilidade.assistencia && <Marcadores pontos={pontosAssistencia} onClick={abrirPainel} />}
+        {visibilidade.historicos && <Marcadores pontos={pontosHistoricos} onClick={abrirPainel} />}
+        {visibilidade.culturais && <Marcadores pontos={pontosLazer} onClick={abrirPainel} />}
+        {visibilidade.comunidades && <Marcadores pontos={pontosComunidades} onClick={abrirPainel} />}
       </MapaBase>
 
-      {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={() => setPainelInfo(null)} />}
+      {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={fecharPainel} />}
       
       <MenuCamadas
         estados={visibilidade}
