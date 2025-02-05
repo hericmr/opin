@@ -78,35 +78,35 @@ const PainelLinks = ({ links }) => (
   )
 );
 
-const PainelInformacoes = ({ painelInfo, closePainel, paineis }) => {
+const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const painelParam = params.get("painel");
-
-    if (painelParam) {
-      const painelSelecionado = paineis.find(p => 
-        p.titulo.toLowerCase().replace(/\s+/g, "_") === painelParam
-      );
-
-      if (painelSelecionado) {
-        setIsVisible(true);
-      }
-    }
-  }, [location.search, paineis]);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (painelInfo) {
       setIsVisible(true);
       document.body.style.overflow = "hidden";
 
-      const painelSlug = painelInfo.titulo.toLowerCase().replace(/\s+/g, "_");
+      const baseText = painelInfo.desc || painelInfo.titulo || "painel";
+      const snakeCaseDesc = baseText
+        .normalize("NFD").replace(/[̀-ͯ]/g, "")
+        .replace(/\s+/g, "_")
+        .replace(/[^\w-]/g, "")
+        .toLowerCase();
 
-      if (painelSlug) {
-        navigate(`?painel=${painelSlug}`, { replace: true });
+      if (snakeCaseDesc) {
+        navigate(`/cartografiasocial/${snakeCaseDesc}`, { replace: true });
       }
     } else {
       setIsVisible(false);
@@ -118,22 +118,18 @@ const PainelInformacoes = ({ painelInfo, closePainel, paineis }) => {
     };
   }, [painelInfo, navigate]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const painelParam = params.get("painel");
+    if (painelParam && painelInfo?.titulo) {
+      setIsVisible(true);
+    }
+  }, [location.search, painelInfo]);
+
   const handleClose = () => {
     navigate(".", { replace: true });
     closePainel();
   };
-
-  return isVisible ? (
-    <div className="fixed top-20 right-2 left-2 sm:left-auto sm:w-3/4 lg:w-[49%] bg-green-50 rounded-xl shadow-lg z-30">
-      <PainelHeader titulo={painelInfo.titulo} closePainel={handleClose} />
-      <div className="p-6 overflow-y-auto">
-        <PainelMedia imagens={painelInfo.imagens} video={painelInfo.video} titulo={painelInfo.titulo} />
-        <PainelDescricao descricao={painelInfo.descricao} />
-        <PainelLinks links={painelInfo.links} />
-      </div>
-    </div>
-  ) : null;
-};
 
   const copiarLink = () => {
     navigator.clipboard.writeText(window.location.href);
