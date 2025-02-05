@@ -27,6 +27,9 @@ const Marcadores = ({ pontos, onClick }) => {
           case "comunidades":
             icon = redIcon;
             break;
+          case "educação":
+            icon = violetIcon;
+            break;
           default:
             console.warn(`Tipo desconhecido: ${ponto.tipo}, usando ícone padrão.`);
             icon = violetIcon;

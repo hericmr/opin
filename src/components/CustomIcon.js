@@ -3,11 +3,11 @@ import L from "leaflet";
 // Cria uma animação de brilho e pulsação customizada
 const createIcon = (url, color) =>
   new L.DivIcon({
-    className: `group transition-all duration-1000 ease-in-out`, // Suaviza a animação
+    className: `group`, // Remove a classe de animação
     html: `
       <div class="relative">
-        <img src="${url}" class="w-[25px] h-[41px] drop-shadow-md transition-transform group-hover:scale-110">
-        <span class="absolute inset-0 w-full h-full animate-[pulse_1.5s_infinite] bg-${color}-400 opacity-20 rounded-full blur-lg"></span>
+        <img src="${url}" class="w-[25px] h-[41px] drop-shadow-md">
+        <span class="absolute inset-0 w-full h-full bg-${color}-400 opacity-20 rounded-full blur-lg"></span>
       </div>
     `,
     iconSize: [25, 41],
