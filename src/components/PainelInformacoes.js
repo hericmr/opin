@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { useNavigate } from "react-router-dom"; // Removido useLocation
-
+import { useNavigate, useLocation } from "react-router-dom";
 
 const PainelHeader = ({ titulo, closePainel }) => (
   <div className="relative p-6 border-b border-gray-100">
@@ -83,7 +82,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
-
+  const location = useLocation();
 
   useEffect(() => {
     const checkMobile = () => {
@@ -94,38 +93,41 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-useEffect(() => {
-  if (painelInfo) {
-    setIsVisible(true);
-    document.body.style.overflow = "hidden";
+  useEffect(() => {
+    if (painelInfo) {
+      setIsVisible(true);
+      document.body.style.overflow = "hidden";
 
-    // Usa `desc` se existir, senão tenta `titulo`, e por último um fallback padrão
-    const baseText = painelInfo.desc || painelInfo.titulo || "painel";
+      const baseText = painelInfo.desc || painelInfo.titulo || "painel";
+      const snakeCaseDesc = baseText
+        .normalize("NFD").replace(/[̀-ͯ]/g, "")
+        .replace(/\s+/g, "_")
+        .replace(/[^\w-]/g, "")
+        .toLowerCase();
 
-    // Converte o texto para snake_case
-    const snakeCaseDesc = baseText
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove acentos
-      .replace(/\s+/g, "_") // Substitui espaços por _
-      .replace(/[^\w-]/g, "") // Remove caracteres especiais
-      .toLowerCase();
-
-    // Só atualiza a URL se um identificador válido for encontrado
-    if (snakeCaseDesc) {
-      navigate(`?painel=${snakeCaseDesc}`, { replace: true });
+      if (snakeCaseDesc) {
+        navigate(`/${snakeCaseDesc}`, { replace: true });
+      }
+    } else {
+      setIsVisible(false);
+      document.body.style.overflow = "";
     }
-  } else {
-    setIsVisible(false);
-    document.body.style.overflow = "";
-  }
 
-  return () => {
-    document.body.style.overflow = "";
-  };
-}, [painelInfo, navigate]);
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [painelInfo, navigate]);
 
-  
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const painelParam = params.get("painel");
+    if (painelParam && painelInfo?.titulo) {
+      setIsVisible(true);
+    }
+  }, [location.search, painelInfo]);
+
   const handleClose = () => {
-    navigate(".", { replace: true }); // Reseta URL ao fechar
+    navigate(".", { replace: true });
     closePainel();
   };
 
@@ -158,7 +160,7 @@ useEffect(() => {
         <div className="mt-4 text-center">
           <button
             onClick={copiarLink}
-            className="px-4 py-2 bg-green-400 text-white rounded hover:bg-green-500"
+            className="px-4 py-2 bg-green-800 text-white rounded hover:bg-green-500"
           >
             Compartilhar
           </button>
