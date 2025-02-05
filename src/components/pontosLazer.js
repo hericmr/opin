@@ -80,41 +80,6 @@ const pontosLazer = [
   },
 },
 
-{
-  "lat": -23.9531346,
-  "lng": -46.3403866,
-  "desc": "E. E. Prof. Primo Ferreira",
-  "tipo": "escola",
-  "detalhes": {
-    "titulo": "E. E. Prof. Primo Ferreira",
-    "descricao": "Escola pública estadual em Santos, SP, oferecendo ensino fundamental, médio e EJA.",
-    "video": null,
-    "imagens": [ "/cartografiasocial/fotos/primo.jpeg"],
-    "links": [
-      {
-        "texto": "Blog da E. E. Prof. Primo Ferreira",
-        "url": "https://profprimoferreira.blogspot.com/"
-      },
-      {
-        "texto": "Detalhes da escola no site da Secretaria da Educação",
-        "url": "https://www.educacao.sp.gov.br/cgrh/escolas/primo-ferreira-professor/"
-      },
-      {
-        "texto": "Perfil no Instagram",
-        "url": "https://www.instagram.com/eeprimoferreira/"
-      },
-      {
-        "texto": "Página no Facebook",
-        "url": "https://www.facebook.com/profile.php?id=154035801319535"
-      },
-      {
-        "texto": "Informações no QEdu",
-        "url": "https://qedu.org.br/escola/35011824-primo-ferreira-professor"
-      }
-    ]
-  }
-}
-
 ];
   
   export default pontosLazer;
