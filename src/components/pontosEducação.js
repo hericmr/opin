@@ -56,7 +56,7 @@ const pontosEducação = [
     "lat": -23.9545224,
     "lng": -46.3432385,
     "desc": "Colégio Lamec",
-    "tipo": "escola",
+    "tipo": "educação",
     "detalhes": {
       "titulo": "Colégio Lamec",
       "descricao": "Escola particular em Santos, SP, oferecendo Educação Infantil e Ensino Fundamental.",
