@@ -71,7 +71,7 @@ const MapaSantos = () => {
 
   const abrirPainel = (info) => {
     setPainelInfo(info);
-    navigate(`?painel=${info.id}`, { replace: true }); // Atualiza a URL ao abrir
+    navigate(`/cartografiasocial`); // Atualiza a URL ao abrir
   };
 
   const fecharPainel = () => {
