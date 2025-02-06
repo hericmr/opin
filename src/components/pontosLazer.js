@@ -91,12 +91,33 @@ detalhes: {
   `,
   video: null, // Vídeo ausente
   imagens: [
-    "/cartograficasocial/fotos/vila.jpeg",
-    "/cartograficasocial/fotos/vila2.jpeg",
+    "/cartografiasocial/fotos/vila.jpeg",
+    "/cartografiasocial/fotos/vila2.jpeg",
   ],
   links: [],
 },
 },
+{
+  lat: -23.9541707,
+  lng: -46.3404553,
+  desc: "Infinity Brechó",
+  tipo: "lazer",
+  detalhes: {
+    titulo: "Infinity Brechó",
+    descricao: `
+      O **Infinity Brechó** é uma loja de roupas e acessórios usados localizada na Rua Doutor Carvalho de Mendonça, 500A, no bairro Marapé, em Santos - SP, uma excelente opção para quem busca moda sustentável e econômica na região.
+    `,
+    video: null, // Vídeo ausente
+    imagens: ["/cartografiasocial/fotos/brecho.png"],
+    links: [
+      {
+        texto: "Instagram do Infinity Brechó",
+        url: "https://www.instagram.com/infinity__brecho/",
+      },
+    ],
+  },
+}
+
 ];
 
 export default pontosLazer;
