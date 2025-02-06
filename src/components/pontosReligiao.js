@@ -9,7 +9,9 @@ const pontosReligiao = [
       descricao: `texto
       `,
       video: null, // Vídeo ausente
-      imagens: ["/cartografiasocial/fotos/tenda.jpeg"], 
+      imagens: ["/cartografiasocial/fotos/tenda.jpeg",
+        "/cartografiasocial/fotos/tenda_2.png",
+      ], 
       links: [
         {
           texto: "Instagram da Tenda de Umbanda Pai Benedito das Almas",
