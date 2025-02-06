@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import PainelHeader from "./PainelHeader";
 import PainelMedia from "./PainelMedia";
 import PainelDescricao from "./PainelDescricao";
@@ -7,13 +6,7 @@ import PainelLinks from "./PainelLinks";
 import usePainelVisibility from "./usePainelVisibility";
 
 const PainelInformacoes = ({ painelInfo, closePainel }) => {
-  const navigate = useNavigate();
-  const { isVisible, isMobile } = usePainelVisibility(painelInfo, navigate);
-
-  const handleClose = () => {
-    navigate(".", { replace: true });
-    closePainel();
-  };
+  const { isVisible, isMobile } = usePainelVisibility(painelInfo);
 
   const copiarLink = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -35,7 +28,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         flexDirection: "column" 
       }}
     >
-      <PainelHeader titulo={painelInfo.titulo} closePainel={handleClose} />
+      <PainelHeader titulo={painelInfo.titulo} closePainel={closePainel} />
       <div className="p-6 overflow-y-auto flex-1">
         <PainelMedia imagens={painelInfo.imagens} video={painelInfo.video} titulo={painelInfo.titulo} />
         <PainelDescricao descricao={painelInfo.descricao} />

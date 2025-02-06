@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const usePainelVisibility = (painelInfo, navigate) => {
+const usePainelVisibility = (painelInfo) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -17,17 +17,6 @@ const usePainelVisibility = (painelInfo, navigate) => {
     if (painelInfo) {
       setIsVisible(true);
       document.body.style.overflow = "hidden";
-
-      const baseText = painelInfo.desc || painelInfo.titulo || "painel";
-      const snakeCaseDesc = baseText
-        .normalize("NFD").replace(/[̀-ͯ]/g, "")
-        .replace(/\s+/g, "_")
-        .replace(/[^\w-]/g, "")
-        .toLowerCase();
-
-      if (snakeCaseDesc) {
-        navigate(`/cartografiasocial/${snakeCaseDesc}`, { replace: true });
-      }
     } else {
       setIsVisible(false);
       document.body.style.overflow = "";
@@ -36,7 +25,7 @@ const usePainelVisibility = (painelInfo, navigate) => {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [painelInfo, navigate]);
+  }, [painelInfo]);
 
   return { isVisible, isMobile };
 };
