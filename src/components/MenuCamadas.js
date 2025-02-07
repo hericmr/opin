@@ -45,7 +45,7 @@ const MenuCamadas = ({ estados, acoes }) => {
         {opcoes.map(({ acao, estado, icone, label, cor }, index) => (
           <button key={index} onClick={acao} className={botaoClasses(estado, cor)}>
             {typeof icone === "string" && icone.startsWith("http") ? (
-              <img src={icone} alt={label} className="w-4 h-5 mr-2" />
+              <img src={icone} alt={label} className="w-4 h-6 mr-3" />
             ) : (
               <span className="mr-2">{icone}</span>
             )}
