@@ -1,70 +1,23 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import PainelHeader from "./PainelHeader";
 import PainelMedia from "./PainelMedia";
 import PainelDescricao from "./PainelDescricao";
 import PainelLinks from "./PainelLinks";
 import usePainelVisibility from "./usePainelVisibility";
+import useAudio from "./useAudio";
+import AudioButton from "./AudioButton";
+import ShareButton from "./ShareButton";
 
-const PainelInformacoes = ({ painelInfo, closePainel, audioUrl }) => {
+const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const { isVisible, isMobile } = usePainelVisibility(painelInfo);
   const painelRef = useRef(null);
-  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
-  const synthRef = useRef(window.speechSynthesis);
-  const utteranceRef = useRef(null);
-  const audioRef = useRef(null); // Referência para o elemento de áudio customizado
+  const { isAudioEnabled, toggleAudio } = useAudio(painelInfo?.audioUrl);
 
-  // Verifica se a API SpeechSynthesis é suportada
-  const isSpeechSynthesisSupported = () => {
-    return "speechSynthesis" in window;
-  };
-
-  // Função para copiar o link
   const copiarLink = () => {
     navigator.clipboard.writeText(window.location.href);
     alert("Link copiado!");
   };
 
-  const toggleAudio = () => {
-    const url = painelInfo.audioUrl; // Pega a URL correta do painelInfo
-  
-    if (url) {
-      // Se o áudio ainda não foi carregado, cria um novo elemento de áudio
-      if (!audioRef.current) {
-        audioRef.current = new Audio(url);
-      }
-  
-      if (isAudioEnabled) {
-        audioRef.current.pause(); // Pausa o áudio
-      } else {
-        audioRef.current.play(); // Reproduz o áudio
-      }
-    } else {
-      // Caso não tenha áudio, usa síntese de fala como fallback
-      if (!isSpeechSynthesisSupported()) {
-        alert("Seu navegador não suporta a funcionalidade de áudio.");
-        console.log("Painel Info:", painelInfo);
-        console.log("Audio URL recebido no PainelInformacoes:", painelInfo?.audioUrl);
-        return;
-      }
-  
-      if (isAudioEnabled) {
-        synthRef.current.cancel();
-      } else {
-        const content = [
-          painelInfo.titulo,
-          painelInfo.descricao,
-          ...(painelInfo.links?.map((link) => link.texto) || []),
-        ].join(". ");
-  
-        utteranceRef.current = new SpeechSynthesisUtterance(content);
-        utteranceRef.current.lang = "pt-BR";
-        synthRef.current.speak(utteranceRef.current);
-      }
-    }
-    setIsAudioEnabled(!isAudioEnabled);
-  };
-  
-  // Função para detectar clique fora do painel
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (painelRef.current && !painelRef.current.contains(event.target)) {
@@ -73,9 +26,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, audioUrl }) => {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [closePainel]);
 
   if (!painelInfo) return null;
@@ -97,16 +48,12 @@ const PainelInformacoes = ({ painelInfo, closePainel, audioUrl }) => {
         flexDirection: "column",
       }}
     >
-      {/* Passando toggleAudio, isAudioEnabled e audioUrl para o PainelHeader */}
-      <PainelHeader
-        titulo={painelInfo.titulo}
-        closePainel={closePainel}
-        toggleAudio={toggleAudio}
-        isAudioEnabled={isAudioEnabled}
-        audioUrl={painelInfo.audioUrl} // CORRETO
-
-      />
+      <PainelHeader titulo={painelInfo.titulo} closePainel={closePainel} />
       <div className="p-6 overflow-y-auto flex-1">
+        {painelInfo.audioUrl && (
+          <AudioButton isAudioEnabled={isAudioEnabled} toggleAudio={toggleAudio} />
+        )}
+
         <PainelMedia
           imagens={painelInfo.imagens}
           video={painelInfo.video}
@@ -115,15 +62,8 @@ const PainelInformacoes = ({ painelInfo, closePainel, audioUrl }) => {
         <PainelDescricao descricao={painelInfo.descricao} />
         <PainelLinks links={painelInfo.links || []} />
 
-        {/* Botão de compartilhar */}
         <div className="mt-4 text-center">
-          <button
-            onClick={copiarLink}
-            className="px-4 py-2 bg-green-800 text-white rounded hover:bg-green-500"
-            aria-label="Compartilhar link"
-          >
-            Compartilhar
-          </button>
+          <ShareButton onClick={copiarLink} />
         </div>
       </div>
     </div>
