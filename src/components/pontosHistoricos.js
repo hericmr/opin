@@ -1,4 +1,4 @@
-const pontosLazer = [
+const pontosHistoricos = [
     {
       lat: -23.9851111,
       lng: -46.3088611,
@@ -29,7 +29,7 @@ A estátua de Iemanjá, localizada na Praia do José Menino, é um símbolo da c
       tipo: "historico",
       detalhes: {
         titulo: 'Ponte dos Práticos',
-        descricao: `A **Ponte dos Práticos**, chamada oficialmente **Ponte Edgard Perdigão**, é um tradicional atracadouro inaugurado em 11 de junho de 1968. Com uma vista bonita da baía de Santos, Guarujá e Ilha Porchat, recebe diariamente milhares de pessoas, sobretudo aquelas que fazem a travessia para a praia do **Góes** e **Santa Cruz dos Navegantes** que é conhecida também popularmente como Pouca Farinha. Há também ponto de embarque para escunas turísticas e barcos pesqueiros, além de um comércio local com uma lanchonete. A Ponte dos Práticos se mantém como um ponto **histórico**, **turístico** e **funcional** para a cidade de Santos.`,
+        descricao: `A **Ponte dos Práticos**, chamada oficialmente **Ponte Edgard Perdigão**, é um atracadouro inaugurado em 11 de junho de 1968. Com uma vista bonita da baía de Santos, Guarujá e Ilha Porchat, recebe diariamente milhares de pessoas, sobretudo aquelas que fazem a travessia para a praia do **Góes** e **Santa Cruz dos Navegantes** que é conhecida também popularmente como Pouca Farinha. Há também ponto de embarque para escunas turísticas e barcos pesqueiros, além de uma lanchonete particular . A Ponte dos Práticos se mantém como um ponto **histórico**, **turístico** e **funcional** para a cidade de Santos.`,
         video: "",
         imagens: ["/cartografiasocial/fotos/ponte.png"],
         links: [
@@ -70,4 +70,4 @@ A estátua de Iemanjá, localizada na Praia do José Menino, é um símbolo da c
 
 ];
 
-export default pontosLazer;
+export default pontosHistoricos;

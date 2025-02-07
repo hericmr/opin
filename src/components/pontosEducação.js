@@ -79,7 +79,7 @@ const pontosEducação = [
     "lat": -23.9793965,
     "lng": -46.2993718,
     "desc": "UME Doutor Porchat Assis",
-    "tipo": "educacao",
+    "tipo": "educação",
     "detalhes": {
       "titulo": "UME Doutor Porchat Assis",
       "descricao": "A UME Doutor Porchat Assis, localizada na Ponta da Praia, em Santos, é uma escola municipal que desempenha um papel essencial na formação educacional de crianças e adolescentes da região. \n\nAlém do currículo regular, a UME Doutor Porchat Assis é reconhecida por ter iniciativas comunitárias, como projetos que incentivam a leitura, atividades esportivas e ações culturais que envolvem tanto os estudantes quanto suas famílias. Essas ações reforçam a importância da educação como ferramenta de transformação social.\n\nA escola também enfrenta desafios que refletem as contradições presentes na sociedade brasileira, como a necessidade de ampliação de recursos e investimentos na educação pública. Contudo, a resistência e o empenho de professores, funcionários e da comunidade escolar têm sido fundamentais para superar essas dificuldades e garantir um ensino de qualidade.",
