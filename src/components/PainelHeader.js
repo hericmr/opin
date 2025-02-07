@@ -1,20 +1,19 @@
 import React from "react";
 
-//  esse componente é responsavel pelo cabeçalho do painel, onde é exibido o titulo e o botão de fechar o painel. falta ajustes nele
-
+// Componente responsável pelo cabeçalho do painel, exibindo o título e o botão de fechar.
 const PainelHeader = ({ titulo, closePainel }) => (
-  <div className="relative p-6 border-b border-gray-100">
-    <h2 className="text-2xl lg:text-3xl font-extrabold tracking-wide text-green-800 text-center">
+  <header className="flex justify-between items-center p-4 border-b border-gray-100">
+    <h2 className="text-3xl font-bold text-green-800 text-center flex-1">
       {titulo}
     </h2>
     <button
       onClick={closePainel}
-      className="absolute top-4 right-4 text-gray-900 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600 rounded-full text-xl"
+      className="text-gray-900 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600 rounded-full text-xl"
       aria-label="Fechar painel"
     >
       ✖
     </button>
-  </div>
+  </header>
 );
 
 export default PainelHeader;
