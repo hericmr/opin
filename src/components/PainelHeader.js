@@ -15,7 +15,7 @@ const PainelHeader = ({ titulo, closePainel, toggleAudio, isAudioEnabled, audioU
           aria-live="polite"
         >
           {isAudioEnabled ? <VolumeX size={20} /> : <Volume2 size={20} />}
-          {isAudioEnabled ? "Parar Áudio" : "Ouvir"}
+          {isAudioEnabled ? "" : ""}
         </button>
       )}
 
