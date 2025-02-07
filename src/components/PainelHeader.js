@@ -27,7 +27,7 @@ const PainelHeader = ({ titulo, closePainel, toggleAudio, isAudioEnabled, audioU
       {/* Botão fechar sempre posicionado no canto superior direito */}
       <button
         onClick={closePainel}
-        className="absolute top-4 right-4 text-gray-900 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600 rounded-full text-xl p-2"
+        className="absolute top-0 right-0 text-gray-900 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600 rounded-full text-xl p-2"
         aria-label="Fechar painel"
       >
         <X size={24} />
