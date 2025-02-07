@@ -112,7 +112,11 @@ const pontosEducação = [
               {
                   "texto": "Santos SP - Projeto de ensino integral",
                   "url": "https://g1.globo.com/sp/santos-regiao/noticia/2019/03/26/seduc-estuda-periodo-integral-para-400-criancas-em-escola-de-ensino-especial-de-santos-sp.ghtml"
-              }
+              },
+              {
+                  "texto": "Mães se reúnem para evitar o fim de escola especial para crianças com deficiência",
+                  "url": "https://g1.globo.com/sp/santos-regiao/noticia/2019/06/04/maes-se-reunem-para-evitar-o-fim-de-escola-especial-para-criancas-com-deficiencia.ghtml"
+                                }
           ]
       }  
     },
