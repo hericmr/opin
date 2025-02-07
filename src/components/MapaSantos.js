@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import MapaBase from "./MapaBase";
 import Marcadores from "./Marcadores";
 import Bairros from "./Bairros";
@@ -14,10 +13,7 @@ import pontosReligiao from "./pontosReligiao";
 import detalhesIntro from "./detalhesInfo"; 
 import "./MapaSantos.css";
 
-
 const MapaSantos = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [painelInfo, setPainelInfo] = useState(detalhesIntro);
   const [geojsonData, setGeojsonData] = useState(null);
   const [visibilidade, setVisibilidade] = useState({
@@ -47,36 +43,12 @@ const MapaSantos = () => {
     fetchGeoJSON();
   }, []);
 
-  // Verifica se há um painel na URL ao carregar
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const painelId = params.get("painel");
-
-    if (painelId) {
-      const todosPontos = [
-        ...pontosAssistencia,
-        ...pontosHistoricos,
-        ...pontosLazer,
-        ...pontosComunidades,
-        ...pontosEducação,
-        ...pontosReligiao,
-      ];
-      const pontoSelecionado = todosPontos.find((p) => p.id === painelId);
-
-      if (pontoSelecionado) {
-        setPainelInfo(pontoSelecionado);
-      }
-    }
-  }, [location.search]);
-
   const abrirPainel = (info) => {
     setPainelInfo(info);
-    navigate(`/cartografiasocial`); // Atualiza a URL ao abrir
   };
 
   const fecharPainel = () => {
     setPainelInfo(null);
-    navigate(".", { replace: true }); // Reseta a URL ao fechar
   };
 
   const geoJSONStyle = {
