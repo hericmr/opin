@@ -18,14 +18,15 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
     // Função para detectar clique fora do painel
     const handleClickOutside = (event) => {
       if (painelRef.current && !painelRef.current.contains(event.target)) {
+        // Apenas fecha o painel sem alterar a URL
         closePainel();
       }
     };
 
-    // Adicionando o event listener
+    // Adicionando o event listener para detectar o clique fora
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Limpando o event listener
+    // Limpando o event listener quando o componente for desmontado
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -35,7 +36,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
 
   return (
     <div
-      ref={painelRef} // Aplicando a referência
+      ref={painelRef} // Referência ao painel
       className={`fixed top-20 right-2 left-2 sm:left-auto sm:w-3/4 lg:w-[49%] bg-green-50 rounded-xl shadow-lg z-30 transform transition-transform duration-700 ease-in-out ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
       }`}
