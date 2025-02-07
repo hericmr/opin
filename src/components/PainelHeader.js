@@ -3,8 +3,8 @@ import { Volume2, VolumeX, X } from "lucide-react"; // Ícones para melhor UX
 
 const PainelHeader = ({ titulo, closePainel, toggleAudio, isAudioEnabled, audioUrl }) => {
   return (
-    <header className="flex justify-between items-center p-4 border-b border-gray-100">
-      <h2 className="text-3xl font-bold text-black text-center flex-1">{titulo}</h2>
+    <header className="flex justify-start items-center p-4 border-b border-gray-100">
+      <h2 className="text-3xl font-bold text-black flex-1">{titulo}</h2>
 
       {/* Botão "Ouvir" (Aparece apenas se houver um áudio disponível) */}
       {audioUrl && (
@@ -15,7 +15,7 @@ const PainelHeader = ({ titulo, closePainel, toggleAudio, isAudioEnabled, audioU
           aria-live="polite"
         >
           {isAudioEnabled ? <VolumeX size={20} /> : <Volume2 size={20} />}
-          {isAudioEnabled ? "" : ""}
+          {isAudioEnabled ? "Parar Áudio" : "Ouvir"}
         </button>
       )}
 
