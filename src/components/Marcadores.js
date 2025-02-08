@@ -1,12 +1,12 @@
 import React from "react";
 import { Marker, Tooltip } from "react-leaflet";
-import { motion } from "framer-motion"; // Biblioteca de animação
+import { motion } from "framer-motion"; 
 import { blackIcon, violetIcon, redIcon, blueIcon, greenIcon, yellowIcon } from "./CustomIcon"; // Ícones personalizados
 
 
 const Marcadores = ({ pontos, onClick }) => {
   if (!pontos || pontos.length === 0) {
-    console.warn("Nenhum ponto para exibir."); // Log para depuração
+    console.warn("Nenhum ponto para exibir."); 
     return null;
   }
 
