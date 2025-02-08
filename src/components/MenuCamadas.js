@@ -12,10 +12,10 @@ const MenuCamadas = ({ estados, acoes }) => {
 
   const menuClasses = `bg-green-900 bg-opacity-30 p-2 rounded-lg shadow-md space-y-1 transition-all duration-200 ${
     menuAberto ? "opacity-100 visible translate-y-0" : "opacity-0 invisible translate-y-4"
-  } ${isMobile ? "absolute bottom-full left-0 mb-2 w-32" : "mt-2 w-40"}`;
+  } ${isMobile ? "absolute bottom-full left-0 mb-2 w-48" : "mt-2 w-56"}`; // Aumentei a largura do menu
 
   const botaoClasses = (ativo, cor) =>
-    `w-full p-2 text-left flex items-center rounded-md transition-colors whitespace-nowrap ${
+    `w-full p-2 text-left flex items-center rounded-md transition-colors whitespace-nowrap overflow-hidden ${
       ativo ? cor : "bg-green-100 hover:bg-gray-100"
     }`;
 
@@ -47,9 +47,9 @@ const MenuCamadas = ({ estados, acoes }) => {
             {typeof icone === "string" && icone.startsWith("http") ? (
               <img src={icone} alt={label} className="w-4 h-6 mr-3" />
             ) : (
-              <span className="mr-2">{icone}</span>
+              <span className="mr-4">{icone}</span>
             )}
-            {label}
+            <span className="truncate">{label}</span> 
           </button>
         ))}
       </div>
