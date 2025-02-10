@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from "react";
+import slugify from "slugify";
 import PainelHeader from "./PainelHeader";
 import PainelMedia from "./PainelMedia";
 import PainelDescricao from "./PainelDescricao";
@@ -14,7 +15,8 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const { isAudioEnabled, toggleAudio } = useAudio(painelInfo?.audioUrl);
 
   const copiarLink = () => {
-    navigator.clipboard.writeText(window.location.href);
+    const url = window.location.origin + window.location.pathname + "?panel=" + slugify(painelInfo.titulo).toLowerCase();
+    navigator.clipboard.writeText(url);
     alert("Link copiado!");
   };
 
