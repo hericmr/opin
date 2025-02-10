@@ -14,8 +14,23 @@ const PainelMedia = ({ imagens = [], video, titulo }) => {
           onClick={() => setZoomedImage(imagens[0])}
         />
       );
+    } else if (imagens.length === 2) {
+      // Se houver duas imagens, exibir em um grid de 2 colunas
+      return (
+        <div className="grid grid-cols-2 gap-4">
+          {imagens.map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              alt={`${titulo} - ${index + 1}`}
+              className="w-full object-contain rounded-lg shadow-md transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer"
+              onClick={() => setZoomedImage(img)}
+            />
+          ))}
+        </div>
+      );
     } else {
-      // Se houver múltiplas imagens, elas são exibidas em uma grade organizada
+      // Se houver mais de duas imagens, exibir em um grid de 3 colunas (ou outro layout desejado)
       return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {imagens.map((img, index) => (
