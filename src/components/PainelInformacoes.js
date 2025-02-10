@@ -33,18 +33,24 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
 
   if (!painelInfo) return null;
 
+  // Defina a altura do painel dinamicamente no celular, levando em consideração a altura da navbar
+  const navbarHeight = isMobile ? 56 : 0; // Exemplo de altura da navbar (ajuste conforme necessário)
+  
+  // Para dispositivos móveis, a altura é 100vh, já para desktop, ajustamos para 80vh ou outro valor
+  const painelHeight = `calc(${isMobile ? "100vh" : "98vh"} - ${navbarHeight}px)`; // Ajuste conforme necessário
+
   return (
     <div
       ref={painelRef}
       role="dialog"
       aria-labelledby="painel-titulo"
       aria-describedby="painel-descricao"
-      className={`fixed top-20 right-2 left-2 sm:left-auto sm:w-3/4 lg:w-[49%] bg-green-50 rounded-xl shadow-lg z-30 transform transition-transform duration-700 ease-in-out ${
+      className={`fixed bottom-0 left-0 right-0 sm:left-auto sm:w-3/4 lg:w-[49%] bg-green-50 rounded-xl shadow-lg z-30 transform transition-transform duration-700 ease-in-out ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
       }`}
       style={{
-        maxHeight: isMobile ? "89vh" : "90vh",
-        height: "auto",
+        height: isMobile ? painelHeight : "auto", // Define altura no celular
+        maxHeight: isMobile ? "100vh" : "80vh", // Limita a altura no desktop
         transition: "opacity 0.7s ease, transform 0.7s ease",
         display: "flex",
         flexDirection: "column",
