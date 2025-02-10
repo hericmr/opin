@@ -10,14 +10,14 @@ const MenuCamadas = ({ estados, acoes }) => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const menuClasses = `bg-green-900 bg-opacity-30 p-2 rounded-lg shadow-md space-y-1 transition-all duration-200 ${
-    menuAberto ? "opacity-100 visible translate-y-0" : "opacity-0 invisible translate-y-4"
-  } ${isMobile ? "absolute bottom-full left-0 mb-2 w-48" : "mt-2 w-40"}`; // Aumentei a largura do menu
+  const menuClasses = `bg-green-900 bg-opacity-30 p-2 rounded-lg shadow-md transition-all duration-200 ${
+    isMobile ? "fixed bottom-0 left-0 right-0 mx-2 mb-2 grid grid-cols-2 gap-2" : "mt-2 w-40"
+  }`;
 
   const botaoClasses = (ativo, cor) =>
-    `w-full p-2 text-left flex items-center rounded-md transition-colors whitespace-nowrap overflow-hidden ${
-      ativo ? cor : "bg-green-100 hover:bg-gray-100"
-    }`;
+    `w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
+      ativo ? cor : "bg-green-100 hover:bg-green-200"
+    } mb-1`;
 
   const opcoes = [
     { acao: acoes.toggleBairros, estado: estados.bairros, icone: "🏘", label: "Bairros", cor: "bg-gray-200" },
@@ -30,18 +30,20 @@ const MenuCamadas = ({ estados, acoes }) => {
   ];
 
   return (
-    <div className={`fixed ${isMobile ? "bottom-3 left-3" : "top-40 left-3"} z-10`}>
-      {/* Botão de menu */}
-      <button
-        onClick={() => setMenuAberto(!menuAberto)}
-        className={`p-2 ${isMobile ? "w-10 h-10 text-sm" : "w-12 h-12"} bg-white text-black rounded-full shadow-lg hover:bg-gray-100 transition-all flex items-center justify-center`}
-        aria-label={menuAberto ? "Fechar menu" : "Abrir menu"}
-      >
-        {menuAberto ? "✖" : "☰"}
-      </button>
+    <div className={`fixed ${isMobile ? "bottom-0 left-0 right-0" : "top-40 left-3"} z-10`}>
+      {/* Botão de menu (visível apenas no PC) */}
+      {!isMobile && (
+        <button
+          onClick={() => setMenuAberto(!menuAberto)}
+          className={`p-2 ${isMobile ? "w-10 h-10 text-sm" : "w-12 h-12"} bg-white text-black rounded-full shadow-lg hover:bg-gray-100 transition-all flex items-center justify-center`}
+          aria-label={menuAberto ? "Fechar menu" : "Abrir menu"}
+        >
+          {menuAberto ? "✖" : "☰"}
+        </button>
+      )}
 
       {/* Menu de camadas */}
-      <div className={menuClasses}>
+      <div className={`${menuClasses} ${isMobile ? "" : (menuAberto ? "opacity-100 visible translate-y-0" : "opacity-0 invisible translate-y-4")}`}>
         {opcoes.map(({ acao, estado, icone, label, cor }, index) => (
           <button key={index} onClick={acao} className={botaoClasses(estado, cor)}>
             {typeof icone === "string" && icone.startsWith("http") ? (
@@ -49,7 +51,7 @@ const MenuCamadas = ({ estados, acoes }) => {
             ) : (
               <span className="mr-4">{icone}</span>
             )}
-            <span className="truncate">{label}</span> 
+            <span className="truncate">{label}</span> {/* Texto sem alterações */}
           </button>
         ))}
       </div>
