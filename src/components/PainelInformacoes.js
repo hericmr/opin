@@ -37,7 +37,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const navbarHeight = isMobile ? 56 : 0; // Exemplo de altura da navbar (ajuste conforme necessário)
   
   // Para dispositivos móveis, a altura é 100vh, já para desktop, ajustamos para 80vh ou outro valor
-  const painelHeight = `calc(${isMobile ? "100vh" : "98vh"} - ${navbarHeight}px)`; // Ajuste conforme necessário
+  const painelHeight = `calc(${isMobile ? "100vh" : "100vh"} - ${navbarHeight}px)`; // Ajuste conforme necessário
 
   return (
     <div
@@ -50,7 +50,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
       }`}
       style={{
         height: isMobile ? painelHeight : "auto", // Define altura no celular
-        maxHeight: isMobile ? "100vh" : "80vh", // Limita a altura no desktop
+        maxHeight: isMobile ? "100vh" : "92vh", // Limita a altura no desktop
         transition: "opacity 0.7s ease, transform 0.7s ease",
         display: "flex",
         flexDirection: "column",
