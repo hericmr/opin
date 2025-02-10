@@ -15,7 +15,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const { isAudioEnabled, toggleAudio } = useAudio(painelInfo?.audioUrl);
 
   const copiarLink = () => {
-    const url = window.location.origin + window.location.pathname + "/" + slugify(painelInfo.titulo).toLowerCase();
+    const url = window.location.origin + window.location.pathname + "" + slugify(painelInfo.titulo).toLowerCase();
     navigator.clipboard.writeText(url);
     alert("Link copiado!");
   };
