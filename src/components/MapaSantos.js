@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import slugify from "slugify";
 import MapaBase from "./MapaBase";
 import Marcadores from "./Marcadores";
 import Bairros from "./Bairros";
@@ -13,8 +14,19 @@ import pontosReligiao from "./pontosReligiao";
 import detalhesIntro from "./detalhesInfo"; 
 import "./MapaSantos.css";
 
+const urlParams = new URLSearchParams(window.location.search);
+const panel = urlParams.get('panel');
+var initialPanel = detalhesIntro;
+if(panel != '') {
+  const mergedPoints = [...pontosAssistencia, ...pontosHistoricos, ...pontosLazer, ...pontosComunidades, ...pontosEducação, ...pontosReligiao];
+  const pointFound = mergedPoints.find(item => slugify(item.detalhes.titulo).toLowerCase() === panel);
+  if(pointFound != null) {
+    initialPanel = pointFound.detalhes;
+  }
+}
+
 const MapaSantos = () => {
-  const [painelInfo, setPainelInfo] = useState(detalhesIntro);
+  const [painelInfo, setPainelInfo] = useState(initialPanel);
   const [geojsonData, setGeojsonData] = useState(null);
   const [visibilidade, setVisibilidade] = useState({
     bairros: false,
