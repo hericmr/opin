@@ -15,7 +15,7 @@ const MenuCamadas = ({ estados, acoes }) => {
   }`;
 
   const botaoClasses = (ativo, cor) =>
-    `w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
+    `w-full flex items-center gap-1 px-1 py-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
       ativo ? cor : "bg-green-100 hover:bg-green-200"
     } mb-1`;
 
