@@ -7,7 +7,7 @@ const isMobile = () => {
 
 const MapaBase = ({ children }) => {
   // Define coordenadas e zoom baseados no dispositivo
-  const defaultPosition = isMobile() ? [-23.96, -46.36] : [-23.97, -46.29];
+  const defaultPosition = isMobile() ? [-23.98, -46.36] : [-23.97, -46.29];
   const defaultZoom = isMobile() ? 12 : 13; // Ajuste do zoom para mobile
 
   return (
