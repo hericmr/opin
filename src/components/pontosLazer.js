@@ -165,6 +165,24 @@ detalhes: {
     "imagens": [],
     "links": []
   }
+},
+{
+  "lat": -23.9499979,
+  "lng": -46.3403454,
+  "desc": "Bike Santos - Estação 24 Estádio Vila Belmiro",
+  "tipo": "transporte",
+  "detalhes": {
+    "titulo": "Bike Santos - Estação 24 Estádio Vila Belmiro",
+    "descricao": "Estação de bicicletas compartilhadas do sistema Bike Santos, localizada próximo ao Estádio Vila Belmiro, em Santos, SP.",
+    "video": null,
+    "imagens": [],
+    "links": [
+      {
+        "texto": "Localização no Google Maps",
+        "url": "https://maps.app.goo.gl/VSyNGpUsuao7Ajdv6?g_st=ac"
+      }
+    ]
+  }
 }
 
 ];

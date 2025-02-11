@@ -143,7 +143,8 @@ const pontosEducação = [
           {
             "texto": "Localização no Google Maps",
             "url": "https://maps.app.goo.gl/JRoFW7tCuDcH9dkB8"
-          }
+          },
+          
 
         ]
       }
