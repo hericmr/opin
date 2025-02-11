@@ -144,6 +144,24 @@ const pontosEducação = [
             "texto": "Localização no Google Maps",
             "url": "https://maps.app.goo.gl/JRoFW7tCuDcH9dkB8"
           },
+          {
+            "lat": -23.9535718,
+            "lng": -46.3412044,
+            "desc": "Praça Olímpio de Lima",
+            "tipo": "lazer",
+            "detalhes": {
+              "titulo": "Praça Olímpio de Lima",
+              "descricao": "Praça pública localizada em Santos, SP, ideal para passeios, atividades ao ar livre e momentos de lazer.",
+              "video": null,
+              "imagens": [],
+              "links": [
+                {
+                  "texto": "Localização no Google Maps",
+                  "url": "https://maps.app.goo.gl/5HGdUyVBp6faEiKU8?g_st=ac"
+                }
+              ]
+            }
+          },
           
 
         ]
