@@ -153,6 +153,46 @@ detalhes: {
     ],
   },
 },
+
+{
+  "lat": -23.9508488,
+  "lng": -46.3403454, // Ajuste a longitude conforme necessário
+  "desc": "Casa Meninos da Vila - Santos FC Academy",
+  "tipo": "lazer",
+  "detalhes": {
+    "titulo": "Casa Meninos da Vila - Santos FC Academy",
+    "descricao": "Centro de treinamento e formação de jovens talentos do Santos Futebol Clube, conhecido como 'Meninos da Vila'.",
+    "video": null,
+    "imagens": [],
+    "links": [
+      {
+        "texto": "Localização no Google Maps",
+        "url": "https://maps.app.goo.gl/BtiQKRbPDg63R7B39"
+      }
+    ]
+  }
+},
+
+{
+  "lat": -23.9535718,
+  "lng": -46.3412044,
+  "desc": "Praça Olímpio de Lima",
+  "tipo": "lazer",
+  "detalhes": {
+    "titulo": "Praça Olímpio de Lima",
+    "descricao": "Praça pública localizada em Santos, SP, ideal para passeios, atividades ao ar livre e momentos de lazer.",
+    "video": null,
+    "imagens": [],
+    "links": [
+      {
+        "texto": "Localização no Google Maps",
+        "url": "https://maps.app.goo.gl/5HGdUyVBp6faEiKU8?g_st=ac"
+      }
+    ]
+  }
+},
+
+
 {
   "lat": -23.9482041,
   "lng": -46.3440041,
