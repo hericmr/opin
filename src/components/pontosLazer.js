@@ -86,9 +86,11 @@ desc: "Estádio Urbano Caldeira - Vila Belmiro",
 tipo: "lazer",
 detalhes: {
   titulo: "Estádio Urbano Caldeira - Vila Belmiro",
-  descricao: `
-    O Estádio Urbano Caldeira, mais conhecido como Vila Belmiro, é o templo sagrado do futebol, berço de grandes nomes do esporte, como Pelé. 
-  `,
+  "descricao": `
+  Este espaço muito conhecido teve sua inauguração em 12 de outubro de 1916, ainda quando a Vila Belmiro que conhecemos hoje se chamava Vila Operária. Sobre esses nomes, o próprio estádio em sua formação era chamado de outra forma: **Campo do Santos** (ou também **Praça de Esportes do Santos**). Somente em 1933, após o falecimento de Urbano Caldeira, o campo passou a se chamar oficialmente **Estádio Urbano Caldeira**.
+
+  Mas o time, como já se sabe, é anterior a esse período, então a questão é: **Como faziam para treinar?** Os treinamentos aconteciam em um antigo campo de treinamento (que hoje é o **Centro de Treinamento Rei Pelé**), localizado no bairro Macuco, perto da Santa Casa de Saúde. Esse campo ainda existe, mas, na época, não oferecia acomodações necessárias para o time.`,
+
   video: null, // Vídeo ausente
   imagens: [
     "/cartografiasocial/fotos/vila.jpeg",
@@ -97,6 +99,40 @@ detalhes: {
   links: [],
 },
 },
+
+{
+  "lat": -23.9494487,
+  "lng": -46.3380132,
+  "desc": "Torcida Jovem do Santos",
+  "tipo": "esporte",
+  "detalhes": {
+    "titulo": "Torcida Jovem do Santos",
+    "descricao": `
+      A torcida começou a surgir durante os anos de 1966 a 1968, através dos jogos que haviam a capital (São Paulo) e que o Santos participava. Assim, um grupo de jovens começou a criar proximidade devida a frequência com que se encontravam nesses jogos. A partir desse momento, começaram a combinar de irem juntos e ficarem num mesmo lugar.
+
+      Isso ficou tão recorrente que em 1969 decidiram fundar a torcida oficial uniformizada. E mais tarde, após a vitória do Santos, em 26 de setembro de 1969, os 13 garotos decidiram fundar oficialmente a Torcida Jovem. Numa casa no Brás (em São Paulo) inclusive onde residia um dos torcedores, Cosmo Damião. 
+      
+      Uma curiosidade dessa Torcida é a sua politização, que ao longo da história ficou conhecida como uma torcida politizada, sempre presente em lutas pela democracia, dentre elas:
+
+      A Campanha de anistia ampla, geral e irrestrita;
+      A campanha das diretas já;
+      A luta pela autonomia política da cidade de Santos;
+      Como um dos fundadores da A.T.O.E.S.P. (Associação das Torcidas Organizadas de São Paulo) e da A.T.O.S. (Associação das Torcidas Organizadas de Santos);
+      Impeachment do Collor;
+      Entre outros.
+    `,
+    "video": null,  
+    "imagens": [],
+    "links": [
+      {
+        "texto": "Site oficial da Torcida Jovem",
+        "url": "https://torcidajovem.com.br/torcida-jovem/"
+      }
+    ],
+  }
+},
+
+
 {
   lat: -23.9541707,
   lng: -46.3404553,
@@ -117,6 +153,8 @@ detalhes: {
     ],
   },
 }
+
+
 
 ];
 
