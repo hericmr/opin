@@ -104,7 +104,7 @@ detalhes: {
   "lat": -23.9494487,
   "lng": -46.3380132,
   "desc": "Torcida Jovem do Santos",
-  "tipo": "esporte",
+  "tipo": "lazer",
   "detalhes": {
     "titulo": "Torcida Jovem do Santos",
     "descricao": `
@@ -152,9 +152,20 @@ detalhes: {
       },
     ],
   },
+},
+{
+  "lat": -23.9482041,
+  "lng": -46.3440041,
+  "desc": "Museu de Veículos - Memorial Necrópole Ecumênica",
+  "tipo": "lazer",
+  "detalhes": {
+    "titulo": "Museu de Veículos - Memorial Necrópole Ecumênica",
+    "descricao": "O museu fica localizado dentro do Memorial Necrópole e apresenta uma finalidade um tanto curiosa, surgiu a partir da idealização de um amante de carros antigos, Pepe Altstut. Com a ideia de desmistificar a visão tradicional de cemitérios. Desta maneira o espaço abriga o Museu de Veículos do Memorial Necrópole Ecumênica. Como também um mini zoológico, localizado ao lado, que conta com diversas aves; dentre elas um pavão albino, araras e galinhas (memorialsantos.com.br). Mas voltado ao acervo de carros, ele possui exemplares raros que datam de 1909 a 1974, abriga motocicletas, bicicletas e claro os carros. E fica localizado logo ao térreo do Memorial, próximo ao jardim e à capela (memorialsantos.com.br).",
+    "video": null,
+    "imagens": [],
+    "links": []
+  }
 }
-
-
 
 ];
 
