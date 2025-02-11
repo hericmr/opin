@@ -6,13 +6,13 @@ const createIcon = (url, color) =>
     className: `group`, // Remove a classe de animação
     html: `
       <div class="relative">
-        <img src="${url}" class="w-[25px] h-[41px] drop-shadow-md">
+        <img src="${url}" class="w-[20px] h-[33px] drop-shadow-md">
         <span class="absolute inset-0 w-full h-full bg-${color}-400 opacity-20 rounded-full blur-lg"></span>
       </div>
     `,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
+    iconSize: [10, 17],
+    iconAnchor: [9, 30],
+    popupAnchor: [1, -14],
   });
 
 // Criando ícones com cores personalizadas
@@ -22,4 +22,4 @@ export const yellowIcon = createIcon("https://raw.githubusercontent.com/pointhi/
 export const redIcon = createIcon("https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png", "red");
 export const violetIcon = createIcon("https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png", "violet");
 export const blackIcon = createIcon("https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png", "black");
-export const orangeIcon = createIcon("https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png", "orange"); 
+export const orangeIcon = createIcon("https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png", "orange");
