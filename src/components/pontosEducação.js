@@ -120,6 +120,16 @@ const pontosEducação = [
           ]
       }  
     },
+    {
+      "lat": -23.9803405,
+      "lng": -46.3118221,
+      "desc": "E. E. Antônio Ablas Filho Dr",
+      "tipo": "educação",
+      "detalhes": {
+        "titulo": "E. E. Antônio Ablas Filho Dr",
+        "descricao": "Escola estadual, em Santos, SP.",}
+    },
+    
    //{
   /*
     "lat": -23.973561,
@@ -189,7 +199,7 @@ const pontosEducação = [
   */
 
 
-
+  
 ];
 
 export default pontosEducação;
