@@ -181,6 +181,29 @@ const pontosEducação = [
       }
     ]
   }
+},
+
+{
+  "lat": -23.9808059,
+  "lng": -46.3143102, // Ajuste a longitude conforme necessário
+  "desc": "CEEJA Maria Aparecida Pasqualeto Figueiredo",
+  "tipo": "educação",
+  "detalhes": {
+    "titulo": "CEEJA Maria Aparecida Pasqualeto Figueiredo",
+    "descricao": "Centro Estadual de Educação de Jovens e Adultos (CEEJA) localizado na Av. Dr. Epitácio Pessoa, 432 - Aparecida, Santos - SP, 11030-600. Oferece oportunidades de ensino para jovens e adultos. Horário de funcionamento: Aberto até às 22:00.",
+    "video": null,
+    "imagens": [],
+    "links": [
+      {
+        "texto": "Site oficial",
+        "url": "http://ceejamar.com.br"
+      },
+      {
+        "texto": "Localização no Google Maps",
+        "url": "https://www.google.com/maps/place/CEEJA+MARIA+APARECIDA+PASQUALETO+FIGUEIREDO/@-23.9808059,-46.3143102,25m/data=!3m1!1e3!4m10!1m3!11m2!2s-1-j9UfOTqu3-JRdLa1M-g!3e3!3m5!1s0x94ce02454a3ec351:0xac4b9164cfac4aa4!8m2!3d-23.9794762!4d-46.3143102!16s%2Fg%2F1q67djm_y?entry=ttu&g_ep=EgoyMDI1MDIwOS4wIKXMDSoASAFQAw%3D%3D"
+      }
+    ]
+  }
 }
           
 
