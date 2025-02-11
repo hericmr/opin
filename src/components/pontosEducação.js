@@ -121,8 +121,8 @@ const pontosEducação = [
       }  
     },
     {
-      "lat": -23.9803405,
-      "lng": -46.3118221,
+      "lat": -23.9808059,
+      "lng": -46.3118476,
       "desc": "E. E. Antônio Ablas Filho Dr",
       "tipo": "educação",
       "detalhes": {

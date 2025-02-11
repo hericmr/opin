@@ -229,7 +229,7 @@ detalhes: {
   "lat": -23.9794762,
   "lng": -46.3143102,
   "desc": "Biblioteca Municipal \"Mário Faria\"",
-  "tipo": "cultura",
+  "tipo": "educação",
   "detalhes": {
     "titulo": "Biblioteca Municipal \"Mário Faria\"",
     "descricao": "Biblioteca pública localizada na orla da praia de Santos, SP, oferecendo um acervo variado para empréstimo e um espaço aconchegante para leitura à beira-mar.",
