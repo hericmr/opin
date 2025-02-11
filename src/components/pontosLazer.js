@@ -210,7 +210,7 @@ detalhes: {
   "lat": -23.9499979,
   "lng": -46.3403454,
   "desc": "Bike Santos - Estação 24 Estádio Vila Belmiro",
-  "tipo": "transporte",
+  "tipo": "lazer",
   "detalhes": {
     "titulo": "Bike Santos - Estação 24 Estádio Vila Belmiro",
     "descricao": "Estação de bicicletas compartilhadas do sistema Bike Santos, localizada próximo ao Estádio Vila Belmiro, em Santos, SP.",
@@ -220,6 +220,25 @@ detalhes: {
       {
         "texto": "Localização no Google Maps",
         "url": "https://maps.app.goo.gl/VSyNGpUsuao7Ajdv6?g_st=ac"
+      }
+    ]
+  }
+},
+
+{
+  "lat": -23.9794762,
+  "lng": -46.3143102,
+  "desc": "Biblioteca Municipal \"Mário Faria\"",
+  "tipo": "cultura",
+  "detalhes": {
+    "titulo": "Biblioteca Municipal \"Mário Faria\"",
+    "descricao": "Biblioteca pública localizada na orla da praia de Santos, SP, oferecendo um acervo variado para empréstimo e um espaço aconchegante para leitura à beira-mar.",
+    "video": null,
+    "imagens": [],
+    "links": [
+      {
+        "texto": "Localização no Google Maps",
+        "url": "https://www.google.com/maps/place/Biblioteca+Municipal+%22M%C3%A1rio+Faria%22/@-23.9794524,-46.314392,25m/data=!3m1!1e3!4m10!1m3!11m2!2s-1-j9UfOTqu3-JRdLa1M-g!3e3!3m5!1s0x94ce02454a3ec351:0xac4b9164cfac4aa4!8m2!3d-23.9794762!4d-46.3143102!16s%2Fg%2F1q67djm_y?entry=ttu&g_ep=EgoyMDI1MDIwOS4wIKXMDSoASAFQAw%3D%3D"
       }
     ]
   }
