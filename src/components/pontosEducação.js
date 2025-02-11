@@ -129,7 +129,55 @@ const pontosEducação = [
         "titulo": "E. E. Antônio Ablas Filho Dr",
         "descricao": "Escola estadual, em Santos, SP.",}
     },
-    
+    {
+      "lat": -23.9529676,
+      "lng": -46.3403866, // Ajuste a longitude conforme necessário
+      "desc": "UME Professora Emília Maria Reis",
+      "tipo": "educação",
+      "detalhes": {
+        "titulo": "UME Professora Emília Maria Reis",
+        "descricao": "Escola municipal em Santos, SP, oferecendo ensino infantil e fundamental.",
+        "video": null,
+        "imagens": [],
+        "links": [
+          {
+            "texto": "Localização no Google Maps",
+            "url": "https://maps.app.goo.gl/JRoFW7tCuDcH9dkB8"
+          }
+        ]
+      }
+    },
+
+    {
+      "lat": -23.9532317,
+      "lng": -46.3403866, // Ajuste a longitude conforme necessário
+      "desc": "E. E. Prof. Primo Ferreira",
+      "tipo": "educação",
+      "detalhes": {
+        "titulo": "E. E. Prof. Primo Ferreira",
+        "descricao": "Escola pública estadual em Santos, SP, oferecendo ensino fundamental, médio e EJA.",
+        "video": null,
+        "imagens": [
+          "/cartografiasocial/fotos/primo.jpeg",
+          "/cartografiasocial/fotos/primo2.png"
+        ],
+        "links": [
+          {
+            "texto": "Blog da E. E. Prof. Primo Ferreira",
+            "url": "https://profprimoferreira.blogspot.com/"
+          },
+          {
+            "texto": "Perfil no Instagram",
+            "url": "https://www.instagram.com/eeprimoferreira/"
+          },
+          {
+            "texto": "Página no Facebook",
+            "url": "https://www.facebook.com/profile.php?id=154035801319535"
+          }
+        ]
+      }
+    },
+
    //{
   /*
     "lat": -23.973561,
