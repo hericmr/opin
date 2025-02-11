@@ -1,7 +1,7 @@
 import React from "react";
 import { Marker, Tooltip } from "react-leaflet";
 import { motion } from "framer-motion"; 
-import { blackIcon, violetIcon, redIcon, blueIcon, greenIcon, yellowIcon } from "./CustomIcon"; // Ícones personalizados
+import { blackIcon, violetIcon, redIcon, blueIcon, greenIcon, yellowIcon, orangeIcon } from "./CustomIcon"; // Ícones personalizados
 
 
 const Marcadores = ({ pontos, onClick }) => {
@@ -35,7 +35,7 @@ const Marcadores = ({ pontos, onClick }) => {
             break;
           default:
             console.warn(`Tipo desconhecido: ${ponto.tipo}, usando ícone padrão.`);
-            icon = violetIcon;
+            icon = orangeIcon;
         }
 
         return (
