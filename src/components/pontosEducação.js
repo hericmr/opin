@@ -334,7 +334,38 @@ const pontosEducação = [
           }
         ]
       }
-    }
+    },
+    {
+      lat: 23.9405995,
+      lng: -46.3348842,
+      desc: "UME Paulo Gomes Barbosa",
+      tipo: "educacao",
+      detalhes: {
+        titulo: "UME Paulo Gomes Barbosa",
+        descricao: "A escola atende Berçário, Maternal, Jardim, Pré e Fundamental I, é referência de ensino no bairro do Jabaquara e atende a comunidade do bairro e regiões próximas. Localizada na Av. Dr. Waldemar Leão, 184 - Jabaquara, Santos - SP, 11013-601, atende de segunda à sexta-feira, das 8:30 às 17:30.",
+        video: null,
+        imagens: [],
+        links: [],
+      },
+    },
+    {
+      lat: 23.9419539,
+      lng: -46.3403259,
+      desc: "CEREX - Eduardo Ballerini Escola Especial",
+      tipo: "educacao",
+      detalhes: {
+        titulo: "CEREX - Eduardo Ballerini Escola Especial",
+        descricao: "A Escola Especial Eduardo Ballerini realiza atendimento contínuo e gratuito para crianças, jovens e adultos com deficiência, através de atendimentos especializados a fim de desenvolver potencialidades biopsicossociais e de promover autonomia e inserção social.",
+        video: null,
+        imagens: [],
+        links: [
+          {
+            texto: "Site da Escola",
+            url: "http://www.cerexballerini.com.br/",
+          },
+        ],
+      },
+    },
   ];
 
   export default pontosEducação;
