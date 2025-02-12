@@ -317,7 +317,20 @@ const pontosEducação = [
 
   A criação do bairro ocorreu a partir do Plano Diretor do Município de 1968, explica o historiador da Fundação Arquivo e Memória de Santos (Fams), José Dionísio de Almeida. "De 1867 até início do século 20, a população ainda se concentra no espaço urbano que chamamos de Centro Histórico até o Paquetá. Em seguida, gradativamente vai se formando o Macuco, que se efetiva a partir de 1915. Com o desmembramento desse bairro, cria-se a Aparecida, que leva o nome da igreja existente desde a década de 1930 para a de 1940".`,
         video: null,
-        imagens: [],
+        imagens: [
+          "/cartografiasocial/fotos/aparecida_0.jpeg",
+          "/cartografiasocial/fotos/aparecida_1.jpeg",
+          "/cartografiasocial/fotos/aparecida_2.jpeg",
+          "/cartografiasocial/fotos/aparecida_3.jpeg",
+          "/cartografiasocial/fotos/aparecida_4.jpeg",
+          "/cartografiasocial/fotos/aparecida_5.jpeg",
+          "/cartografiasocial/fotos/aparecida_6.jpeg",
+          "/cartografiasocial/fotos/aparecida_7.jpeg",
+          "/cartografiasocial/fotos/aparecida_8.jpeg",
+          "/cartografiasocial/fotos/aparecida_9.jpeg",
+          "/cartografiasocial/fotos/aparecida_10.jpeg",
+
+        ],
         links: [
           {
             texto: "Mais detalhes – Jornal da Orla",
