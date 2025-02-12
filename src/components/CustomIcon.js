@@ -7,7 +7,7 @@ const createIcon = (url, color) =>
     html: `
       <div class="relative">
         <img src="${url}" class="w-[20px] h-[33px] drop-shadow-md">
-        <span class="absolute inset-0 w-full h-full bg-${color}-400 opacity-20 rounded-full blur-lg"></span>
+
       </div>
     `,
     iconSize: [10, 17],
