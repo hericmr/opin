@@ -251,10 +251,10 @@ const pontosAssistencia = [
       titulo: "Santa Casa da Misericórdia de Santos",
       descricao: "A Santa Casa de Santos foi o primeiro hospital do Brasil e é uma instituição filantrópica fundamental no cenário de assistência à saúde. Atualmente segue sendo referência na cidade atendendo serviços privados e alguns setores públicos da saúde.",
       video: null,
-      imagens: [],
+      imagens: [
+        "cartografiasocial/fotos/santa_casa_1.jpg"
+        ],
       links: [],
-    },
-  },
 ]
 
 export default pontosAssistencia;
