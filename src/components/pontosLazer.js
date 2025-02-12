@@ -228,7 +228,7 @@ detalhes: {
   "lat": -23.9709835,
   "lng": -46.3295577,
   "desc": "Concha Acústica - Espaço cultural ao ar livre com capacidade para 300 espectadores.",
-  "tipo": "cultura",
+  "tipo": "lazer",
   "detalhes": {
     "titulo": "Concha Acústica",
     "descricao": "Projetada pelo arquiteto Carlos Prates, a Concha Acústica foi inaugurada em junho de 1981 ao lado do Canal 3, na orla, durante o 93º aniversário do bairro Gonzaga. O espaço funciona como um centro de cultura ao ar livre, onde são promovidos espetáculos artísticos e culturais, além de exposições. Com capacidade para 300 espectadores, é um local icônico para eventos na cidade de Santos.",
