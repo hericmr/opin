@@ -45,7 +45,7 @@ const pontosComunidades = [
         "links": [
           {
             "texto": "Banda da Trabulsi",
-            "url": ""
+            "url": "https://www.instagram.com/bandadatrabulsi/"
           },
           {
             "texto": "Primeira fase da revitalização da Rua Trabulsi em Santos termina",
