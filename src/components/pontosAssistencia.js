@@ -186,7 +186,75 @@ const pontosAssistencia = [
         "/cartografiasocial/fotos/ubspaqueta.jpg"],
       "links": []
     }
-  }
+  },
+  {
+    lat: -23.9407581,
+    lng: -46.3356959,
+    desc: "Policlínica Jabaquara - Unidade Saúde da Família Jabaquara",
+    tipo: "assistencia",
+    detalhes: {
+      titulo: "Policlínica Jabaquara - Unidade Saúde da Família Jabaquara",
+      descricao: "A Unidade Saúde da Família do Jabaquara é a primeira policlínica universitária da cidade de Santos, em conjunto com a fundação Lusíada propicia os estudantes estarem mais próximos da comunidade. A Unidade é referência de cuidado no bairro, além de oferecer consultas e acompanhamentos médicos, oferece oficinas e grupos de promoção e prevenção.",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9448193,
+    lng: -46.3417959,
+    desc: "Codevida - Coordenadoria de Defesa da Vida Animal",
+    tipo: "assistencia",
+    detalhes: {
+      titulo: "Codevida - Coordenadoria de Defesa da Vida Animal",
+      descricao: "A Codevida foi criada pela Lei Complementar 542, art. 548, de 27/09/2005 (reforma administrativa) e tem como função principal o controle populacional de cães e gatos. Além disso, oferece atendimento médico e cirúrgico aos animais castrados da população de baixa renda.",
+      video: null,
+      imagens: [
+      "/cartografiasocial/fotos/codevida_1.jpg",
+      "/cartografiasocial/fotos/codevida_2.jpg"
+      ],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9420504,
+    lng: -46.3395723,
+    desc: "APASEM - Associação de Promoção e Assistência Social Estrela do Mar - Núcleo Jabaquara",
+    tipo: "assistencia",
+    detalhes: {
+      titulo: "APASEM - Associação de Promoção e Assistência Social Estrela do Mar - Núcleo Jabaquara",
+      descricao: "Foi constituída em 02 de maio de 2002, pela Cúria Diocesana de Santos, com o objetivo de apoiar as iniciativas sociais das Paróquias da Diocese de Santos, na capitalização de recursos para projetos da igreja.",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.943,
+    lng: -46.3401784,
+    desc: "Associação Equoterapia",
+    tipo: "assistencia",
+    detalhes: {
+      titulo: "Associação Equoterapia",
+      descricao: "O Projeto Equoterapia é o pioneiro na Baixada Santista na utilização da Equoterapia para reabilitação e habilitação de pessoas deficientes e/ou com necessidades especiais e foi implantado em 1997 no município de São Vicente – SP, em uma área cedida pela Prefeitura Municipal do município, de aproximadamente 900 m², no antigo Horto Municipal de São Vicente.",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9445175,
+    lng: -46.3366313,
+    desc: "Santa Casa da Misericórdia de Santos",
+    tipo: "assistencia",
+    detalhes: {
+      titulo: "Santa Casa da Misericórdia de Santos",
+      descricao: "A Santa Casa de Santos foi o primeiro hospital do Brasil e é uma instituição filantrópica fundamental no cenário de assistência à saúde. Atualmente segue sendo referência na cidade atendendo serviços privados e alguns setores públicos da saúde.",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
 ]
 
 export default pontosAssistencia;
