@@ -89,7 +89,20 @@ A estátua de Iemanjá, localizada na Praia do José Menino, é um dos símbolos
             }
           ]
         }
-      }
+      },
+      {
+        lat: -23.9723761,
+        lng: -46.3043035,
+        desc: "Mochilando Afroculturas",
+        tipo: "historico",
+        detalhes: {
+          titulo: "Mochilando Afroculturas",
+          descricao: "",
+          video: null,
+          imagens: [],
+          links: [],
+        },
+      },
 ];
 
 export default pontosHistoricos;

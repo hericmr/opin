@@ -38,7 +38,7 @@ const pontosEducação = [
       "links": [
         {
           "texto": "Detalhes da escola no site da Secretaria da Educação",
-          "url": "https://www.educacao.sp.gov.br/cgrh/escolas/azevedo-junior/"
+          "url": "https://www.educação.sp.gov.br/cgrh/escolas/azevedo-junior/"
         },
         {
           "texto": "Informações no QEdu",
@@ -162,24 +162,7 @@ const pontosEducação = [
       ]
     }
   },
-  {
-    "lat": -23.9794762,
-    "lng": -46.3143102,
-    "desc": "Biblioteca Municipal \"Mário Faria\"",
-    "tipo": "cultura",
-    "detalhes": {
-      "titulo": "Biblioteca Municipal \"Mário Faria\"",
-      "descricao": "Biblioteca pública localizada na orla da praia de Santos, SP, oferecendo um acervo variado para empréstimo e um espaço aconchegante para leitura à beira-mar.",
-      "video": null,
-      "imagens": [],
-      "links": [
-        {
-          "texto": "Localização no Google Maps",
-          "url": "https://www.google.com/maps/place/Biblioteca+Municipal+%22M%C3%A1rio+Faria%22/@-23.9794524,-46.314392,25m/data=!3m1!1e3!4m10!1m3!11m2!2s-1-j9UfOTqu3-JRdLa1M-g!3e3!3m5!1s0x94ce02454a3ec351:0xac4b9164cfac4aa4!8m2!3d-23.9794762!4d-46.3143102!16s%2Fg%2F1q67djm_y?entry=ttu&g_ep=EgoyMDI1MDIwOS4wIKXMDSoASAFQAw%3D%3D"
-        }
-      ]
-    }
-  },
+  
   {
     "lat": -23.9792099,
     "lng": -46.3104148,
@@ -201,7 +184,127 @@ const pontosEducação = [
         }
       ]
     }
-  }
+  },
+  {
+    "lat": -23.981796,
+    "lng": -46.3070677,
+    "desc": "Escola Verde - Canal 6",
+    "tipo": "educação",
+    "detalhes": {
+      "titulo": "Escola Verde - Canal 6",
+      "descricao": "",
+      "video": null,
+      "imagens": [],
+      "links": [],
+    },
+  },
+  {
+    lat: -23.9717463,
+    lng: -46.3071106,
+    desc: "Colégio Renovação Santos Escola Particular, Bilíngue e Integral",
+    tipo: "educação",
+    detalhes: {
+      titulo: "Colégio Renovação Santos Escola Particular, Bilíngue e Integral",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9796224,
+    lng: -46.3077376,
+    desc: "Escola Santista de Mandarim",
+    tipo: "educação",
+    detalhes: {
+      titulo: "Escola Santista de Mandarim",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9796224,
+    lng: -46.3077376,
+    desc: "Escola XIII de Julho",
+    tipo: "educação",
+    detalhes: {
+      titulo: "Escola XIII de Julho",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9751803,
+    lng: -46.3072396,
+    desc: 'UME "Dos Andradas l" - Berçário, Maternal, Jardim e Pré',
+    tipo: "educação",
+    detalhes: {
+      titulo: 'UME "Dos Andradas l" - Berçário, Maternal, Jardim e Pré',
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9796224,
+    lng: -46.3077376,
+    desc: 'UME "Dos Andradas II" - 1° ao 5° ano',
+    tipo: "educação",
+    detalhes: {
+      titulo: 'UME "Dos Andradas II" - 1° ao 5° ano',
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9796224,
+    lng: -46.3077376,
+    desc: "Escola Estadual Olga Cury",
+    tipo: "educação",
+    detalhes: {
+      titulo: "Escola Estadual Olga Cury",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9796224,
+    lng: -46.3077376,
+    desc: "Colégio Jean Piaget - Ensino Fundamental I",
+    tipo: "educação",
+    detalhes: {
+      titulo: "Colégio Jean Piaget - Ensino Fundamental I",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9794312,
+    lng: -46.3053322,
+    desc: "Escola Municipal Lourdes Ortiz",
+    tipo: "educação",
+    detalhes: {
+      titulo: "Escola Municipal Lourdes Ortiz",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+
+  
+
 ];
 
 export default pontosEducação;

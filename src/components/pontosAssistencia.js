@@ -67,10 +67,111 @@ const pontosAssistencia = [
         }
       ]
     }
-  }
-  
+  },
+  {
+    lat: -23.9796224,
+    lng: -46.3077376,
+    desc: "Casa do Paraplégico de Santos",
+    tipo: "assistencia",
+    detalhes: {
+      titulo: "Casa do Paraplégico de Santos",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9796224,
+    lng: -46.3077376,
+    desc: "Vila Criativa Senior 50+",
+    tipo: "assistencia",
+    detalhes: {
+      titulo: "Vila Criativa Senior 50+",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9711037,
+    lng: -46.3080697,
+    desc: "Pronto Socorro Dentário e de Implantes",
+    tipo: "assistencia",
+    detalhes: {
+      titulo: "Pronto Socorro Dentário e de Implantes",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9796224,
+    lng: -46.3077376,
+    desc: "Policlínica Aparecida",
+    tipo: "assistencia",
+    detalhes: {
+      titulo: "Policlínica Aparecida",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9794573,
+    lng: -46.3060937,
+    desc: "Residencial Geriátrico Lar Vida",
+    tipo: "assistencia",
+    detalhes: {
+      titulo: "Residencial Geriátrico Lar Vida",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9785566,
+    lng: -46.3088064,
+    desc: "Prevent Senior. Unidade Cascais",
+    tipo: "assistencia",
+    detalhes: {
+      titulo: "Prevent Senior. Unidade Cascais",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9791109,
+    lng: -46.3096918,
+    desc: "Gerência Executiva do Instituto Nacional do Seguro Social em Santos",
+    tipo: "assistencia",
+    detalhes: {
+      titulo: "Gerência Executiva do Instituto Nacional do Seguro Social em Santos",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9781893,
+    lng: -46.3111461,
+    desc: "Secretaria de Estado da Saúde",
+    tipo: "assistencia",
+    detalhes: {
+      titulo: "Secretaria de Estado da Saúde",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
 ];
-
-
 
 export default pontosAssistencia;
