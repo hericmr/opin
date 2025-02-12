@@ -322,7 +322,6 @@ const pontosEducação = [
           "/cartografiasocial/fotos/aparecida_1.jpeg",
           "/cartografiasocial/fotos/aparecida_2.jpeg",
           "/cartografiasocial/fotos/aparecida_3.jpeg",
-          "/cartografiasocial/fotos/aparecida_4.jpeg",
           "/cartografiasocial/fotos/aparecida_5.jpeg",
           "/cartografiasocial/fotos/aparecida_6.jpeg",
           "/cartografiasocial/fotos/aparecida_7.jpeg",
