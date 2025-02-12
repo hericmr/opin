@@ -61,14 +61,17 @@ const useAudio = (audioUrl) => {
   };
 
   useEffect(() => {
+    // Solução para o warning do ESLint
+    const synth = synthRef.current;
+
     return () => {
       console.log("Cleaning up audio and speech synthesis..."); // Log para verificar a limpeza
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
       }
-      if (synthRef.current) {
-        synthRef.current.cancel();
+      if (synth) {
+        synth.cancel();
       }
     };
   }, []);

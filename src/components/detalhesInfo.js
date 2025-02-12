@@ -39,7 +39,6 @@ const detalhesIntro = {
           <br><img src="/cartografiasocial/fotos/turma.png" alt="Turma do Vespertino" className="h-10 w-auto object-contain" />
         `,
 };
-console.log("DetalhesIntro:", detalhesIntro);
-console.log("Audio URL em DetalhesIntro:", detalhesIntro.audioUrl);
+
 
 export default detalhesIntro;

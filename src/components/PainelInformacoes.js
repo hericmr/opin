@@ -5,14 +5,14 @@ import PainelMedia from "./PainelMedia";
 import PainelDescricao from "./PainelDescricao";
 import PainelLinks from "./PainelLinks";
 import usePainelVisibility from "./usePainelVisibility";
-import useAudio from "./useAudio";
-import AudioButton from "./AudioButton";
+import useAudio from "./useAudio"; 
+import AudioButton from "./AudioButton"; 
 import ShareButton from "./ShareButton";
 
 const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const { isVisible, isMobile } = usePainelVisibility(painelInfo);
   const painelRef = useRef(null);
-  const { isAudioEnabled, toggleAudio } = useAudio(painelInfo?.audioUrl);
+  const { isAudioEnabled, toggleAudio } = useAudio(painelInfo?.audioUrl); 
 
   const copiarLink = () => {
     const url = window.location.origin + window.location.pathname + "?panel=" + slugify(painelInfo.titulo).toLowerCase();
@@ -33,11 +33,10 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
 
   if (!painelInfo) return null;
 
-  // Defina a altura do painel dinamicamente no celular, levando em consideração a altura da navbar
-  const navbarHeight = isMobile ? 62 : 0; // Exemplo de altura da navbar (ajuste conforme necessário)
+
+  const navbarHeight = isMobile ? 62 : 0; 
   
-  // Para dispositivos móveis, a altura é 100vh, já para desktop, ajustamos para 80vh ou outro valor
-  const painelHeight = `calc(${isMobile ? "100vh" : "100vh"} - ${navbarHeight}px)`; // Ajuste conforme necessário
+  const painelHeight = `calc(${isMobile ? "100vh" : "100vh"} - ${navbarHeight}px)`; 
 
   return (
     <div
@@ -49,8 +48,8 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
       }`}
       style={{
-        height: isMobile ? painelHeight : "auto", // Define altura no celular
-        maxHeight: isMobile ? "96vh" : "92vh", // Limita a altura no desktop
+        height: isMobile ? painelHeight : "auto", 
+        maxHeight: isMobile ? "96vh" : "92vh", 
         transition: "opacity 0.7s ease, transform 0.7s ease",
         display: "flex",
         flexDirection: "column",
@@ -66,6 +65,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
           imagens={painelInfo.imagens}
           video={painelInfo.video}
           titulo={painelInfo.titulo}
+          audioUrl={painelInfo.audioUrl}
         />
         <PainelDescricao descricao={painelInfo.descricao} />
         <PainelLinks links={painelInfo.links || []} />
