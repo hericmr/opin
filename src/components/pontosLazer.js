@@ -242,8 +242,150 @@ detalhes: {
       }
     ]
   }
-}
-
+},
+  {
+    lat: -23.9796224,
+    lng: -46.3077376,
+    desc: "Feira livre ás quartas-feira",
+    tipo: "lazer",
+    detalhes: {
+      titulo: "Feira livre ás quartas-feira",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9717176,
+    lng: -46.3071205,
+    desc: "A P A Braz Cia",
+    tipo: "lazer",
+    detalhes: {
+      titulo: "A P A Braz Cia",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9712971,
+    lng: -46.3073434,
+    desc: "Clube Atlético Santa Cecília",
+    tipo: "lazer",
+    detalhes: {
+      titulo: "Clube Atlético Santa Cecília",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9796224,
+    lng: -46.3077376,
+    desc: "Lanchas Tour - Passeio de Lancha Guarujá e Santos",
+    tipo: "lazer",
+    detalhes: {
+      titulo: "Lanchas Tour - Passeio de Lancha Guarujá e Santos",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9796224,
+    lng: -46.3077376,
+    desc: "Quadra BNH",
+    tipo: "lazer",
+    detalhes: {
+      titulo: "Quadra BNH",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9759863,
+    lng: -46.3100247,
+    desc: "Praça Abílio Rodrigues Paz",
+    tipo: "lazer",
+    detalhes: {
+      titulo: "Praça Abílio Rodrigues Paz",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9768919,
+    lng: -46.3100835,
+    desc: "Praiamar Shopping",
+    tipo: "lazer",
+    detalhes: {
+      titulo: "Praiamar Shopping",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9757311,
+    lng: -46.3117249,
+    desc: "Sesc - Santos",
+    tipo: "lazer",
+    detalhes: {
+      titulo: "Sesc - Santos",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9764243,
+    lng: -46.3127398,
+    desc: "Praça do Sesc Santos",
+    tipo: "lazer",
+    detalhes: {
+      titulo: "Praça do Sesc Santos",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.9794762,
+    lng: -46.3143102,
+    desc: 'Biblioteca Municipal "Mário Faria"',
+    tipo: "lazer",
+    detalhes: {
+      titulo: 'Biblioteca Municipal "Mário Faria"',
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
+  {
+    lat: -23.98033,
+    lng: -46.3132581,
+    desc: "Fonte do Sapo",
+    tipo: "lazer",
+    detalhes: {
+      titulo: "Fonte do Sapo",
+      descricao: "",
+      video: null,
+      imagens: [],
+      links: [],
+    },
+  },
 ];
 
 export default pontosLazer;
