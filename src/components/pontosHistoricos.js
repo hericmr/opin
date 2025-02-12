@@ -69,9 +69,9 @@ A estátua de Iemanjá, localizada na Praia do José Menino, é um dos símbolos
       {
         lat: -23.93858343910077,
         lng: -46.31737352946441,
+        tipo: "historico",
         desc: "Cemitério do Paquetá - O mais antigo de Santos, inaugurado em 1853.",
         audioUrl: "/cartografiasocial/audio/cemiterio.mp3",
-        tipo: "historico",
         detalhes: {
           titulo: "Cemitério do Paquetá",
           descricao: `
