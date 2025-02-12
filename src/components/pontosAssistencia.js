@@ -182,7 +182,8 @@ const pontosAssistencia = [
       "titulo": "Policlínica e Pronto Atendimento do Porto - UBS Pa-Porto",
       "descricao": "A Policlínica e Pronto Atendimento do Porto, localizada no bairro Paquetá, em Santos, é uma unidade de saúde que oferece serviços médicos básicos e emergenciais à população. Situada na Rua General Câmara, 507, a unidade funciona de segunda a sexta-feira, das 7h às 19h. A policlínica disponibiliza atendimentos em diversas especialidades médicas, além de serviços como consultas, exames laboratoriais, vacinação e acompanhamento de doenças crônicas. O pronto atendimento serve como suporte para casos de urgência e emergência de baixa complexidade, garantindo um serviço acessível à comunidade local. Para mais informações, é possível entrar em contato.",
       "video": null,
-      "imagens": [],
+      "imagens": [
+        "/cartografiasocial/fotos/ubspaqueta.jpg"],
       "links": []
     }
   }
