@@ -66,8 +66,30 @@ A estátua de Iemanjá, localizada na Praia do José Menino, é um dos símbolos
         ]
       }
       },
-    
-
+      {
+        lat: -23.93858343910077,
+        lng: -46.31737352946441,
+        desc: "Cemitério do Paquetá - O mais antigo de Santos, inaugurado em 1853.",
+        audioUrl: "/cartografiasocial/audio/cemiterio.mp3",
+        tipo: "historico",
+        detalhes: {
+          titulo: "Cemitério do Paquetá",
+          descricao: `
+            O Cemitério do Paquetá, o mais antigo de Santos, teve seus primeiros enterros em 1853, substituindo os sepultamentos nas igrejas, como a do Valongo. Devido à falta de espaço, a Câmara adquiriu um terreno em 1851 para a construção do cemitério. Inicialmente, apenas o muro, o portão e parte do terreno foram preparados. Em 1854, a Capela de Santo Cristo foi construída, e o cemitério foi inaugurado em 30 de novembro. Sua regulamentação ocorreu em 16 de fevereiro de 1855. No mesmo ano, uma epidemia de cólera exigiu a ampliação emergencial do local.
+      
+            Tomado por imagens de anjos, alamedas arborizadas e sepulturas que são verdadeiras obras de arte, o Cemitério do Paquetá é referência histórica nacional e o mais antigo de Santos. Figuras ilustres, como o ex-governador Mário Covas; os ex-prefeitos Luiz La Scala Jr., Antônio Feliciano; os poetas Martins Fontes e Vicente de Carvalho; o escritor Júlio Ribeiro e o pintor Benedicto Calixto, foram enterradas no local e suas sepulturas podem ser visitadas. Muitos dos ornamentos das campas foram confeccionados com mármore de Carrara, cobre e bronze. A sepultura que mais chama a atenção e intriga santistas há anos é a do túmulo do advogado abolicionista João Galeão Carvalhal. A obra possui uma imagem de uma mulher, em tamanho natural, debruçada sobre a lápide chorando sua perda, com um busto acima ladeado por dois anjos. O Cemitério do Paquetá fica na Rua Doutor Cóchrane, s/n, no Paquetá e fica aberto das 7h às 17h, todos os dias, com visitação livre.
+          `,
+          video: null,
+          imagens: [
+            "/cartografiasocial/fotos/cemiterio.jpg"],
+          links: [
+            {
+              texto: "Fonte: Prefeitura de Santos",
+              url: "https://www.santos.sp.gov.br"
+            }
+          ]
+        }
+      }
 ];
 
 export default pontosHistoricos;
