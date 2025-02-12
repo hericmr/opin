@@ -108,7 +108,7 @@ A estátua de Iemanjá, localizada na Praia do José Menino, é um dos símbolos
       lat: -23.9392689,
       lng: -46.3359225,
       desc: "Marco Oficial do Quilombo do Jabaquara",
-      tipo: "historicos",
+      tipo: "historico",
       detalhes: {
         titulo: "Marco Oficial do Quilombo do Jabaquara",
         descricao: "Segundo estudo publicado pelo Instituto Prócomum o Quilombo do Jabaquara foi o mais famoso da região, um dos maiores do Brasil e estima-se que tenha abrigado 10 mil escravizados. Fundado em 1882, por iniciativa dos abolicionistas da elite santista Américo Martins e Xavier Pinheiro teve como líder o negro alforriado Quintino de Lacerda.",
