@@ -162,7 +162,7 @@ const pontosEducação = [
       ]
     }
   },
-  
+
   {
     "lat": -23.9792099,
     "lng": -46.3104148,
@@ -302,9 +302,30 @@ const pontosEducação = [
       links: [],
     },
   },
+    {
+      lat: -23.98127,
+      lng: -46.31288,
+      desc: "Aparecida",
+      tipo: "bairro",
+      detalhes: {
+        titulo: "Aparecida",
+        descricao: `Considerado um dos bairros mais populosos da Cidade, com cerca de 50 mil habitantes, a Aparecida é delimitada por cinco grandes avenidas – Bartolomeu de Gusmão, Almirante Cochrane, Afonso Pena, Joaquim Montenegro e Pedro Lessa. Muitas são as referências locais como a Fonte do Sapo, a Paróquia Nossa Senhora Aparecida, que inspirou o nome do bairro, a Praça de Cães (Praça Caio Ribeiro de Moraes Silva), a FeirArte, o Sesc e o Praiamar Shopping.
 
-  
+  Quem ali reside ainda conta com equipamentos na área da saúde como a UPA Zona Leste, a Policlínica Aparecida e o Ambulatório Médico de Especialidades (AME), ligado ao Governo do Estado, além das unidades municipais de educação Lourdes Ortiz e dos Andradas, e as estaduais Escolástica Rosa e Aristóteles Ferreira e a CEEJA Maria Aparecida Pasqualeto Figueiredo.
 
-];
+  O bairro cresceu muito e possui uma das estruturas mais modernas da Cidade. Muita coisa mudou, ficou mais valorizado com a instalação de grandes empreendimentos que geraram emprego, mas ainda preserva chalés com moradores antigos.
 
-export default pontosEducação;
+  A criação do bairro ocorreu a partir do Plano Diretor do Município de 1968, explica o historiador da Fundação Arquivo e Memória de Santos (Fams), José Dionísio de Almeida. "De 1867 até início do século 20, a população ainda se concentra no espaço urbano que chamamos de Centro Histórico até o Paquetá. Em seguida, gradativamente vai se formando o Macuco, que se efetiva a partir de 1915. Com o desmembramento desse bairro, cria-se a Aparecida, que leva o nome da igreja existente desde a década de 1930 para a de 1940".`,
+        video: null,
+        imagens: [],
+        links: [
+          {
+            texto: "Mais detalhes – Jornal da Orla",
+            url: "https://jornaldaorla.com.br/noticias/48464-bairro-aparecida-em-santos-completa-53-anos/"
+          }
+        ]
+      }
+    }
+  ];
+
+  export default pontosEducação;
