@@ -224,7 +224,7 @@ const pontosAssistencia = [
       titulo: "APASEM - Associação de Promoção e Assistência Social Estrela do Mar - Núcleo Jabaquara",
       descricao: "Foi constituída em 02 de maio de 2002, pela Cúria Diocesana de Santos, com o objetivo de apoiar as iniciativas sociais das Paróquias da Diocese de Santos, na capitalização de recursos para projetos da igreja. om uma diretoria atuante, envolvida com as  causas sociais de nossa região, a Estrela do Mar conta no seu quadro diretivo com pessoas voluntárias totalmente comprometidas com as ações sociais da igreja, apoiando diversas atividades sociais, culturais e educacionais em vários municípios da Baixada Santista. Aém da iniciativa privada, atualmente, apresentam-se como principais parceiros da APASEM, o Poder Público Municipal e Estadual, por meio de suas secretarias em Santos, Cubatão e Praia Grande. Atualmente no bairro do Jabaquara oferta aulas voltadas para fortalecimento e convivência dos idosos, com  aulas de música, história geral, cultura, prática laboral e jogos.",
       video: null,
-      imagens: ["/cartografiasocial/fotos/apasem.jpg",]
+      imagens: ["/cartografiasocial/fotos/apasem.jpg",],
       links: [],
     },
   },
