@@ -197,7 +197,7 @@ const pontosAssistencia = [
       descricao: " Unidade Saúde da Família do Jabaquara é a primeira policlínica universitária da cidade de Santos, em conjunto com a fundação Lusíada propicia os estudantes estarem mais próximos da comunidade. A Unidade é referência de cuidado no bairro, além de oferecer consultas e acompanhamentos médicos, oferece  oficinas e grupos de promoção e prevenção.",
       video: null,
       imagens: ["/cartografiasocial/fotos/poli_jaba_1.jpg", 
-                "/cartografiasocial/fotos/poli_jaba_2.jpg"]
+                "/cartografiasocial/fotos/poli_jaba_2.jpg"],
       links: [],
     },
   },
