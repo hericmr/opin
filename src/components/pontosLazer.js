@@ -255,7 +255,10 @@ detalhes: {
     "titulo": "Biblioteca Municipal \"Mário Faria\"",
     "descricao": "Biblioteca pública localizada na orla da praia de Santos, SP, oferecendo um acervo variado para empréstimo e um espaço aconchegante para leitura à beira-mar.",
     "video": null,
-    "imagens": [],
+    "imagens": [
+      "/cartografiasocial/fotos/concha.jpeg"
+
+    ],
     "links": [
       {
         "texto": "Localização no Google Maps",
