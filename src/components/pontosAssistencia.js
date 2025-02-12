@@ -211,9 +211,7 @@ const pontosAssistencia = [
       descricao: " A Codevida foi criada pela Lei Complementar 542, art. 548, de 27/09/2005 (reforma administrativa) e tem como função principal o controle populacional de cães e gatos. Além disso, oferece atendimento médico e cirúrgico aos animais castrados da população de baixa renda. Por ano, o setor realiza cerca de cinco mil castrações e quase 10 mil atendimentos clínicos. Para isso, além da Unidade Jabaquara, possui uma Unidade no Jardim Botânico Chico Mendes (Bom Retiro) e outra em Caruara (Área Continental). ara incentivar ainda mais as castrações, a Codevida possui dois veículos Castramóvel, equipamento especialmente adaptado como centro cirúrgico, capaz de realizar de 20 a 40 castrações por dia, atendendo diretamente nos bairros, após pré-agendamento. A Codevida é uma das únicas entidades públicas do País onde seus animais já são doados castrados, microchipados e com vacinas importadas. No período em que estão sob tutela da coordenadoria, são alimentados com ração de qualidade e recebem acompanhamento psicológico e físico, embasados em critérios internacionais de bem-estar animal.  Codevida também possui um veículo especialmente adaptado para transporte em caso de resgate de animal em risco de morte, sempre previamente avaliado pelos técnicos do setor.",
       video: null,
       imagens: [
-      "/cartografiasocial/fotos/codevida_1.jpg",
-      "/cartografiasocial/fotos/codevida_2.jpg"
-      ],
+      "/cartografiasocial/fotos/codevida_1.jpg"],
       links: [],
     },
   },
@@ -226,7 +224,7 @@ const pontosAssistencia = [
       titulo: "APASEM - Associação de Promoção e Assistência Social Estrela do Mar - Núcleo Jabaquara",
       descricao: "Foi constituída em 02 de maio de 2002, pela Cúria Diocesana de Santos, com o objetivo de apoiar as iniciativas sociais das Paróquias da Diocese de Santos, na capitalização de recursos para projetos da igreja. om uma diretoria atuante, envolvida com as  causas sociais de nossa região, a Estrela do Mar conta no seu quadro diretivo com pessoas voluntárias totalmente comprometidas com as ações sociais da igreja, apoiando diversas atividades sociais, culturais e educacionais em vários municípios da Baixada Santista. Aém da iniciativa privada, atualmente, apresentam-se como principais parceiros da APASEM, o Poder Público Municipal e Estadual, por meio de suas secretarias em Santos, Cubatão e Praia Grande. Atualmente no bairro do Jabaquara oferta aulas voltadas para fortalecimento e convivência dos idosos, com  aulas de música, história geral, cultura, prática laboral e jogos.",
       video: null,
-      imagens: [],
+      imagens: ["/cartografiasocial/fotos/apasem.jpg",]
       links: [],
     },
   },
@@ -239,7 +237,7 @@ const pontosAssistencia = [
       titulo: "Associação Equoterapia",
       descricao: "O Projeto Equoterapia é o pioneiro na Baixada Santista na utilização da Equoterapia para reabilitação e habilitação de pessoas deficientes e/ou com necessidades especiais e foi implantado em 1997 no município de São Vicente – SP, em uma área cedida pela Prefeitura Municipal do município, de aproximadamente 900 m², no antigo Horto Municipal de São Vicente.",
       video: null,
-      imagens: [],
+      imagens: ["/cartografiasocial/fotos/codevida_2.jpg"],
       links: [],
     },
   },
