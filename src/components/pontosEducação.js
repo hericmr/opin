@@ -1,5 +1,54 @@
 const pontosEducação = [
   {
+    "lat": -23.9647998,
+    "lng": -46.3260761,
+    "desc": "Escola Estadual Canadá",
+    "tipo": "educação",
+    "detalhes": {
+      "titulo": "Escola Estadual Canadá",
+      "descricao": "A Escola Estadual Canadá é uma instituição de ensino localizada no bairro Boqueirão, atendendo alunos do ensino fundamental e médio. Possui estrutura moderna e oferece uma educação de qualidade para a comunidade estudantil.",
+      "video": null,
+      "imagens": [],
+      "links": [
+        {
+          "texto": "Localização no Google Maps",
+          "url": "https://www.google.com.br/maps/place/Escola+Estadual+Canad%C3%A1/@-23.9648928,-46.3263122,20.3z"
+        }
+      ]
+    }
+  },
+  {
+    "lat": -23.9647998,
+    "lng": -46.3260761,
+    "desc": "UME Lydia Federici",
+    "tipo": "educação",
+    "detalhes": {
+      "titulo": "UME Lydia Federici",
+      "descricao": "A UME Lydia Federici atende alunos do ensino fundamental, proporcionando ensino de qualidade para crianças da região. A escola conta com uma infraestrutura adequada para o aprendizado dos alunos.",
+      "video": null,
+      "imagens": [],
+      "links": []
+    }
+  },
+  {
+    "lat": -23.9671019,
+    "lng": -46.3235923,
+    "desc": "UME Derosse José de Oliveira",
+    "tipo": "educação",
+    "detalhes": {
+      "titulo": "UME Derosse José de Oliveira",
+      "descricao": "A UME Derosse José de Oliveira é uma escola municipal localizada no Boqueirão. Oferece ensino infantil e fundamental, atendendo crianças da comunidade local.",
+      "video": null,
+      "imagens": [],
+      "links": [
+        {
+          "texto": "Localização no Google Maps",
+          "url": "https://www.google.com.br/maps/place/UME+Derosse+Jos%C3%A9+de+Oliveira/@-23.9670841,-46.3235617,21z"
+        }
+      ]
+    },
+  },
+  {
     "lat": -23.9531346,
     "lng": -46.3403866,
     "desc": "E. E. Prof. Primo Ferreira",
