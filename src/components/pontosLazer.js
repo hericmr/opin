@@ -410,6 +410,33 @@ detalhes: {
       links: [],
     },
   },
-];
 
+  {
+    lat: -23.9420434,
+    lng: -46.3370367,
+    desc: "Instituto Cultural Vasco Carmano",
+    tipo: "lazer",
+    detalhes: {
+      titulo: "Instituto Cultural Vasco Carmano",
+      descricao: "Criado em 2006, o Instituto Cultural Vasco Carmano (ICVC) é uma Organização da Sociedade Civil de Interesse Público (OSCIP), ou seja, é uma ONG que surgiu a partir da iniciativa privada, e possui uma chancela do Ministério da Justiça, porque desenvolve práticas sociais que auxiliam o poder público e a iniciativa privada. O ICVC surgiu a partir de um grupo de artistas da produtora “Criando Ideias e Produções”, uma empresa privada. A função do Instituto é ser parceiro do poder público e da iniciativa privada em ações de treinamento e incentivo à cultura, por meio do teatro. Um dos projetos: Quase no Quintal de casa. O projeto Quase no Quintal de Casa tem por objetivo realizar 82 apresentações acessíveis a crianças entre 06 e 10 anos de idade em cidades da Baixada Santista, no estado de São Paulo, Camaçari, no estado da Bahia, e em Vitória e Cariacica, no estado do Espírito Santo. Locais esses onde é comum encontrar população em situação de vulnerabilidade social habitando áreas de mangue, principal tema deste espetáculo. Um trabalho voltado a difundir a importância dos manguezais de maneira lúdica, respeitando e valorizando as experiências coletivas adquiridas com as dificuldades que essas comunidades enfrentam. O teatro é um caminho que pode não só despertar o interesse pela questão temática, mas principalmente estimular a prática da observação, criando a possibilidade real de preservação desse ecossistema.",
+      video: null,
+      imagens: [],
+      links: []
+    },
+    
+  },
+  {
+    lat: -23.9732609,
+    lng: -46.3222072,
+    desc: "Pinacoteca Benedicto Calixto",
+    tipo: "lazer",
+    detalhes: {
+      titulo: "Pinacoteca Benedicto Calixto",
+      descricao: "A Pinacoteca Benedicto Calixto é um importante centro cultural em Santos, localizado no bairro Boqueirão. O espaço abriga exposições de arte, eventos culturais e atividades educativas, sendo um ponto de referência para os amantes da arte.",
+      video: null,
+      imagens: [],
+      links: []
+    }
+  }
+];
 export default pontosLazer;
