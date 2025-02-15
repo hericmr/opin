@@ -1,42 +1,50 @@
 import React from "react";
 import { Marker, Tooltip } from "react-leaflet";
 import { motion } from "framer-motion"; 
-import { blackIcon, violetIcon, redIcon, blueIcon, greenIcon, yellowIcon, orangeIcon } from "./CustomIcon"; // Ícones personalizados
+import { blackIcon, violetIcon, redIcon, blueIcon, greenIcon, yellowIcon } from "./CustomIcon"; // Ícones personalizados
 
-
-const Marcadores = ({ pontos, onClick }) => {
-  if (!pontos || pontos.length === 0) {
-    console.warn("Nenhum ponto para exibir."); 
-    return null;
-  }
+const Marcadores = ({ dataPoints, visibility, onClick }) => {
+  
+  const DataPointType = Object.freeze({
+    ASSISTENCIA: { icon: greenIcon , enabled: visibility.assistencia },
+    HISTORICO:   { icon: yellowIcon, enabled: visibility.historicos },
+    LAZER:       { icon: blueIcon  , enabled: visibility.culturais },
+    COMUNIDADES: { icon: redIcon   , enabled: visibility.comunidades },
+    EDUCACAO:    { icon: violetIcon, enabled: visibility.educação },
+    RELIGIAO:    { icon: blackIcon , enabled: visibility.religiao }
+  });
 
   return (
     <>
-      {pontos.map((ponto, index) => {
-        let icon;
+      {
+      dataPoints.map((ponto, index) => {
+        
+        let dataPointType;
         switch (ponto.tipo) {
           case "assistencia":
-            icon = greenIcon;
+            dataPointType = DataPointType.ASSISTENCIA;
             break;
           case "historico":
-            icon = yellowIcon;
+            dataPointType = DataPointType.HISTORICO;
             break;
           case "lazer":
-            icon = blueIcon;
+            dataPointType = DataPointType.LAZER;
             break;
           case "comunidades":
-            icon = redIcon;
+            dataPointType = DataPointType.COMUNIDADES;
             break;
           case "educação":
-            icon = violetIcon;
+            dataPointType = DataPointType.EDUCACAO;
             break;
-            case "religiao":
-            icon = blackIcon;
+          case "religiao":
+            dataPointType = DataPointType.RELIGIAO;
             break;
           default:
             console.warn(`Tipo desconhecido: ${ponto.tipo}, usando ícone padrão.`);
-            icon = orangeIcon;
+            return null;
         }
+
+        if (!dataPointType.enabled) return null;
 
         return (
           <motion.div
@@ -46,12 +54,12 @@ const Marcadores = ({ pontos, onClick }) => {
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           >
             <Marker
-              position={[ponto.lat, ponto.lng]}
-              icon={icon}
+              position={[ponto.latitude, ponto.longitude]}
+              icon={dataPointType.icon}
               eventHandlers={{
                 click: () => {
                   if (onClick) {
-                    onClick(ponto.detalhes);
+                    onClick(ponto);
                   } else {
                     console.warn("Nenhum handler onClick definido.");
                   }
@@ -59,7 +67,7 @@ const Marcadores = ({ pontos, onClick }) => {
               }}
             >
               <Tooltip direction="top" offset={[0, -20]} opacity={0.9}>
-                {ponto.detalhes?.titulo || "Sem título"}
+                {ponto.titulo || "Sem título"}
               </Tooltip>
             </Marker>
           </motion.div>

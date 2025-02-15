@@ -10,6 +10,7 @@ import AudioButton from "./AudioButton";
 import ShareButton from "./ShareButton";
 
 const PainelInformacoes = ({ painelInfo, closePainel }) => {
+
   const { isVisible, isMobile } = usePainelVisibility(painelInfo);
   const painelRef = useRef(null);
   const { isAudioEnabled, toggleAudio } = useAudio(painelInfo?.audioUrl);
@@ -38,7 +39,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
       input.select();
       document.execCommand("copy");
       document.body.removeChild(input);
-      alert("Link copiado (método alternativo)!");
+      alert("Link copiado!");
     }
   };
 
@@ -117,8 +118,8 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
           titulo={painelInfo.titulo}
           audioUrl={painelInfo.audioUrl}
         />
-        <PainelDescricao descricao={painelInfo.descricao} />
-        <PainelLinks links={painelInfo.links || []} />
+        <PainelDescricao descricao={painelInfo.descricao_detalhada} />
+        <PainelLinks links={painelInfo.links} />
 
         <div className="mt-4 text-center">
           <ShareButton onClick={copiarLink} onShare={compartilhar} />
