@@ -4,7 +4,7 @@ Este projeto mapeia territorialidades, lutas e conquistas dos movimentos sociais
 
 ## Como Contribuir
 
-1. Acesse a [planilha de contribuição](#).
+1. Acesse a [planilha de daos do site](https://docs.google.com/spreadsheets/d/10h3GnQFWcHa8gZL1YfkJyMjxV3j24z1H-RtqU7TReYY/edit?gid=70924424#gid=70924424).
 2. Preencha os seguintes campos:
    - **Latitude e Longitude** (Exemplo: `-23.9544635, -46.3414889`).
    - **Título**: Nome do local.
