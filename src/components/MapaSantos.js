@@ -5,28 +5,21 @@ import Marcadores from "./Marcadores";
 import Bairros from "./Bairros";
 import MenuCamadas from "./MenuCamadas";
 import PainelInformacoes from "./PainelInformacoes";
-import pontosAssistencia from "./pontosAssistencia";
-import pontosHistoricos from "./pontosHistoricos";
-import pontosLazer from "./pontosLazer";
-import pontosComunidades from "./pontosComunidades";
-import pontosEducação from "./pontosEducação";
-import pontosReligiao from "./pontosReligiao";
 import detalhesIntro from "./detalhesInfo"; 
 import "./MapaSantos.css";
 
-const urlParams = new URLSearchParams(window.location.search);
-const panel = urlParams.get('panel');
-var initialPanel = detalhesIntro;
-if(panel != '') {
-  const mergedPoints = [...pontosAssistencia, ...pontosHistoricos, ...pontosLazer, ...pontosComunidades, ...pontosEducação, ...pontosReligiao];
-  const pointFound = mergedPoints.find(item => slugify(item.detalhes.titulo).toLowerCase() === panel);
-  if(pointFound != null) {
-    initialPanel = pointFound.detalhes;
+const MapaSantos = ({ dataPoints }) => {
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  const panel = urlParams.get('panel');
+  var initialPanel = detalhesIntro;
+  if(panel && panel !== '' && dataPoints && dataPoints.length > 0) {
+    const pointFound = dataPoints.find((item) => slugify(item.titulo).toLowerCase() === panel);
+    if(pointFound != null) {
+      initialPanel = pointFound;
+    }
   }
-}
-
-const MapaSantos = () => {
-  const [painelInfo, setPainelInfo] = useState(initialPanel);
+  
   const [geojsonData, setGeojsonData] = useState(null);
   const [visibilidade, setVisibilidade] = useState({
     bairros: false,
@@ -37,7 +30,8 @@ const MapaSantos = () => {
     educação: true,
     religiao: true,
   });
-
+  const [painelInfo, setPainelInfo] = useState(initialPanel);
+  
   useEffect(() => {
     const fetchGeoJSON = async () => {
       try {
@@ -51,7 +45,6 @@ const MapaSantos = () => {
         console.error("Erro ao carregar GeoJSON:", error);
       }
     };
-
     fetchGeoJSON();
   }, []);
 
@@ -79,12 +72,7 @@ const MapaSantos = () => {
     <div className="relative h-screen">
       <MapaBase>
         {visibilidade.bairros && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
-        {visibilidade.assistencia && <Marcadores pontos={pontosAssistencia} onClick={abrirPainel} />}
-        {visibilidade.historicos && <Marcadores pontos={pontosHistoricos} onClick={abrirPainel} />}
-        {visibilidade.culturais && <Marcadores pontos={pontosLazer} onClick={abrirPainel} />}
-        {visibilidade.comunidades && <Marcadores pontos={pontosComunidades} onClick={abrirPainel} />}
-        {visibilidade.educação && <Marcadores pontos={pontosEducação} onClick={abrirPainel} />}
-        {visibilidade.religiao && <Marcadores pontos={pontosReligiao} onClick={abrirPainel} />}
+        {<Marcadores dataPoints={dataPoints} visibility={visibilidade} onClick={abrirPainel} />}
       </MapaBase>
 
       {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={fecharPainel} />}
@@ -92,13 +80,13 @@ const MapaSantos = () => {
       <MenuCamadas
         estados={visibilidade}
         acoes={{
-          toggleBairros: () => toggleVisibilidade("bairros"),
+          toggleBairros:     () => toggleVisibilidade("bairros"),
           toggleAssistencia: () => toggleVisibilidade("assistencia"),
-          toggleHistoricos: () => toggleVisibilidade("historicos"),
-          toggleCulturais: () => toggleVisibilidade("culturais"),
+          toggleHistoricos:  () => toggleVisibilidade("historicos"),
+          toggleCulturais:   () => toggleVisibilidade("culturais"),
           toggleComunidades: () => toggleVisibilidade("comunidades"),
-          toggleEducação: () => toggleVisibilidade("educação"),
-          toggleReligiao: () => toggleVisibilidade("religiao"),
+          toggleEducação:    () => toggleVisibilidade("educação"),
+          toggleReligiao:    () => toggleVisibilidade("religiao"),
         }}
       />
     </div>
