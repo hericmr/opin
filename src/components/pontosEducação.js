@@ -306,8 +306,8 @@ const pontoseducação = [
       }
     },
     {
-      lat: -23.9796224,
-      lng: -46.3077376,
+      lat: -23.9744121,
+      lng: -46.3106409,
       desc: "Escola Estadual Olga Cury",
       tipo: "educação",
       detalhes: {
@@ -317,7 +317,7 @@ const pontoseducação = [
   `,
         video: "",
         imagens: [
-          "https://drive.google.com/file/d/1QZYWCV6FxITTAuMHzqb1GoPEFyj102k6/view?usp=sharing https://drive.google.com/file/d/1Q_FojeK1s_UL_Y-S1E0OGAbPiL_N8vTO/view?usp=drive_link"
+          "https://drive.google.com/file/d/1QZYWCV6FxITTAuMHzqb1GoPEFyj102k6/view?usp=sharing", "https://drive.google.com/file/d/1Q_FojeK1s_UL_Y-S1E0OGAbPiL_N8vTO/view?usp=drive_link"
         ],
         links: [
           {
