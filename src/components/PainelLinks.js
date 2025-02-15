@@ -17,19 +17,22 @@ const PainelLinks = ({ links }) => {
     <div className="mt-6" role="region" aria-label="Referências">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Referências:</h3>
       <ul className="list-disc pl-6 space-y-2">
-        {links.map((link, index) => (
-          <li key={index}>
-            <a
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-800 hover:text-blue-800 hover:underline"
-              aria-label={`Abrir referência: ${link.texto}`}
-            >
-              {link.texto}
-            </a>
-          </li>
-        ))}
+        {
+          links
+            .map((link, index) => (
+              <li key={index}>
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-800 hover:text-blue-800 hover:underline"
+                  aria-label={`Abrir referência: ${link.texto}`}
+                >
+                  {link.texto}
+                </a>
+              </li>
+            ))   
+        }
       </ul>
     </div>
   );

@@ -3,25 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "buffer": "^6.0.3",
     "cra-template": "1.2.0",
+    "crypto-browserify": "^3.12.1",
     "framer-motion": "^12.0.6",
     "geojson": "^0.5.0",
+    "https-browserify": "^1.0.0",
     "leaflet": "^1.9.4",
     "leaflet-css": "^0.1.0",
     "leaflet-gpx": "^2.1.2",
     "lucide-react": "^0.475.0",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
+    "public-google-sheets-parser": "^1.5.4",
     "react": "^18.3.1",
+    "react-app-rewired": "^2.2.1",
     "react-dom": "^18.3.1",
     "react-leaflet": "^4.2.1",
     "react-markdown": "^9.0.3",
     "react-scripts": "^5.0.1",
     "slugify": "^1.6.6",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.4",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "predeploy": "npm run build",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "deploy": "gh-pages -d build"
   },
   "homepage": "https://hericmr.github.io/cartografiasocial",
@@ -52,5 +62,9 @@
     "gh-pages": "^6.2.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.16"
+  },
+  "browser": {
+    "http": false,
+    "https": false
   }
 }
