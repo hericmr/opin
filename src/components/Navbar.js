@@ -15,8 +15,7 @@ const Navbar = ({ onTitleClick = () => {} }) => {
           <h1
             className="text-base sm:text-lg md:text-2xl font-bold tracking-wide cursor-pointer"
             onClick={() => {
-              console.log("título clicado! Atualizando abrindo detalhes intro");
-              onTitleClick();
+              window.location.href = '/cartografiasocial?panel=sobre-o-site';
             }}
           >
             Cartografia Social de Santos
@@ -24,17 +23,19 @@ const Navbar = ({ onTitleClick = () => {} }) => {
         </div>
 
         {/* Logo da Unifesp */}
-        <div className="flex flex-col items-center text-center">
-          <img
-            src="/cartografiasocial/logo.png"
-            alt="Logo da Unifesp"
-            className="h-8 sm:h-10 w-auto object-contain"
-            aria-label="Logo da Unifesp"
-          />
-          <p className="text-xs tracking-wide font-serif mt-1">
-            Serviço Social
-          </p>
-        </div>
+        <a href="https://www.unifesp.br/" target="_blank" rel="noopener noreferrer">
+          <div className="flex flex-col items-center text-center">
+            <img
+              src="/cartografiasocial/logo.png"
+              alt="Logo da Unifesp"
+              className="h-8 sm:h-10 w-auto object-contain"
+              aria-label="Logo da Unifesp"
+            />
+            <p className="text-xs tracking-wide font-serif mt-1">
+              Serviço Social
+            </p>
+          </div>
+        </a>
       </div>
     </header>
   );
