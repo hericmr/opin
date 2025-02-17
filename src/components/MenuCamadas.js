@@ -10,8 +10,10 @@ const MenuCamadas = ({ estados, acoes }) => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const menuClasses = `bg-green-900 bg-opacity-30 p-2 rounded-lg shadow-md transition-all duration-200 ${
-    isMobile ? "fixed bottom-0 left-0 right-0 mx-2 mb-2 grid grid-cols-2 gap-2" : "mt-2 w-40"
+  const menuClasses = `bg-green-900 bg-opacity-30 backdrop-blur p-2 rounded-lg shadow-md transition-all duration-200 ${
+    isMobile
+      ? "fixed bottom-0 left-0 right-0 mx-2 mb-2 grid grid-cols-2 gap-2"
+      : "mt-2 w-40"
   }`;
 
   const botaoClasses = (ativo, cor) =>
