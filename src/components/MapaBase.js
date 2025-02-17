@@ -20,9 +20,9 @@ const MapaBase = ({ children }) => {
       >
         {/* TileLayer com o mapa de fundo */}
         <TileLayer
-          url="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-          attribution='&copy; <a href="https://www.esri.com/en-us/home">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
-        />
+        url="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        attribution="&copy;  &mdash; Desenvolvido por <a href='https://github.com/hericmr' target='_blank' rel='noopener noreferrer'>Heric Moura</a> e <a href='https://github.com/lexfadelli' target='_blank' rel='noopener noreferrer'>Leandro Fadelli</a>"
+      />
 
         {/* Conteúdo adicional do mapa (marcadores, camadas, etc.) */}
         {children}
