@@ -2,7 +2,7 @@ import React from "react";
 
 const Navbar = ({ onTitleClick = () => {} }) => {
   return (
-    <header className="bg-green-900 text-white shadow-lg">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-green-900/80 backdrop-blur-md text-white shadow-lg">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         {/* Logo e título */}
         <div className="flex items-center">
@@ -31,7 +31,7 @@ const Navbar = ({ onTitleClick = () => {} }) => {
             className="h-8 sm:h-10 w-auto object-contain"
             aria-label="Logo da Unifesp"
           />
-          <p className=" text-xs tracking-wide font-serif mt-1">
+          <p className="text-xs tracking-wide font-serif mt-1">
             Serviço Social
           </p>
         </div>
