@@ -21,7 +21,7 @@ const MapaBase = ({ children }) => {
         {/* TileLayer com o mapa de fundo */}
         <TileLayer
         url="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-        attribution="&copy;  &mdash; Desenvolvido por <a href='https://github.com/hericmr' target='_blank' rel='noopener noreferrer'>Heric Moura</a> e <a href='https://github.com/lexfadelli' target='_blank' rel='noopener noreferrer'>Leandro Fadelli</a>"
+        attribution="&copy;  &mdash; Desenvolvido por <a href='https://hericmr.github.io/me/portuguese' target='_blank' rel='noopener noreferrer'>Heric Moura</a> e <a href='https://github.com/lexfadelli' target='_blank' rel='noopener noreferrer'>Leandro Fadelli</a>"
       />
 
         {/* Conteúdo adicional do mapa (marcadores, camadas, etc.) */}
