@@ -88,6 +88,7 @@ const MapaSantos = ({ dataPoints }) => {
           toggleComunidades: () => toggleVisibilidade("comunidades"),
           toggleEducação:    () => toggleVisibilidade("educação"),
           toggleReligiao:    () => toggleVisibilidade("religiao"),
+          toggleBairro:      () => toggleVisibilidade("bairro"),
           
         }}
       />
