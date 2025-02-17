@@ -1,7 +1,7 @@
 import React from "react";
 import { Marker, Tooltip } from "react-leaflet";
 import { motion } from "framer-motion"; 
-import { blackIcon, violetIcon, redIcon, blueIcon, greenIcon, yellowIcon } from "./CustomIcon"; // Ícones personalizados
+import { orangeIcon, blackIcon, violetIcon, redIcon, blueIcon, greenIcon, yellowIcon } from "./CustomIcon"; // Ícones personalizados
 
 const Marcadores = ({ dataPoints, visibility, onClick }) => {
   
@@ -11,7 +11,8 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
     LAZER:       { icon: blueIcon  , enabled: visibility.culturais },
     COMUNIDADES: { icon: redIcon   , enabled: visibility.comunidades },
     EDUCACAO:    { icon: violetIcon, enabled: visibility.educação },
-    RELIGIAO:    { icon: blackIcon , enabled: visibility.religiao }
+    RELIGIAO:    { icon: blackIcon , enabled: visibility.religiao },
+    BAIRRO:      { icon: orangeIcon , enabled: visibility.bairro },
   });
 
   return (
@@ -38,6 +39,9 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
             break;
           case "religiao":
             dataPointType = DataPointType.RELIGIAO;
+            break;
+          case "bairro":
+            dataPointType = DataPointType.BAIRRO;
             break;
           default:
             console.warn(`Tipo desconhecido: ${ponto.tipo}, usando ícone padrão.`);

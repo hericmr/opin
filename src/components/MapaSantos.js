@@ -29,6 +29,7 @@ const MapaSantos = ({ dataPoints }) => {
     comunidades: true,
     educação: true,
     religiao: true,
+    bairro: true,
   });
   const [painelInfo, setPainelInfo] = useState(initialPanel);
   
@@ -87,6 +88,7 @@ const MapaSantos = ({ dataPoints }) => {
           toggleComunidades: () => toggleVisibilidade("comunidades"),
           toggleEducação:    () => toggleVisibilidade("educação"),
           toggleReligiao:    () => toggleVisibilidade("religiao"),
+          
         }}
       />
     </div>
