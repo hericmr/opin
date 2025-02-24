@@ -10,9 +10,11 @@ const MenuCamadas = ({ estados, acoes }) => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const menuClasses = `bg-green-900 bg-opacity-30 backdrop-blur p-2 rounded-lg shadow-md transition-all duration-200 ${
+  const menuClasses = `bg-green-900 bg-opacity-70 backdrop-blur p-2 rounded-lg shadow-md transition-all duration-200 ${
     isMobile
-      ? "fixed bottom-0 left-0 right-0 mx-2 mb-6 grid grid-cols-2 gap-2"
+      ? `fixed bottom-0 left-0 right-0 mx-2 mb-6 grid grid-cols-2 gap-2 transition-transform duration-200 ${
+          menuAberto ? 'translate-y-0' : 'translate-y-full'
+        }`
       : "mt-2 w-40"
   }`;
 
@@ -45,7 +47,7 @@ const MenuCamadas = ({ estados, acoes }) => {
       )}
 
       {/* Menu de camadas */}
-      <div className={`${menuClasses} ${isMobile ? "" : (menuAberto ? "opacity-100 visible translate-y-0" : "opacity-0 invisible translate-y-4")}`}>
+      <div className={menuClasses}>
         {opcoes.map(({ acao, estado, icone, label, cor }, index) => (
           <button key={index} onClick={acao} className={botaoClasses(estado, cor)}>
             {typeof icone === "string" && icone.startsWith("http") ? (
@@ -53,10 +55,31 @@ const MenuCamadas = ({ estados, acoes }) => {
             ) : (
               <span className="mr-4">{icone}</span>
             )}
-            <span className="truncate">{label}</span> {/* Texto sem alterações */}
+            <span className="truncate">{label}</span>
           </button>
         ))}
+        
+        {isMobile && (
+          <button
+            onClick={() => setMenuAberto(false)}
+            className="w-full flex items-center justify-center gap-1 px-1 py-2 rounded-lg transition-all duration-200 bg-gray-200 hover:bg-gray-300 col-span-2"
+          >
+            <span>➖</span>
+            <span>Minimizar</span>
+          </button>
+        )}
       </div>
+
+      {/* Botão flutuante para reabrir o menu no mobile */}
+      {isMobile && !menuAberto && (
+        <button
+          onClick={() => setMenuAberto(true)}
+          className="fixed bottom-2 left-1/2 transform -translate-x-1/2 bg-white text-black p-2 rounded-full shadow-lg hover:bg-gray-100 transition-all z-20"
+          aria-label="Abrir menu"
+        >
+          ☰
+        </button>
+      )}
     </div>
   );
 };
