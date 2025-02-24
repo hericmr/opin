@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import PainelHeader from "./PainelHeader";
 import PainelMedia from "./PainelMedia";
 import PainelDescricao from "./PainelDescricao";
@@ -11,6 +11,7 @@ import { useShare } from "./hooks/useShare";
 import { useDynamicURL } from "./hooks/useDynamicURL";
 import { useClickOutside } from "./hooks/useClickOutside";
 import { usePainelDimensions } from "./hooks/usePainelDimensions";
+
 const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const { isVisible, isMobile } = usePainelVisibility(painelInfo);
   const painelRef = useRef(null);
@@ -25,25 +26,24 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
   if (!painelInfo) return null;
 
   return (
-<div
-  ref={painelRef}
-  role="dialog"
-  aria-labelledby="painel-titulo"
-  aria-describedby="painel-descricao"
-  className={`fixed bottom-0 left-0 right-0 sm:left-auto sm:w-3/4 lg:w-[49%] bg-green-50 rounded-xl shadow-lg z-50 transform transition-transform duration-900 ease-in-out ${
-    isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-  }`}
-  style={{
-    height: isMobile ? `calc(100vh - 66px)` : painelDimensions.height,
-    maxHeight: isMobile ? `calc(100vh - 56px)` : painelDimensions.maxHeight,
-    transition: "opacity 0.7s ease, transform 0.7s ease",
-    display: "flex",
-    flexDirection: "column",
-  }}
->
-
+    <div
+      ref={painelRef}
+      role="dialog"
+      aria-labelledby="painel-titulo"
+      aria-describedby="painel-descricao"
+      className={`fixed top-16 left-0 right-0 sm:left-auto sm:w-3/4 lg:w-[49%] bg-green-50 rounded-xl shadow-lg z-40 transform transition-transform duration-900 ease-in-out ${
+        isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+      }`}
+      style={{
+        height: isMobile ? 'calc(100vh - 4rem)' : painelDimensions.height,
+        maxHeight: isMobile ? 'calc(100vh - 4rem)' : painelDimensions.maxHeight,
+        transition: "opacity 0.7s ease, transform 0.7s ease",
+        display: "flex",
+        flexDirection: "column"
+      }}
+    >
       <PainelHeader titulo={painelInfo.titulo} closePainel={closePainel} />
-      
+
       <div className="p-6 overflow-y-auto flex-1">
         {painelInfo.audioUrl && (
           <AudioButton isAudioEnabled={isAudioEnabled} toggleAudio={toggleAudio} />
@@ -57,7 +57,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
           descricao_detalhada={painelInfo.descricao_detalhada}
           links={painelInfo.links}
         />
-        
+
         <ShareSection copiarLink={copiarLink} compartilhar={compartilhar} />
       </div>
     </div>
