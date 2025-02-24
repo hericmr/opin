@@ -3,7 +3,7 @@ import React from "react";
 const Navbar = ({ onTitleClick = () => {} }) => {
   return (
     // No componente Navbar.js
-<header className="fixed top-0 left-0 right-0 z-50 bg-green-900/80 backdrop-blur-md text-white h-16"> 
+<header className="fixed top-0 left-0 right-0 z-50 bg-green-900/80 backdrop-blur-md text-white h-16"> h1
       <div className="container mx-auto px-4 py-1 flex items-center justify-between">
         {/* Logo e título */}
         <div className="flex items-center">
