@@ -12,24 +12,19 @@ const fetchDataPoints = async () => {
 };
 
 // Componente de tela de carregamento
-const LoadingScreen = () => {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-green-900 text-white">
-      <div className="relative">
-        {/* Spinner Animado */}
-        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-
-        <div className="absolute inset-0 flex items-center justify-center">
-          <img src="/cartografiasocial/favicon.ico" alt="Ícone de carregamento" className="w-8 h-8" />
-        </div>
+const LoadingScreen = () => (
+  <div className="flex flex-col items-center justify-center min-h-screen bg-green-900 text-white">
+    <div className="relative">
+      {/* Spinner Animado */}
+      <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <img src="/monstros-do-brasil/favicon.ico" alt="Ícone de carregamento" className="w-8 h-8" />
       </div>
-
-      <p className="mt-4 text-lg font-semibold animate-pulse">Carregando dados...</p>
     </div>
-  );
-};
+    <p className="mt-4 text-lg font-semibold animate-pulse">Carregando dados...</p>
+  </div>
+);
 
-// Componente principal da aplicação
 const App = () => {
   const [dataPoints, setDataPoints] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -38,17 +33,38 @@ const App = () => {
   // Função para formatar os dados da planilha
   const formatData = (dataPoints) => {
     return dataPoints.map((e) => {
-      // Formata os links (texto:url;texto:url)
       e.links = e.links && typeof e.links === 'string' ? e.links.split(";").map((l) => {
         let [texto, url] = l.split(':');
-        return { texto: texto || "", url };
+        return { texto: texto || "Sem título", url: url || "#" };
       }) : [];
 
-      // Formata as imagens (url1,url2,url3)
       e.imagens = e.imagens && typeof e.imagens === 'string' ? e.imagens.split(",") : [];
-
-      // Formata os áudios (url1,url2,url3) e renomeia para audioUrl
       e.audioUrl = e.audio && typeof e.audio === 'string' ? e.audio.split(",") : [];
+      e.titulo = e.titulo || "Título não disponível";  
+      e.descricao = e.titulo || "Sem descrição";  
+
+      // Extraindo latitude e longitude da coluna 'localizacao'
+      if (e.localizacao && typeof e.localizacao === 'string') {
+        const [lat, lng] = e.localizacao.split(',').map(coord => parseFloat(coord.trim()));
+        if (!isNaN(lat) && !isNaN(lng)) {
+          e.latitude = lat;
+          e.longitude = lng;
+        } else {
+          e.latitude = null;
+          e.longitude = null;
+        }
+      } else {
+        e.latitude = null;
+        e.longitude = null;
+      }
+
+      // Formatando descricao_detalhada para exibir corretamente no site
+      if (e.descricao_detalhada) {
+        e.descricao_detalhada = e.descricao_detalhada
+          .replace(/\n/g, "<br>") 
+          .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") 
+          .replace(/\*(.*?)\*/g, "<i>$1</i>"); 
+      }
 
       return e;
     });
@@ -86,7 +102,7 @@ const App = () => {
           onClick={() => window.location.reload()}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
-          Tentar novamente
+          Tentar novamente...
         </button>
       </div>
     );
@@ -98,7 +114,7 @@ const App = () => {
       <Navbar />
       <main className="flex-grow">
         <MapaSantos dataPoints={dataPoints} />
-        <PainelInformacoes />
+        <PainelInformacoes dataPoints={dataPoints} />
       </main>
     </div>
   );
