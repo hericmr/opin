@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AddLocationPanel from "./AddLocationPanel";
+import AddLocationPanel from './AddLocationPanel';
 
 const ADMIN_PASSWORD = "Política Social"; // Defina a senha para administradores
 
@@ -19,7 +19,7 @@ const Navbar = ({ onTitleClick = () => {} }) => {
   };
 
   const handleAddLocationClick = () => {
-    const enteredPassword = prompt("Digite a senha de administrador:");
+    const enteredPassword = prompt("Esse recurso é permitido apenas a adiministradores do site. Digite a senha de administrador:");
     if (enteredPassword === ADMIN_PASSWORD) {
       setIsAddingLocation(true);
     } else {

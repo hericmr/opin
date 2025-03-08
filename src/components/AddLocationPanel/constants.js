@@ -1,0 +1,68 @@
+export const opcoes = [
+    {
+      acao: "toggleBairros",
+      estado: "bairros",
+      icone: "🏘",
+      label: "Bairros",
+      value: "bairro",
+      cor: "bg-gray-200",
+    },
+    {
+      acao: "toggleAssistencia",
+      estado: "assistencia",
+      icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png",
+      label: "Assistência",
+      value: "assistencia",
+      cor: "bg-green-500 text-black",
+    },
+    {
+      acao: "toggleHistoricos",
+      estado: "historicos",
+      icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png",
+      label: "Históricos",
+      value: "historico",
+      cor: "bg-yellow-300",
+    },
+    {
+      acao: "toggleCulturais",
+      estado: "culturais",
+      icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
+      label: "Lazer",
+      value: "lazer",
+      cor: "bg-blue-400",
+    },
+    {
+      acao: "toggleComunidades",
+      estado: "comunidades",
+      icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+      label: "Comunidades",
+      value: "comunidades",
+      cor: "bg-red-500",
+    },
+    {
+      acao: "toggleEducação",
+      estado: "educação",
+      icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png",
+      label: "Educação",
+      value: "educação",
+      cor: "bg-purple-400",
+    },
+    {
+      acao: "toggleReligiao",
+      estado: "religiao",
+      icone: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black.png",
+      label: "Religião",
+      value: "religiao",
+      cor: "bg-gray-400",
+    },
+  ];
+  
+  export const crosshairColorMap = {
+    bairro: "#E5E7EB",
+    assistencia: "#10B981",
+    historico: "#FACC15",
+    lazer: "#60A5FA",
+    comunidades: "#EF4444",
+    educação: "#A78BFA",
+    religiao: "#9CA3AF",
+  };
