@@ -9,6 +9,8 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [errors, setErrors] = useState({}); // Estado para armazenar erros de validação
 
   // Handlers de mídia
   const handleImageUpload = (event) => {
@@ -32,9 +34,25 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose }) => {
   const handleRemoveImage = () => setImagePreview(null);
   const handleRemoveVideo = () => setVideoPreview(null);
 
+  // Validação dos campos obrigatórios
+  const validateForm = () => {
+    const newErrors = {};
+    if (!newLocation.titulo) newErrors.titulo = "Título é obrigatório.";
+    if (!newLocation.latitude || !newLocation.longitude) newErrors.localizacao = "Localização é obrigatória.";
+    if (!newLocation.descricao_detalhada) newErrors.descricao_detalhada = "Descrição detalhada é obrigatória.";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Retorna true se não houver erros
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave();
+    if (validateForm()) {
+      onSave();
+      setShowConfirmation(true);
+      setTimeout(() => {
+        setShowConfirmation(false);
+      }, 3000);
+    }
   };
 
   return (
@@ -54,11 +72,37 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose }) => {
 
         {/* Formulário principal */}
         <form className="mt-4 space-y-4" onSubmit={handleSubmit}>
+          {/* Campo Título */}
+          <div>
+            <label className="block font-medium" htmlFor="titulo">
+              Título <span className="text-red-500">*</span>
+            </label>
+            {errors.titulo && (
+              <p className="text-red-500 text-sm">{errors.titulo}</p>
+            )}
+            <input
+              id="titulo"
+              type="text"
+              className="w-full border rounded p-2 text-black"
+              placeholder="Digite o título do local"
+              value={newLocation.titulo || ""}
+              onChange={(e) =>
+                setNewLocation((prev) => ({
+                  ...prev,
+                  titulo: e.target.value,
+                }))
+              }
+            />
+          </div>
+
           {/* Seção de Mapa */}
           <div>
             <label className="block font-medium" htmlFor="mapLocation">
               Localização <span className="text-red-500">*</span>
             </label>
+            {errors.localizacao && (
+              <p className="text-red-500 text-sm">{errors.localizacao}</p>
+            )}
             <p className="mb-2">
               {newLocation.latitude || "Não selecionado"},{" "}
               {newLocation.longitude || "Não selecionado"}
@@ -102,7 +146,7 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose }) => {
                 className="w-full border rounded p-2 flex items-center justify-between text-black"
               >
                 <span>
-                  {newLocation.titulo || "Selecione o tipo de marcador"}
+                  {newLocation.tipo || "Selecione o tipo de marcador"}
                 </span>
                 <svg
                   className="w-4 h-4 text-black"
@@ -156,6 +200,9 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose }) => {
             <label className="block font-medium" htmlFor="descricao_detalhada">
               Descrição Detalhada <span className="text-red-500">*</span>
             </label>
+            {errors.descricao_detalhada && (
+              <p className="text-red-500 text-sm">{errors.descricao_detalhada}</p>
+            )}
             <textarea
               id="descricao_detalhada"
               className="w-full border rounded p-2 text-black"
@@ -171,7 +218,7 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose }) => {
             />
           </div>
 
-          {/* Seções de Mídia (mantidas no mesmo arquivo por dependência de estado) */}
+          {/* Seções de Mídia */}
           <MediaSection
             type="image"
             preview={imagePreview}
@@ -205,9 +252,16 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose }) => {
 
           {/* Botões de Ação */}
           <div className="mt-4 flex justify-end gap-2">
-            <ActionButton type="button" onClick={onClose} label="Cancelar" color="gray" />
+            <ActionButton type="button" onClick={onClose} label="Cancelar" color="black" />
             <ActionButton type="submit" label="Salvar" color="green" />
           </div>
+v
+          {/* Mensagem de confirmação */}
+          {showConfirmation && (
+            <div className="text-green-600 text-sm mt-2 animate-fade-in">
+              ✔ Local salvo com sucesso!
+            </div>
+          )}
         </form>
       </div>
     </div>

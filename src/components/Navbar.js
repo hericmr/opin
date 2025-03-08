@@ -1,32 +1,7 @@
-import React, { useState } from "react";
-import AddLocationPanel from './AddLocationPanel';
-
-const ADMIN_PASSWORD = "Política Social"; // Defina a senha para administradores
+import React from "react";
+import AddLocationButton from './AddLocationButton';
 
 const Navbar = ({ onTitleClick = () => {} }) => {
-  const [isAddingLocation, setIsAddingLocation] = useState(false);
-  const [newLocation, setNewLocation] = useState({
-    latitude: "",
-    longitude: "",
-    description: "",
-    links: "",
-    audio: "",
-  });
-
-  const handleSaveLocation = () => {
-    console.log("Novo local salvo:", newLocation);
-    setIsAddingLocation(false);
-  };
-
-  const handleAddLocationClick = () => {
-    const enteredPassword = prompt("Esse recurso é permitido apenas a adiministradores do site. Digite a senha de administrador:");
-    if (enteredPassword === ADMIN_PASSWORD) {
-      setIsAddingLocation(true);
-    } else {
-      alert("Senha incorreta! Ação não permitida.");
-    }
-  };
-
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-green-900/80 backdrop-blur-md text-white h-16">
       <div className="container mx-auto px-4 py-1 flex items-center justify-between">
@@ -62,23 +37,7 @@ const Navbar = ({ onTitleClick = () => {} }) => {
       </div>
       
       {/* Botão discreto no final da Navbar */}
-      <div className="absolute bottom-4 right-4">
-        <button
-          className="bg-green-800 text-white px-4 py-2 rounded-full shadow-lg hover:bg-green-700 focus:outline-none transition duration-300 ease-in-out"
-          onClick={handleAddLocationClick}
-        >
-          + Adicionar Local
-        </button>
-      </div>
-
-      {isAddingLocation && (
-        <AddLocationPanel
-          newLocation={newLocation}
-          setNewLocation={setNewLocation}
-          onSave={handleSaveLocation}
-          onClose={() => setIsAddingLocation(false)}
-        />
-      )}
+      <AddLocationButton />
     </header>
   );
 };

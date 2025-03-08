@@ -3,8 +3,8 @@ import { supabase } from './supabaseClient';
 import MapaSantos from "./components/MapaSantos";
 import Navbar from "./components/Navbar";
 import PainelInformacoes from "./components/PainelInformacoes";
+import AddLocationButton from "./components/AddLocationButton";
 
-// Componente de tela de carregamento
 const LoadingScreen = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-green-900 text-white">
     <div className="relative">
@@ -22,7 +22,6 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Função para buscar os dados do Supabase
   const fetchDataPoints = async () => {
     console.log("Iniciando consulta ao Supabase na tabela 'locations'...");
     const { data, error } = await supabase
@@ -38,35 +37,34 @@ const App = () => {
     return data;
   };
 
-  // Função para formatar os dados e definir valores padrão
   const formatData = (dataPoints) => {
     console.log("Iniciando formatação dos dados...");
     const formattedData = dataPoints.map((e, index) => {
       console.log(`Formatando registro ${index}:`, e);
-      
-      // Links: se não existir ou não for string, define como array vazio
+
+      // Links
       e.links = (e.links && typeof e.links === 'string')
         ? e.links.split(";").map((l) => {
             let [texto, url] = l.split(':');
             return { texto: texto || "Sem título", url: url || "#" };
           })
         : [];
-      
-      // Imagens: define array vazio se não houver
+
+      // Imagens
       e.imagens = (e.imagens && typeof e.imagens === 'string')
         ? e.imagens.split(",")
         : [];
-      
-      // Áudio: define array vazio se não houver
+
+      // Áudio
       e.audioUrl = (e.audio && typeof e.audio === 'string')
         ? e.audio.split(",")
         : [];
-      
-      // Título e Descrição: valores padrão se estiverem vazios
+
+      // Título e Descrição
       e.titulo = e.titulo || "Título não disponível";
       e.descricao = e.descricao || "Sem descrição";
 
-      // Extração de latitude e longitude da coluna 'localizacao'
+      // Coordenadas
       if (e.localizacao && typeof e.localizacao === 'string') {
         const [lat, lng] = e.localizacao.split(',').map(coord => parseFloat(coord.trim()));
         if (!isNaN(lat) && !isNaN(lng)) {
@@ -82,14 +80,14 @@ const App = () => {
         e.longitude = null;
       }
 
-      // Formatação da descrição detalhada
+      // Descrição detalhada
       if (e.descricao_detalhada) {
         e.descricao_detalhada = e.descricao_detalhada
           .replace(/\n/g, "<br>")
           .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
           .replace(/\*(.*?)\*/g, "<i>$1</i>");
       }
-      
+
       console.log(`Registro ${index} formatado:`, e);
       return e;
     });
@@ -97,23 +95,28 @@ const App = () => {
     return formattedData;
   };
 
+  const handleLocationAdded = (newLocation) => {
+    const formattedLocation = formatData([newLocation])[0];
+    setDataPoints((prevDataPoints) => [...prevDataPoints, formattedLocation]);
+  };
+
   useEffect(() => {
     const initializeApp = async () => {
       try {
         console.log("Inicializando aplicativo...");
         let dataPoints = await fetchDataPoints();
+        console.log("Dados brutos recebidos do Supabase:", dataPoints);
         if (dataPoints.length === 0) {
           console.warn("Nenhum dado encontrado na tabela 'locations'.");
         }
         dataPoints = formatData(dataPoints);
+        console.log("Dados formatados:", dataPoints);
         setDataPoints(dataPoints);
-        console.log("Dados definidos no estado do App.");
       } catch (err) {
         console.error("Erro ao buscar ou formatar dados:", err);
         setError(err.message);
       } finally {
         setLoading(false);
-        console.log("Processo de inicialização finalizado.");
       }
     };
 
@@ -145,6 +148,7 @@ const App = () => {
       <main className="flex-grow">
         <MapaSantos dataPoints={dataPoints} />
         <PainelInformacoes dataPoints={dataPoints} />
+        <AddLocationButton onLocationAdded={handleLocationAdded} />
       </main>
     </div>
   );
