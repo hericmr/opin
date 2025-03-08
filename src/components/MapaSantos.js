@@ -9,17 +9,18 @@ import detalhesIntro from "./detalhesInfo";
 import "./MapaSantos.css";
 
 const MapaSantos = ({ dataPoints }) => {
-  
+  console.log("DataPoints recebidos:", dataPoints); // Verifique os dados recebidos
+
   const urlParams = new URLSearchParams(window.location.search);
   const panel = urlParams.get('panel');
   var initialPanel = detalhesIntro;
-  if(panel && panel !== '' && dataPoints && dataPoints.length > 0) {
+  if (panel && panel !== '' && dataPoints && dataPoints.length > 0) {
     const pointFound = dataPoints.find((item) => slugify(item.titulo).toLowerCase() === panel);
-    if(pointFound != null) {
+    if (pointFound != null) {
       initialPanel = pointFound;
     }
   }
-  
+
   const [geojsonData, setGeojsonData] = useState(null);
   const [visibilidade, setVisibilidade] = useState({
     bairros: false,
@@ -32,7 +33,7 @@ const MapaSantos = ({ dataPoints }) => {
     bairro: true,
   });
   const [painelInfo, setPainelInfo] = useState(initialPanel);
-  
+
   useEffect(() => {
     const fetchGeoJSON = async () => {
       try {
@@ -73,7 +74,7 @@ const MapaSantos = ({ dataPoints }) => {
     <div className="relative h-screen">
       <MapaBase>
         {visibilidade.bairros && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
-        {<Marcadores dataPoints={dataPoints} visibility={visibilidade} onClick={abrirPainel} />}
+        {dataPoints && <Marcadores dataPoints={dataPoints} visibility={visibilidade} onClick={abrirPainel} />}
       </MapaBase>
 
       {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={fecharPainel} />}
@@ -81,15 +82,14 @@ const MapaSantos = ({ dataPoints }) => {
       <MenuCamadas
         estados={visibilidade}
         acoes={{
-          toggleBairros:     () => toggleVisibilidade("bairros"),
+          toggleBairros: () => toggleVisibilidade("bairros"),
           toggleAssistencia: () => toggleVisibilidade("assistencia"),
-          toggleHistoricos:  () => toggleVisibilidade("historicos"),
-          toggleCulturais:   () => toggleVisibilidade("culturais"),
+          toggleHistoricos: () => toggleVisibilidade("historicos"),
+          toggleCulturais: () => toggleVisibilidade("culturais"),
           toggleComunidades: () => toggleVisibilidade("comunidades"),
-          toggleEducação:    () => toggleVisibilidade("educação"),
-          toggleReligiao:    () => toggleVisibilidade("religiao"),
-          toggleBairro:      () => toggleVisibilidade("bairro"),
-          
+          toggleEducação: () => toggleVisibilidade("educação"),
+          toggleReligiao: () => toggleVisibilidade("religiao"),
+          toggleBairro: () => toggleVisibilidade("bairro"),
         }}
       />
     </div>
