@@ -56,8 +56,8 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose }) => {
   };
 
   return (
-    <div className="fixed top-6 left-0 right-0 z-50 p-4 text-black">
-      <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-lg mx-auto">
+    <div className="fixed inset-50  left-0 right-0 z-50 p-4 text-black">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
         {/* Cabeçalho */}
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">Adicionar um Novo Local</h2>
@@ -94,45 +94,72 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose }) => {
               }
             />
           </div>
+{/* Seção de Mapa */}
+<div>
+  <label className="block font-medium" htmlFor="mapLocation">
+    Localização <span className="text-red-500">*</span>
+  </label>
+  {errors.localizacao && (
+    <p className="text-red-500 text-sm">{errors.localizacao}</p>
+  )}
+  <p className="mb-2">
+    {newLocation.latitude || "Não selecionado"},{" "}
+    {newLocation.longitude || "Não selecionado"}
+  </p>
 
-          {/* Seção de Mapa */}
-          <div>
-            <label className="block font-medium" htmlFor="mapLocation">
-              Localização <span className="text-red-500">*</span>
-            </label>
-            {errors.localizacao && (
-              <p className="text-red-500 text-sm">{errors.localizacao}</p>
-            )}
-            <p className="mb-2">
-              {newLocation.latitude || "Não selecionado"},{" "}
-              {newLocation.longitude || "Não selecionado"}
-            </p>
-            <div id="mapLocation" className="relative">
-              <MapContainer
-                center={[-23.9575, -46.2278]}
-                zoom={13}
-                style={{
-                  height: "200px",
-                  width: "100%",
-                  borderRadius: "8px",
-                  border: "1px solid #ddd",
-                }}
-              >
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                {newLocation.latitude && newLocation.longitude && (
-                  <Marker
-                    position={[newLocation.latitude, newLocation.longitude]}
-                    icon={greenIcon}
-                  />
-                )}
-                <MapClickHandler setNewLocation={setNewLocation} />
-              </MapContainer>
-              <div
-                className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-6 w-6 border-2 rounded-full pointer-events-none"
-                style={{ borderColor: crosshairColorMap[newLocation.tipo] || "#D1D5DB" }}
-              ></div>
-            </div>
-          </div>
+  {/* Botão para obter a localização via GPS */}
+  <button
+    onClick={() => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setNewLocation({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+          },
+          (error) => {
+            console.error("Erro ao obter localização:", error);
+            alert("Não foi possível obter sua localização.");
+          }
+        );
+      } else {
+        alert("Geolocalização não é suportada pelo seu navegador.");
+      }
+    }}
+    className="bg-blue-500 text-white px-4 py-2 rounded-md mb-2"
+  >
+    Usar minha localização
+  </button>
+
+  <div id="mapLocation" className="relative">
+    <MapContainer
+      center={
+        newLocation.latitude && newLocation.longitude
+          ? [newLocation.latitude, newLocation.longitude]
+          : [-23.976769, -46.332818]
+      }
+      zoom={11}
+      style={{
+        height: "200px",
+        width: "100%",
+        borderRadius: "8px",
+        border: "1px solid #ddd",
+      }}
+    >
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      {newLocation.latitude && newLocation.longitude && (
+        <Marker position={[newLocation.latitude, newLocation.longitude]} icon={greenIcon} />
+      )}
+      <MapClickHandler setNewLocation={setNewLocation} />
+    </MapContainer>
+    <div
+      className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-6 w-6 border-2 rounded-full pointer-events-none"
+      style={{ borderColor: crosshairColorMap[newLocation.tipo] || "#D1D5DB" }}
+    ></div>
+  </div>
+</div>
+
 
           {/* Dropdown de Tipo de Marcador */}
           <div>
@@ -250,18 +277,27 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose }) => {
             placeholder="http://"
           />
 
-          {/* Botões de Ação */}
-          <div className="mt-4 flex justify-end gap-2">
-            <ActionButton type="button" onClick={onClose} label="Cancelar" color="black" />
-            <ActionButton type="submit" label="Salvar" color="green" />
-          </div>
-v
-          {/* Mensagem de confirmação */}
-          {showConfirmation && (
-            <div className="text-green-600 text-sm mt-2 animate-fade-in">
-              ✔ Local salvo com sucesso!
-            </div>
-          )}
+      {/* Botões de Ação */}
+      <div className="mt-4 flex justify-end gap-2">
+        <button
+          type="button"
+          onClick={onClose}
+          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          Salvar
+        </button>
+      </div>
+
+      {/* Mensagem de confirmação */}
+      {showConfirmation && (
+        <div className="text-green-600 text-sm mt-2 animate-fade-in">✔ Local salvo com sucesso!</div>
+      )}
         </form>
       </div>
     </div>
@@ -272,30 +308,52 @@ v
 const MediaSection = ({ type, preview, onUpload, onRemove }) => (
   <div>
     <label className="block font-medium" htmlFor={`${type}Upload`}>
-      {type === 'image' ? 'Imagens' : 'Vídeo'}
+      {type === 'image' ? 'Imagens' : 'Vídeo (YouTube URL)'}
     </label>
-    <input
-      id={`${type}Upload`}
-      type="file"
-      accept={`${type}/*`}
-      {...(type === 'image' ? { capture: "environment" } : {})}
-      onChange={onUpload}
-      className="hidden"
-    />
-    <label
-      htmlFor={`${type}Upload`}
-      className="cursor-pointer flex items-center justify-center border rounded p-4 bg-gray-100 text-black"
-    >
-      {preview ? (
-        type === 'image' ? (
-          <img src={preview} alt="Preview" className="w-32 h-32 object-cover rounded" />
-        ) : (
-          <video src={preview} controls className="w-32 h-32 object-cover rounded" />
-        )
-      ) : (
-        <span>{type === 'image' ? '📷 Tirar Foto ou Escolher Imagem' : '🎥 Escolher Vídeo'}</span>
-      )}
-    </label>
+    {type === 'image' ? (
+      <>
+        <input
+          id={`${type}Upload`}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          onChange={onUpload}
+          className="hidden"
+        />
+        <label
+          htmlFor={`${type}Upload`}
+          className="cursor-pointer flex items-center justify-center border rounded p-4 bg-gray-100 text-black"
+        >
+          {preview ? (
+            <img src={preview} alt="Preview" className="w-32 h-32 object-cover rounded" />
+          ) : (
+            <span>📷 Tirar Foto ou Escolher Imagem</span>
+          )}
+        </label>
+      </>
+    ) : (
+      <>
+        <input
+          type="text"
+          placeholder="Cole a URL do YouTube"
+          className="w-full border rounded p-2 text-black"
+          onChange={onUpload}
+        />
+        {preview && (
+          <div className="mt-2">
+            <iframe
+              width="100%"
+              height="200"
+              src={preview}
+              title="YouTube Video"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        )}
+      </>
+    )}
     {preview && (
       <button
         type="button"
@@ -324,15 +382,7 @@ const InputField = ({ label, id, type, value, onChange, placeholder }) => (
   </div>
 );
 
-const ActionButton = ({ type = 'button', onClick, label, color = 'gray' }) => (
-  <button
-    type={type}
-    onClick={onClick}
-    className={`px-4 py-2 bg-${color}-600 text-white rounded hover:bg-${color}-700`}
-  >
-    {label}
-  </button>
-);
+
 
 AddLocationPanel.propTypes = {
   newLocation: PropTypes.shape({
