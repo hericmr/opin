@@ -127,8 +127,13 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose }) => {
         alert("Geolocalização não é suportada pelo seu navegador.");
       }
     }}
-    className="bg-blue-500 text-white px-4 py-2 rounded-md mb-2"
+    type="button"
+    className="text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-md mb-2 flex items-center gap-1"
   >
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
     Usar minha localização
   </button>
 
@@ -154,8 +159,11 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose }) => {
       <MapClickHandler setNewLocation={setNewLocation} />
     </MapContainer>
     <div
-      className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-6 w-6 border-2 rounded-full pointer-events-none"
-      style={{ borderColor: crosshairColorMap[newLocation.tipo] || "#D1D5DB" }}
+      className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-6 w-6 border-2 rounded-full pointer-events-none transition-all duration-300 ease-in-out"
+      style={{ 
+        borderColor: crosshairColorMap[newLocation.tipo] || "#D1D5DB",
+        boxShadow: `0 0 0 2px rgba(255,255,255,0.8)`,
+      }}
     ></div>
   </div>
 </div>
