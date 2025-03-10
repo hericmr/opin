@@ -48,21 +48,24 @@ const MenuCamadas = ({ estados, acoes }) => {
 
       {/* Menu de camadas */}
       <div className={menuClasses}>
-        {opcoes.map(({ acao, estado, icone, label, cor }, index) => (
-          <button key={index} onClick={acao} className={botaoClasses(estado, cor)}>
-            {typeof icone === "string" && icone.startsWith("http") ? (
-              <img src={icone} alt={label} className="w-4 h-6 mr-3" />
-            ) : (
-              <span className="mr-4">{icone}</span>
-            )}
-            <span className="truncate">{label}</span>
-          </button>
-        ))}
+        {/* Seção de Camadas */}
+        <div className="col-span-2">
+          {opcoes.map(({ acao, estado, icone, label, cor }, index) => (
+            <button key={index} onClick={acao} className={botaoClasses(estado, cor)}>
+              {typeof icone === "string" && icone.startsWith("http") ? (
+                <img src={icone} alt={label} className="w-4 h-6 mr-3" />
+              ) : (
+                <span className="mr-4">{icone}</span>
+              )}
+              <span className="truncate">{label}</span>
+            </button>
+          ))}
+        </div>
         
         {isMobile && (
           <button
             onClick={() => setMenuAberto(false)}
-            className="w-full flex items-center justify-center gap-1 px-1 py-2 rounded-lg transition-all duration-200 bg-gray-200 hover:bg-gray-300 col-span-2"
+            className="w-full flex items-center justify-center gap-1 px-1 py-2 rounded-lg transition-all duration-200 bg-gray-200 hover:bg-gray-300 col-span-2 mt-4"
           >
             <span>➖</span>
             <span>Minimizar</span>
