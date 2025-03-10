@@ -25,7 +25,7 @@ const App = () => {
   const fetchDataPoints = async () => {
     console.log("Iniciando consulta ao Supabase na tabela 'locations'...");
     const { data, error } = await supabase
-      .from('locations')
+      .from('locations3')
       .select('*');
     
     if (error) {
