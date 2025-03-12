@@ -6,21 +6,21 @@ const MarkerTypeDropdown = ({ newLocation, setNewLocation }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    <div>
-      <label className="block font-medium">
+    <div className="w-full text-gray-800">
+      <label className="block font-medium mb-1">
         Tipo de Marcador <span className="text-red-500">*</span>
       </label>
       <div className="relative">
         <button
           type="button"
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="w-full border rounded p-2 flex items-center justify-between text-black"
+          className="w-full border border-gray-300 rounded-md p-2.5 flex items-center justify-between bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
         >
-          <span>
+          <span className="text-gray-700">
             {newLocation.tipo || "Selecione o tipo de marcador"}
           </span>
           <svg
-            className="w-4 h-4 text-black"
+            className={`w-4 h-4 text-gray-600 transition-transform duration-200 ${dropdownOpen ? 'transform rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -34,7 +34,7 @@ const MarkerTypeDropdown = ({ newLocation, setNewLocation }) => {
           </svg>
         </button>
         {dropdownOpen && (
-          <div className="absolute mt-1 w-full bg-white border rounded shadow-lg z-10">
+          <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg z-10 max-h-60 overflow-y-auto">
             {opcoes.map((opcao, idx) => (
               <button
                 key={idx}
@@ -47,18 +47,18 @@ const MarkerTypeDropdown = ({ newLocation, setNewLocation }) => {
                   }));
                   setDropdownOpen(false);
                 }}
-                className={`w-full text-left p-2 hover:bg-gray-100 flex items-center ${opcao.cor} text-black`}
+                className={`w-full text-left p-2.5 flex items-center hover:bg-gray-50 transition-colors ${idx !== opcoes.length - 1 ? 'border-b border-gray-100' : ''} ${opcao.cor} text-gray-700`}
               >
                 {opcao.icone.startsWith("http") ? (
                   <img
                     src={opcao.icone}
                     alt={opcao.label}
-                    className="w-6 h-6 mr-2"
+                    className="w-6 h-6 mr-3"
                   />
                 ) : (
-                  <span className="mr-2">{opcao.icone}</span>
+                  <span className="mr-3">{opcao.icone}</span>
                 )}
-                <span>{opcao.label}</span>
+                <span className="font-medium">{opcao.label}</span>
               </button>
             ))}
           </div>
