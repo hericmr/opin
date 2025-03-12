@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import { supabase } from './supabaseClient';
 import MapaSantos from "./components/MapaSantos";
 import Navbar from "./components/Navbar";
 import PainelInformacoes from "./components/PainelInformacoes";
 import AddLocationButton from "./components/AddLocationButton";
+import ConteudoCartografia from "./components/ConteudoCartografia";
 
 const LoadingScreen = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-green-900 text-white">
@@ -17,15 +19,16 @@ const LoadingScreen = () => (
   </div>
 );
 
-const App = () => {
+const AppContent = () => {
   const [dataPoints, setDataPoints] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const fetchDataPoints = async () => {
     console.log("Iniciando consulta ao Supabase na tabela 'locations'...");
     const { data, error } = await supabase
-      .from('loca')
+      .from('locations3')
       .select('*');
     
     if (error) {
@@ -144,13 +147,32 @@ const App = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow">
-        <MapaSantos dataPoints={dataPoints} />
-        <PainelInformacoes dataPoints={dataPoints} />
-        <AddLocationButton onLocationAdded={handleLocationAdded} />
-      </main>
+      <Navbar onConteudoClick={() => navigate('/conteudo')} />
+      <Routes>
+        <Route 
+          path="/" 
+          element={
+            <main className="flex-grow">
+              <MapaSantos dataPoints={dataPoints} />
+              <PainelInformacoes dataPoints={dataPoints} />
+              <AddLocationButton onLocationAdded={handleLocationAdded} />
+            </main>
+          } 
+        />
+        <Route 
+          path="/conteudo" 
+          element={<ConteudoCartografia locations={dataPoints} />} 
+        />
+      </Routes>
     </div>
+  );
+};
+
+const App = () => {
+  return (
+    <Router basename="/cartografiasocial">
+      <AppContent />
+    </Router>
   );
 };
 
