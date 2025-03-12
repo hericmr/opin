@@ -75,7 +75,7 @@ const MapSection = ({ newLocation, setNewLocation, error }) => {
               ? [newLocation.latitude, newLocation.longitude]
               : [-23.976769, -46.332818]
           }
-          zoom={11}
+          zoom={10}
           style={{
             height: "200px",
             width: "100%",

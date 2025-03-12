@@ -10,12 +10,12 @@ const MenuCamadas = ({ estados, acoes }) => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const menuClasses = `bg-green-900 bg-opacity-70 backdrop-blur p-2 rounded-lg shadow-md transition-all duration-200 ${
+  const menuClasses = `bg-green-900 bg-opacity-80 backdrop-blur-md p-4 rounded-lg shadow-lg transition-all duration-300 ${
     isMobile
-      ? `fixed bottom-0 left-0 right-0 mx-2 mb-6 grid grid-cols-2 gap-2 transition-transform duration-200 ${
+      ? `fixed bottom-0 left-0 right-0 mx-2 mb-6 grid grid-cols-2 gap-2 transition-transform duration-300 ${
           menuAberto ? 'translate-y-0' : 'translate-y-full'
         }`
-      : "mt-2 w-40"
+      : "mt-2 w-52"
   }`;
 
   const botaoClasses = (ativo, cor) =>
@@ -35,7 +35,7 @@ const MenuCamadas = ({ estados, acoes }) => {
 
   return (
     <div className={`fixed ${isMobile ? "bottom-0 left-0 right-0" : "top-40 left-3"} z-10`}>
-      {/* Botão de menu (visível apenas no PC) */}
+      {/* Botão de Toggle (visível apenas no PC) */}
       {!isMobile && (
         <button
           onClick={() => setMenuAberto(!menuAberto)}
@@ -61,11 +61,13 @@ const MenuCamadas = ({ estados, acoes }) => {
             </button>
           ))}
         </div>
-        
-        {isMobile && (
+
+        {/* Botão de Minimizar (Mobile) */}
+        {isMobile && menuAberto && (
           <button
             onClick={() => setMenuAberto(false)}
             className="w-full flex items-center justify-center gap-1 px-1 py-2 rounded-lg transition-all duration-200 bg-gray-200 hover:bg-gray-300 col-span-2 mt-4"
+            aria-label="Minimizar menu"
           >
             <span>➖</span>
             <span>Minimizar</span>
@@ -77,7 +79,7 @@ const MenuCamadas = ({ estados, acoes }) => {
       {isMobile && !menuAberto && (
         <button
           onClick={() => setMenuAberto(true)}
-          className="fixed bottom-2 left-1/2 transform -translate-x-1/2 bg-white text-black p-2 rounded-full shadow-lg hover:bg-gray-100 transition-all z-20"
+          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white p-3 rounded-full shadow-lg hover:bg-green-700 hover:shadow-xl transition-all duration-200 z-20"
           aria-label="Abrir menu"
         >
           ☰
