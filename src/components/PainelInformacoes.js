@@ -31,7 +31,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
       role="dialog"
       aria-labelledby="painel-titulo"
       aria-describedby="painel-descricao"
-      className={`fixed top-16 left-0 right-0 sm:left-auto sm:w-3/4 lg:w-[49%] bg-green-50 rounded-xl shadow-lg z-40 transform transition-transform duration-900 ease-in-out ${
+      className={`fixed top-16 left-0 right-0 sm:left-auto sm:w-3/4 lg:w-[49%] bg-green-50 hover:bg-green-100 rounded-xl shadow-lg z-40 transform transition-transform duration-900 ease-in-out ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
       }`}
       style={{
@@ -39,14 +39,19 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         maxHeight: isMobile ? 'calc(100vh - 4rem)' : painelDimensions.maxHeight,
         transition: "opacity 0.7s ease, transform 0.7s ease",
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        backgroundColor: "#f0fdf4",
+        backdropFilter: "none",
+        WebkitBackdropFilter: "none"
       }}
     >
       <PainelHeader titulo={painelInfo.titulo} closePainel={closePainel} />
 
-      <div className="p-6 overflow-y-auto flex-1">
+      <div className="p-8 overflow-y-auto flex-1 space-y-6 bg-white">
         {painelInfo.audioUrl && (
-          <AudioButton isAudioEnabled={isAudioEnabled} toggleAudio={toggleAudio} />
+          <div className="mb-4">
+            <AudioButton isAudioEnabled={isAudioEnabled} toggleAudio={toggleAudio} />
+          </div>
         )}
 
         <PainelMediaContent
@@ -66,7 +71,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
 
 // Componentes internos modularizados
 const PainelMediaContent = ({ imagens, video, titulo, audioUrl, descricao_detalhada, links }) => (
-  <>
+  <div className="space-y-8 bg-white">
     <PainelMedia
       imagens={imagens}
       video={video}
@@ -75,11 +80,11 @@ const PainelMediaContent = ({ imagens, video, titulo, audioUrl, descricao_detalh
     />
     <PainelDescricao descricao={descricao_detalhada} />
     <PainelLinks links={links} />
-  </>
+  </div>
 );
 
 const ShareSection = ({ copiarLink, compartilhar }) => (
-  <div className="mt-4 text-center">
+  <div className="mt-8 text-center">
     <ShareButton onClick={copiarLink} onShare={compartilhar} />
   </div>
 );
