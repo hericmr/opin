@@ -11,21 +11,21 @@ const MenuCamadas = ({ estados, acoes }) => {
   }, []);
 
   const menuClasses = `
-    bg-green-900/80 backdrop-blur-md p-2.5 rounded-lg shadow-lg transition-all duration-300 text-white
+    bg-white/95 backdrop-blur-md p-3 rounded-lg shadow-lg transition-all duration-300
     ${isMobile
       ? `fixed bottom-0 left-0 right-0 mx-2 mb-6 grid grid-cols-2 gap-2 transition-transform duration-300 ${
           menuAberto ? 'translate-y-0' : 'translate-y-full'
         }`
-      : "mt-2 w-44"
+      : "mt-2 w-52"
     }
   `;
 
   const botaoClasses = (ativo, cor) => `
-    w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all duration-200
+    w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200
     ${ativo 
-      ? `${cor} shadow-sm transform scale-[1.01] text-gray-800` 
-      : "bg-green-800/50 hover:bg-green-800/70"}
-    focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 mb-1
+      ? `${cor} shadow-sm transform scale-[1.01]` 
+      : "bg-white hover:bg-gray-50 border border-gray-100"}
+    focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 mb-1.5
   `;
 
   const MarkerIcon = ({ color }) => (
@@ -54,7 +54,7 @@ const MenuCamadas = ({ estados, acoes }) => {
       {!isMobile && (
         <button
           onClick={() => setMenuAberto(!menuAberto)}
-          className="p-2 w-10 h-10 bg-green-900/80 backdrop-blur-md text-white rounded-full shadow-lg hover:bg-green-800/80 transition-all flex items-center justify-center text-sm"
+          className="p-2 w-10 h-10 bg-white text-green-800 rounded-full shadow-lg hover:bg-green-50 transition-all flex items-center justify-center text-sm"
           aria-label={menuAberto ? "Fechar menu" : "Abrir menu"}
         >
           {menuAberto ? "✖" : "☰"}
@@ -72,8 +72,8 @@ const MenuCamadas = ({ estados, acoes }) => {
               className={botaoClasses(estado, cor)}
             >
               <MarkerIcon color={color} />
-              <span className="flex-1 text-left text-sm font-medium">{label}</span>
-              <span className={`w-2 h-2 rounded-full ${estado ? 'bg-green-300' : 'bg-green-900/50'}`}></span>
+              <span className="flex-1 text-left text-sm font-medium text-gray-700">{label}</span>
+              <span className={`w-2 h-2 rounded-full ${estado ? 'bg-green-500' : 'bg-gray-200'}`}></span>
             </button>
           ))}
         </div>
@@ -82,7 +82,7 @@ const MenuCamadas = ({ estados, acoes }) => {
         {isMobile && menuAberto && (
           <button
             onClick={() => setMenuAberto(false)}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 bg-green-800/50 hover:bg-green-800/70 col-span-2 mt-2 text-sm"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 bg-gray-50 hover:bg-gray-100 col-span-2 mt-2 text-sm"
             aria-label="Minimizar menu"
           >
             <span>➖</span>
@@ -95,7 +95,7 @@ const MenuCamadas = ({ estados, acoes }) => {
       {isMobile && !menuAberto && (
         <button
           onClick={() => setMenuAberto(true)}
-          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-900/80 backdrop-blur-md text-white p-3 rounded-full shadow-lg hover:bg-green-800/80 hover:shadow-xl transition-all duration-200 z-20 text-sm"
+          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white p-3 rounded-full shadow-lg hover:bg-green-700 hover:shadow-xl transition-all duration-200 z-20 text-sm"
           aria-label="Abrir menu"
         >
           ☰
