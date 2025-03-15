@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AddLocationButton from './AddLocationButton';
 import EditLocationButton from './EditLocationButton';
+import { Settings, ChevronDown, Shield } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const ADMIN_PASSWORD = "Política Social";
 
@@ -71,24 +73,42 @@ const Navbar = () => {
           {!isAdmin ? (
             <button
               onClick={handleAdminClick}
-              className="text-sm font-medium text-white/50 hover:text-white transition-colors ml-2"
+              className="p-2 rounded-full hover:bg-green-800/50 transition-colors ml-2 group"
+              aria-label="Configurações de administrador"
             >
-              ⚙️
+              <Settings className="w-5 h-5 text-white/50 group-hover:text-white transition-colors" />
             </button>
           ) : (
             <div className="relative ml-2">
               <button
                 onClick={() => setShowAdminPanel(!showAdminPanel)}
-                className="text-sm font-medium text-white hover:text-green-100 transition-colors"
+                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white hover:bg-green-800/50 rounded-lg transition-all"
               >
-                Painel Admin
+                <Shield className="w-4 h-4" />
+                <span>Admin</span>
+                <ChevronDown 
+                  className={`w-4 h-4 transition-transform duration-200 ${showAdminPanel ? 'rotate-180' : ''}`}
+                />
               </button>
-              {showAdminPanel && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                  <AddLocationButton />
-                  <EditLocationButton />
-                </div>
-              )}
+              <AnimatePresence>
+                {showAdminPanel && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 border border-gray-100"
+                  >
+                    <div className="px-3 py-2 text-xs font-medium text-gray-500 border-b border-gray-100">
+                      Gerenciar Locais
+                    </div>
+                    <div className="py-1">
+                      <AddLocationButton />
+                      <EditLocationButton />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           )}
         </div>
