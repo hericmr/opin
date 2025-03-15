@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import PainelInformacoes from "./components/PainelInformacoes";
 import AddLocationButton from "./components/AddLocationButton";
 import ConteudoCartografia from "./components/ConteudoCartografia";
+import AdminPanel from "./components/AdminPanel";
 
 const LoadingScreen = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-green-900 text-white">
@@ -162,6 +163,10 @@ const AppContent = () => {
         <Route 
           path="/conteudo" 
           element={<ConteudoCartografia locations={dataPoints} />} 
+        />
+        <Route 
+          path="/admin" 
+          element={<AdminPanel />} 
         />
       </Routes>
     </div>
