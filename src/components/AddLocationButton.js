@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AddLocationPanel from './AddLocationPanel';
 import { supabase } from '../supabaseClient';
+import { PlusCircle, Loader2 } from 'lucide-react';
 
 const AddLocationButton = () => {
   const [isAddingLocation, setIsAddingLocation] = useState(false);
@@ -86,7 +87,7 @@ const AddLocationButton = () => {
   return (
     <>
       <button
-        className="text-white/80 hover:text-white transition-colors text-sm flex items-center gap-1"
+        className="w-full px-4 py-2 flex items-center gap-2 text-gray-700 hover:bg-gray-50 transition-colors text-sm group"
         onClick={() => {
           console.log("Botão Adicionar clicado");
           setIsAddingLocation(true);
@@ -94,13 +95,24 @@ const AddLocationButton = () => {
         aria-label="Adicionar Local"
         disabled={isLoading}
       >
-        {isLoading ? "Salvando..." : "➕ Adicionar"}
+        {isLoading ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <PlusCircle className="w-4 h-4 text-green-600 group-hover:text-green-700" />
+        )}
+        <span className="flex-1 text-left">
+          {isLoading ? "Salvando..." : "Adicionar Local"}
+        </span>
       </button>
 
-      {error && <div className="text-red-500 mt-2">{error}</div>}
+      {error && (
+        <div className="px-4 py-2 text-sm text-red-600 bg-red-50">
+          {error}
+        </div>
+      )}
 
       {isAddingLocation && (
-        <div className="relative">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
           <AddLocationPanel
             newLocation={newLocation}
             setNewLocation={setNewLocation}
