@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AddLocationButton from './AddLocationButton';
-import EditLocationButton from './EditLocationButton';
-import { Settings, ChevronDown, Shield } from 'lucide-react';
+import { Settings, ChevronDown, Shield, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const ADMIN_PASSWORD = "Política Social";
@@ -10,6 +9,7 @@ const ADMIN_PASSWORD = "Política Social";
 const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -22,6 +22,15 @@ const Navbar = () => {
   };
 
   const isConteudoPage = location.pathname === '/conteudo';
+  
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const handleNavigation = (path) => {
+    navigate(path);
+    setMobileMenuOpen(false);
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-green-900/80 backdrop-blur-md text-white">
@@ -42,8 +51,19 @@ const Navbar = () => {
           </h1>
         </div>
 
-        {/* Links de Navegação e Logos */}
-        <div className="flex items-center">
+        {/* Versão Mobile - Menu Hambúrguer */}
+        <div className="md:hidden flex items-center">
+          <button
+            onClick={toggleMobileMenu}
+            className="p-2 rounded-full hover:bg-green-800/50 transition-colors"
+            aria-label="Menu principal"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+
+        {/* Links de Navegação e Logos - Versão Desktop */}
+        <div className="hidden md:flex items-center">
           {/* Botão Ver Conteúdo/Voltar */}
           <button
             onClick={() => navigate(isConteudoPage ? '/' : '/conteudo')}
@@ -104,7 +124,6 @@ const Navbar = () => {
                     </div>
                     <div className="py-1">
                       <AddLocationButton />
-                      <EditLocationButton />
                       <button
                         onClick={() => navigate('/admin')}
                         className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
@@ -124,6 +143,78 @@ const Navbar = () => {
           )}
         </div>
       </nav>
+
+      {/* Menu Mobile Expandido */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-green-900/90 backdrop-blur-md"
+          >
+            <div className="container mx-auto px-4 py-3 flex flex-col space-y-3">
+              <button
+                onClick={() => handleNavigation(isConteudoPage ? '/' : '/conteudo')}
+                className="w-full py-2 text-sm font-medium text-white text-center hover:bg-green-800/50 rounded-lg"
+              >
+                {isConteudoPage ? 'Voltar ao Mapa' : 'Ver Todo Conteúdo'}
+              </button>
+              
+              <div className="flex items-center justify-center py-2">
+                <a 
+                  href="https://www.unifesp.br/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center"
+                >
+                  <img
+                    src="/cartografiasocial/logo.png"
+                    alt="Logo da Unifesp"
+                    className="h-8 w-auto object-contain"
+                  />
+                  <span className="text-[10px] tracking-wide font-serif mt-0.5 text-white">
+                    Serviço Social
+                  </span>
+                </a>
+              </div>
+              
+              {!isAdmin ? (
+                <button
+                  onClick={handleAdminClick}
+                  className="w-full py-2 text-sm font-medium text-white text-center hover:bg-green-800/50 rounded-lg flex items-center justify-center gap-2"
+                >
+                  <Settings className="w-4 h-4" />
+                  Área administrativa
+                </button>
+              ) : (
+                <>
+                  <div className="w-full py-2 px-4 text-sm font-medium text-white text-center border-t border-green-800">
+                    <span className="flex items-center justify-center gap-2">
+                      <Shield className="w-4 h-4" />
+                      Acesso de Administrador
+                    </span>
+                  </div>
+                  <div className="flex flex-col space-y-1 pb-2">
+                    <AddLocationButton />
+                    <button
+                      onClick={() => handleNavigation('/admin')}
+                      className="w-full text-left px-4 py-2 text-sm text-white hover:bg-green-800/50 flex items-center gap-2"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="3" y1="9" x2="21" y2="9"/>
+                        <line x1="9" y1="21" x2="9" y2="9"/>
+                      </svg>
+                      Painel de Administração
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
