@@ -42,47 +42,57 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
   // Hooks customizados
   useDynamicURL(painelInfo, gerarLinkCustomizado);
   useClickOutside(painelRef, closePainel);
-  
+
   if (!painelInfo) return null;
-  
+
   const baseClasses = "fixed top-16 right-0 sm:left-auto sm:w-3/4 lg:w-[49%] rounded-xl shadow-lg z-40 transform transition-all duration-500 ease-in-out";
   const visibilityClasses = isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0";
-  
+
   return (
     <div
       ref={painelRef}
       role="dialog"
       aria-labelledby="painel-titulo"
       aria-describedby="painel-descricao"
+      aria-modal="true"
       className={`${baseClasses} ${visibilityClasses}`}
       style={{
         height: isMobile ? 'calc(100vh - 4rem)' : painelDimensions.height,
         maxHeight: isMobile ? 'calc(100vh - 4rem)' : painelDimensions.maxHeight,
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "#f0fdf4"
+        backgroundColor: "#f0fdf4" // Verde claro (green-100)
       }}
     >
       <PainelHeader titulo={painelInfo.titulo} closePainel={closePainel} />
       
-      <div className="p-6 overflow-y-auto flex-1 space-y-6 bg-white rounded-b-xl">
+      <div className="p-6 overflow-y-auto flex-1 space-y-8 bg-green-50 rounded-b-xl">
         {painelInfo.audioUrl && (
           <div className="mb-4 flex justify-end">
-            <AudioButton isAudioEnabled={isAudioEnabled} toggleAudio={toggleAudio} />
+            <AudioButton 
+              isAudioEnabled={isAudioEnabled} 
+              toggleAudio={toggleAudio} 
+              aria-label={isAudioEnabled ? "Desativar áudio" : "Ativar áudio"}
+            />
           </div>
         )}
         
-        <PainelMediaContent
-          imagens={painelInfo.imagens}
-          video={painelInfo.video}
-          titulo={painelInfo.titulo}
-          audioUrl={painelInfo.audioUrl}
-          descricao_detalhada={painelInfo.descricao_detalhada}
-          links={painelInfo.links}
-        />
+        {/* Conteúdo principal com estilo de texto melhorado para acessibilidade */}
+        <div className="text-xl sm:text-2 leading-loose tracking-wide text-gray-900 font-medium">
+          <PainelMediaContent
+            imagens={painelInfo.imagens}
+            video={painelInfo.video}
+            titulo={painelInfo.titulo}
+            audioUrl={painelInfo.audioUrl}
+            descricao_detalhada={painelInfo.descricao_detalhada}
+            links={painelInfo.links}
+          />
+        </div>
         
         <ShareSection copiarLink={copiarLink} compartilhar={compartilhar} />
       </div>
+      
+
     </div>
   );
 };
