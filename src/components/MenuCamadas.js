@@ -11,7 +11,7 @@ const MenuCamadas = ({ estados, acoes }) => {
   }, []);
 
   const menuClasses = `
-    bg-white/95 backdrop-blur-md p-3 rounded-lg shadow-lg transition-all duration-300
+    bg-green-900/30 backdrop-blur-md p-3 rounded-lg shadow-lg transition-all duration-300 text-white
     ${isMobile
       ? `fixed bottom-0 left-0 right-0 mx-2 mb-6 grid grid-cols-2 gap-2 transition-transform duration-300 ${
           menuAberto ? 'translate-y-0' : 'translate-y-full'
@@ -24,8 +24,8 @@ const MenuCamadas = ({ estados, acoes }) => {
     w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200
     ${ativo 
       ? `${cor} shadow-sm transform scale-[1.01]` 
-      : "bg-white hover:bg-gray-50 border border-gray-100"}
-    focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 mb-1.5
+      : "bg-green-800/90 hover:bg-green-700/90 border border-green-700"}
+    focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50 mb-1.5
   `;
 
   const MarkerIcon = ({ color }) => (
@@ -39,13 +39,13 @@ const MenuCamadas = ({ estados, acoes }) => {
   );
 
   const opcoes = [
-    { acao: acoes.toggleBairros, estado: estados.bairros, color: "#9CA3AF", label: "Bairros", cor: "bg-gray-100 hover:bg-gray-200" },
-    { acao: acoes.toggleAssistencia, estado: estados.assistencia, color: "#10B981", label: "Assistência", cor: "bg-green-100 hover:bg-green-200" },
-    { acao: acoes.toggleHistoricos, estado: estados.historicos, color: "#FBBF24", label: "Históricos", cor: "bg-yellow-100 hover:bg-yellow-200" },
-    { acao: acoes.toggleCulturais, estado: estados.culturais, color: "#3B82F6", label: "Lazer", cor: "bg-blue-100 hover:bg-blue-200" },
-    { acao: acoes.toggleComunidades, estado: estados.comunidades, color: "#EF4444", label: "Comunidades", cor: "bg-red-100 hover:bg-red-200" },
-    { acao: acoes.toggleEducação, estado: estados.educação, color: "#8B5CF6", label: "Educação", cor: "bg-purple-100 hover:bg-purple-200" },
-    { acao: acoes.toggleReligiao, estado: estados.religiao, color: "#4B5563", label: "Religião", cor: "bg-gray-100 hover:bg-gray-200" },
+    { acao: acoes.toggleBairros, estado: estados.bairros, color: "#9CA3AF", label: "Bairros", cor: "bg-gray-700 hover:bg-gray-600 text-white" },
+    { acao: acoes.toggleAssistencia, estado: estados.assistencia, color: "#10B981", label: "Assistência", cor: "bg-green-600 hover:bg-green-500 text-white" },
+    { acao: acoes.toggleHistoricos, estado: estados.historicos, color: "#FBBF24", label: "Históricos", cor: "bg-yellow-600 hover:bg-yellow-500 text-white" },
+    { acao: acoes.toggleCulturais, estado: estados.culturais, color: "#3B82F6", label: "Lazer", cor: "bg-blue-600 hover:bg-blue-500 text-white" },
+    { acao: acoes.toggleComunidades, estado: estados.comunidades, color: "#EF4444", label: "Comunidades", cor: "bg-red-600 hover:bg-red-500 text-white" },
+    { acao: acoes.toggleEducação, estado: estados.educação, color: "#8B5CF6", label: "Educação", cor: "bg-purple-600 hover:bg-purple-500 text-white" },
+    { acao: acoes.toggleReligiao, estado: estados.religiao, color: "#4B5563", label: "Religião", cor: "bg-gray-700 hover:bg-gray-600 text-white" },
   ];
 
   return (
@@ -54,7 +54,7 @@ const MenuCamadas = ({ estados, acoes }) => {
       {!isMobile && (
         <button
           onClick={() => setMenuAberto(!menuAberto)}
-          className="p-2 w-10 h-10 bg-white text-green-800 rounded-full shadow-lg hover:bg-green-50 transition-all flex items-center justify-center text-sm"
+          className="p-2 w-10 h-10 bg-green-900/90 text-white rounded-full shadow-lg hover:bg-green-800 transition-all flex items-center justify-center text-sm"
           aria-label={menuAberto ? "Fechar menu" : "Abrir menu"}
         >
           {menuAberto ? "✖" : "☰"}
@@ -62,40 +62,42 @@ const MenuCamadas = ({ estados, acoes }) => {
       )}
 
       {/* Menu de camadas */}
-      <div className={menuClasses}>
-        {/* Seção de Camadas */}
-        <div className="col-span-2">
-          {opcoes.map(({ acao, estado, color, label, cor }, index) => (
-            <button
-              key={index}
-              onClick={acao}
-              className={botaoClasses(estado, cor)}
-            >
-              <MarkerIcon color={color} />
-              <span className="flex-1 text-left text-sm font-medium text-gray-700">{label}</span>
-              <span className={`w-2 h-2 rounded-full ${estado ? 'bg-green-500' : 'bg-gray-200'}`}></span>
-            </button>
-          ))}
-        </div>
+      {menuAberto && (
+        <div className={menuClasses}>
+          {/* Seção de Camadas */}
+          <div className="col-span-2">
+            {opcoes.map(({ acao, estado, color, label, cor }, index) => (
+              <button
+                key={index}
+                onClick={acao}
+                className={botaoClasses(estado, cor)}
+              >
+                <MarkerIcon color={color} />
+                <span className="flex-1 text-left text-sm font-medium text-white">{label}</span>
+                <span className={`w-2 h-2 rounded-full ${estado ? 'bg-green-300' : 'bg-gray-500'}`}></span>
+              </button>
+            ))}
+          </div>
 
-        {/* Botão de Minimizar (Mobile) */}
-        {isMobile && menuAberto && (
-          <button
-            onClick={() => setMenuAberto(false)}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 bg-gray-50 hover:bg-gray-100 col-span-2 mt-2 text-sm"
-            aria-label="Minimizar menu"
-          >
-            <span>➖</span>
-            <span className="font-medium">Minimizar</span>
-          </button>
-        )}
-      </div>
+          {/* Botão de Minimizar (Mobile) */}
+          {isMobile && menuAberto && (
+            <button
+              onClick={() => setMenuAberto(false)}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 bg-green-700/90 hover:bg-green-600/90 col-span-2 mt-2 text-sm text-white"
+              aria-label="Minimizar menu"
+            >
+              <span>➖</span>
+              <span className="font-medium">Minimizar</span>
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Botão flutuante para reabrir o menu no mobile */}
       {isMobile && !menuAberto && (
         <button
           onClick={() => setMenuAberto(true)}
-          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white p-3 rounded-full shadow-lg hover:bg-green-700 hover:shadow-xl transition-all duration-200 z-20 text-sm"
+          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-800 text-white p-3 rounded-full shadow-lg hover:bg-green-700 hover:shadow-xl transition-all duration-200 z-20 text-sm"
           aria-label="Abrir menu"
         >
           ☰
