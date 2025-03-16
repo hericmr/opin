@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { orangeIcon, blackIcon, violetIcon, redIcon, blueIcon, greenIcon, yellowIcon } from './CustomIcon';
 
 const CATEGORIAS = {
-  'lazer': { cor: 'blue-700', icone: blueIcon, label: 'Lazer' },
-  'assistencia': { cor: 'green-700', icone: greenIcon, label: 'Assistência' },
-  'historico': { cor: 'yellow-600', icone: yellowIcon, label: 'Históricos' },
-  'comunidades': { cor: 'red-600', icone: redIcon, label: 'Comunidades' },
-  'educação': { cor: 'violet-600', icone: violetIcon, label: 'Educação' },
-  'religiao': { cor: 'black', icone: blackIcon, label: 'Religião' },
-  'bairro': { cor: 'orange-500', icone: orangeIcon, label: 'Bairro' }
+  'lazer': { cor: 'blue-700', bgCor: 'bg-blue-200', borderCor: 'border-blue-200', icone: blueIcon, label: 'Lazer' },
+  'assistencia': { cor: 'green-700', bgCor: 'bg-green-100', borderCor: 'border-green-200', icone: greenIcon, label: 'Assistência' },
+  'historico': { cor: 'yellow-600', bgCor: 'bg-yellow-100', borderCor: 'border-yellow-200', icone: yellowIcon, label: 'Históricos' },
+  'comunidades': { cor: 'red-600', bgCor: 'bg-red-100', borderCor: 'border-red-200', icone: redIcon, label: 'Comunidades' },
+  'educação': { cor: 'violet-600', bgCor: 'bg-violet-200', borderCor: 'border-violet-200', icone: violetIcon, label: 'Educação' },
+  'religiao': { cor: 'black', bgCor: 'bg-gray-200', borderCor: 'border-gray-200', icone: blackIcon, label: 'Religião' },
+  'bairro': { cor: 'orange-500', bgCor: 'bg-orange-200', borderCor: 'border-orange-200', icone: orangeIcon, label: 'Bairro' }
 };
 
 const ConteudoCartografia = ({ locations }) => {
@@ -61,7 +61,7 @@ const ConteudoCartografia = ({ locations }) => {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6">
         <path
-          fill="currentColor"
+          fill={`currentColor`}
           className={`text-${categoriaInfo.cor}`}
           d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
         />
@@ -114,14 +114,16 @@ const ConteudoCartografia = ({ locations }) => {
               if (locaisFiltrados.length === 0) return null;
 
               const categoriaInfo = CATEGORIAS[categoria.toLowerCase()];
-              if (!categoriaInfo) return null;
+              const bgColor = categoriaInfo?.bgCor || 'bg-white';
+              const textColor = categoriaInfo?.cor || 'gray-800';
+              const borderColor = categoriaInfo?.borderCor || 'border-gray-200';
 
               return (
-                <div key={categoria} className="bg-white rounded-lg shadow-lg p-6 transition-all hover:shadow-xl">
+                <div key={categoria} className={`${bgColor} rounded-lg shadow-lg p-6 transition-all hover:shadow-xl`}>
                   <div className="flex items-center mb-6 pb-3 border-b">
                     {renderIconeSVG(categoria)}
-                    <h2 className={`text-xl font-semibold ml-2 text-${categoriaInfo.cor}`}>
-                      {categoriaInfo.label}
+                    <h2 className={`text-xl font-semibold ml-2 text-${textColor}`}>
+                      {categoriaInfo?.label || categoria}
                     </h2>
                     <span className="ml-auto text-sm text-gray-500">
                       {locaisFiltrados.length} {locaisFiltrados.length === 1 ? 'local' : 'locais'}
@@ -133,15 +135,15 @@ const ConteudoCartografia = ({ locations }) => {
                       <div
                         key={local.id}
                         onClick={() => abrirLocal(local)}
-                        className="cursor-pointer border rounded-lg p-5 hover:bg-gray-50 transition-all duration-200 hover:shadow-md group"
+                        className={`cursor-pointer border ${borderColor} rounded-lg p-5 hover:bg-white transition-all duration-200 hover:shadow-md group`}
                       >
-                        <h3 className="font-medium text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                        <h3 className={`font-medium text-${textColor} mb-3 group-hover:text-${textColor} transition-colors`}>
                           {local.titulo}
                         </h3>
                         <p className="text-gray-600 text-sm line-clamp-3">
                           {local.descricao_detalhada?.replace(/<[^>]*>/g, '').substring(0, 200)}...
                         </p>
-                        <div className="mt-3 text-sm text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className={`mt-3 text-sm text-${textColor} opacity-0 group-hover:opacity-100 transition-opacity`}>
                           Clique para ver mais →
                         </div>
                       </div>
@@ -156,4 +158,4 @@ const ConteudoCartografia = ({ locations }) => {
   );
 };
 
-export default ConteudoCartografia; 
+export default ConteudoCartografia;
