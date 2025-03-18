@@ -33,19 +33,20 @@ const Navbar = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-green-900/80 backdrop-blur-md text-white">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-green-900/95 to-green-900/85 backdrop-blur-md text-white shadow-lg">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo e Título */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3 group">
           <img
             src="/cartografiasocial/favicon.ico"
             alt="Ícone do mapa"
-            className="h-6 sm:h-8 w-auto"
+            className="h-7 sm:h-8 w-auto transform group-hover:scale-105 transition-transform duration-200"
             aria-label="Ícone do mapa"
           />
           <h1
             onClick={() => navigate('/')}
-            className="text-sm sm:text-base md:text-xl lg:text-2xl font-bold tracking-wide cursor-pointer truncate hover:text-green-100 transition-colors"
+            className="text-sm sm:text-base md:text-xl lg:text-2xl font-bold tracking-wide cursor-pointer truncate 
+                     hover:text-green-100 transition-colors duration-200 border-b-2 border-transparent hover:border-green-400"
           >
             Cartografia Social de Santos
           </h1>
@@ -55,19 +56,27 @@ const Navbar = () => {
         <div className="md:hidden flex items-center">
           <button
             onClick={toggleMobileMenu}
-            className="p-2 rounded-full hover:bg-green-800/50 transition-colors"
+            className="p-2 rounded-full hover:bg-green-800/50 transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-400"
             aria-label="Menu principal"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            <motion.div
+              initial={false}
+              animate={{ rotate: mobileMenuOpen ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </motion.div>
           </button>
         </div>
 
         {/* Links de Navegação e Logos - Versão Desktop */}
-        <div className="hidden md:flex items-center">
+        <div className="hidden md:flex items-center space-x-6">
           {/* Botão Ver Conteúdo/Voltar */}
           <button
             onClick={() => navigate(isConteudoPage ? '/' : '/conteudo')}
-            className="px-4 py-2 text-sm font-medium text-white hover:text-green-100 transition-colors rounded-lg hover:bg-green-800"
+            className="px-4 py-2 text-sm font-medium text-white bg-green-800/50 hover:bg-green-700/50 
+                     transition-all duration-200 rounded-lg hover:shadow-md active:scale-95
+                     focus:outline-none focus:ring-2 focus:ring-green-400"
           >
             {isConteudoPage ? 'Voltar ao Mapa' : 'Ver Todo Conteúdo'}
           </button>
@@ -77,14 +86,14 @@ const Navbar = () => {
             href="https://www.unifesp.br/" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex flex-col items-center mx-4"
+            className="flex flex-col items-center group transition-transform duration-200 hover:scale-105"
           >
             <img
               src="/cartografiasocial/logo.png"
               alt="Logo da Unifesp"
               className="h-8 sm:h-10 w-auto object-contain"
             />
-            <span className="text-[10px] sm:text-xs tracking-wide font-serif mt-0.5">
+            <span className="text-[10px] sm:text-xs tracking-wide font-serif mt-0.5 opacity-90">
               Serviço Social
             </span>
           </a>
@@ -93,31 +102,37 @@ const Navbar = () => {
           {!isAdmin ? (
             <button
               onClick={handleAdminClick}
-              className="p-2 rounded-full hover:bg-green-800/50 transition-colors ml-2 group"
+              className="p-2 rounded-full hover:bg-green-800/50 transition-all duration-200 group
+                       focus:outline-none focus:ring-2 focus:ring-green-400 active:scale-95"
               aria-label="Configurações de administrador"
             >
-              <Settings className="w-5 h-5 text-white/50 group-hover:text-white transition-colors" />
+              <Settings className="w-5 h-5 text-white/70 group-hover:text-white transition-colors duration-200" />
             </button>
           ) : (
-            <div className="relative ml-2">
+            <div className="relative">
               <button
                 onClick={() => setShowAdminPanel(!showAdminPanel)}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white hover:bg-green-800/50 rounded-lg transition-all"
+                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white 
+                         bg-green-800/50 hover:bg-green-700/50 rounded-lg transition-all duration-200
+                         focus:outline-none focus:ring-2 focus:ring-green-400 active:scale-95"
               >
                 <Shield className="w-4 h-4" />
                 <span>Admin</span>
-                <ChevronDown 
-                  className={`w-4 h-4 transition-transform duration-200 ${showAdminPanel ? 'rotate-180' : ''}`}
-                />
+                <motion.div
+                  animate={{ rotate: showAdminPanel ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </motion.div>
               </button>
               <AnimatePresence>
                 {showAdminPanel && (
                   <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute right-0 mt-2 w-56 bg-green-100 rounded-lg shadow-lg py-2 border border-gray-100"
+                    className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 border border-gray-100"
                   >
                     <div className="px-3 py-2 text-xs font-medium text-gray-500 border-b border-gray-100">
                       Gerenciar Locais
@@ -126,7 +141,8 @@ const Navbar = () => {
                       <AddLocationButton />
                       <button
                         onClick={() => navigate('/admin')}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 
+                                 transition-colors duration-200 flex items-center gap-2"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
@@ -151,12 +167,15 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-green-900/90 backdrop-blur-md"
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden bg-gradient-to-b from-green-900/95 to-green-800/95 backdrop-blur-md border-t border-green-800/30"
           >
-            <div className="container mx-auto px-4 py-3 flex flex-col space-y-3">
+            <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
               <button
                 onClick={() => handleNavigation(isConteudoPage ? '/' : '/conteudo')}
-                className="w-full py-2 text-sm font-medium text-white text-center hover:bg-green-800/50 rounded-lg"
+                className="w-full py-2.5 text-sm font-medium text-white bg-green-800/50 hover:bg-green-700/50 
+                         rounded-lg transition-all duration-200 active:scale-95
+                         focus:outline-none focus:ring-2 focus:ring-green-400"
               >
                 {isConteudoPage ? 'Voltar ao Mapa' : 'Ver Todo Conteúdo'}
               </button>
@@ -166,14 +185,14 @@ const Navbar = () => {
                   href="https://www.unifesp.br/" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex flex-col items-center"
+                  className="flex flex-col items-center transform transition-transform duration-200 hover:scale-105"
                 >
                   <img
                     src="/cartografiasocial/logo.png"
                     alt="Logo da Unifesp"
                     className="h-8 w-auto object-contain"
                   />
-                  <span className="text-[10px] tracking-wide font-serif mt-0.5 text-white">
+                  <span className="text-[10px] tracking-wide font-serif mt-0.5 text-white/90">
                     Serviço Social
                   </span>
                 </a>
@@ -182,24 +201,28 @@ const Navbar = () => {
               {!isAdmin ? (
                 <button
                   onClick={handleAdminClick}
-                  className="w-full py-2 text-sm font-medium text-white text-center hover:bg-green-800/50 rounded-lg flex items-center justify-center gap-2"
+                  className="w-full py-2.5 text-sm font-medium text-white bg-green-800/50 hover:bg-green-700/50 
+                           rounded-lg transition-all duration-200 flex items-center justify-center gap-2
+                           focus:outline-none focus:ring-2 focus:ring-green-400 active:scale-95"
                 >
                   <Settings className="w-4 h-4" />
                   Área administrativa
                 </button>
               ) : (
                 <>
-                  <div className="w-full py-2 px-4 text-sm font-medium text-white text-center border-t border-green-800">
+                  <div className="w-full py-2 px-4 text-sm font-medium text-white/90 text-center border-t border-green-800/30">
                     <span className="flex items-center justify-center gap-2">
                       <Shield className="w-4 h-4" />
                       Acesso de Administrador
                     </span>
                   </div>
-                  <div className="flex flex-col space-y-1 pb-2">
+                  <div className="flex flex-col space-y-2">
                     <AddLocationButton />
                     <button
                       onClick={() => handleNavigation('/admin')}
-                      className="w-full text-left px-4 py-2 text-sm text-white hover:bg-green-800/50 flex items-center gap-2"
+                      className="w-full py-2.5 text-sm text-white bg-green-800/50 hover:bg-green-700/50 
+                               rounded-lg transition-all duration-200 flex items-center justify-center gap-2
+                               focus:outline-none focus:ring-2 focus:ring-green-400 active:scale-95"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>

@@ -14,7 +14,7 @@ import { usePainelDimensions } from "./hooks/usePainelDimensions";
 
 // Componentes internos modularizados
 const PainelMediaContent = memo(({ imagens, video, titulo, audioUrl, descricao_detalhada, links }) => (
-  <div className="space-y-8">
+  <div className="space-y-6">
     <PainelMedia
       imagens={imagens}
       video={video}
@@ -27,7 +27,7 @@ const PainelMediaContent = memo(({ imagens, video, titulo, audioUrl, descricao_d
 ));
 
 const ShareSection = memo(({ copiarLink, compartilhar }) => (
-  <div className="mt-8 text-center">
+  <div className="mt-8 flex justify-center space-x-4">
     <ShareButton onClick={copiarLink} onShare={compartilhar} />
   </div>
 ));
@@ -45,7 +45,12 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
 
   if (!painelInfo) return null;
 
-  const baseClasses = "fixed top-16 right-0 sm:left-auto sm:w-3/4 lg:w-[49%] rounded-xl shadow-lg z-40 transform transition-all duration-500 ease-in-out";
+  const baseClasses = `
+    fixed top-16 right-0 sm:left-auto sm:w-3/4 lg:w-[49%] 
+    rounded-xl shadow-xl z-40 transform transition-all duration-500 ease-in-out
+    bg-gradient-to-b from-green-50/95 to-green-50/90 backdrop-blur-sm
+  `;
+  
   const visibilityClasses = isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0";
 
   return (
@@ -61,38 +66,37 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
         maxHeight: isMobile ? 'calc(100vh - 4rem)' : painelDimensions.maxHeight,
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "#f0fdf4" // Verde claro (green-100)
       }}
     >
       <PainelHeader titulo={painelInfo.titulo} closePainel={closePainel} />
       
-      <div className="p-6 overflow-y-auto flex-1 space-y-8 bg-green-50 rounded-b-xl">
-        {painelInfo.audioUrl && (
-          <div className="mb-4 flex justify-end">
-            <AudioButton 
-              isAudioEnabled={isAudioEnabled} 
-              toggleAudio={toggleAudio} 
-              aria-label={isAudioEnabled ? "Desativar áudio" : "Ativar áudio"}
+      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-green-600/40 scrollbar-track-green-50/20">
+        <div className="p-6 space-y-6">
+          {painelInfo.audioUrl && typeof painelInfo.audioUrl === 'string' && painelInfo.audioUrl.trim() !== "" && (
+            <div className="flex justify-end -mt-2 mb-4">
+              <AudioButton 
+                isAudioEnabled={isAudioEnabled} 
+                toggleAudio={toggleAudio} 
+                aria-label={isAudioEnabled ? "Desativar áudio" : "Ativar áudio"}
+                className="hover:bg-green-100/50 transition-colors duration-200"
+              />
+            </div>
+          )}
+          
+          <div className="prose prose-lg lg:prose-xl max-w-none">
+            <PainelMediaContent
+              imagens={painelInfo.imagens}
+              video={painelInfo.video}
+              titulo={painelInfo.titulo}
+              audioUrl={painelInfo.audioUrl}
+              descricao_detalhada={painelInfo.descricao_detalhada}
+              links={painelInfo.links}
             />
           </div>
-        )}
-        
-        {/* Conteúdo principal com estilo de texto melhorado para acessibilidade */}
-        <div className="text-xl sm:text-2 leading-loose tracking-wide text-gray-900 font-medium">
-          <PainelMediaContent
-            imagens={painelInfo.imagens}
-            video={painelInfo.video}
-            titulo={painelInfo.titulo}
-            audioUrl={painelInfo.audioUrl}
-            descricao_detalhada={painelInfo.descricao_detalhada}
-            links={painelInfo.links}
-          />
+          
+          <ShareSection copiarLink={copiarLink} compartilhar={compartilhar} />
         </div>
-        
-        <ShareSection copiarLink={copiarLink} compartilhar={compartilhar} />
       </div>
-      
-
     </div>
   );
 };
