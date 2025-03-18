@@ -35,7 +35,6 @@ const PainelDescricao = ({ descricao, className = "" }) => {
   };
 
   // Usa useMemo para evitar sanitização redundante em re-renders
-  // Todos os hooks devem ser chamados no nível superior, antes de qualquer retorno condicional
   const sanitizedHTML = useMemo(() => {
     if (!descricao) return "";
     
@@ -57,17 +56,32 @@ const PainelDescricao = ({ descricao, className = "" }) => {
     });
   }, [descricao]);
 
-  // Retorna null se não houver descrição após executar todos os Hooks
   if (!descricao) return null;
 
   return (
     <div className={`mb-6 ${className}`}>
       <div
-        className="prose prose-lg lg:prose-xl max-w-none bg-white rounded-lg p-4"
+        className="prose prose-lg lg:prose-xl max-w-none px-1"
         style={{
-          lineHeight: "1.8",
-          fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
-          color: "#1f2937", // text-gray-800 equivalente
+          '--tw-prose-body': '#1f2937',
+          '--tw-prose-headings': '#111827',
+          '--tw-prose-links': '#059669',
+          '--tw-prose-bold': '#111827',
+          '--tw-prose-counters': '#1f2937',
+          '--tw-prose-bullets': '#4b5563',
+          '--tw-prose-hr': '#e5e7eb',
+          '--tw-prose-quotes': '#111827',
+          '--tw-prose-quote-borders': '#10b981',
+          '--tw-prose-captions': '#6b7280',
+          '--tw-prose-code': '#111827',
+          '--tw-prose-pre-code': '#e5e7eb',
+          '--tw-prose-pre-bg': '#1f2937',
+          '--tw-prose-th-borders': '#d1d5db',
+          '--tw-prose-td-borders': '#e5e7eb',
+          lineHeight: '1.8',
+          fontSize: '1.125rem',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          letterSpacing: '0.015em',
         }}
         dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
         aria-live="polite"

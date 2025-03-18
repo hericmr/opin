@@ -144,18 +144,9 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
                         key={idx}
                         type="button"
                         onClick={() => handleTipoChange(opcao.value)}
-                        className={`w-full text-left p-2 hover:bg-gray-50 flex items-center ${opcao.cor} text-gray-800`}
+                        className={`w-full text-left p-2 ${opcao.cor} text-gray-800`}
                       >
-                        {opcao.icone.startsWith("http") ? (
-                          <img
-                            src={opcao.icone}
-                            alt={opcao.label}
-                            className="w-6 h-6 mr-2"
-                          />
-                        ) : (
-                          <span className="mr-2">{opcao.icone}</span>
-                        )}
-                        <span>{opcao.label}</span>
+                        {opcao.label}
                       </button>
                     ))}
                   </div>
@@ -193,22 +184,19 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
               onRemove={handleRemoveVideo}
             />
 
-            <InputField
-              label="Links"
-              id="links"
-              type="url"
-              value={newLocation.links || ""}
-              onChange={(e) => setNewLocation(prev => ({...prev, links: e.target.value}))}
-              placeholder="Cole um link aqui (http://...)"
-            />
-            <InputField
-              label="Áudio"
-              id="audio"
-              type="url"
-              value={newLocation.audio || ""}
-              onChange={(e) => setNewLocation(prev => ({...prev, audio: e.target.value}))}
-              placeholder="http://"
-            />
+            <div className="mb-4">
+              <label htmlFor="links" className="block text-sm font-medium text-gray-700">
+                Links
+              </label>
+              <input
+                type="text"
+                id="links"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                value={newLocation.links || ""}
+                onChange={(e) => setNewLocation(prev => ({...prev, links: e.target.value}))}
+                placeholder="Links separados por vírgula"
+              />
+            </div>
 
             <div className="mt-4 flex justify-end gap-2">
               <button
@@ -239,19 +227,22 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
 };
 
 AddLocationPanel.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
   newLocation: PropTypes.shape({
+    nome: PropTypes.string,
+    tipo: PropTypes.string,
+    descricao: PropTypes.string,
+    descricao_detalhada: PropTypes.string,
     latitude: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     longitude: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    tipo: PropTypes.string,
-    titulo: PropTypes.string,
-    descricao_detalhada: PropTypes.string,
+    imagens: PropTypes.string,
+    video: PropTypes.string,
     links: PropTypes.string,
-    audio: PropTypes.string,
   }).isRequired,
   setNewLocation: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool,
+  error: PropTypes.string,
 };
 
 AddLocationPanel.defaultProps = {
