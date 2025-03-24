@@ -95,6 +95,14 @@ const PainelMedia = ({ imagens = [], video, titulo }) => {
       )}
       
       {renderZoomedImage()}
+
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-gray-800">Descrição Detalhada</h2>
+        <div 
+          className="prose max-w-none"
+          dangerouslySetInnerHTML={{ __html: location.descricao_detalhada }}
+        />
+      </div>
     </div>
   );
 };
