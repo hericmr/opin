@@ -252,7 +252,11 @@ const MapSection = ({ newLocation, setNewLocation, error }) => {
         .from('media')
         .getPublicUrl(filePath);
 
-      setNewLocation(prev => ({ ...prev, audio: publicUrl }));
+      setNewLocation(prev => ({
+        ...prev,
+        audio: publicUrl
+      }));
+
       setAudioState(prev => ({ ...prev, audioBlob: null }));
     } catch (error) {
       console.error('Erro no upload do áudio:', error);
