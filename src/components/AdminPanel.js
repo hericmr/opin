@@ -11,6 +11,7 @@ const AdminPanel = () => {
   const [error, setError] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [editingLocation, setEditingLocation] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Buscar todos os locais
   useEffect(() => {
@@ -74,8 +75,15 @@ const AdminPanel = () => {
   };
 
   const handleSaveEdit = async (updatedLocation) => {
+    if (!updatedLocation || !updatedLocation.id) {
+      setError('Dados do local inválidos. Por favor, tente novamente.');
+      return;
+    }
+
     try {
-      setLoading(true);
+      setIsSaving(true);
+      setError(null);
+
       const { error } = await supabase
         .from('locations3')
         .update({
@@ -96,12 +104,11 @@ const AdminPanel = () => {
         loc.id === updatedLocation.id ? updatedLocation : loc
       ));
       setEditingLocation(null);
-      setError(null);
     } catch (err) {
       console.error('Erro ao atualizar local:', err);
       setError('Não foi possível atualizar o local. Por favor, tente novamente.');
     } finally {
-      setLoading(false);
+      setIsSaving(false);
     }
   };
 
