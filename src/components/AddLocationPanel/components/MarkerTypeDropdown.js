@@ -49,15 +49,15 @@ const MarkerTypeDropdown = ({ newLocation, setNewLocation }) => {
                 }}
                 className={`w-full text-left p-2.5 flex items-center hover:bg-gray-50 transition-colors ${idx !== opcoes.length - 1 ? 'border-b border-gray-100' : ''} ${opcao.cor} text-gray-700`}
               >
-                {opcao.icone.startsWith("http") ? (
-                  <img
-                    src={opcao.icone}
-                    alt={opcao.label}
-                    className="w-6 h-6 mr-3"
-                  />
-                ) : (
-                  <span className="mr-3">{opcao.icone}</span>
-                )}
+                <div className="mr-3 w-6 h-6">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-full h-full">
+                    <path
+                      fill="currentColor"
+                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                    />
+                    <circle cx="12" cy="9" r="3" fill="white"/>
+                  </svg>
+                </div>
                 <span className="font-medium">{opcao.label}</span>
               </button>
             ))}
