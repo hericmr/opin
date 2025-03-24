@@ -5,7 +5,7 @@ export const uploadFile = async (file, bucket = 'media') => {
     // Gera um nome único para o arquivo
     const fileExt = file.name.split('.').pop();
     const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-    const filePath = `locations/${fileName}`;
+    const filePath = `${fileName}`;
 
     const { error: uploadError, data } = await supabase.storage
       .from(bucket)
@@ -28,9 +28,9 @@ export const uploadFile = async (file, bucket = 'media') => {
 };
 
 export const uploadImage = async (file) => {
-  return uploadFile(file, 'media');
+  return uploadFile(file, 'images');
 };
 
 export const uploadAudio = async (file) => {
-  return uploadFile(file, 'media');
+  return uploadFile(file, 'audio');
 }; 

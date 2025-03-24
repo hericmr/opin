@@ -6,5 +6,7 @@ module.exports = {
   theme: {
     extend: {}, // Personalizações, caso necessário
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 };
