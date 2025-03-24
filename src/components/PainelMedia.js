@@ -100,7 +100,7 @@ const PainelMedia = ({ imagens = [], video, titulo }) => {
         <h2 className="text-xl font-semibold text-gray-800">Descrição Detalhada</h2>
         <div 
           className="prose max-w-none"
-          dangerouslySetInnerHTML={{ __html: location.descricao_detalhada }}
+          dangerouslySetInnerHTML={{ __html: local.descricao_detalhada }}
         />
       </div>
     </div>
