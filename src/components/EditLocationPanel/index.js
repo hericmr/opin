@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import PropTypes from "prop-types";
 import { supabase } from '../../supabaseClient';
 import MapSection from "../AddLocationPanel/components/MapSection";
 import InputField from "../AddLocationPanel/components/InputField";
 import RichTextEditor from "../AddLocationPanel/components/RichTextEditor";
 import { opcoes } from "../AddLocationPanel/constants";
+import { Upload, X } from 'lucide-react';
 
 const EditLocationPanel = ({ location, onClose, onSave }) => {
   const [editedLocation, setEditedLocation] = useState({
@@ -16,6 +17,23 @@ const EditLocationPanel = ({ location, onClose, onSave }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [errors, setErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
+  const [mediaState, setMediaState] = useState({
+    selectedImages: [],
+    imageUrls: [],
+    uploadingImages: false,
+    uploadError: "",
+  });
+
+  // Inicializa as imagens existentes
+  React.useEffect(() => {
+    if (location.imagens) {
+      const existingImages = location.imagens.split(',').filter(url => url);
+      setMediaState(prev => ({
+        ...prev,
+        imageUrls: existingImages
+      }));
+    }
+  }, [location.imagens]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -43,6 +61,102 @@ const EditLocationPanel = ({ location, onClose, onSave }) => {
       tipo: tipo,
     }));
     setDropdownOpen(false);
+  };
+
+  const handleImageSelect = async (event) => {
+    const files = Array.from(event.target.files);
+    if (files.length === 0) return;
+
+    const validFiles = files.filter(file => {
+      const isValidType = ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type);
+      const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB
+      return isValidType && isValidSize;
+    });
+
+    if (validFiles.length !== files.length) {
+      setMediaState(prev => ({
+        ...prev,
+        uploadError: "Alguns arquivos foram ignorados. Use apenas imagens JPG/PNG até 5MB."
+      }));
+    }
+
+    setMediaState(prev => ({
+      ...prev,
+      selectedImages: [...prev.selectedImages, ...validFiles]
+    }));
+
+    validFiles.forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setMediaState(prev => ({
+          ...prev,
+          imageUrls: [...prev.imageUrls, reader.result]
+        }));
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleUploadImages = async () => {
+    if (mediaState.selectedImages.length === 0) return;
+
+    setMediaState(prev => ({ ...prev, uploadingImages: true, uploadError: "" }));
+    const uploadedUrls = [];
+
+    try {
+      for (const file of mediaState.selectedImages) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `locations/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('media')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('media')
+          .getPublicUrl(filePath);
+
+        uploadedUrls.push(publicUrl);
+      }
+
+      // Combina as URLs existentes com as novas
+      const existingUrls = editedLocation.imagens ? editedLocation.imagens.split(',').filter(url => url) : [];
+      const allUrls = [...existingUrls, ...uploadedUrls];
+
+      setEditedLocation(prev => ({
+        ...prev,
+        imagens: allUrls.join(',')
+      }));
+
+      setMediaState(prev => ({
+        ...prev,
+        selectedImages: [],
+        imageUrls: allUrls
+      }));
+    } catch (error) {
+      console.error('Erro no upload:', error);
+      setMediaState(prev => ({
+        ...prev,
+        uploadError: "Erro ao fazer upload das imagens. Tente novamente."
+      }));
+    } finally {
+      setMediaState(prev => ({ ...prev, uploadingImages: false }));
+    }
+  };
+
+  const removeImage = (index) => {
+    const newImageUrls = mediaState.imageUrls.filter((_, i) => i !== index);
+    setMediaState(prev => ({
+      ...prev,
+      imageUrls: newImageUrls
+    }));
+    setEditedLocation(prev => ({
+      ...prev,
+      imagens: newImageUrls.join(',')
+    }));
   };
 
   return (
@@ -166,6 +280,65 @@ const EditLocationPanel = ({ location, onClose, onSave }) => {
               onChange={(e) => setEditedLocation(prev => ({...prev, links: e.target.value}))}
               placeholder="Cole um link aqui (http://...)"
             />
+
+            {/* Seção de Upload de Imagens */}
+            <div className="space-y-4">
+              <label className="block font-medium text-gray-800">
+                Imagens
+              </label>
+              <div className="space-y-4">
+                {/* Grid de imagens existentes */}
+                {mediaState.imageUrls.length > 0 && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {mediaState.imageUrls.map((url, index) => (
+                      <div key={index} className="relative group">
+                        <img
+                          src={url}
+                          alt={`Imagem ${index + 1}`}
+                          className="w-full h-32 object-cover rounded-lg"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Upload de novas imagens */}
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition-colors">
+                    <Upload className="w-4 h-4" />
+                    <span>Adicionar Imagens</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="hidden"
+                      onChange={handleImageSelect}
+                    />
+                  </label>
+                  {mediaState.selectedImages.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleUploadImages}
+                      disabled={mediaState.uploadingImages}
+                      className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:bg-green-300"
+                    >
+                      {mediaState.uploadingImages ? "Enviando..." : "Enviar Imagens"}
+                    </button>
+                  )}
+                </div>
+                {mediaState.uploadError && (
+                  <p className="text-red-500 text-sm">{mediaState.uploadError}</p>
+                )}
+              </div>
+            </div>
+
             <div className="mt-4 flex justify-end gap-2">
               <button
                 type="button"
@@ -206,6 +379,7 @@ EditLocationPanel.propTypes = {
     descricao_detalhada: PropTypes.string,
     localizacao: PropTypes.string,
     links: PropTypes.string,
+    imagens: PropTypes.string,
   }).isRequired,
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
