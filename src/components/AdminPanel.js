@@ -73,7 +73,7 @@ const AdminPanel = () => {
     setEditingLocation(location);
   };
 
-  const handleSaveEdit = async (updatedLocation) => {
+  const handleSaveEdit = async (e, updatedLocation) => {
     try {
       setLoading(true);
       const { error } = await supabase
@@ -218,13 +218,13 @@ const AdminPanel = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
                           className="text-blue-600 hover:text-blue-900 mr-3"
-                          onClick={() => handleEdit(location)}
+                          onClick={(e) => handleEdit(location)}
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           className="text-red-600 hover:text-red-900"
-                          onClick={() => handleDelete(location)}
+                          onClick={(e) => handleDelete(location)}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
