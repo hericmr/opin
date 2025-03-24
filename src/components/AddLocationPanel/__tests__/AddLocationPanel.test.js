@@ -21,8 +21,7 @@ jest.mock('../../../supabaseClient', () => ({
       })),
     },
     from: jest.fn(() => ({
-      insert: jest.fn(),
-      select: jest.fn(),
+      insert: jest.fn().mockResolvedValue({ data: null, error: null })
     })),
   },
 }));
@@ -248,6 +247,68 @@ describe('AddLocationPanel', () => {
 
     expect(screen.getByText(/Salvando/i)).toBeInTheDocument();
     expect(screen.getByText(/Cancelar/i)).toBeDisabled();
+  });
+
+  it('deve salvar o local com as URLs de imagens e áudio no Supabase', async () => {
+    const mockImageUrl = 'https://example.com/test-image.jpg';
+    const mockAudioUrl = 'https://example.com/test-audio.mp3';
+    
+    render(
+      <AddLocationPanel
+        newLocation={{
+          ...mockNewLocation,
+          imagens: mockImageUrl,
+          audio: mockAudioUrl
+        }}
+        setNewLocation={mockSetNewLocation}
+        onSave={mockOnSave}
+        onClose={mockOnClose}
+        isLoading={false}
+      />
+    );
+
+    // Clicar no botão de salvar
+    const saveButton = screen.getByText('Salvar');
+    await userEvent.click(saveButton);
+
+    // Verificar se o Supabase insert foi chamado com os dados corretos
+    expect(supabase.from().insert).toHaveBeenCalledWith([
+      expect.objectContaining({
+        titulo: mockNewLocation.titulo,
+        tipo: mockNewLocation.tipo,
+        descricao_detalhada: mockNewLocation.descricao_detalhada,
+        localizacao: `${mockNewLocation.latitude},${mockNewLocation.longitude}`,
+        imagens: mockImageUrl,
+        audio: mockAudioUrl,
+      }),
+    ]);
+  });
+
+  it('deve salvar o local com a URL do áudio no Supabase', async () => {
+    const mockAudioUrl = 'https://example.com/audio.wav';
+    
+    render(
+      <AddLocationPanel
+        newLocation={{
+          ...mockNewLocation,
+          audio: mockAudioUrl
+        }}
+        setNewLocation={mockSetNewLocation}
+        onSave={mockOnSave}
+        onClose={mockOnClose}
+        isLoading={false}
+      />
+    );
+
+    const saveButton = screen.getByText('Salvar');
+    await userEvent.click(saveButton);
+
+    expect(supabase.from).toHaveBeenCalledWith('locations3');
+    expect(supabase.from().insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        audio: mockAudioUrl
+      })
+    );
   });
 });
 

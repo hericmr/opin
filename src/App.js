@@ -60,9 +60,7 @@ const AppContent = () => {
         : [];
 
       // Áudio
-      e.audioUrl = (e.audio && typeof e.audio === 'string')
-        ? e.audio.split(",")
-        : [];
+      e.audioUrl = e.audio || "";
 
       // Título e Descrição
       e.titulo = e.titulo || "Título não disponível";
