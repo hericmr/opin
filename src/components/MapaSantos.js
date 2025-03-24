@@ -67,7 +67,16 @@ const MapaSantos = ({ dataPoints }) => {
 
   const toggleVisibilidade = (chave) => {
     console.log(`Alterando visibilidade: ${chave}`);
-    setVisibilidade((prev) => ({ ...prev, [chave]: !prev[chave] }));
+    if (chave === "bairros") {
+      // Quando alternar bairros, também alterna os marcadores de bairro
+      setVisibilidade((prev) => ({ 
+        ...prev, 
+        [chave]: !prev[chave],
+        bairro: !prev[chave] // Sincroniza com os marcadores de bairro
+      }));
+    } else {
+      setVisibilidade((prev) => ({ ...prev, [chave]: !prev[chave] }));
+    }
   };
 
   return (
