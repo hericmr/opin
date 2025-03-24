@@ -122,15 +122,21 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
                         onClick={() => handleTipoChange(opcao.value)}
                         className={`w-full text-left p-2 hover:bg-gray-50 flex items-center ${opcao.cor} text-gray-800`}
                       >
-                        {opcao.icone.startsWith("http") ? (
-                          <img
-                            src={opcao.icone}
-                            alt={opcao.label}
-                            className="w-6 h-6 mr-2"
-                          />
-                        ) : (
-                          <span className="mr-2">{opcao.icone}</span>
-                        )}
+                        <div className="mr-2 w-6 h-6">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-full h-full">
+                            <path
+                              fill={opcao.value === "assistencia" ? "#10B981" : 
+                                    opcao.value === "lazer" ? "#3B82F6" :
+                                    opcao.value === "historico" ? "#FBBF24" :
+                                    opcao.value === "comunidades" ? "#EF4444" :
+                                    opcao.value === "educação" ? "#8B5CF6" :
+                                    opcao.value === "religiao" ? "#4B5563" :
+                                    "#9CA3AF"}
+                              d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                            />
+                            <circle cx="12" cy="9" r="3" fill="white"/>
+                          </svg>
+                        </div>
                         <span>{opcao.label}</span>
                       </button>
                     ))}
