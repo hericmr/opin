@@ -73,7 +73,7 @@ const AdminPanel = () => {
     setEditingLocation(location);
   };
 
-  const handleSaveEdit = async (e, updatedLocation) => {
+  const handleSaveEdit = async (updatedLocation) => {
     try {
       setLoading(true);
       const { error } = await supabase
