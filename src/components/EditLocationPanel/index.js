@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { supabase } from '../../supabaseClient';
 import MapSection from "../AddLocationPanel/components/MapSection";
-import MediaSection from "../AddLocationPanel/components/MediaSection";
 import InputField from "../AddLocationPanel/components/InputField";
 import RichTextEditor from "../AddLocationPanel/components/RichTextEditor";
 import { opcoes } from "../AddLocationPanel/constants";
@@ -13,33 +12,10 @@ const EditLocationPanel = ({ location, onClose, onSave }) => {
     latitude: location.localizacao ? location.localizacao.split(',')[0] : '',
     longitude: location.localizacao ? location.localizacao.split(',')[1] : '',
   });
-  const [imagePreview, setImagePreview] = useState(null);
-  const [videoPreview, setVideoPreview] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [errors, setErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
-
-  const handleImageUpload = (event) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleVideoUpload = (event) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setVideoPreview(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleRemoveImage = () => setImagePreview(null);
-  const handleRemoveVideo = () => setVideoPreview(null);
 
   const validateForm = () => {
     const newErrors = {};
@@ -50,58 +26,23 @@ const EditLocationPanel = ({ location, onClose, onSave }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      onSave();
+      setShowConfirmation(true);
+      setTimeout(() => {
+        setShowConfirmation(false);
+      }, 3000);
+    }
+  };
+
   const handleTipoChange = (tipo) => {
     setEditedLocation((prev) => ({
       ...prev,
       tipo: tipo,
     }));
     setDropdownOpen(false);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-    setIsSaving(true);
-    try {
-      const locationData = {
-        titulo: editedLocation.titulo,
-        tipo: editedLocation.tipo,
-        descricao_detalhada: editedLocation.descricao_detalhada,
-        localizacao: `${editedLocation.latitude},${editedLocation.longitude}`,
-        links: editedLocation.links || null,
-        audio: editedLocation.audio || null,
-      };
-
-      // Certifique-se de que estamos usando o ID correto
-      const locationId = location.id;
-      console.log("Atualizando local com ID:", locationId);
-
-      // Atualizar a tabela locations3 em vez de locations
-      const { data, error: supabaseError } = await supabase
-        .from('locations3')
-        .update(locationData)
-        .eq('id', locationId)
-        .select();
-
-      if (supabaseError) throw new Error(supabaseError.message);
-      console.log("Local atualizado com sucesso:", data);
-      setShowConfirmation(true);
-      
-      // Passar o objeto editedLocation para onSave
-      setTimeout(() => {
-        onSave({
-          ...editedLocation,
-          id: location.id,
-          localizacao: `${editedLocation.latitude},${editedLocation.longitude}`
-        });
-        onClose();
-      }, 2000);
-    } catch (err) {
-      console.error("Erro ao atualizar local:", err);
-      setErrors({ submit: `Erro ao atualizar o local: ${err.message}` });
-    } finally {
-      setIsSaving(false);
-    }
   };
 
   return (
@@ -217,18 +158,6 @@ const EditLocationPanel = ({ location, onClose, onSave }) => {
               }
               error={errors.descricao_detalhada}
             />
-            <MediaSection
-              type="image"
-              preview={imagePreview}
-              onUpload={handleImageUpload}
-              onRemove={handleRemoveImage}
-            />
-            <MediaSection
-              type="video"
-              preview={videoPreview}
-              onUpload={handleVideoUpload}
-              onRemove={handleRemoveVideo}
-            />
             <InputField
               label="Links"
               id="links"
@@ -236,14 +165,6 @@ const EditLocationPanel = ({ location, onClose, onSave }) => {
               value={editedLocation.links || ""}
               onChange={(e) => setEditedLocation(prev => ({...prev, links: e.target.value}))}
               placeholder="Cole um link aqui (http://...)"
-            />
-            <InputField
-              label="Áudio"
-              id="audio"
-              type="url"
-              value={editedLocation.audio || ""}
-              onChange={(e) => setEditedLocation(prev => ({...prev, audio: e.target.value}))}
-              placeholder="http://"
             />
             <div className="mt-4 flex justify-end gap-2">
               <button
@@ -268,9 +189,7 @@ const EditLocationPanel = ({ location, onClose, onSave }) => {
             )}
             {/* Mensagem de confirmação */}
             {showConfirmation && (
-              <div className="text-green-600 text-sm mt-2 animate-fade-in">
-                ✔ Local atualizado com sucesso!
-              </div>
+              <div className="text-green-600 text-sm mt-2 animate-fade-in">✔ Local atualizado com sucesso!</div>
             )}
           </form>
         </div>
@@ -287,7 +206,6 @@ EditLocationPanel.propTypes = {
     descricao_detalhada: PropTypes.string,
     localizacao: PropTypes.string,
     links: PropTypes.string,
-    audio: PropTypes.string,
   }).isRequired,
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
