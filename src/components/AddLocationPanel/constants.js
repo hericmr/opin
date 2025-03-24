@@ -1,38 +1,47 @@
+import { greenIcon, blueIcon, yellowIcon, redIcon, violetIcon, blackIcon, orangeIcon } from "../CustomIcon";
+
 export const opcoes = [
   {
     value: "assistencia",
     label: "Assistência Social",
     cor: "hover:bg-green-100",
+    icone: greenIcon
   },
   {
     value: "lazer",
     label: "Lazer",
     cor: "hover:bg-blue-100",
+    icone: blueIcon
   },
   {
     value: "historico",
     label: "Histórico",
     cor: "hover:bg-yellow-100",
+    icone: yellowIcon
   },
   {
     value: "comunidades",
     label: "Comunidades",
     cor: "hover:bg-red-100",
+    icone: redIcon
   },
   {
     value: "educação",
     label: "Educação",
     cor: "hover:bg-purple-100",
+    icone: violetIcon
   },
   {
     value: "religiao",
     label: "Religião",
     cor: "hover:bg-gray-100",
+    icone: blackIcon
   },
   {
     value: "bairro",
     label: "Bairro",
     cor: "hover:bg-orange-100",
+    icone: orangeIcon
   }
 ];
 
