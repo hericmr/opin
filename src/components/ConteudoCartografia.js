@@ -137,6 +137,15 @@ const ConteudoCartografia = ({ locations }) => {
                         onClick={() => abrirLocal(local)}
                         className={`cursor-pointer border ${borderColor} rounded-lg p-5 hover:bg-white transition-all duration-200 hover:shadow-md group`}
                       >
+                        {local.imagens && local.imagens.length > 0 && (
+                          <div className="mb-4">
+                            <img
+                              src={local.imagens[0]}
+                              alt={local.titulo}
+                              className="w-full h-48 object-cover rounded-lg shadow-sm"
+                            />
+                          </div>
+                        )}
                         <h3 className={`font-medium text-${textColor} mb-3 group-hover:text-${textColor} transition-colors`}>
                           {local.titulo}
                         </h3>
