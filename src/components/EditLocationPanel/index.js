@@ -47,7 +47,25 @@ const EditLocationPanel = ({ location, onClose, onSave }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      onSave(editedLocation);
+      // Limpa e valida as URLs das imagens
+      const cleanLocation = {
+        ...editedLocation,
+        imagens: editedLocation.imagens
+          ? editedLocation.imagens
+              .split(',')
+              .map(url => url.trim())
+              .filter(url => {
+                try {
+                  new URL(url);
+                  return true;
+                } catch {
+                  return false;
+                }
+              })
+              .join(',')
+          : ''
+      };
+      onSave(cleanLocation);
       setShowConfirmation(true);
       setTimeout(() => {
         setShowConfirmation(false);
