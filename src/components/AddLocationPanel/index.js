@@ -1,84 +1,14 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import MapSection from "./components/MapSection";
-import MediaSection from "./components/MediaSection";
 import InputField from "./components/InputField";
 import RichTextEditor from "./components/RichTextEditor";
 import { opcoes } from "./constants";
-import { uploadImage } from "../../services/uploadService";
 
 const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoading }) => {
-  const [imagePreview, setImagePreview] = useState(null);
-  const [videoPreview, setVideoPreview] = useState(null);
-  const [audioPreview, setAudioPreview] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [errors, setErrors] = useState({});
-
-  const handleImageUpload = (event) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleImageUploadComplete = (url) => {
-    setNewLocation(prev => ({
-      ...prev,
-      imagens: url
-    }));
-  };
-
-  const handleAudioUpload = (event) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setAudioPreview(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleAudioUploadComplete = (url) => {
-    setNewLocation(prev => ({
-      ...prev,
-      audio: url
-    }));
-  };
-
-  const handleVideoUpload = (event) => {
-    const url = event.target.value;
-    setVideoPreview(url);
-    setNewLocation(prev => ({
-      ...prev,
-      video: url
-    }));
-  };
-
-  const handleRemoveImage = () => {
-    setImagePreview(null);
-    setNewLocation(prev => ({
-      ...prev,
-      imagens: null
-    }));
-  };
-
-  const handleRemoveAudio = () => {
-    setAudioPreview(null);
-    setNewLocation(prev => ({
-      ...prev,
-      audio: null
-    }));
-  };
-
-  const handleRemoveVideo = () => {
-    setVideoPreview(null);
-    setNewLocation(prev => ({
-      ...prev,
-      video: null
-    }));
-  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -92,25 +22,6 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // Se houver uma imagem sendo carregada, aguarda o upload
-      if (imagePreview && !newLocation.imagens) {
-        try {
-          const file = imagePreview;
-          const url = await uploadImage(file);
-          setNewLocation(prev => ({
-            ...prev,
-            imagens: url
-          }));
-        } catch (error) {
-          console.error('Erro ao fazer upload da imagem:', error);
-          setErrors(prev => ({
-            ...prev,
-            image: 'Erro ao fazer upload da imagem. Tente novamente.'
-          }));
-          return;
-        }
-      }
-      
       onSave();
       setShowConfirmation(true);
       setTimeout(() => {
@@ -194,7 +105,7 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
                   </svg>
                 </button>
                 {dropdownOpen && (
-                  <div 
+                  <div
                     className="absolute w-full bg-white border rounded shadow-lg"
                     style={{
                       top: '100%',
@@ -209,9 +120,18 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
                         key={idx}
                         type="button"
                         onClick={() => handleTipoChange(opcao.value)}
-                        className={`w-full text-left p-2 ${opcao.cor} text-gray-800`}
+                        className={`w-full text-left p-2 hover:bg-gray-50 flex items-center ${opcao.cor} text-gray-800`}
                       >
-                        {opcao.label}
+                        {opcao.icone.startsWith("http") ? (
+                          <img
+                            src={opcao.icone}
+                            alt={opcao.label}
+                            className="w-6 h-6 mr-2"
+                          />
+                        ) : (
+                          <span className="mr-2">{opcao.icone}</span>
+                        )}
+                        <span>{opcao.label}</span>
                       </button>
                     ))}
                   </div>
@@ -236,41 +156,14 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
               error={errors.descricao_detalhada}
             />
 
-            <MediaSection
-              type="image"
-              preview={imagePreview}
-              onUpload={handleImageUpload}
-              onRemove={handleRemoveImage}
-              onUploadComplete={handleImageUploadComplete}
+            <InputField
+              label="Links"
+              id="links"
+              type="url"
+              value={newLocation.links || ""}
+              onChange={(e) => setNewLocation(prev => ({...prev, links: e.target.value}))}
+              placeholder="Cole um link aqui (http://...)"
             />
-            <MediaSection
-              type="audio"
-              preview={audioPreview}
-              onUpload={handleAudioUpload}
-              onRemove={handleRemoveAudio}
-              onUploadComplete={handleAudioUploadComplete}
-            />
-            <MediaSection
-              type="video"
-              preview={videoPreview}
-              onUpload={handleVideoUpload}
-              onRemove={handleRemoveVideo}
-              onUploadComplete={handleVideoUpload}
-            />
-
-            <div className="mb-4">
-              <label htmlFor="links" className="block text-sm font-medium text-gray-700">
-                Links
-              </label>
-              <input
-                type="text"
-                id="links"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                value={newLocation.links || ""}
-                onChange={(e) => setNewLocation(prev => ({...prev, links: e.target.value}))}
-                placeholder="Links separados por vírgula"
-              />
-            </div>
 
             <div className="mt-4 flex justify-end gap-2">
               <button
@@ -311,8 +204,6 @@ AddLocationPanel.propTypes = {
     descricao_detalhada: PropTypes.string,
     latitude: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     longitude: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    imagens: PropTypes.string,
-    video: PropTypes.string,
     links: PropTypes.string,
   }).isRequired,
   setNewLocation: PropTypes.func.isRequired,
