@@ -13,6 +13,7 @@ const AddLocationButton = () => {
     descricao_detalhada: "",
     links: "",
     audio: "",
+    imagens: "",
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -33,6 +34,7 @@ const AddLocationButton = () => {
         localizacao: `${newLocation.latitude},${newLocation.longitude}`,
         links: newLocation.links || null,
         audio: newLocation.audio || null,
+        imagens: newLocation.imagens || null,
       };
 
       // Inserir no Supabase
@@ -58,6 +60,7 @@ const AddLocationButton = () => {
         descricao_detalhada: "",
         links: "",
         audio: "",
+        imagens: "",
       });
 
       // Recarregar a página para atualizar os dados
@@ -80,6 +83,7 @@ const AddLocationButton = () => {
       descricao_detalhada: "",
       links: "",
       audio: "",
+      imagens: "",
     });
     setError("");
   };

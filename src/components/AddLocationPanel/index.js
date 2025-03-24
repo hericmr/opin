@@ -5,10 +5,12 @@ import MediaSection from "./components/MediaSection";
 import InputField from "./components/InputField";
 import RichTextEditor from "./components/RichTextEditor";
 import { opcoes } from "./constants";
+import { uploadImage } from "../../services/uploadService";
 
 const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoading }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
+  const [audioPreview, setAudioPreview] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [errors, setErrors] = useState({});
@@ -22,17 +24,61 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
     }
   };
 
-  const handleVideoUpload = (event) => {
+  const handleImageUploadComplete = (url) => {
+    setNewLocation(prev => ({
+      ...prev,
+      imagens: url
+    }));
+  };
+
+  const handleAudioUpload = (event) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => setVideoPreview(reader.result);
+      reader.onloadend = () => setAudioPreview(reader.result);
       reader.readAsDataURL(file);
     }
   };
 
-  const handleRemoveImage = () => setImagePreview(null);
-  const handleRemoveVideo = () => setVideoPreview(null);
+  const handleAudioUploadComplete = (url) => {
+    setNewLocation(prev => ({
+      ...prev,
+      audio: url
+    }));
+  };
+
+  const handleVideoUpload = (event) => {
+    const url = event.target.value;
+    setVideoPreview(url);
+    setNewLocation(prev => ({
+      ...prev,
+      video: url
+    }));
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    setNewLocation(prev => ({
+      ...prev,
+      imagens: null
+    }));
+  };
+
+  const handleRemoveAudio = () => {
+    setAudioPreview(null);
+    setNewLocation(prev => ({
+      ...prev,
+      audio: null
+    }));
+  };
+
+  const handleRemoveVideo = () => {
+    setVideoPreview(null);
+    setNewLocation(prev => ({
+      ...prev,
+      video: null
+    }));
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -43,9 +89,28 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
+      // Se houver uma imagem sendo carregada, aguarda o upload
+      if (imagePreview && !newLocation.imagens) {
+        try {
+          const file = imagePreview;
+          const url = await uploadImage(file);
+          setNewLocation(prev => ({
+            ...prev,
+            imagens: url
+          }));
+        } catch (error) {
+          console.error('Erro ao fazer upload da imagem:', error);
+          setErrors(prev => ({
+            ...prev,
+            image: 'Erro ao fazer upload da imagem. Tente novamente.'
+          }));
+          return;
+        }
+      }
+      
       onSave();
       setShowConfirmation(true);
       setTimeout(() => {
@@ -176,12 +241,21 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
               preview={imagePreview}
               onUpload={handleImageUpload}
               onRemove={handleRemoveImage}
+              onUploadComplete={handleImageUploadComplete}
+            />
+            <MediaSection
+              type="audio"
+              preview={audioPreview}
+              onUpload={handleAudioUpload}
+              onRemove={handleRemoveAudio}
+              onUploadComplete={handleAudioUploadComplete}
             />
             <MediaSection
               type="video"
               preview={videoPreview}
               onUpload={handleVideoUpload}
               onRemove={handleRemoveVideo}
+              onUploadComplete={handleVideoUpload}
             />
 
             <div className="mb-4">
