@@ -391,16 +391,13 @@ const EditLocationPanel = ({ location, onClose, onSave }) => {
               setMediaState={setMediaState}
               setAudioState={setAudioState}
             />
-            <RichTextEditor
-              value={editedLocation.descricao_detalhada || ""}
-              onChange={(content) =>
-                setEditedLocation((prev) => ({
-                  ...prev,
-                  descricao_detalhada: content,
-                }))
-              }
-              error={errors.descricao_detalhada}
-            />
+            <div className="space-y-2">
+              <RichTextEditor
+                value={editedLocation.descricao_detalhada}
+                onChange={(value) => setEditedLocation(prev => ({ ...prev, descricao_detalhada: value }))}
+                error={errors.descricao_detalhada}
+              />
+            </div>
             <InputField
               label="Links"
               id="links"
