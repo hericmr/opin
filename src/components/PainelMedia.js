@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const PainelMedia = ({ imagens = [], video, titulo }) => {
+const PainelMedia = ({ imagens = [], video, titulo, descricao_detalhada }) => {
   const [zoomedImage, setZoomedImage] = useState(null);
 
   const renderizarImagens = () => {
@@ -96,13 +96,15 @@ const PainelMedia = ({ imagens = [], video, titulo }) => {
       
       {renderZoomedImage()}
 
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-800">Descrição Detalhada</h2>
-        <div 
-          className="prose max-w-none"
-          dangerouslySetInnerHTML={{ __html: local.descricao_detalhada }}
-        />
-      </div>
+      {descricao_detalhada && (
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold text-gray-800">Descrição Detalhada</h2>
+          <div 
+            className="prose max-w-none"
+            dangerouslySetInnerHTML={{ __html: descricao_detalhada }}
+          />
+        </div>
+      )}
     </div>
   );
 };
