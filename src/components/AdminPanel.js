@@ -85,6 +85,7 @@ const AdminPanel = () => {
           localizacao: `${updatedLocation.latitude},${updatedLocation.longitude}`,
           links: updatedLocation.links,
           audio: updatedLocation.audio,
+          imagens: updatedLocation.imagens,
         })
         .eq('id', updatedLocation.id);
 
