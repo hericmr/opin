@@ -47,7 +47,7 @@ const EditLocationPanel = ({ location, onClose, onSave }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      onSave();
+      onSave(editedLocation);
       setShowConfirmation(true);
       setTimeout(() => {
         setShowConfirmation(false);
