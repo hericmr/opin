@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AddLocationButton from './AddLocationButton';
-import { Settings, ChevronDown, Shield, Menu, X } from 'lucide-react';
+import { Settings, ChevronDown, Shield, Menu, X, LayoutGrid } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const ADMIN_PASSWORD = "Política Social";
-
+    
 const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
@@ -15,7 +13,7 @@ const Navbar = () => {
 
   const handleAdminClick = () => {
     const enteredPassword = prompt("Digite a senha de administrador:");
-    if (enteredPassword === ADMIN_PASSWORD) {
+    if (enteredPassword === process.env.REACT_APP_ADMIN_PASSWORD) {
       setIsAdmin(true);
       setShowAdminPanel(false);
     }
@@ -144,11 +142,7 @@ const Navbar = () => {
                         className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 
                                  transition-colors duration-200 flex items-center gap-2"
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                          <line x1="3" y1="9" x2="21" y2="9"/>
-                          <line x1="9" y1="21" x2="9" y2="9"/>
-                        </svg>
+                        <LayoutGrid className="h-4 w-4" />
                         Painel de Administração
                       </button>
                     </div>
@@ -224,11 +218,7 @@ const Navbar = () => {
                                rounded-lg transition-all duration-200 flex items-center justify-center gap-2
                                focus:outline-none focus:ring-2 focus:ring-green-400 active:scale-95"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                        <line x1="3" y1="9" x2="21" y2="9"/>
-                        <line x1="9" y1="21" x2="9" y2="9"/>
-                      </svg>
+                      <LayoutGrid className="h-4 w-4" />
                       Painel de Administração
                     </button>
                   </div>
