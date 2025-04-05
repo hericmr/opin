@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { orangeIcon, blackIcon, violetIcon, redIcon, blueIcon, greenIcon, yellowIcon } from './CustomIcon';
 
 const CATEGORIAS = {
@@ -15,7 +14,6 @@ const CATEGORIAS = {
 const ConteudoCartografia = ({ locations }) => {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('todos');
   const [termoBusca, setTermoBusca] = useState('');
-  const navigate = useNavigate();
 
   // Função para converter título em slug
   const criarSlug = (texto) => {
@@ -50,7 +48,9 @@ const ConteudoCartografia = ({ locations }) => {
 
   const abrirLocal = (local) => {
     const slug = criarSlug(local.titulo);
-    navigate(`/?panel=${slug}`);
+    // Verifica se já estamos no caminho base do site
+    const basePath = window.location.pathname.includes('/cartografiasocial') ? '/cartografiasocial' : '';
+    window.location.href = `${basePath}/?panel=${slug}`;
   };
 
   // Função para renderizar o ícone SVG com a cor correta
@@ -152,8 +152,25 @@ const ConteudoCartografia = ({ locations }) => {
                         <p className="text-gray-600 text-sm line-clamp-3">
                           {local.descricao_detalhada?.replace(/<[^>]*>/g, '').substring(0, 200)}...
                         </p>
-                        <div className={`mt-3 text-sm text-${textColor} opacity-0 group-hover:opacity-100 transition-opacity`}>
-                          Clique para ver mais →
+                        <div className="mt-3 flex items-center justify-between">
+                          <div className={`text-sm text-${textColor} opacity-0 group-hover:opacity-100 transition-opacity`}>
+                            Clique para ver mais →
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                              <div 
+                                className={`h-full rounded-full transition-all duration-300 ${
+                                  local.pontuacaoPercentual >= 80 ? 'bg-green-500' :
+                                  local.pontuacaoPercentual >= 60 ? 'bg-yellow-500' :
+                                  'bg-red-500'
+                                }`}
+                                style={{ width: `${local.pontuacaoPercentual}%` }}
+                              />
+                            </div>
+                            <span className="text-xs text-gray-500">
+                              {local.pontuacaoPercentual}%
+                            </span>
+                          </div>
                         </div>
                       </div>
                     ))}
