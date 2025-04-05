@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from './supabaseClient';
 import MapaSantos from "./components/MapaSantos";
 import Navbar from "./components/Navbar";
@@ -25,6 +25,7 @@ const AppContent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchDataPoints = async () => {
     console.log("Iniciando consulta ao Supabase na tabela 'locations'...");
@@ -90,6 +91,42 @@ const AppContent = () => {
           .replace(/\*(.*?)\*/g, "<i>$1</i>");
       }
 
+      // Cálculo da pontuação
+      let pontuacao = 0;
+      
+      // Título (15 pontos)
+      if (e.titulo && e.titulo !== "Título não disponível") {
+        pontuacao += 15;
+      }
+      
+      // Descrição detalhada (25 pontos)
+      if (e.descricao_detalhada && e.descricao_detalhada.length > 100) {
+        pontuacao += 25;
+      }
+      
+      // Imagens (15 pontos)
+      if (e.imagens && e.imagens.length > 0) {
+        pontuacao += 15;
+      }
+      
+      // Áudio (15 pontos)
+      if (e.audioUrl) {
+        pontuacao += 15;
+      }
+      
+      // Links (15 pontos)
+      if (e.links && e.links.length > 0) {
+        pontuacao += 15;
+      }
+
+      // Vídeo (15 pontos)
+      if (e.video) {
+        pontuacao += 15;
+      }
+
+      e.pontuacao = pontuacao;
+      e.pontuacaoPercentual = Math.round((pontuacao / 100) * 100);
+
       console.log(`Registro ${index} formatado:`, e);
       return e;
     });
@@ -152,7 +189,13 @@ const AppContent = () => {
           path="/" 
           element={
             <main className="flex-grow">
-              <MapaSantos dataPoints={dataPoints} />
+              <MapaSantos 
+                dataPoints={
+                  new URLSearchParams(location.search).get('panel')
+                    ? dataPoints // Se houver um panel na URL, mostra todos os pontos
+                    : dataPoints.filter(point => point.pontuacao >= 70) // Caso contrário, filtra por pontuação
+                } 
+              />
               <PainelInformacoes dataPoints={dataPoints} />
               <AddLocationButton onLocationAdded={handleLocationAdded} />
             </main>

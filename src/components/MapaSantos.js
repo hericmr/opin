@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import slugify from "slugify";
 import MapaBase from "./MapaBase";
 import Marcadores from "./Marcadores";
 import Bairros from "./Bairros";
@@ -8,6 +7,17 @@ import PainelInformacoes from "./PainelInformacoes";
 import detalhesIntro from "./detalhesInfo"; 
 import "./MapaSantos.css";
 
+// Função para converter título em slug
+const criarSlug = (texto) => {
+  return texto
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+    .replace(/[^a-z0-9]+/g, '-')     // Substitui caracteres especiais por hífen
+    .replace(/^-+|-+$/g, '')         // Remove hífens do início e fim
+    .trim();
+};
+
 const MapaSantos = ({ dataPoints }) => {
   console.log("DataPoints recebidos:", dataPoints); // Verifique os dados recebidos
 
@@ -15,7 +25,7 @@ const MapaSantos = ({ dataPoints }) => {
   const panel = urlParams.get('panel');
   var initialPanel = detalhesIntro;
   if (panel && panel !== '' && dataPoints && dataPoints.length > 0) {
-    const pointFound = dataPoints.find((item) => slugify(item.titulo).toLowerCase() === panel);
+    const pointFound = dataPoints.find((item) => criarSlug(item.titulo) === panel);
     if (pointFound != null) {
       initialPanel = pointFound;
     }
@@ -24,6 +34,7 @@ const MapaSantos = ({ dataPoints }) => {
   const [geojsonData, setGeojsonData] = useState(null);
   const [visibilidade, setVisibilidade] = useState({
     bairros: false,
+    bairrosLaranja: true,
     assistencia: true,
     historicos: true,
     culturais: true,
@@ -74,6 +85,13 @@ const MapaSantos = ({ dataPoints }) => {
         [chave]: !prev[chave],
         bairro: !prev[chave] // Sincroniza com os marcadores de bairro
       }));
+    } else if (chave === "bairrosLaranja") {
+      // Quando alternar bairros laranja, também alterna os marcadores de bairro
+      setVisibilidade((prev) => ({ 
+        ...prev, 
+        [chave]: !prev[chave],
+        bairro: !prev[chave] // Sincroniza com os marcadores de bairro
+      }));
     } else {
       setVisibilidade((prev) => ({ ...prev, [chave]: !prev[chave] }));
     }
@@ -92,6 +110,7 @@ const MapaSantos = ({ dataPoints }) => {
         estados={visibilidade}
         acoes={{
           toggleBairros: () => toggleVisibilidade("bairros"),
+          toggleBairrosLaranja: () => toggleVisibilidade("bairrosLaranja"),
           toggleAssistencia: () => toggleVisibilidade("assistencia"),
           toggleHistoricos: () => toggleVisibilidade("historicos"),
           toggleCulturais: () => toggleVisibilidade("culturais"),
