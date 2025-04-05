@@ -1,7 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
-import { Search, Filter, Edit2, Trash2, X } from 'lucide-react';
+import { Search, Filter, Edit2, Trash2, X, MapPin, Star } from 'lucide-react';
 import EditLocationPanel from './EditLocationPanel';
+
+// Função para calcular a pontuação
+const calcularPontuacao = (location) => {
+  let pontuacao = 0;
+  
+  // Título (15 pontos)
+  if (location.titulo && location.titulo !== "Título não disponível") {
+    pontuacao += 15;
+  }
+  
+  // Descrição detalhada (25 pontos)
+  if (location.descricao_detalhada && location.descricao_detalhada.length > 100) {
+    pontuacao += 25;
+  }
+  
+  // Imagens (15 pontos)
+  if (location.imagens && location.imagens.length > 0) {
+    pontuacao += 15;
+  }
+  
+  // Áudio (15 pontos)
+  if (location.audio) {
+    pontuacao += 15;
+  }
+  
+  // Links (15 pontos)
+  if (location.links && location.links.length > 0) {
+    pontuacao += 15;
+  }
+
+  // Vídeo (15 pontos)
+  if (location.video) {
+    pontuacao += 15;
+  }
+
+  return Math.round((pontuacao / 100) * 100);
+};
 
 const AdminPanel = () => {
   const [locations, setLocations] = useState([]);
@@ -189,57 +226,97 @@ const AdminPanel = () => {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Título
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Tipo
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Localização
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Ações
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredLocations.map((location) => (
-                    <tr key={location.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
-                          {location.titulo}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                          {location.tipo}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {location.localizacao}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          className="text-blue-600 hover:text-blue-900 mr-3"
-                          onClick={(e) => handleEdit(location)}
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button
-                          className="text-red-600 hover:text-red-900"
-                          onClick={(e) => handleDelete(location)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </td>
+              <div className="max-h-[calc(100vh-300px)] overflow-y-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50 sticky top-0 z-10">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+                        Título
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+                        Tipo
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+                        Localização
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+                        Pontuação
+                      </th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+                        Ações
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {filteredLocations.map((location) => {
+                      const pontuacao = calcularPontuacao(location);
+                      return (
+                        <tr key={location.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4">
+                            <div className="text-sm font-medium text-gray-900">
+                              {location.titulo}
+                            </div>
+                            <div className="text-xs text-gray-500 line-clamp-2">
+                              {location.descricao_detalhada?.replace(/<[^>]*>/g, '')}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              location.tipo === 'lazer' ? 'bg-blue-100 text-blue-800' :
+                              location.tipo === 'assistencia' ? 'bg-green-100 text-green-800' :
+                              location.tipo === 'historico' ? 'bg-yellow-100 text-yellow-800' :
+                              location.tipo === 'comunidades' ? 'bg-red-100 text-red-800' :
+                              location.tipo === 'educação' ? 'bg-violet-100 text-violet-800' :
+                              location.tipo === 'religiao' ? 'bg-gray-100 text-gray-800' :
+                              'bg-orange-100 text-orange-800'
+                            }`}>
+                              {location.tipo}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center text-sm text-gray-500">
+                              <MapPin className="w-4 h-4 mr-1" />
+                              {location.localizacao}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden mr-2">
+                                <div 
+                                  className={`h-full rounded-full transition-all duration-300 ${
+                                    pontuacao >= 80 ? 'bg-green-500' :
+                                    pontuacao >= 60 ? 'bg-yellow-500' :
+                                    'bg-red-500'
+                                  }`}
+                                  style={{ width: `${pontuacao}%` }}
+                                />
+                              </div>
+                              <div className="flex items-center text-sm">
+                                <Star className="w-4 h-4 mr-1 text-yellow-400" />
+                                {pontuacao}%
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button
+                              className="text-blue-600 hover:text-blue-900 mr-3"
+                              onClick={(e) => handleEdit(location)}
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              className="text-red-600 hover:text-red-900"
+                              onClick={(e) => handleDelete(location)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>

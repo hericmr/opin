@@ -39,7 +39,8 @@ const MenuCamadas = ({ estados, acoes }) => {
   );
 
   const opcoes = [
-    { acao: acoes.toggleBairros, estado: estados.bairros, color: "#9CA3AF", label: "Bairros", cor: "bg-gray-700 hover:bg-gray-600 text-white" },
+    { acao: acoes.toggleBairros, estado: estados.bairros, color: "#9CA3AF", label: "Limites dos Bairros", cor: "bg-gray-700 hover:bg-gray-600 text-white" },
+    { acao: acoes.toggleBairrosLaranja, estado: estados.bairrosLaranja, color: "#FF5722", label: "Bairros", cor: "bg-orange-600 hover:bg-orange-600 text-white" },
     { acao: acoes.toggleAssistencia, estado: estados.assistencia, color: "#10B981", label: "Assistência", cor: "bg-green-600 hover:bg-green-500 text-white" },
     { acao: acoes.toggleHistoricos, estado: estados.historicos, color: "#FBBF24", label: "Históricos", cor: "bg-yellow-600 hover:bg-yellow-500 text-white" },
     { acao: acoes.toggleCulturais, estado: estados.culturais, color: "#3B82F6", label: "Lazer", cor: "bg-blue-600 hover:bg-blue-500 text-white" },

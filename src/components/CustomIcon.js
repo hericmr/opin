@@ -45,4 +45,5 @@ export const yellowIcon = createIcon("#FFC107");
 export const redIcon = createIcon("#F44336");
 export const violetIcon = createIcon("#9C27B0");
 export const blackIcon = createIcon("#212121");
-export const orangeIcon = createIcon("#FF9800");
+export const orangeIcon = createIcon("#FF5722");
+export const orangeBairroIcon = createIcon("#FF9800");
