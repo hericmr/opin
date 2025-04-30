@@ -43,7 +43,17 @@ export const blueIcon = createIcon("#2196F3");
 export const greenIcon = createIcon("#4CAF50");
 export const yellowIcon = createIcon("#FFC107");
 export const redIcon = createIcon("#F44336");
-export const violetIcon = createIcon("#9C27B0");
+export const violetIcon = new L.Icon({
+  iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path fill="#3B82F6" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+      <circle cx="12" cy="9" r="3" fill="white"/>
+    </svg>
+  `),
+  iconSize: [24, 24],
+  iconAnchor: [12, 24],
+  popupAnchor: [0, -24]
+});
 export const blackIcon = createIcon("#212121");
 export const orangeIcon = createIcon("#FF5722");
 export const orangeBairroIcon = createIcon("#FF9800");

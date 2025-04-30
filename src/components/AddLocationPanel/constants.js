@@ -28,7 +28,7 @@ export const opcoes = [
   {
     value: "educação",
     label: "Educação",
-    cor: "hover:bg-purple-100",
+    cor: "hover:bg-blue-100",
     icone: violetIcon
   },
   {

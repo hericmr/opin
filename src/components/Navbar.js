@@ -46,7 +46,7 @@ const Navbar = () => {
             className="text-sm sm:text-base md:text-xl lg:text-2xl font-bold tracking-wide cursor-pointer truncate 
                      hover:text-green-100 transition-colors duration-200 border-b-2 border-transparent hover:border-green-400"
           >
-            Cartografia Social de Santos
+            Observatório da Escolas Indígenas
           </h1>
         </div>
 
@@ -92,7 +92,7 @@ const Navbar = () => {
               className="h-8 sm:h-10 w-auto object-contain"
             />
             <span className="text-[10px] sm:text-xs tracking-wide font-serif mt-0.5 opacity-90">
-              Serviço Social
+              
             </span>
           </a>
 
