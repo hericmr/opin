@@ -36,7 +36,7 @@ const Navbar = () => {
         {/* Logo e Título */}
         <div className="flex items-center space-x-3 group">
           <img
-            src="/cartografiasocial/favicon.ico"
+            src="/escolasindigenas/favicon.ico"
             alt="Ícone do mapa"
             className="h-7 sm:h-8 w-auto transform group-hover:scale-105 transition-transform duration-200"
             aria-label="Ícone do mapa"
@@ -87,7 +87,7 @@ const Navbar = () => {
             className="flex flex-col items-center group transition-transform duration-200 hover:scale-105"
           >
             <img
-              src="/cartografiasocial/logo.png"
+              src="/escolasindigenas/logo.png"
               alt="Logo da Unifesp"
               className="h-8 sm:h-10 w-auto object-contain"
             />
@@ -182,7 +182,7 @@ const Navbar = () => {
                   className="flex flex-col items-center transform transition-transform duration-200 hover:scale-105"
                 >
                   <img
-                    src="/cartografiasocial/logo.png"
+                    src="/escolasindigenas/logo.png"
                     alt="Logo da Unifesp"
                     className="h-8 w-auto object-contain"
                   />

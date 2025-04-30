@@ -56,8 +56,8 @@ const MapaSantos = ({ dataPoints }) => {
       try {
         const [bairrosResponse, terrasIndigenasResponse, estadoSPResponse] = await Promise.all([
           fetch("https://raw.githubusercontent.com/hericmr/gps/main/public/bairros.geojson"),
-          fetch("/cartografiasocial/terras_indigenas.geojson"),
-          fetch("/cartografiasocial/SP.geojson")
+          fetch("/escolasindigenas/terras_indigenas.geojson"),
+          fetch("/escolasindigenas/SP.geojson")
         ]);
 
         if (!bairrosResponse.ok) throw new Error(`Erro ao carregar GeoJSON dos bairros: HTTP status ${bairrosResponse.status}`);
