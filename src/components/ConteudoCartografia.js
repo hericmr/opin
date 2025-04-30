@@ -6,7 +6,7 @@ const CATEGORIAS = {
   'assistencia': { cor: 'green-700', bgCor: 'bg-green-100', borderCor: 'border-green-200', icone: greenIcon, label: 'Assistência' },
   'historico': { cor: 'yellow-600', bgCor: 'bg-yellow-100', borderCor: 'border-yellow-200', icone: yellowIcon, label: 'Históricos' },
   'comunidades': { cor: 'red-600', bgCor: 'bg-red-100', borderCor: 'border-red-200', icone: redIcon, label: 'Comunidades' },
-  'educação': { cor: 'violet-600', bgCor: 'bg-violet-200', borderCor: 'border-violet-200', icone: violetIcon, label: 'Educação' },
+  'educação': { cor: 'blue-600', bgCor: 'bg-blue-200', borderCor: 'border-blue-200', icone: violetIcon, label: 'Educação' },
   'religiao': { cor: 'black', bgCor: 'bg-gray-200', borderCor: 'border-gray-200', icone: blackIcon, label: 'Religião' },
   'bairro': { cor: 'orange-500', bgCor: 'bg-orange-200', borderCor: 'border-orange-200', icone: orangeIcon, label: 'Bairro' }
 };
