@@ -7,6 +7,7 @@ import PainelInformacoes from "./components/PainelInformacoes";
 import AddLocationButton from "./components/AddLocationButton";
 import ConteudoCartografia from "./components/ConteudoCartografia";
 import AdminPanel from "./components/AdminPanel";
+import Papa from 'papaparse';
 
 const LoadingScreen = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-green-900 text-white">
@@ -28,109 +29,122 @@ const AppContent = () => {
   const location = useLocation();
 
   const fetchDataPoints = async () => {
-    console.log("Iniciando consulta ao Supabase na tabela 'locations'...");
-    const { data, error } = await supabase
-      .from('locations3')
-      .select('*');
-    
-    if (error) {
-      console.error("Erro na consulta ao Supabase:", error);
-      throw new Error(error.message);
+    try {
+      const response = await fetch('/cartografiasocial/escolas.csv');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const csvText = await response.text();
+      
+      // Verifica se o conteúdo é realmente um CSV
+      if (csvText.includes('<!DOCTYPE html>')) {
+        throw new Error('O arquivo retornado não é um CSV válido');
+      }
+      
+      return new Promise((resolve, reject) => {
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+          transformHeader: (header) => header.trim(),
+          transform: (value) => value.trim(),
+          complete: (results) => {
+            if (!results.data || results.data.length === 0) {
+              reject(new Error("Nenhum dado encontrado no CSV"));
+              return;
+            }
+            
+            // Verifica se as colunas necessárias existem
+            const firstRow = results.data[0];
+            const requiredColumns = ['Escola', 'Latitude', 'Longitude'];
+            const missingColumns = requiredColumns.filter(col => !(col in firstRow));
+            
+            if (missingColumns.length > 0) {
+              reject(new Error(`Colunas obrigatórias ausentes: ${missingColumns.join(', ')}`));
+              return;
+            }
+            
+            console.log("Dados do CSV carregados:", results.data);
+            resolve(results.data);
+          },
+          error: (error) => {
+            console.error("Erro ao processar CSV:", error);
+            reject(error);
+          }
+        });
+      });
+    } catch (error) {
+      console.error("Erro ao buscar arquivo CSV:", error);
+      throw error;
     }
-    
-    console.log("Consulta realizada com sucesso. Dados recebidos:", data);
-    return data;
   };
 
   const formatData = (dataPoints) => {
     console.log("Iniciando formatação dos dados...");
-    const formattedData = dataPoints.map((e, index) => {
+    console.log("Número total de registros:", dataPoints.length);
+    
+    const formattedData = dataPoints
+      .filter(e => {
+        if (!e || typeof e !== 'object' || Array.isArray(e)) {
+          console.warn("Registro inválido:", e);
+          return false;
+        }
+        return true;
+      })
+      .map((e, index) => {
       console.log(`Formatando registro ${index}:`, e);
 
-      // Links
-      e.links = (e.links && typeof e.links === 'string')
-        ? e.links.split(";").map((l) => {
-            let [texto, url] = l.split(':');
-            return { texto: texto || "Sem título", url: url || "#" };
-          })
-        : [];
-
-      // Imagens
-      e.imagens = (e.imagens && typeof e.imagens === 'string')
-        ? e.imagens.split(",")
-        : [];
-
-      // Áudio
-      e.audioUrl = e.audio || "";
-
-      // Título e Descrição
-      e.titulo = e.titulo || "Título não disponível";
-      e.descricao = e.descricao || "Sem descrição";
+        // Verifica se as propriedades necessárias existem
+        if (!e.Escola) {
+          console.warn(`Registro ${index} sem nome da escola:`, e);
+        }
 
       // Coordenadas
-      if (e.localizacao && typeof e.localizacao === 'string') {
-        const [lat, lng] = e.localizacao.split(',').map(coord => parseFloat(coord.trim()));
-        if (!isNaN(lat) && !isNaN(lng)) {
-          e.latitude = lat;
-          e.longitude = lng;
-        } else {
-          console.warn("Coordenadas inválidas para o registro:", e);
-          e.latitude = null;
-          e.longitude = null;
+        let latitude = null;
+        let longitude = null;
+        
+        if (e.Latitude && e.Longitude) {
+          const lat = e.Latitude.toString().trim();
+          const lng = e.Longitude.toString().trim();
+          
+          if (!isNaN(lat) && !isNaN(lng) && lat !== "" && lng !== "") {
+            latitude = parseFloat(lat);
+            longitude = parseFloat(lng);
+          }
         }
-      } else {
-        e.latitude = null;
-        e.longitude = null;
-      }
 
-      // Descrição detalhada
-      if (e.descricao_detalhada) {
-        e.descricao_detalhada = e.descricao_detalhada
-          .replace(/\n/g, "<br>")
-          .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
-          .replace(/\*(.*?)\*/g, "<i>$1</i>");
-      }
+        // Só inclui o ponto se tiver coordenadas válidas
+        if (latitude === null || longitude === null) {
+          console.warn(`Ponto sem coordenadas válidas: ${e.Escola || 'Título não disponível'}`);
+          return null;
+        }
 
-      // Cálculo da pontuação
-      let pontuacao = 0;
-      
-      // Título (15 pontos)
-      if (e.titulo && e.titulo !== "Título não disponível") {
-        pontuacao += 15;
-      }
-      
-      // Descrição detalhada (25 pontos)
-      if (e.descricao_detalhada && e.descricao_detalhada.length > 100) {
-        pontuacao += 25;
-      }
-      
-      // Imagens (15 pontos)
-      if (e.imagens && e.imagens.length > 0) {
-        pontuacao += 15;
-      }
-      
-      // Áudio (15 pontos)
-      if (e.audioUrl) {
-        pontuacao += 15;
-      }
-      
-      // Links (15 pontos)
-      if (e.links && e.links.length > 0) {
-        pontuacao += 15;
-      }
+        const ponto = {
+          titulo: e.Escola || "Título não disponível",
+          descricao: `${e.Endereço || ''} - ${e.Município || ''}, ${e.UF || ''}${e.Telefone ? ` - Tel: ${e.Telefone}` : ''}`.trim(),
+          latitude: latitude,
+          longitude: longitude,
+          tipo: "educação",
+          pontuacao: 40,
+          pontuacaoPercentual: 100,
+          // Adicionando todos os campos do CSV
+          Escola: e.Escola,
+          Endereço: e.Endereço,
+          Município: e.Município,
+          UF: e.UF,
+          Telefone: e.Telefone,
+          'Dependência Administrativa': e['Dependência Administrativa'],
+          'Etapas e Modalidade de Ensino Oferecidas': e['Etapas e Modalidade de Ensino Oferecidas'],
+          'Código INEP': e['Código INEP'],
+          Localização: e.Localização,
+          'Localidade Diferenciada': e['Localidade Diferenciada']
+        };
 
-      // Vídeo (15 pontos)
-      if (e.video) {
-        pontuacao += 15;
-      }
-
-      e.pontuacao = pontuacao;
-      e.pontuacaoPercentual = Math.round((pontuacao / 100) * 100);
-
-      console.log(`Registro ${index} formatado:`, e);
-      return e;
-    });
-    console.log("Formatação concluída. Dados formatados:", formattedData);
+        console.log(`Registro ${index} formatado:`, ponto);
+        return ponto;
+      })
+      .filter(ponto => ponto !== null);
+    
+    console.log("Formatação concluída. Número de pontos válidos:", formattedData.length);
     return formattedData;
   };
 

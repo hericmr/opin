@@ -129,7 +129,7 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
                                     opcao.value === "lazer" ? "#3B82F6" :
                                     opcao.value === "historico" ? "#FBBF24" :
                                     opcao.value === "comunidades" ? "#EF4444" :
-                                    opcao.value === "educação" ? "#8B5CF6" :
+                                    opcao.value === "educação" ? "#3B82F6" :
                                     opcao.value === "religiao" ? "#4B5563" :
                                     "#9CA3AF"}
                               d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"

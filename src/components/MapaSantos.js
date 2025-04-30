@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import MapaBase from "./MapaBase";
 import Marcadores from "./Marcadores";
 import Bairros from "./Bairros";
+import TerrasIndigenas from "./TerrasIndigenas";
+import EstadoSP from "./EstadoSP";
 import MenuCamadas from "./MenuCamadas";
 import PainelInformacoes from "./PainelInformacoes";
 import detalhesIntro from "./detalhesInfo"; 
@@ -32,6 +34,8 @@ const MapaSantos = ({ dataPoints }) => {
   }
 
   const [geojsonData, setGeojsonData] = useState(null);
+  const [terrasIndigenasData, setTerrasIndigenasData] = useState(null);
+  const [estadoSPData, setEstadoSPData] = useState(null);
   const [visibilidade, setVisibilidade] = useState({
     bairros: false,
     bairrosLaranja: true,
@@ -42,18 +46,33 @@ const MapaSantos = ({ dataPoints }) => {
     educação: true,
     religiao: true,
     bairro: true,
+    terrasIndigenas: true,
+    estadoSP: true,
   });
   const [painelInfo, setPainelInfo] = useState(initialPanel);
 
   useEffect(() => {
     const fetchGeoJSON = async () => {
       try {
-        const response = await fetch(
-          "https://raw.githubusercontent.com/hericmr/gps/main/public/bairros.geojson"
-        );
-        if (!response.ok) throw new Error(`Erro ao carregar GeoJSON: HTTP status ${response.status}`);
-        const data = await response.json();
-        setGeojsonData(data);
+        const [bairrosResponse, terrasIndigenasResponse, estadoSPResponse] = await Promise.all([
+          fetch("https://raw.githubusercontent.com/hericmr/gps/main/public/bairros.geojson"),
+          fetch("/cartografiasocial/terras_indigenas.geojson"),
+          fetch("/cartografiasocial/SP.geojson")
+        ]);
+
+        if (!bairrosResponse.ok) throw new Error(`Erro ao carregar GeoJSON dos bairros: HTTP status ${bairrosResponse.status}`);
+        if (!terrasIndigenasResponse.ok) throw new Error(`Erro ao carregar GeoJSON das terras indígenas: HTTP status ${terrasIndigenasResponse.status}`);
+        if (!estadoSPResponse.ok) throw new Error(`Erro ao carregar GeoJSON do estado: HTTP status ${estadoSPResponse.status}`);
+
+        const [bairrosData, terrasIndigenasData, estadoSPData] = await Promise.all([
+          bairrosResponse.json(),
+          terrasIndigenasResponse.json(),
+          estadoSPResponse.json()
+        ]);
+
+        setGeojsonData(bairrosData);
+        setTerrasIndigenasData(terrasIndigenasData);
+        setEstadoSPData(estadoSPData);
       } catch (error) {
         console.error("Erro ao carregar GeoJSON:", error);
       }
@@ -100,7 +119,9 @@ const MapaSantos = ({ dataPoints }) => {
   return (
     <div className="relative h-screen">
       <MapaBase>
+        {visibilidade.estadoSP && estadoSPData && <EstadoSP data={estadoSPData} />}
         {visibilidade.bairros && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
+        {visibilidade.terrasIndigenas && terrasIndigenasData && <TerrasIndigenas data={terrasIndigenasData} onClick={abrirPainel} />}
         {dataPoints && <Marcadores dataPoints={dataPoints} visibility={visibilidade} onClick={abrirPainel} />}
       </MapaBase>
 
@@ -118,6 +139,8 @@ const MapaSantos = ({ dataPoints }) => {
           toggleEducação: () => toggleVisibilidade("educação"),
           toggleReligiao: () => toggleVisibilidade("religiao"),
           toggleBairro: () => toggleVisibilidade("bairro"),
+          toggleTerrasIndigenas: () => toggleVisibilidade("terrasIndigenas"),
+          toggleEstadoSP: () => toggleVisibilidade("estadoSP"),
         }}
       />
     </div>

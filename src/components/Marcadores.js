@@ -43,13 +43,15 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
             dataPointType = DataPointType.COMUNIDADES;
             break;
           case "educação":
+          case "educacao":
+          case "educacao":
             dataPointType = DataPointType.EDUCACAO;
             break;
           case "religiao":
             dataPointType = DataPointType.RELIGIAO;
             break;
           case "bairro":
-            dataPointType = DataPointType.BAIRRO; // Sempre usa o ícone laranja para pontos de bairro
+            dataPointType = DataPointType.BAIRRO;
             break;
           default:
             console.warn(`Tipo desconhecido: ${ponto.tipo}, usando ícone padrão.`);
@@ -58,8 +60,12 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
 
         if (!dataPointType.enabled) return null;
 
-        if (isNaN(ponto.latitude) || isNaN(ponto.longitude)) {
-          console.warn(`Coordenadas inválidas para o ponto: ${ponto.titulo}`);
+        // Validação mais rigorosa das coordenadas
+        if (!ponto.latitude || !ponto.longitude || 
+            isNaN(ponto.latitude) || isNaN(ponto.longitude) ||
+            ponto.latitude < -90 || ponto.latitude > 90 ||
+            ponto.longitude < -180 || ponto.longitude > 180) {
+          console.warn(`Coordenadas inválidas para o ponto: ${ponto.titulo}`, ponto.latitude, ponto.longitude);
           return null;
         }
 
