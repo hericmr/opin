@@ -196,7 +196,7 @@ const AppContent = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="App">
       <Navbar onConteudoClick={() => navigate('/conteudo')} />
       <Routes>
         <Route 
@@ -230,7 +230,7 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <Router basename="/cartografiasocial">
+    <Router basename="/escolasindigenas">
       <AppContent />
     </Router>
   );
