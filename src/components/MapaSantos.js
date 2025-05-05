@@ -44,6 +44,7 @@ const MapaSantos = ({ dataPoints }) => {
     culturais: true,
     comunidades: true,
     educação: true,
+    educacao: true,
     religiao: true,
     bairro: true,
     terrasIndigenas: true,
@@ -54,25 +55,42 @@ const MapaSantos = ({ dataPoints }) => {
   useEffect(() => {
     const fetchGeoJSON = async () => {
       try {
-        const [bairrosResponse, terrasIndigenasResponse, estadoSPResponse] = await Promise.all([
-          fetch("https://raw.githubusercontent.com/hericmr/gps/main/public/bairros.geojson"),
-          fetch("/escolasindigenas/terras_indigenas.geojson"),
-          fetch("/escolasindigenas/SP.geojson")
-        ]);
-
-        if (!bairrosResponse.ok) throw new Error(`Erro ao carregar GeoJSON dos bairros: HTTP status ${bairrosResponse.status}`);
-        if (!terrasIndigenasResponse.ok) throw new Error(`Erro ao carregar GeoJSON das terras indígenas: HTTP status ${terrasIndigenasResponse.status}`);
-        if (!estadoSPResponse.ok) throw new Error(`Erro ao carregar GeoJSON do estado: HTTP status ${estadoSPResponse.status}`);
-
-        const [bairrosData, terrasIndigenasData, estadoSPData] = await Promise.all([
-          bairrosResponse.json(),
-          terrasIndigenasResponse.json(),
-          estadoSPResponse.json()
-        ]);
-
-        setGeojsonData(bairrosData);
-        setTerrasIndigenasData(terrasIndigenasData);
+        console.log("Iniciando carregamento dos GeoJSONs...");
+        
+        // Carregando o GeoJSON do estado SP primeiro
+        const estadoSPResponse = await fetch("/escolasindigenas/SP.geojson");
+        if (!estadoSPResponse.ok) {
+          throw new Error(`Erro ao carregar GeoJSON do estado: HTTP status ${estadoSPResponse.status}`);
+        }
+        const estadoSPData = await estadoSPResponse.json();
+        console.log("GeoJSON do estado SP carregado:", {
+          type: estadoSPData.type,
+          features: estadoSPData.features ? estadoSPData.features.length : 0
+        });
         setEstadoSPData(estadoSPData);
+
+        // Carregando o GeoJSON das terras indígenas
+        console.log("Carregando GeoJSON das terras indígenas...");
+        const terrasIndigenasResponse = await fetch("/escolasindigenas/terras_indigenas.geojson");
+        if (!terrasIndigenasResponse.ok) {
+          throw new Error(`Erro ao carregar GeoJSON das terras indígenas: HTTP status ${terrasIndigenasResponse.status}`);
+        }
+        const terrasIndigenasData = await terrasIndigenasResponse.json();
+        console.log("GeoJSON das terras indígenas carregado:", {
+          type: terrasIndigenasData.type,
+          features: terrasIndigenasData.features ? terrasIndigenasData.features.length : 0,
+          properties: terrasIndigenasData.features ? terrasIndigenasData.features[0].properties : null
+        });
+        setTerrasIndigenasData(terrasIndigenasData);
+
+        // Carregando o GeoJSON dos bairros
+        const bairrosResponse = await fetch("https://raw.githubusercontent.com/hericmr/gps/main/public/bairros.geojson");
+        if (!bairrosResponse.ok) {
+          throw new Error(`Erro ao carregar GeoJSON dos bairros: HTTP status ${bairrosResponse.status}`);
+        }
+        const bairrosData = await bairrosResponse.json();
+        setGeojsonData(bairrosData);
+
       } catch (error) {
         console.error("Erro ao carregar GeoJSON:", error);
       }
@@ -121,7 +139,12 @@ const MapaSantos = ({ dataPoints }) => {
       <MapaBase>
         {visibilidade.estadoSP && estadoSPData && <EstadoSP data={estadoSPData} />}
         {visibilidade.bairros && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
-        {visibilidade.terrasIndigenas && terrasIndigenasData && <TerrasIndigenas data={terrasIndigenasData} onClick={abrirPainel} />}
+        {visibilidade.terrasIndigenas && terrasIndigenasData && (
+          <TerrasIndigenas 
+            data={terrasIndigenasData} 
+            onClick={abrirPainel}
+          />
+        )}
         {dataPoints && <Marcadores dataPoints={dataPoints} visibility={visibilidade} onClick={abrirPainel} />}
       </MapaBase>
 
