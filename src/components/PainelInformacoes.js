@@ -21,105 +21,112 @@ const EscolaInfo = memo(({ escola }) => {
     return null;
   }
 
-  const formatarEndereco = () => {
-    const partes = [
-      escola.Endereço,
-      escola.Município,
-      escola.UF
-    ].filter(Boolean);
-    return partes.join(", ");
+  // Funções de formatação para cada campo do CSV
+  const formatters = {
+    basico: () => ({
+      escola: escola.Escola,
+      municipio: escola.Município,
+      endereco: escola.Endereço,
+      terraIndigena: escola['Terra Indigena (TI)'],
+      tipoEscola: escola['Escola Estadual ou Municipal'],
+      parcerias: escola['Parcerias com o municipípio'],
+      diretoriaEnsino: escola['Diretoria de Ensino']
+    }),
+
+    povosELinguas: () => ({
+      povos: escola['Povos indigenas'],
+      linguas: escola['Linguas faladas'],
+      anoCriacao: escola['Ano de criação da escola']
+    }),
+
+    ensino: () => ({
+      modalidade: escola['Modalidade de Ensino/turnos de funcionamento'],
+      numeroAlunos: escola['Numero de alunos']
+    }),
+
+    infraestrutura: () => ({
+      espacos: escola['Espaço escolar e estrutura'],
+      cozinha: escola['Cozinha/Merenda escolar/diferenciada'],
+      agua: escola['Acesso à água'],
+      coletaLixo: escola['Tem coleta de lixo?'],
+      internet: escola['Acesso à internet'],
+      equipamentos: escola['Equipamentos Tecnológicos (Computadores, tablets e impressoras)'],
+      acesso: escola['Modo de acesso à escola']
+    }),
+
+    pessoal: () => ({
+      gestao: escola['Gestão/Nome'],
+      outrosFuncionarios: escola['Outros funcionários'],
+      profIndigenas: escola['Quantidade de professores indígenas'],
+      profNaoIndigenas: escola['Quantidade de professores não indígenas'],
+      profFalamLingua: escola['Professores falam a língua indígena?'],
+      formacaoProf: escola['Formação dos professores'],
+      formacaoContinuada: escola['Formação continuada oferecida']
+    }),
+
+    pedagogico: () => ({
+      ppp: escola['A escola possui PPP próprio?'],
+      pppComunidade: escola['PPP elaborado com a comunidade?'],
+      disciplinasBilingues: escola['Disciplinas bilíngues?'],
+      materialNaoIndigena: escola['Material pedagógico não indígena'],
+      materialIndigena: escola['Material pedagógico indígena'],
+      praticasPedagogicas: escola['Práticas pedagógicas indígenas'],
+      formasAvaliacao: escola['Formas de avaliação']
+    }),
+
+    projetos: () => ({
+      projetosAndamento: escola['Projetos em andamento'],
+      parceriasUniversidades: escola['Parcerias com universidades?'],
+      acoesONGs: escola['Ações com ONGs ou coletivos?'],
+      desejosComunidade: escola['Desejos da comunidade para a escola']
+    }),
+
+    social: () => ({
+      redesSociais: escola['Escola utiliza redes sociais?'],
+      links: escola['Links das redes sociais'],
+      historia: escola['historia da aldeia']
+    }),
+
+    localizacao: () => ({
+      latitude: escola.Latitude,
+      longitude: escola.Longitude
+    })
   };
 
-  const formatarTelefone = () => {
-    return escola.Telefone ? `Tel: ${escola.Telefone}` : null;
-  };
-
-  const formatarDependencia = () => {
-    return escola['Dependência Administrativa'] ? 
-      `Dependência: ${escola['Dependência Administrativa']}` : null;
-  };
-
-  const formatarEtapasEnsino = () => {
-    return escola['Etapas e Modalidade de Ensino Oferecidas'] ?
-      `Etapas de Ensino: ${escola['Etapas e Modalidade de Ensino Oferecidas']}` : null;
-  };
-
-  const formatarLocalizacao = () => {
-    return escola.Localização ? 
-      `Localização: ${escola.Localização}` : null;
-  };
-
-  const formatarLocalidadeDiferenciada = () => {
-    return escola['Localidade Diferenciada'] ?
-      `Localidade Diferenciada: ${escola['Localidade Diferenciada']}` : null;
-  };
-
-  const formatarCodigoINEP = () => {
-    return escola['Código INEP'] ? 
-      `Código INEP: ${escola['Código INEP']}` : null;
-  };
-
-  const formatarCategoriaAdministrativa = () => {
-    return escola['Categoria Administrativa'] ?
-      `Categoria Administrativa: ${escola['Categoria Administrativa']}` : null;
-  };
-
-  const formatarCategoriaEscolaPrivada = () => {
-    return escola['Categoria Escola Privada'] ?
-      `Categoria Escola Privada: ${escola['Categoria Escola Privada']}` : null;
-  };
-
-  const formatarConveniadaPoderPublico = () => {
-    return escola['Conveniada Poder Público'] ?
-      `Conveniada Poder Público: ${escola['Conveniada Poder Público']}` : null;
-  };
-
-  const formatarRegulamentacao = () => {
-    return escola['Regulamentação pelo Conselho de Educação'] ?
-      `Regulamentação: ${escola['Regulamentação pelo Conselho de Educação']}` : null;
-  };
-
-  const formatarPorte = () => {
-    return escola['Porte da Escola'] ?
-      `Porte: ${escola['Porte da Escola']}` : null;
-  };
-
-  const formatarOutrasOfertas = () => {
-    return escola['Outras Ofertas Educacionais'] ?
-      `Outras Ofertas: ${escola['Outras Ofertas Educacionais']}` : null;
-  };
-
-  const formatarRestricaoAtendimento = () => {
-    return escola['Restrição de Atendimento'] ?
-      `Restrição de Atendimento: ${escola['Restrição de Atendimento']}` : null;
-  };
-
-  const informacoes = [
-    formatarCodigoINEP(),
-    formatarEndereco(),
-    formatarTelefone(),
-    formatarCategoriaAdministrativa(),
-    formatarDependencia(),
-    formatarCategoriaEscolaPrivada(),
-    formatarConveniadaPoderPublico(),
-    formatarRegulamentacao(),
-    formatarPorte(),
-    formatarEtapasEnsino(),
-    formatarOutrasOfertas(),
-    formatarLocalizacao(),
-    formatarLocalidadeDiferenciada(),
-    formatarRestricaoAtendimento()
-  ].filter(Boolean);
-
-  console.log("Informações formatadas:", informacoes);
+  // Função para formatar as seções
+  const formatSection = (title, data) => {
+    const items = Object.entries(data).filter(([_, value]) => value);
+    if (items.length === 0) return null;
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        {informacoes.map((info, index) => (
-          <p key={index} className="text-gray-700">{info}</p>
+      <div key={title} className="mb-6">
+        <h3 className="text-lg font-semibold text-green-800 mb-2">{title}</h3>
+        {items.map(([key, value]) => (
+          <p key={key} className="text-gray-700 mb-1">
+            <span className="font-medium">{key.charAt(0).toUpperCase() + key.slice(1)}: </span>
+            {value}
+          </p>
         ))}
       </div>
+    );
+  };
+
+  // Estrutura das seções
+  const sections = [
+    { title: "Informações Básicas", data: formatters.basico() },
+    { title: "Povos e Línguas", data: formatters.povosELinguas() },
+    { title: "Ensino", data: formatters.ensino() },
+    { title: "Infraestrutura", data: formatters.infraestrutura() },
+    { title: "Pessoal", data: formatters.pessoal() },
+    { title: "Pedagógico", data: formatters.pedagogico() },
+    { title: "Projetos e Parcerias", data: formatters.projetos() },
+    { title: "Redes Sociais e História", data: formatters.social() },
+    { title: "Localização", data: formatters.localizacao() }
+  ];
+
+  return (
+    <div className="space-y-6">
+      {sections.map(section => formatSection(section.title, section.data))}
     </div>
   );
 });

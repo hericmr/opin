@@ -14,7 +14,7 @@ const LoadingScreen = () => (
     <div className="relative">
       <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       <div className="absolute inset-0 flex items-center justify-center">
-        <img src="/cartografiasocial/favicon.ico" alt="Ícone de carregamento" className="w-8 h-8" />
+        <img src="/escolasindigenas/favicon.ico" alt="Ícone de carregamento" className="w-8 h-8" />
       </div>
     </div>
     <p className="mt-4 text-lg font-semibold animate-pulse">Carregando dados...</p>
@@ -30,14 +30,19 @@ const AppContent = () => {
 
   const fetchDataPoints = async () => {
     try {
-      const response = await fetch('/cartografiasocial/escolas.csv');
+      console.log("Tentando buscar o arquivo CSV em:", `${process.env.PUBLIC_URL}/escolas_indigenas_SP_inep.csv`);
+      const response = await fetch(`${process.env.PUBLIC_URL}/escolas_indigenas_SP_inep.csv`);
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+
       const csvText = await response.text();
+      console.log("Conteúdo do CSV (primeiros 200 caracteres):", csvText.substring(0, 200));
       
       // Verifica se o conteúdo é realmente um CSV
-      if (csvText.includes('<!DOCTYPE html>')) {
+      if (!csvText.includes(',')) {
+        console.error("Conteúdo recebido:", csvText);
         throw new Error('O arquivo retornado não é um CSV válido');
       }
       
@@ -48,6 +53,7 @@ const AppContent = () => {
           transformHeader: (header) => header.trim(),
           transform: (value) => value.trim(),
           complete: (results) => {
+            console.log("Resultado do parse:", results);
             if (!results.data || results.data.length === 0) {
               reject(new Error("Nenhum dado encontrado no CSV"));
               return;
@@ -55,7 +61,9 @@ const AppContent = () => {
             
             // Verifica se as colunas necessárias existem
             const firstRow = results.data[0];
-            const requiredColumns = ['Escola', 'Latitude', 'Longitude'];
+            console.log("Primeira linha:", firstRow);
+            
+            const requiredColumns = ['Escola', 'Município', 'Latitude', 'Longitude'];
             const missingColumns = requiredColumns.filter(col => !(col in firstRow));
             
             if (missingColumns.length > 0) {
@@ -91,55 +99,71 @@ const AppContent = () => {
         return true;
       })
       .map((e, index) => {
-      console.log(`Formatando registro ${index}:`, e);
+        console.log(`Formatando registro ${index}:`, e);
 
         // Verifica se as propriedades necessárias existem
         if (!e.Escola) {
           console.warn(`Registro ${index} sem nome da escola:`, e);
+          return null;
         }
 
-      // Coordenadas
+        // Coordenadas
         let latitude = null;
         let longitude = null;
         
         if (e.Latitude && e.Longitude) {
-          const lat = e.Latitude.toString().trim();
-          const lng = e.Longitude.toString().trim();
+          // Remove pontos e converte para número
+          const lat = e.Latitude.toString().replace(/\./g, '');
+          const lng = e.Longitude.toString().replace(/\./g, '');
           
-          if (!isNaN(lat) && !isNaN(lng) && lat !== "" && lng !== "") {
-            latitude = parseFloat(lat);
-            longitude = parseFloat(lng);
-          }
+          // Converte para o formato decimal correto (divide por 10^7)
+          latitude = parseFloat(lat) / 10000000;
+          longitude = parseFloat(lng) / 10000000;
+
+          console.log(`Coordenadas convertidas para ${e.Escola}:`, {
+            original: { lat: e.Latitude, lng: e.Longitude },
+            convertido: { lat: latitude, lng: longitude }
+          });
         }
 
         // Só inclui o ponto se tiver coordenadas válidas
-        if (latitude === null || longitude === null) {
+        if (latitude === null || longitude === null || isNaN(latitude) || isNaN(longitude)) {
           console.warn(`Ponto sem coordenadas válidas: ${e.Escola || 'Título não disponível'}`);
+          return null;
+        }
+
+        // Validação adicional das coordenadas
+        if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+          console.warn(`Coordenadas fora do intervalo válido para ${e.Escola}:`, { latitude, longitude });
           return null;
         }
 
         const ponto = {
           titulo: e.Escola || "Título não disponível",
-          descricao: `${e.Endereço || ''} - ${e.Município || ''}, ${e.UF || ''}${e.Telefone ? ` - Tel: ${e.Telefone}` : ''}`.trim(),
+          descricao: `${e.Município || ''} - ${e['Terra Indigena (TI)'] || ''}`.trim(),
           latitude: latitude,
           longitude: longitude,
-          tipo: "educação",
-          pontuacao: 40,
+          tipo: "educacao",
+          pontuacao: 100,
           pontuacaoPercentual: 100,
           // Adicionando todos os campos do CSV
-          Escola: e.Escola,
-          Endereço: e.Endereço,
-          Município: e.Município,
-          UF: e.UF,
-          Telefone: e.Telefone,
-          'Dependência Administrativa': e['Dependência Administrativa'],
-          'Etapas e Modalidade de Ensino Oferecidas': e['Etapas e Modalidade de Ensino Oferecidas'],
-          'Código INEP': e['Código INEP'],
-          Localização: e.Localização,
-          'Localidade Diferenciada': e['Localidade Diferenciada']
+          ...e,
+          // Campos específicos para exibição
+          povos_indigenas: e['Povos indigenas'] || '',
+          linguas_faladas: e['Linguas faladas'] || '',
+          modalidade_ensino: e['Modalidade de Ensino/turnos de funcionamento'] || '',
+          numero_alunos: e['Numero de alunos'] || '',
+          infraestrutura: e['Espaço escolar e estrutura'] || '',
+          acesso_internet: e['Acesso à internet'] || 'Não',
+          equipamentos: e['Equipamentos Tecnológicos (Computadores, tablets e impressoras)'] || ''
         };
 
-        console.log(`Registro ${index} formatado:`, ponto);
+        console.log(`Registro ${index} formatado com coordenadas:`, {
+          titulo: ponto.titulo,
+          latitude: ponto.latitude,
+          longitude: ponto.longitude,
+          tipo: ponto.tipo
+        });
         return ponto;
       })
       .filter(ponto => ponto !== null);
@@ -230,7 +254,7 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <Router basename="/cartografiasocial">
+    <Router basename="/escolasindigenas">
       <AppContent />
     </Router>
   );

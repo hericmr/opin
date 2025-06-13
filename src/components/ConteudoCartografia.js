@@ -49,7 +49,7 @@ const ConteudoCartografia = ({ locations }) => {
   const abrirLocal = (local) => {
     const slug = criarSlug(local.titulo);
     // Verifica se já estamos no caminho base do site
-    const basePath = window.location.pathname.includes('/cartografiasocial') ? '/cartografiasocial' : '';
+    const basePath = window.location.pathname.includes('/escolasindigenas') ? '/escolasindigenas' : '';
     window.location.href = `${basePath}/?panel=${slug}`;
   };
 
