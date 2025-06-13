@@ -4,6 +4,11 @@ import { motion } from "framer-motion";
 import { orangeIcon, orangeBairroIcon, blackIcon, violetIcon, redIcon, blueIcon, greenIcon, yellowIcon } from "./CustomIcon"; // Ícones personalizados
 
 const Marcadores = ({ dataPoints, visibility, onClick }) => {
+  console.log("Marcadores recebendo dataPoints:", {
+    quantidade: dataPoints?.length || 0,
+    visibility
+  });
+
   const DataPointType = Object.freeze({
     ASSISTENCIA: { icon: greenIcon, enabled: visibility.assistencia },
     HISTORICO:   { icon: yellowIcon, enabled: visibility.historicos },
@@ -20,16 +25,31 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
     animate: { opacity: 1, scale: [1, 1.2, 1] }
   };
 
+  if (!Array.isArray(dataPoints)) {
+    console.error("dataPoints não é um array:", dataPoints);
+    return null;
+  }
+
   return (
     <>
       {dataPoints.map((ponto, index) => {
+        // Log detalhado de cada ponto
+        console.log(`Processando ponto ${index}:`, {
+          titulo: ponto.titulo,
+          tipo: ponto.tipo,
+          coordenadas: [ponto.latitude, ponto.longitude]
+        });
+
         if (!ponto.tipo) {
           console.warn(`Ponto sem tipo definido: ${ponto.titulo}`);
           return null;
         }
 
         let dataPointType;
-        switch (ponto.tipo.toLowerCase()) {
+        const tipoLowerCase = ponto.tipo.toLowerCase();
+        console.log(`Tipo do ponto ${index}:`, tipoLowerCase);
+
+        switch (tipoLowerCase) {
           case "assistencia":
             dataPointType = DataPointType.ASSISTENCIA;
             break;

@@ -40,7 +40,7 @@
     "test:coverage": "react-app-rewired test --coverage --watchAll=false",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://hericmr.github.io/cartografiasocial",
+  "homepage": "https://hericmr.github.io/escolasindigenas",
   "eslintConfig": {
     "extends": [
       "react-app",
