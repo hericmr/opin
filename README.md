@@ -21,8 +21,8 @@ Os materiais cartográficos e textuais disponíveis aqui foram produzidos pelas(
 
 1. Clone o repositório e instale as dependências:
 ```bash
-git clone https://github.com/hericmr/cartografiasocial.git
-cd cartografiasocial
+git clone https://github.com/hericmr/escolasindigenas.git
+cd escolasindigenas
 npm install
 ```
 

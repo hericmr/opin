@@ -21,7 +21,15 @@ const criarSlug = (texto) => {
 };
 
 const MapaSantos = ({ dataPoints }) => {
-  console.log("DataPoints recebidos:", dataPoints); // Verifique os dados recebidos
+  console.log("DataPoints recebidos no MapaSantos:", dataPoints ? {
+    quantidade: dataPoints.length,
+    exemplo: dataPoints[0] ? {
+      titulo: dataPoints[0].titulo,
+      latitude: dataPoints[0].latitude,
+      longitude: dataPoints[0].longitude,
+      tipo: dataPoints[0].tipo
+    } : 'Nenhum ponto'
+  } : 'Nenhum dataPoint');
 
   const urlParams = new URLSearchParams(window.location.search);
   const panel = urlParams.get('panel');
@@ -54,15 +62,32 @@ const MapaSantos = ({ dataPoints }) => {
   useEffect(() => {
     const fetchGeoJSON = async () => {
       try {
+        console.log("Iniciando carregamento dos arquivos GeoJSON...");
+        
         const [bairrosResponse, terrasIndigenasResponse, estadoSPResponse] = await Promise.all([
-          fetch("https://raw.githubusercontent.com/hericmr/gps/main/public/bairros.geojson"),
-          fetch("/cartografiasocial/terras_indigenas.geojson"),
-          fetch("/cartografiasocial/SP.geojson")
+          fetch("/escolasindigenas/bairros.geojson"),
+          fetch("/escolasindigenas/terras_indigenas.geojson"),
+          fetch("/escolasindigenas/SP.geojson")
         ]);
 
-        if (!bairrosResponse.ok) throw new Error(`Erro ao carregar GeoJSON dos bairros: HTTP status ${bairrosResponse.status}`);
-        if (!terrasIndigenasResponse.ok) throw new Error(`Erro ao carregar GeoJSON das terras indígenas: HTTP status ${terrasIndigenasResponse.status}`);
-        if (!estadoSPResponse.ok) throw new Error(`Erro ao carregar GeoJSON do estado: HTTP status ${estadoSPResponse.status}`);
+        console.log("Respostas recebidas:", {
+          bairros: bairrosResponse.status,
+          terrasIndigenas: terrasIndigenasResponse.status,
+          estadoSP: estadoSPResponse.status
+        });
+
+        if (!bairrosResponse.ok) {
+          console.error(`Erro ao carregar GeoJSON dos bairros: HTTP status ${bairrosResponse.status}`);
+          return;
+        }
+        if (!terrasIndigenasResponse.ok) {
+          console.error(`Erro ao carregar GeoJSON das terras indígenas: HTTP status ${terrasIndigenasResponse.status}`);
+          return;
+        }
+        if (!estadoSPResponse.ok) {
+          console.error(`Erro ao carregar GeoJSON do estado: HTTP status ${estadoSPResponse.status}`);
+          return;
+        }
 
         const [bairrosData, terrasIndigenasData, estadoSPData] = await Promise.all([
           bairrosResponse.json(),
@@ -70,15 +95,47 @@ const MapaSantos = ({ dataPoints }) => {
           estadoSPResponse.json()
         ]);
 
+        console.log("Dados GeoJSON carregados:", {
+          bairros: bairrosData ? "OK" : "Falha",
+          terrasIndigenas: terrasIndigenasData ? "OK" : "Falha",
+          estadoSP: estadoSPData ? "OK" : "Falha"
+        });
+
+        if (!bairrosData || !bairrosData.features) {
+          console.error("Dados dos bairros inválidos:", bairrosData);
+          return;
+        }
+
+        if (!terrasIndigenasData || !terrasIndigenasData.features) {
+          console.error("Dados das terras indígenas inválidos:", terrasIndigenasData);
+          return;
+        }
+
+        if (!estadoSPData || !estadoSPData.features) {
+          console.error("Dados do estado inválidos:", estadoSPData);
+          return;
+        }
+
         setGeojsonData(bairrosData);
         setTerrasIndigenasData(terrasIndigenasData);
         setEstadoSPData(estadoSPData);
+
+        console.log("Estados atualizados com os dados GeoJSON");
       } catch (error) {
         console.error("Erro ao carregar GeoJSON:", error);
       }
     };
     fetchGeoJSON();
   }, []);
+
+  // Adicionar logs para verificar quando os dados são renderizados
+  useEffect(() => {
+    console.log("Estado dos dados GeoJSON:", {
+      bairros: geojsonData ? "Carregado" : "Não carregado",
+      terrasIndigenas: terrasIndigenasData ? "Carregado" : "Não carregado",
+      estadoSP: estadoSPData ? "Carregado" : "Não carregado"
+    });
+  }, [geojsonData, terrasIndigenasData, estadoSPData]);
 
   const abrirPainel = (info) => {
     setPainelInfo(info);
@@ -132,7 +189,6 @@ const MapaSantos = ({ dataPoints }) => {
         acoes={{
           toggleBairros: () => toggleVisibilidade("bairros"),
           toggleBairrosLaranja: () => toggleVisibilidade("bairrosLaranja"),
-          toggleAssistencia: () => toggleVisibilidade("assistencia"),
           toggleHistoricos: () => toggleVisibilidade("historicos"),
           toggleCulturais: () => toggleVisibilidade("culturais"),
           toggleComunidades: () => toggleVisibilidade("comunidades"),

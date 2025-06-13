@@ -7,8 +7,8 @@ const isMobile = () => {
 
 const MapaBase = ({ children }) => {
   // Define coordenadas e zoom baseados no dispositivo para visualizar SP
-  const defaultPosition = isMobile() ? [-23.5505, -46.6333] : [-23.5505, -46.6333];
-  const defaultZoom = isMobile() ? 7 : 8; // Zoom ajustado para visualizar o estado de SP
+  const defaultPosition = isMobile() ? [-23.5505, -48.6333] : [-23.5505, -48.6333];
+  const defaultZoom = isMobile() ? 6 : 6; // Zoom mais aberto para visualizar mais do estado
 
   return (
     <div className="h-screen w-screen overflow-hidden">
