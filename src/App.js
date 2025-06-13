@@ -8,6 +8,11 @@ import AddLocationButton from "./components/AddLocationButton";
 import ConteudoCartografia from "./components/ConteudoCartografia";
 import AdminPanel from "./components/AdminPanel";
 import Papa from 'papaparse';
+import EditLocationPanel from './components/EditLocationPanel';
+import TerrasIndigenas from './components/TerrasIndigenas';
+import Marcadores from './components/Marcadores';
+import { useShare } from './components/hooks/useShare';
+import './App.css';
 
 const LoadingScreen = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-green-900 text-white">
@@ -247,6 +252,9 @@ const AppContent = () => {
           path="/admin" 
           element={<AdminPanel />} 
         />
+        <Route path="/edit/:id" element={<EditLocationPanel />} />
+        <Route path="/terras" element={<TerrasIndigenas />} />
+        <Route path="/marcadores" element={<Marcadores />} />
       </Routes>
     </div>
   );

@@ -52,6 +52,7 @@ const MapaSantos = ({ dataPoints }) => {
     culturais: true,
     comunidades: true,
     educação: true,
+    educacao: true,
     religiao: true,
     bairro: true,
     terrasIndigenas: true,
@@ -178,7 +179,12 @@ const MapaSantos = ({ dataPoints }) => {
       <MapaBase>
         {visibilidade.estadoSP && estadoSPData && <EstadoSP data={estadoSPData} />}
         {visibilidade.bairros && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
-        {visibilidade.terrasIndigenas && terrasIndigenasData && <TerrasIndigenas data={terrasIndigenasData} onClick={abrirPainel} />}
+        {visibilidade.terrasIndigenas && terrasIndigenasData && (
+          <TerrasIndigenas 
+            data={terrasIndigenasData} 
+            onClick={abrirPainel}
+          />
+        )}
         {dataPoints && <Marcadores dataPoints={dataPoints} visibility={visibilidade} onClick={abrirPainel} />}
       </MapaBase>
 
