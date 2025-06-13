@@ -1,18 +1,20 @@
 const detalhesIntro = {
   titulo: "Sobre o site",
   audioUrl: "/escolasindigenas/audio/intro.mp3",
-  descricao_detalhada: `Esta é uma cartografia social que busca mapear territorialidades, lutas e conquistas dos movimentos sociais e da população na cidade de Santos. O mapa destaca a presença de equipamentos sociais, culturais, religiosos, políticos, educacionais, como escolas, unidades de saúde, assistência social, espaços culturais e de lazer, além de comunidades e locais carregados de memória e história. Os pontos estão representados por:
+  descricao_detalhada: `Este é um observatório que busca mapear as escolas indígenas no estado de São Paulo, destacando suas características, desafios e conquistas.
 
-Lazer: equipamentos sociais, culturais e de lazer.
-Assistência: unidades de assistência social e saúde.
-Históricos: lugares históricos e de memória.
-Comunidades: territórios de comunidades.
-Educação: escolas e unidades de ensino.
-Religião: estabelecimentos religiosos.
+O mapa destaca a presença de escolas indígenas, suas localizações, características educacionais, infraestrutura, e outros aspectos relevantes para o entendimento da educação indígena no estado.
 
-Entre os elementos mapeados, estão histórias relacionadas à escravidão e lutas do povo negro, à opressão e resistência à ditadura empresarial-militar (1964-1984), e às lutas que moldaram e continuam moldando a identidade da região.
+Entre os elementos mapeados, estão informações sobre:
+- Povos indígenas atendidos
+- Línguas faladas
+- Modalidades de ensino
+- Número de alunos
+- Infraestrutura escolar
+- Acesso à internet
+- Equipamentos tecnológicos
 
-Os materiais cartográficos e textuais disponíveis aqui foram produzidos pelas(os) estudantes de Serviço Social da UNIFESP do vespertino e noturno durante a Unidade Curricular de Política Social 2, em 2024 e 2025.`,
+Os materiais cartográficos e textuais disponíveis aqui foram produzidos pelos estudantes de Serviço Social da UNIFESP, durante a Unidade Curricular de Políticas Públicas 2, em 2024 e 2025.`,
   imagens: ["/escolasindigenas/fotos/turma.png"]
 };
 
