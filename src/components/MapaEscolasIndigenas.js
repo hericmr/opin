@@ -219,7 +219,7 @@ const MapaEscolasIndigenas = ({ dataPoints }) => {
       )}
       
       <div className="absolute inset-0 pointer-events-none">
-        <div className="pointer-events-auto">
+        <div className="pointer-events-auto" style={{ zIndex: 20 }}>
           <MenuCamadas
             estados={visibilidade}
             acoes={{
