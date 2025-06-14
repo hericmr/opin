@@ -1,8 +1,54 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
+import PropTypes from 'prop-types';
+import Draggable from 'react-draggable';
+
+const CAMADAS = {
+  ESTADO_SP: { id: 'estadoSP', label: 'Estado de São Paulo', cor: '#10B981' },
+  ESCOLAS: { id: 'educacao', label: 'Instituições de Ensino', cor: '#3B82F6' },
+  TERRAS_INDIGENAS: { id: 'terrasIndigenas', label: 'Terras Indígenas', cor: '#F59E0B' }
+};
+
+const CabecalhoMenu = memo(({ onClose, onMinimize, isMobile, isMinimized }) => (
+  <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100 cursor-move bg-white">
+    <h3 className="text-sm font-medium text-gray-800">Camadas do Mapa</h3>
+    <div className="flex items-center gap-2">
+      {/* ➕ Agora permite minimizar também no mobile, se quiser */}
+      <button
+        onClick={onMinimize}
+        className="text-gray-500 hover:text-gray-700"
+        aria-label={isMinimized ? "Expandir" : "Minimizar"}
+      >
+        {isMinimized ? "▾" : "▴"}
+      </button>
+      <button
+        onClick={onClose}
+        className="text-gray-500 hover:text-gray-700"
+        aria-label="Fechar"
+      >
+        ✕
+      </button>
+    </div>
+  </div>
+));
+
+const BotaoCamada = memo(({ camada, ativo, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`w-full flex items-center gap-2 px-3 py-2 rounded-md transition ${
+      ativo ? 'bg-gray-50' : 'hover:bg-gray-50'
+    }`}
+  >
+    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: camada.cor }} />
+    <span className="text-sm text-gray-800">{camada.label}</span>
+    <div className="ml-auto w-2 h-2 rounded-full" style={{ backgroundColor: ativo ? camada.cor : '#e5e7eb' }} />
+  </button>
+));
 
 const MenuCamadas = ({ estados, acoes }) => {
   const [menuAberto, setMenuAberto] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [position, setPosition] = useState({ x: 24, y: 24 });
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -10,114 +56,89 @@ const MenuCamadas = ({ estados, acoes }) => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const menuClasses = `
-    bg-green-900/30 backdrop-blur-md p-3 rounded-lg shadow-lg transition-all duration-300 text-white
-    ${isMobile
-      ? `fixed bottom-0 left-0 right-0 mx-2 mb-6 transition-transform duration-300 ${
-          menuAberto ? 'translate-y-0' : 'translate-y-full'
-        }`
-      : "mt-2 w-52"
-    }
-  `;
-
-  const botaoClasses = (ativo) => `
-    w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200
-    ${ativo 
-      ? "bg-purple-600 shadow-sm transform scale-[1.01]" 
-      : "bg-green-800/90 hover:bg-green-700/90 border border-green-700"}
-    focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50
-  `;
-
-  const MarkerIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5">
-      <path
-        fill="#8B5CF6"
-        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-      />
-      <circle cx="12" cy="9" r="3" fill="white"/>
-    </svg>
-  );
-
-  return (
-    <div className={`fixed ${isMobile ? "bottom-0 left-0 right-0" : "top-40 left-3"} z-10`}>
-      {/* Botão de Toggle (visível apenas no PC) */}
-      {!isMobile && (
-        <button
-          onClick={() => setMenuAberto(!menuAberto)}
-          className="p-2 w-10 h-10 bg-green-900/90 text-white rounded-full shadow-lg hover:bg-green-800 transition-all flex items-center justify-center text-sm"
-          aria-label={menuAberto ? "Fechar menu" : "Abrir menu"}
-        >
-          {menuAberto ? "✖" : "☰"}
-        </button>
-      )}
-
-      {/* Menu de camadas */}
-      {menuAberto && (
-        <div className={menuClasses}>
-          <button
-            onClick={acoes.toggleEstadoSP}
-            className={botaoClasses(estados.estadoSP)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5">
-              <path
-                fill="#2E7D32"
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-              />
-            </svg>
-            <span className="flex-1 text-left text-sm font-medium text-white">Estado SP</span>
-            <span className={`w-2 h-2 rounded-full ${estados.estadoSP ? 'bg-green-300' : 'bg-gray-500'}`}></span>
-          </button>
-
-          <button
-            onClick={acoes.toggleEducação}
-            className={botaoClasses(estados.educação)}
-          >
-            <MarkerIcon />
-            <span className="flex-1 text-left text-sm font-medium text-white">Escolas</span>
-            <span className={`w-2 h-2 rounded-full ${estados.educação ? 'bg-green-300' : 'bg-gray-500'}`}></span>
-          </button>
-
-              <button
-            onClick={acoes.toggleTerrasIndigenas}
-            className={botaoClasses(estados.terrasIndigenas)}
-              >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5">
-              <path
-                fill="#FF4500"
-                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-              />
-              <circle cx="12" cy="9" r="3" fill="white"/>
-            </svg>
-            <span className="flex-1 text-left text-sm font-medium text-white">Terras Indígenas</span>
-            <span className={`w-2 h-2 rounded-full ${estados.terrasIndigenas ? 'bg-orange-300' : 'bg-gray-500'}`}></span>
-              </button>
-
-          {/* Botão de Minimizar (Mobile) */}
-          {isMobile && menuAberto && (
-            <button
-              onClick={() => setMenuAberto(false)}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 bg-green-700/90 hover:bg-green-600/90 mt-2 text-sm text-white"
-              aria-label="Minimizar menu"
-            >
-              <span>➖</span>
-              <span className="font-medium">Minimizar</span>
-            </button>
+  // 🔸 Menu Mobile sempre aparece fixo no rodapé
+  if (isMobile) {
+    return (
+      <div className="fixed bottom-0 left-0 right-0 z-50">
+        <div className="bg-white border-t border-gray-100">
+          <CabecalhoMenu
+            onClose={() => setMenuAberto(false)}
+            onMinimize={() => setIsMinimized(!isMinimized)}
+            isMobile={true}
+            isMinimized={isMinimized}
+          />
+          {!isMinimized && (
+            <div className="p-2 flex flex-col gap-1">
+              <BotaoCamada camada={CAMADAS.ESTADO_SP} ativo={estados.estadoSP} onClick={acoes.toggleEstadoSP} />
+              <BotaoCamada camada={CAMADAS.ESCOLAS} ativo={estados.educacao} onClick={acoes.toggleEducacao} />
+              <BotaoCamada camada={CAMADAS.TERRAS_INDIGENAS} ativo={estados.terrasIndigenas} onClick={acoes.toggleTerrasIndigenas} />
+            </div>
           )}
         </div>
-      )}
 
-      {/* Botão flutuante para reabrir o menu no mobile */}
-      {isMobile && !menuAberto && (
-        <button
-          onClick={() => setMenuAberto(true)}
-          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-800 text-white p-3 rounded-full shadow-lg hover:bg-green-700 hover:shadow-xl transition-all duration-200 z-20 text-sm"
-          aria-label="Abrir menu"
-        >
-          ☰
-        </button>
-      )}
-    </div>
+        {/* Botão de abrir menu no mobile, caso feche */}
+        {!menuAberto && (
+          <button
+            onClick={() => setMenuAberto(true)}
+            className="fixed bottom-4 right-4 bg-white border border-gray-200 shadow-md p-2 rounded-full z-50"
+          >
+            ☰
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  // 🔸 Se menu fechado no desktop, mostra botão flutuante
+  if (!menuAberto) {
+    return (
+      <button
+        onClick={() => setMenuAberto(true)}
+        className="fixed bottom-4 right-4 bg-white border border-gray-200 shadow-md p-2 rounded-full z-50"
+      >
+        ☰
+      </button>
+    );
+  }
+
+  // 🔸 Menu Desktop
+  return (
+    <Draggable
+      handle=".cursor-move"
+      position={position}
+      onStop={(e, data) => setPosition({ x: data.x, y: data.y })}
+      bounds="parent"
+    >
+      <div className="fixed w-64 bg-white border border-gray-100 rounded-lg shadow-md z-50">
+        <CabecalhoMenu 
+          onClose={() => setMenuAberto(false)}
+          onMinimize={() => setIsMinimized(!isMinimized)}
+          isMobile={false}
+          isMinimized={isMinimized}
+        />
+        {!isMinimized && (
+          <div className="p-2 flex flex-col gap-1">
+            <BotaoCamada camada={CAMADAS.ESTADO_SP} ativo={estados.estadoSP} onClick={acoes.toggleEstadoSP} />
+            <BotaoCamada camada={CAMADAS.ESCOLAS} ativo={estados.educacao} onClick={acoes.toggleEducacao} />
+            <BotaoCamada camada={CAMADAS.TERRAS_INDIGENAS} ativo={estados.terrasIndigenas} onClick={acoes.toggleTerrasIndigenas} />
+          </div>
+        )}
+      </div>
+    </Draggable>
   );
 };
 
-export default MenuCamadas;
+MenuCamadas.propTypes = {
+  estados: PropTypes.shape({
+    estadoSP: PropTypes.bool.isRequired,
+    educacao: PropTypes.bool.isRequired,
+    terrasIndigenas: PropTypes.bool.isRequired
+  }).isRequired,
+  acoes: PropTypes.shape({
+    toggleEstadoSP: PropTypes.func.isRequired,
+    toggleEducacao: PropTypes.func.isRequired,
+    toggleTerrasIndigenas: PropTypes.func.isRequired
+  }).isRequired
+};
+
+export default memo(MenuCamadas);

@@ -14,7 +14,7 @@ const EditLocationWrapper = () => {
     const fetchLocation = async () => {
       try {
         const { data, error } = await supabase
-          .from('locations3')
+          .from('escolas_completa')
           .select('*')
           .eq('id', id)
           .single();
@@ -35,7 +35,7 @@ const EditLocationWrapper = () => {
   const handleSave = async (updatedLocation) => {
     try {
       const { error } = await supabase
-        .from('locations3')
+        .from('escolas_completa')
         .update({
           titulo: updatedLocation.titulo,
           tipo: updatedLocation.tipo,
@@ -45,7 +45,7 @@ const EditLocationWrapper = () => {
           audio: updatedLocation.audio,
           imagens: updatedLocation.imagens,
         })
-        .eq('id', id);
+        .eq('id', updatedLocation.id);
 
       if (error) throw error;
       navigate('/admin');
