@@ -57,23 +57,86 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
   // Filtra os pontos válidos
   const pontosValidos = React.useMemo(() => {
     if (!Array.isArray(dataPoints) || dataPoints.length === 0) {
+      console.warn("Marcadores: Nenhum ponto de dados recebido");
       return [];
     }
 
-    return dataPoints.filter(ponto => {
+    // Log inicial com total de pontos
+    console.log("Total de escolas recebidas:", dataPoints.length);
+
+    // Array para armazenar escolas com coordenadas inválidas
+    const escolasComProblemas = [];
+
+    const pontosFiltrados = dataPoints.filter(ponto => {
+      // Verifica se o ponto tem as propriedades básicas
       if (!ponto.titulo || !ponto.latitude || !ponto.longitude) {
+        escolasComProblemas.push({
+          escola: ponto.titulo || "Sem nome",
+          problema: "Dados básicos ausentes",
+          detalhes: {
+            titulo: !!ponto.titulo,
+            latitude: !!ponto.latitude,
+            longitude: !!ponto.longitude
+          }
+        });
         return false;
       }
 
       const lat = parseFloat(ponto.latitude);
       const lng = parseFloat(ponto.longitude);
       
-      return !(
-        isNaN(lat) || isNaN(lng) ||
-        lat < -90 || lat > 90 ||
-        lng < -180 || lng > 180
-      );
+      // Verifica se as coordenadas são números válidos
+      if (isNaN(lat) || isNaN(lng)) {
+        escolasComProblemas.push({
+          escola: ponto.titulo,
+          problema: "Coordenadas não são números válidos",
+          detalhes: {
+            latitude: ponto.latitude,
+            longitude: ponto.longitude
+          }
+        });
+        return false;
+      }
+
+      // Verifica se as coordenadas estão dentro dos limites válidos
+      if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+        escolasComProblemas.push({
+          escola: ponto.titulo,
+          problema: "Coordenadas fora dos limites válidos",
+          detalhes: {
+            latitude: lat,
+            longitude: lng,
+            limites: {
+              latMin: -90,
+              latMax: 90,
+              lngMin: -180,
+              lngMax: 180
+            }
+          }
+        });
+        return false;
+      }
+
+      return true;
     });
+
+    // Log detalhado das escolas com problemas
+    if (escolasComProblemas.length > 0) {
+      console.group("Escolas com coordenadas inválidas:");
+      escolasComProblemas.forEach(escola => {
+        console.group(escola.escola);
+        console.log("Problema:", escola.problema);
+        console.log("Detalhes:", escola.detalhes);
+        console.groupEnd();
+      });
+      console.groupEnd();
+      console.log(`Total de escolas com problemas: ${escolasComProblemas.length}`);
+    }
+
+    // Log do resultado final
+    console.log(`Escolas válidas: ${pontosFiltrados.length} de ${dataPoints.length}`);
+
+    return pontosFiltrados;
   }, [dataPoints]);
 
   // Configuração do ícone para escolas indígenas
