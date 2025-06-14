@@ -1,3 +1,10 @@
+/**
+ * Componente MapaEscolasIndigenas - Exibe o mapa interativo com escolas indígenas e terras indígenas
+ * 
+ * @param {Object} props - Propriedades do componente
+ * @param {Array} props.dataPoints - Array de pontos de dados das escolas
+ * @returns {React.ReactElement} - Componente renderizado
+ */
 import React, { useState, useEffect } from "react";
 import MapaBase from "./MapaBase";
 import Marcadores from "./Marcadores";
@@ -7,7 +14,7 @@ import EstadoSP from "./EstadoSP";
 import MenuCamadas from "./MenuCamadas";
 import PainelInformacoes from "./PainelInformacoes";
 import detalhesIntro from "./detalhesInfo"; 
-import "./MapaSantos.css";
+import "./MapaEscolasIndigenas.css";
 
 // Função para converter título em slug
 const criarSlug = (texto) => {
@@ -20,8 +27,8 @@ const criarSlug = (texto) => {
     .trim();
 };
 
-const MapaSantos = ({ dataPoints }) => {
-  console.log("DataPoints recebidos no MapaSantos:", dataPoints ? {
+const MapaEscolasIndigenas = ({ dataPoints }) => {
+  console.log("DataPoints recebidos no MapaEscolasIndigenas:", dataPoints ? {
     quantidade: dataPoints.length,
     exemplo: dataPoints[0] ? {
       titulo: dataPoints[0].titulo,
@@ -52,7 +59,21 @@ const MapaSantos = ({ dataPoints }) => {
     estadoSP: true,
   });
   const [painelInfo, setPainelInfo] = useState(initialPanel);
-  console.log("painelInfo state:", painelInfo);
+  
+  // Adicionar useEffect para monitorar mudanças no painelInfo
+  useEffect(() => {
+    console.group("MapaEscolasIndigenas - painelInfo state changed");
+    console.log("Novo valor de painelInfo:", {
+      titulo: painelInfo?.titulo,
+      tipo: painelInfo?.tipo,
+      hasLink: !!painelInfo?.link_para_documentos,
+      linkValue: painelInfo?.link_para_documentos,
+      isInitialPanel: painelInfo === initialPanel,
+      isNull: painelInfo === null,
+      isUndefined: painelInfo === undefined
+    });
+    console.groupEnd();
+  }, [painelInfo, initialPanel]);
 
   // Calcula o total de escolas visíveis no mapa (com pontuação >= 0)
   const escolasVisiveis = dataPoints ? dataPoints.filter(point => point.pontuacao >= 0) : [];
@@ -137,11 +158,28 @@ const MapaSantos = ({ dataPoints }) => {
   }, [geojsonData, terrasIndigenasData, estadoSPData]);
 
   const abrirPainel = (info) => {
+    console.group("MapaEscolasIndigenas - abrirPainel");
+    console.log("Info recebida:", {
+      titulo: info?.titulo,
+      tipo: info?.tipo,
+      hasLink: !!info?.link_para_documentos,
+      linkValue: info?.link_para_documentos
+    });
     setPainelInfo(info);
+    console.log("painelInfo atualizado");
+    console.groupEnd();
   };
 
   const fecharPainel = () => {
+    console.group("MapaEscolasIndigenas - fecharPainel");
+    console.log("Estado anterior:", {
+      titulo: painelInfo?.titulo,
+      tipo: painelInfo?.tipo,
+      hasLink: !!painelInfo?.link_para_documentos
+    });
     setPainelInfo(null);
+    console.log("painelInfo definido como null");
+    console.groupEnd();
   };
 
   const geoJSONStyle = {
@@ -171,7 +209,11 @@ const MapaSantos = ({ dataPoints }) => {
 
       {painelInfo && (
         <>
-          {console.log("Rendering PainelInformacoes with:", painelInfo)}
+          {console.log("MapaEscolasIndigenas - Renderizando PainelInformacoes com:", {
+            painelInfo,
+            hasLink: painelInfo?.link_para_documentos,
+            linkValue: painelInfo?.link_para_documentos
+          })}
           <PainelInformacoes painelInfo={painelInfo} closePainel={fecharPainel} />
         </>
       )}
@@ -193,4 +235,4 @@ const MapaSantos = ({ dataPoints }) => {
   );
 };
 
-export default MapaSantos;
+export default MapaEscolasIndigenas;
