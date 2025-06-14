@@ -5,25 +5,25 @@ import L from 'leaflet';
 const Bairros = ({ data }) => {
   const map = useMap();
 
-  // Define a paleta de cores com base na densidade
+  // Define a paleta de cores com tons naturais e terrosos
   const getColor = useCallback((density) => {
     return density > 1000
-      ? '#00441b'
+      ? '#2d3436'    // Cinza escuro (pedra)
       : density > 500
-      ? '#006d2c'
+      ? '#636e72'    // Cinza médio (rocha)
       : density > 200
-      ? '#238b45'
+      ? '#74b9ff'    // Azul suave (água)
       : density > 100
-      ? '#41ab5d'
-      : '#74c476';
+      ? '#81ecec'    // Verde-água claro (lagoa)
+      : '#ddd6ba';   // Bege claro (areia/terra)
   }, []);
 
-  // Estilo padrão dos bairros
+  // Estilo padrão dos bairros com cores mais naturais
   const defaultStyle = useMemo(
     () => ({
-      color: '#ffffff',
+      color: '#a0956b',  // Marrom terra para as bordas
       weight: 1,
-      fillOpacity: 0.2,
+      fillOpacity: 0.3,
     }),
     []
   );
@@ -40,14 +40,14 @@ const Bairros = ({ data }) => {
   const onEachFeature = useCallback(
     (feature, layer) => {
       layer.bindPopup(`<strong>Bairro:</strong> ${feature.properties.NOME}<br/>`);
-
+      
       layer.on({
         mouseover: (e) => {
           const layer = e.target;
           layer.setStyle({
             weight: 3,
-            color: '#00441b',
-            fillOpacity: 0.9,
+            color: '#6c5ce7',  // Roxo suave para hover
+            fillOpacity: 0.7,
           });
           layer.bringToFront();
         },
@@ -58,18 +58,18 @@ const Bairros = ({ data }) => {
           const layer = e.target;
           const bounds = layer.getBounds();
           map.fitBounds(bounds, { padding: [50, 50] });
-
+          
           // Restaura estilo de todos os bairros antes de destacar o selecionado
           e.target._map.eachLayer((l) => {
             if (l instanceof L.Path && l !== layer) {
               l.setStyle(style(l.feature));
             }
           });
-
+          
           layer.setStyle({
             weight: 4,
-            color: '#000000',
-            fillOpacity: 0.8,
+            color: '#2d3436',  // Cinza escuro para seleção
+            fillOpacity: 0.6,
           });
         },
       });

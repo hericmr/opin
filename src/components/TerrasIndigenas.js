@@ -20,12 +20,12 @@ const TerrasIndigenas = ({ data, onClick }) => {
   // Estilo padrão das terras indígenas
   const defaultStyle = useMemo(
     () => ({
-      color: '#8B4513', // Marrom escuro para a borda
+      color: '#B22222', // Vermelho escuro na borda
       weight: 2,
-      fillOpacity: 0.2,
-      fillColor: '#D2691E', // Marrom avermelhado
+      fillOpacity: 0.3,
+      fillColor: '#DC143C', // Vermelho vivo no preenchimento
       dashArray: '3',
-      zIndex: 2 // Acima do estado, abaixo dos marcadores
+      zIndex: 2
     }),
     []
   );
@@ -43,8 +43,8 @@ const TerrasIndigenas = ({ data, onClick }) => {
       
       return {
         ...defaultStyle,
-        fillColor: isRegularizada ? '#D2691E' : '#CD853F', // Marrom mais claro para não regularizadas
-        fillOpacity: isRegularizada ? 0.2 : 0.15
+        fillColor: isRegularizada ? '#DC143C' : '#8B0000', // Regularizada vermelho vivo, não regularizada vermelho escuro
+        fillOpacity: isRegularizada ? 0.3 : 0.25
       };
     },
     [defaultStyle]
@@ -53,9 +53,9 @@ const TerrasIndigenas = ({ data, onClick }) => {
   // Estilo quando o mouse passa por cima
   const hoverStyle = {
     weight: 3,
-    color: '#A0522D',
-    fillOpacity: 0.4,
-    dashArray: '1'
+    color: '#FF0000', // Vermelho puro na borda ao passar o mouse
+    fillOpacity: 0.45,
+    dashArray: ''
   };
 
   const onEachFeature = useCallback(

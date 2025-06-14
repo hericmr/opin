@@ -60,6 +60,10 @@ const MapaSantos = ({ dataPoints }) => {
   });
   const [painelInfo, setPainelInfo] = useState(initialPanel);
 
+  // Calcula o total de escolas visíveis no mapa (com pontuação >= 0)
+  const escolasVisiveis = dataPoints ? dataPoints.filter(point => point.pontuacao >= 0) : [];
+  const totalEscolas = escolasVisiveis.length;
+
   useEffect(() => {
     const fetchGeoJSON = async () => {
       try {
@@ -175,7 +179,7 @@ const MapaSantos = ({ dataPoints }) => {
   };
 
   return (
-    <div className="relative h-screen">
+    <div className="relative h-screen w-full overflow-hidden">
       <MapaBase>
         {visibilidade.estadoSP && estadoSPData && <EstadoSP data={estadoSPData} />}
         {visibilidade.bairros && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
@@ -185,26 +189,31 @@ const MapaSantos = ({ dataPoints }) => {
             onClick={abrirPainel}
           />
         )}
-        {dataPoints && <Marcadores dataPoints={dataPoints} visibility={visibilidade} onClick={abrirPainel} />}
+        {dataPoints && <Marcadores dataPoints={escolasVisiveis} visibility={visibilidade} onClick={abrirPainel} />}
       </MapaBase>
 
       {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={fecharPainel} />}
       
-      <MenuCamadas
-        estados={visibilidade}
-        acoes={{
-          toggleBairros: () => toggleVisibilidade("bairros"),
-          toggleBairrosLaranja: () => toggleVisibilidade("bairrosLaranja"),
-          toggleHistoricos: () => toggleVisibilidade("historicos"),
-          toggleCulturais: () => toggleVisibilidade("culturais"),
-          toggleComunidades: () => toggleVisibilidade("comunidades"),
-          toggleEducação: () => toggleVisibilidade("educação"),
-          toggleReligiao: () => toggleVisibilidade("religiao"),
-          toggleBairro: () => toggleVisibilidade("bairro"),
-          toggleTerrasIndigenas: () => toggleVisibilidade("terrasIndigenas"),
-          toggleEstadoSP: () => toggleVisibilidade("estadoSP"),
-        }}
-      />
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="pointer-events-auto">
+          <MenuCamadas
+            estados={visibilidade}
+            acoes={{
+              toggleBairros: () => toggleVisibilidade("bairros"),
+              toggleBairrosLaranja: () => toggleVisibilidade("bairrosLaranja"),
+              toggleHistoricos: () => toggleVisibilidade("historicos"),
+              toggleCulturais: () => toggleVisibilidade("culturais"),
+              toggleComunidades: () => toggleVisibilidade("comunidades"),
+              toggleEducação: () => toggleVisibilidade("educação"),
+              toggleReligiao: () => toggleVisibilidade("religiao"),
+              toggleBairro: () => toggleVisibilidade("bairro"),
+              toggleTerrasIndigenas: () => toggleVisibilidade("terrasIndigenas"),
+              toggleEstadoSP: () => toggleVisibilidade("estadoSP"),
+            }}
+            totalEscolas={totalEscolas}
+          />
+        </div>
+      </div>
     </div>
   );
 };
