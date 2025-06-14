@@ -89,7 +89,7 @@ const MenuCamadas = ({ estados, acoes, totalEscolas }) => {
   // 🔸 Menu Mobile sempre aparece fixo no rodapé
   if (isMobile) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 z-[100]">
+      <div className="fixed bottom-0 left-0 right-0 z-[20]">
         <div className="bg-white border-t border-gray-100 shadow-lg">
           <CabecalhoMenu
             onClose={() => setMenuAberto(false)}
@@ -124,7 +124,7 @@ const MenuCamadas = ({ estados, acoes, totalEscolas }) => {
     return (
       <button
         onClick={() => setMenuAberto(true)}
-        className="fixed bottom-4 right-4 bg-white border border-gray-200 shadow-md p-2 rounded-full z-50"
+        className="fixed bottom-4 right-4 bg-white border border-gray-200 shadow-md p-2 rounded-full z-[20]"
       >
         ☰
       </button>
@@ -139,7 +139,7 @@ const MenuCamadas = ({ estados, acoes, totalEscolas }) => {
       onStop={(e, data) => setPosition({ x: data.x, y: data.y })}
       bounds="parent"
     >
-      <div className="fixed w-64 bg-white border border-gray-100 rounded-lg shadow-lg z-[100]">
+      <div className="fixed w-64 bg-white border border-gray-100 rounded-lg shadow-lg z-[20]">
         <CabecalhoMenu 
           onClose={() => setMenuAberto(false)}
           onMinimize={() => setIsMinimized(!isMinimized)}
