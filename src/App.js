@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from './supabaseClient';
-import MapaSantos from "./components/MapaSantos";
+import MapaEscolasIndigenas from "./components/MapaEscolasIndigenas";
 import Navbar from "./components/Navbar";
 import PainelInformacoes from "./components/PainelInformacoes";
 import AddLocationButton from "./components/AddLocationButton";
@@ -100,6 +100,22 @@ const AppContent = () => {
         if (!e.Escola) {
           console.warn(`Registro ${index} sem nome da escola:`, e);
           return null;
+        }
+
+        // Log para debug dos links
+        if (e.link_para_documentos) {
+          console.log(`Escola ${e.Escola} - link_para_documentos:`, {
+            original: e.link_para_documentos,
+            tipo: typeof e.link_para_documentos,
+            temGoogleDrive: e.link_para_documentos.includes('/file/d/')
+          });
+        }
+        if (e.link_para_videos) {
+          console.log(`Escola ${e.Escola} - link_para_videos:`, {
+            original: e.link_para_videos,
+            tipo: typeof e.link_para_videos,
+            temYoutube: e.link_para_videos.includes('youtube.com') || e.link_para_videos.includes('youtu.be')
+          });
         }
 
         // Verifica o estado das coordenadas
@@ -236,9 +252,11 @@ const AppContent = () => {
           imagens: e.imagens,
           audio: e.audio,
           video: e.video,
+          link_para_documentos: e.link_para_documentos,
+          link_para_videos: e.link_para_videos,
           
           // Campos para o mapa
-          tipo: 'educacao', // Definindo como educação por padrão
+          tipo: 'educacao',
           pontuacao: 100,
           pontuacaoPercentual: 100
         };
@@ -371,11 +389,11 @@ const AppContent = () => {
           path="/" 
           element={
             <main className="flex-grow">
-              <MapaSantos 
+              <MapaEscolasIndigenas 
                 dataPoints={
                   new URLSearchParams(location.search).get('panel')
-                    ? dataPoints // Se houver um panel na URL, mostra todos os pontos
-                    : dataPoints.filter(point => point.pontuacao >= 0) // Caso contrário, filtra por pontuação mínima de 20%
+                    ? dataPoints
+                    : dataPoints.filter(point => point.pontuacao >= 0)
                 } 
               />
               <AddLocationButton onLocationAdded={handleLocationAdded} />
