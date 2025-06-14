@@ -39,7 +39,7 @@ const AddLocationButton = () => {
 
       // Inserir no Supabase
       const { data, error: supabaseError } = await supabase
-        .from('locations3')
+        .from('escolas_completa')
         .insert([locationData])
         .select();
 
