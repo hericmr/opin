@@ -4,6 +4,8 @@ const usePainelVisibility = (painelInfo) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  console.log("usePainelVisibility - painelInfo:", painelInfo);
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 640);
@@ -14,10 +16,13 @@ const usePainelVisibility = (painelInfo) => {
   }, []);
 
   useEffect(() => {
+    console.log("usePainelVisibility effect - painelInfo changed:", painelInfo);
     if (painelInfo) {
+      console.log("Setting isVisible to true");
       setIsVisible(true);
       document.body.style.overflow = "hidden";
     } else {
+      console.log("Setting isVisible to false");
       setIsVisible(false);
       document.body.style.overflow = "";
     }
@@ -26,6 +31,8 @@ const usePainelVisibility = (painelInfo) => {
       document.body.style.overflow = "";
     };
   }, [painelInfo]);
+
+  console.log("usePainelVisibility - returning state:", { isVisible, isMobile });
 
   return { isVisible, isMobile };
 };

@@ -80,6 +80,13 @@ const AppContent = () => {
     console.log("Iniciando formatação dos dados...");
     console.log("Número total de registros:", dataPoints.length);
     
+    // Arrays para armazenar diferentes tipos de problemas com coordenadas
+    const escolasSemCoordenadas = {
+      vazias: [], // latitude/longitude são null ou undefined
+      invalidas: [], // latitude/longitude não são números válidos
+      foraDosLimites: [] // latitude/longitude estão fora dos limites aceitáveis
+    };
+    
     const formattedData = dataPoints
       .filter(e => {
         if (!e || typeof e !== 'object' || Array.isArray(e)) {
@@ -89,23 +96,75 @@ const AppContent = () => {
         return true;
       })
       .map((e, index) => {
-        console.log(`Formatando registro ${index}:`, e);
-
         // Verifica se as propriedades necessárias existem
         if (!e.Escola) {
           console.warn(`Registro ${index} sem nome da escola:`, e);
           return null;
         }
 
-        // Coordenadas
-        let latitude = parseFloat(e.Latitude);
-        let longitude = parseFloat(e.Longitude);
+        // Verifica o estado das coordenadas
+        const infoEscola = {
+          id: e.id,
+          nome: e.Escola,
+          municipio: e["Município"],
+          endereco: e["Endereço"],
+          diretoria: e["Diretoria de Ensino"],
+          terra_indigena: e["Terra Indigena (TI)"],
+          tipo_escola: e["Escola Estadual ou Municipal"],
+          povos: e["Povos indigenas"],
+          linguas: e["Linguas faladas"],
+          latitude_original: e.Latitude,
+          longitude_original: e.Longitude
+        };
 
-        // Só inclui o ponto se tiver coordenadas válidas (não nulas e não NaN)
+        // Verifica se as coordenadas estão vazias
+        if (e.Latitude === null || e.Latitude === undefined || 
+            e.Longitude === null || e.Longitude === undefined) {
+          escolasSemCoordenadas.vazias.push({
+            ...infoEscola,
+            problema: "Coordenadas vazias (null/undefined)",
+            detalhes: {
+              latitude: e.Latitude,
+              longitude: e.Longitude
+            }
+          });
+          return null;
+        }
+
+        // Tenta converter para números
+        const latitude = parseFloat(e.Latitude);
+        const longitude = parseFloat(e.Longitude);
+
+        // Verifica se as coordenadas são números válidos
         if (isNaN(latitude) || isNaN(longitude)) {
-          console.warn(`Ponto sem coordenadas válidas: ${e.Escola}`, {
-            latitude: e.Latitude,
-            longitude: e.Longitude
+          escolasSemCoordenadas.invalidas.push({
+            ...infoEscola,
+            problema: "Coordenadas não são números válidos",
+            detalhes: {
+              latitude: e.Latitude,
+              longitude: e.Longitude,
+              tipo_latitude: typeof e.Latitude,
+              tipo_longitude: typeof e.Longitude
+            }
+          });
+          return null;
+        }
+
+        // Verifica se as coordenadas estão dentro dos limites válidos
+        if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+          escolasSemCoordenadas.foraDosLimites.push({
+            ...infoEscola,
+            problema: "Coordenadas fora dos limites válidos",
+            detalhes: {
+              latitude: latitude,
+              longitude: longitude,
+              limites: {
+                latMin: -90,
+                latMax: 90,
+                lngMin: -180,
+                lngMax: 180
+              }
+            }
           });
           return null;
         }
@@ -184,14 +243,67 @@ const AppContent = () => {
           pontuacaoPercentual: 100
         };
 
-        console.log(`Registro ${index} formatado:`, {
-          titulo: ponto.titulo,
-          latitude: ponto.latitude,
-          longitude: ponto.longitude
-        });
         return ponto;
       })
       .filter(ponto => ponto !== null);
+    
+    // Log detalhado das escolas com problemas nas coordenadas
+    const totalProblemas = escolasSemCoordenadas.vazias.length + 
+                          escolasSemCoordenadas.invalidas.length + 
+                          escolasSemCoordenadas.foraDosLimites.length;
+
+    if (totalProblemas > 0) {
+      console.group("Escolas com problemas nas coordenadas:");
+      
+      // Escolas com coordenadas vazias
+      if (escolasSemCoordenadas.vazias.length > 0) {
+        console.group(`Escolas com coordenadas vazias (${escolasSemCoordenadas.vazias.length}):`);
+        escolasSemCoordenadas.vazias.forEach(escola => {
+          console.group(`ID ${escola.id}: ${escola.nome}`);
+          console.log("Problema:", escola.problema);
+          console.log("Detalhes:", escola.detalhes);
+          console.log("Município:", escola.municipio);
+          console.log("Endereço:", escola.endereco);
+          console.log("Diretoria de Ensino:", escola.diretoria);
+          console.groupEnd();
+        });
+        console.groupEnd();
+      }
+
+      // Escolas com coordenadas inválidas
+      if (escolasSemCoordenadas.invalidas.length > 0) {
+        console.group(`Escolas com coordenadas inválidas (${escolasSemCoordenadas.invalidas.length}):`);
+        escolasSemCoordenadas.invalidas.forEach(escola => {
+          console.group(`ID ${escola.id}: ${escola.nome}`);
+          console.log("Problema:", escola.problema);
+          console.log("Detalhes:", escola.detalhes);
+          console.log("Município:", escola.municipio);
+          console.log("Endereço:", escola.endereco);
+          console.log("Diretoria de Ensino:", escola.diretoria);
+          console.groupEnd();
+        });
+        console.groupEnd();
+      }
+
+      // Escolas com coordenadas fora dos limites
+      if (escolasSemCoordenadas.foraDosLimites.length > 0) {
+        console.group(`Escolas com coordenadas fora dos limites (${escolasSemCoordenadas.foraDosLimites.length}):`);
+        escolasSemCoordenadas.foraDosLimites.forEach(escola => {
+          console.group(`ID ${escola.id}: ${escola.nome}`);
+          console.log("Problema:", escola.problema);
+          console.log("Detalhes:", escola.detalhes);
+          console.log("Município:", escola.municipio);
+          console.log("Endereço:", escola.endereco);
+          console.log("Diretoria de Ensino:", escola.diretoria);
+          console.groupEnd();
+        });
+        console.groupEnd();
+      }
+
+      console.log(`Total de escolas com problemas: ${totalProblemas}`);
+      console.log("Para atualizar as coordenadas, acesse o painel administrativo e edite cada escola.");
+      console.groupEnd();
+    }
     
     console.log("Formatação concluída. Número de pontos válidos:", formattedData.length);
     return formattedData;

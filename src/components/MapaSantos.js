@@ -34,31 +34,25 @@ const MapaSantos = ({ dataPoints }) => {
   const urlParams = new URLSearchParams(window.location.search);
   const panel = urlParams.get('panel');
   var initialPanel = detalhesIntro;
+  console.log("detalhesIntro:", detalhesIntro);
   if (panel && panel !== '' && dataPoints && dataPoints.length > 0) {
     const pointFound = dataPoints.find((item) => criarSlug(item.titulo) === panel);
     if (pointFound != null) {
       initialPanel = pointFound;
     }
   }
+  console.log("initialPanel:", initialPanel);
 
   const [geojsonData, setGeojsonData] = useState(null);
   const [terrasIndigenasData, setTerrasIndigenasData] = useState(null);
   const [estadoSPData, setEstadoSPData] = useState(null);
   const [visibilidade, setVisibilidade] = useState({
-    bairros: false,
-    bairrosLaranja: true,
-    assistencia: true,
-    historicos: true,
-    culturais: true,
-    comunidades: true,
-    educação: true,
     educacao: true,
-    religiao: true,
-    bairro: true,
     terrasIndigenas: true,
     estadoSP: true,
   });
   const [painelInfo, setPainelInfo] = useState(initialPanel);
+  console.log("painelInfo state:", painelInfo);
 
   // Calcula o total de escolas visíveis no mapa (com pontuação >= 0)
   const escolasVisiveis = dataPoints ? dataPoints.filter(point => point.pontuacao >= 0) : [];
@@ -159,30 +153,13 @@ const MapaSantos = ({ dataPoints }) => {
 
   const toggleVisibilidade = (chave) => {
     console.log(`Alterando visibilidade: ${chave}`);
-    if (chave === "bairros") {
-      // Quando alternar bairros, também alterna os marcadores de bairro
-      setVisibilidade((prev) => ({ 
-        ...prev, 
-        [chave]: !prev[chave],
-        bairro: !prev[chave] // Sincroniza com os marcadores de bairro
-      }));
-    } else if (chave === "bairrosLaranja") {
-      // Quando alternar bairros laranja, também alterna os marcadores de bairro
-      setVisibilidade((prev) => ({ 
-        ...prev, 
-        [chave]: !prev[chave],
-        bairro: !prev[chave] // Sincroniza com os marcadores de bairro
-      }));
-    } else {
-      setVisibilidade((prev) => ({ ...prev, [chave]: !prev[chave] }));
-    }
+    setVisibilidade((prev) => ({ ...prev, [chave]: !prev[chave] }));
   };
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
       <MapaBase>
         {visibilidade.estadoSP && estadoSPData && <EstadoSP data={estadoSPData} />}
-        {visibilidade.bairros && geojsonData && <Bairros data={geojsonData} style={geoJSONStyle} />}
         {visibilidade.terrasIndigenas && terrasIndigenasData && (
           <TerrasIndigenas 
             data={terrasIndigenasData} 
@@ -192,21 +169,19 @@ const MapaSantos = ({ dataPoints }) => {
         {dataPoints && <Marcadores dataPoints={escolasVisiveis} visibility={visibilidade} onClick={abrirPainel} />}
       </MapaBase>
 
-      {painelInfo && <PainelInformacoes painelInfo={painelInfo} closePainel={fecharPainel} />}
+      {painelInfo && (
+        <>
+          {console.log("Rendering PainelInformacoes with:", painelInfo)}
+          <PainelInformacoes painelInfo={painelInfo} closePainel={fecharPainel} />
+        </>
+      )}
       
       <div className="absolute inset-0 pointer-events-none">
         <div className="pointer-events-auto">
           <MenuCamadas
             estados={visibilidade}
             acoes={{
-              toggleBairros: () => toggleVisibilidade("bairros"),
-              toggleBairrosLaranja: () => toggleVisibilidade("bairrosLaranja"),
-              toggleHistoricos: () => toggleVisibilidade("historicos"),
-              toggleCulturais: () => toggleVisibilidade("culturais"),
-              toggleComunidades: () => toggleVisibilidade("comunidades"),
-              toggleEducação: () => toggleVisibilidade("educação"),
-              toggleReligiao: () => toggleVisibilidade("religiao"),
-              toggleBairro: () => toggleVisibilidade("bairro"),
+              toggleEducacao: () => toggleVisibilidade("educacao"),
               toggleTerrasIndigenas: () => toggleVisibilidade("terrasIndigenas"),
               toggleEstadoSP: () => toggleVisibilidade("estadoSP"),
             }}
