@@ -21,75 +21,85 @@ const EscolaInfo = memo(({ escola }) => {
     return null;
   }
 
-  // Funções de formatação para cada campo do CSV
+  // Funções de formatação para cada seção
   const formatters = {
-    basico: () => ({
-      escola: escola.Escola,
-      municipio: escola.Município,
-      endereco: escola.Endereço,
-      terraIndigena: escola['Terra Indigena (TI)'],
-      tipoEscola: escola['Escola Estadual ou Municipal'],
-      parcerias: escola['Parcerias com o municipípio'],
-      diretoriaEnsino: escola['Diretoria de Ensino']
+    informacoesBasicas: () => ({
+      "Nome da Escola": escola.titulo,
+      "Município": escola.municipio,
+      "Endereço": escola.endereco,
+      "Terra Indígena": escola.terra_indigena,
+      "Tipo de Escola": escola.tipo_escola,
+      "Parcerias com o Município": escola.parcerias_municipio,
+      "Diretoria de Ensino": escola.diretoria_ensino,
+      "Ano de Criação": escola.ano_criacao
     }),
 
     povosELinguas: () => ({
-      povos: escola['Povos indigenas'],
-      linguas: escola['Linguas faladas'],
-      anoCriacao: escola['Ano de criação da escola']
+      "Povos Indígenas": escola.povos_indigenas,
+      "Línguas Faladas": escola.linguas_faladas
     }),
 
     ensino: () => ({
-      modalidade: escola['Modalidade de Ensino/turnos de funcionamento'],
-      numeroAlunos: escola['Numero de alunos']
+      "Modalidade de Ensino": escola.modalidade_ensino,
+      "Número de Alunos": escola.numero_alunos,
+      "Disciplinas Bilíngues": escola.disciplinas_bilingues,
+      "Material Pedagógico Não Indígena": escola.material_nao_indigena,
+      "Material Pedagógico Indígena": escola.material_indigena,
+      "Práticas Pedagógicas Indígenas": escola.praticas_pedagogicas,
+      "Formas de Avaliação": escola.formas_avaliacao
     }),
 
     infraestrutura: () => ({
-      espacos: escola['Espaço escolar e estrutura'],
-      cozinha: escola['Cozinha/Merenda escolar/diferenciada'],
-      agua: escola['Acesso à água'],
-      coletaLixo: escola['Tem coleta de lixo?'],
-      internet: escola['Acesso à internet'],
-      equipamentos: escola['Equipamentos Tecnológicos (Computadores, tablets e impressoras)'],
-      acesso: escola['Modo de acesso à escola']
+      "Espaço Escolar e Estrutura": escola.espaco_escolar,
+      "Cozinha/Merenda Escolar": escola.cozinha_merenda,
+      "Acesso à Água": escola.acesso_agua,
+      "Coleta de Lixo": escola.coleta_lixo,
+      "Acesso à Internet": escola.acesso_internet,
+      "Equipamentos Tecnológicos": escola.equipamentos,
+      "Modo de Acesso à Escola": escola.modo_acesso
     }),
 
-    pessoal: () => ({
-      gestao: escola['Gestão/Nome'],
-      outrosFuncionarios: escola['Outros funcionários'],
-      profIndigenas: escola['Quantidade de professores indígenas'],
-      profNaoIndigenas: escola['Quantidade de professores não indígenas'],
-      profFalamLingua: escola['Professores falam a língua indígena?'],
-      formacaoProf: escola['Formação dos professores'],
-      formacaoContinuada: escola['Formação continuada oferecida']
+    gestaoEProfessores: () => ({
+      "Gestão/Nome": escola.gestao,
+      "Outros Funcionários": escola.outros_funcionarios,
+      "Professores Indígenas": escola.professores_indigenas,
+      "Professores Não Indígenas": escola.professores_nao_indigenas,
+      "Professores Falam a Língua Indígena": escola.professores_falam_lingua,
+      "Formação dos Professores": escola.formacao_professores,
+      "Formação Continuada": escola.formacao_continuada
     }),
 
-    pedagogico: () => ({
-      ppp: escola['A escola possui PPP próprio?'],
-      pppComunidade: escola['PPP elaborado com a comunidade?'],
-      disciplinasBilingues: escola['Disciplinas bilíngues?'],
-      materialNaoIndigena: escola['Material pedagógico não indígena'],
-      materialIndigena: escola['Material pedagógico indígena'],
-      praticasPedagogicas: escola['Práticas pedagógicas indígenas'],
-      formasAvaliacao: escola['Formas de avaliação']
+    projetoPedagogico: () => ({
+      "Possui PPP Próprio": escola.ppp_proprio,
+      "PPP Elaborado com a Comunidade": escola.ppp_comunidade
     }),
 
-    projetos: () => ({
-      projetosAndamento: escola['Projetos em andamento'],
-      parceriasUniversidades: escola['Parcerias com universidades?'],
-      acoesONGs: escola['Ações com ONGs ou coletivos?'],
-      desejosComunidade: escola['Desejos da comunidade para a escola']
+    projetosEParcerias: () => ({
+      "Projetos em Andamento": escola.projetos_andamento,
+      "Parcerias com Universidades": escola.parcerias_universidades,
+      "Ações com ONGs ou Coletivos": escola.acoes_ongs,
+      "Desejos da Comunidade": escola.desejos_comunidade
     }),
 
-    social: () => ({
-      redesSociais: escola['Escola utiliza redes sociais?'],
-      links: escola['Links das redes sociais'],
-      historia: escola['historia da aldeia']
+    redesSociaisEMidia: () => ({
+      "Utiliza Redes Sociais": escola.usa_redes_sociais,
+      "Links das Redes Sociais": escola.links_redes_sociais,
+      "História da Aldeia": escola.historia_aldeia
+    }),
+
+    midia: () => ({
+      "Imagens": escola.imagens,
+      "Áudio": escola.audio,
+      "Vídeo": escola.video
+    }),
+
+    links: () => ({
+      "Links": escola.links
     }),
 
     localizacao: () => ({
-      latitude: escola.Latitude,
-      longitude: escola.Longitude
+      "Latitude": escola.latitude,
+      "Longitude": escola.longitude
     })
   };
 
@@ -98,29 +108,105 @@ const EscolaInfo = memo(({ escola }) => {
     const items = Object.entries(data).filter(([_, value]) => value);
     if (items.length === 0) return null;
 
-  return (
+    return (
       <div key={title} className="mb-6">
         <h3 className="text-lg font-semibold text-green-800 mb-2">{title}</h3>
-        {items.map(([key, value]) => (
-          <p key={key} className="text-gray-700 mb-1">
-            <span className="font-medium">{key.charAt(0).toUpperCase() + key.slice(1)}: </span>
-            {value}
-          </p>
-        ))}
+        <div className="bg-white/50 rounded-lg p-4 space-y-2">
+          {items.map(([key, value]) => {
+            // Se o valor for uma string de URLs separadas por vírgula, renderiza como links
+            if (typeof value === 'string' && (key === 'links' || key === 'Links das Redes Sociais')) {
+              const urls = value.split(',').map(url => url.trim()).filter(url => url);
+              return (
+                <div key={key} className="mb-2">
+                  <span className="font-medium text-gray-700">{key}: </span>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {urls.map((url, index) => (
+                      <a
+                        key={index}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 underline"
+                      >
+                        {url}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // Se for áudio, renderiza o player de áudio
+            if (key === 'Áudio' && value) {
+              return (
+                <div key={key} className="mb-2">
+                  <span className="font-medium text-gray-700">Áudio: </span>
+                  <audio controls className="mt-1">
+                    <source src={value} type="audio/wav" />
+                    Seu navegador não suporta o elemento de áudio.
+                  </audio>
+                </div>
+              );
+            }
+
+            // Se for vídeo, renderiza o player de vídeo
+            if (key === 'Vídeo' && value) {
+              return (
+                <div key={key} className="mb-2">
+                  <span className="font-medium text-gray-700">Vídeo: </span>
+                  <video controls className="mt-1 max-w-full">
+                    <source src={value} type="video/mp4" />
+                    Seu navegador não suporta o elemento de vídeo.
+                  </video>
+                </div>
+              );
+            }
+
+            // Se for imagens, renderiza em grid
+            if (key === 'Imagens' && value) {
+              const imagens = Array.isArray(value) ? value : value.split(',').map(url => url.trim()).filter(url => url);
+              return (
+                <div key={key} className="mb-2">
+                  <span className="font-medium text-gray-700">Imagens: </span>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
+                    {imagens.map((url, index) => (
+                      <img
+                        key={index}
+                        src={url}
+                        alt={`Imagem ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg"
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // Para outros campos, renderiza normalmente
+            return (
+              <div key={key} className="flex flex-col sm:flex-row sm:items-start gap-1">
+                <span className="font-medium text-gray-700 min-w-[200px]">{key}:</span>
+                <span className="text-gray-600 flex-1">{value}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   };
 
   // Estrutura das seções
   const sections = [
-    { title: "Informações Básicas", data: formatters.basico() },
+    { title: "Informações Básicas", data: formatters.informacoesBasicas() },
     { title: "Povos e Línguas", data: formatters.povosELinguas() },
     { title: "Ensino", data: formatters.ensino() },
     { title: "Infraestrutura", data: formatters.infraestrutura() },
-    { title: "Pessoal", data: formatters.pessoal() },
-    { title: "Pedagógico", data: formatters.pedagogico() },
-    { title: "Projetos e Parcerias", data: formatters.projetos() },
-    { title: "Redes Sociais e História", data: formatters.social() },
+    { title: "Gestão e Professores", data: formatters.gestaoEProfessores() },
+    { title: "Projeto Pedagógico", data: formatters.projetoPedagogico() },
+    { title: "Projetos e Parcerias", data: formatters.projetosEParcerias() },
+    { title: "Redes Sociais e Mídia", data: formatters.redesSociaisEMidia() },
+    { title: "Mídia", data: formatters.midia() },
+    { title: "Links", data: formatters.links() },
     { title: "Localização", data: formatters.localizacao() }
   ];
 
@@ -225,7 +311,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
       }}
     >
       <PainelHeader 
-        titulo={isTerraIndigena ? painelInfo.titulo : painelInfo.Escola} 
+        titulo={painelInfo.titulo} 
         closePainel={closePainel} 
       />
       

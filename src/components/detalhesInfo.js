@@ -15,7 +15,7 @@ Entre os elementos mapeados, estão informações sobre:
 - Equipamentos tecnológicos
 
 Os materiais cartográficos e textuais disponíveis aqui foram produzidos pelos estudantes de Serviço Social da UNIFESP, durante a Unidade Curricular de Políticas Públicas 2, em 2024 e 2025.`,
-  imagens: ["/escolasindigenas/fotos/turma.png"]
+  imagens: [""]
 };
 
 export default detalhesIntro;

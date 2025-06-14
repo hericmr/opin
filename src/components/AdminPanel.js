@@ -56,7 +56,7 @@ const AdminPanel = () => {
       try {
         setLoading(true);
         const { data, error } = await supabase
-          .from('locations3')
+          .from('escolas_completa')
           .select('*')
           .order('titulo', { ascending: true });
 
@@ -89,7 +89,7 @@ const AdminPanel = () => {
       try {
         setLoading(true);
         const { error } = await supabase
-          .from('locations3')
+          .from('escolas_completa')
           .delete()
           .eq('id', location.id);
 
@@ -122,7 +122,7 @@ const AdminPanel = () => {
       setError(null);
 
       const { error } = await supabase
-        .from('locations3')
+        .from('escolas_completa')
         .update({
           titulo: updatedLocation.titulo,
           tipo: updatedLocation.tipo,
