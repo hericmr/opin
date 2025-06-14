@@ -92,3 +92,44 @@
 .leaflet-control-zoom-in {
   border-bottom: none !important; /* Remove a borda entre os botões */
 }
+
+/* Estilos para os clusters de marcadores com estética indígena */
+.marker-cluster {
+  background: transparent !important;
+  border: none !important;
+}
+
+.marker-cluster div {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.marker-cluster div:hover {
+  transform: scale(1.08) !important;
+  cursor: pointer !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Estilo para o efeito de aranha quando expandido */
+.marker-cluster-spider {
+  background-color: rgba(160, 82, 45, 0.15) !important; /* Terra com baixa opacidade */
+}
+
+.marker-cluster-spider-leg {
+  background-color: rgba(92, 64, 51, 0.3) !important; /* Contorno com baixa opacidade */
+}
+
+/* Estilos para diferentes tamanhos de clusters */
+.marker-cluster-small {
+  opacity: 0.9 !important;
+}
+
+.marker-cluster-medium {
+  opacity: 0.95 !important;
+}
+
+.marker-cluster-large {
+  opacity: 1 !important;
+}

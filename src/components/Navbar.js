@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AddLocationButton from './AddLocationButton';
-import { Settings, ChevronDown, Shield, Menu, X, LayoutGrid } from 'lucide-react';
+import { Leaf, ChevronDown, Shield, Menu, X, LayoutGrid } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-    
+
 const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
@@ -20,19 +20,16 @@ const Navbar = () => {
   };
 
   const isConteudoPage = location.pathname === '/conteudo';
-  
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
-
+  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const handleNavigation = (path) => {
     navigate(path);
     setMobileMenuOpen(false);
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-green-900/95 to-green-900/85 backdrop-blur-md text-white shadow-lg">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-green-900/95 to-green-800/90 backdrop-blur-md text-white shadow-lg">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
+        
         {/* Logo e Título */}
         <div className="flex items-center space-x-3 group">
           <img
@@ -43,18 +40,20 @@ const Navbar = () => {
           />
           <h1
             onClick={() => navigate('/')}
-            className="text-sm sm:text-base md:text-xl lg:text-2xl font-bold tracking-wide cursor-pointer truncate 
-                     hover:text-green-100 transition-colors duration-200 border-b-2 border-transparent hover:border-green-400"
+            className="text-base sm:text-lg md:text-2xl lg:text-3xl cursor-pointer truncate 
+                      hover:text-amber-200 transition-colors duration-200 border-b-2 border-transparent 
+                      hover:border-amber-400 font-[Caveat]"
           >
-            Observatório da Escolas Indígenas
+            Observatório das Escolas Indígenas
           </h1>
         </div>
 
-        {/* Versão Mobile - Menu Hambúrguer */}
+        {/* Mobile - Botão */}
         <div className="md:hidden flex items-center">
           <button
             onClick={toggleMobileMenu}
-            className="p-2 rounded-full hover:bg-green-800/50 transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className="p-2 rounded-full hover:bg-amber-800/50 transition-all duration-200 active:scale-95 
+                      focus:outline-none focus:ring-2 focus:ring-amber-400"
             aria-label="Menu principal"
           >
             <motion.div
@@ -67,19 +66,18 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Links de Navegação e Logos - Versão Desktop */}
+        {/* Desktop */}
         <div className="hidden md:flex items-center space-x-6">
-          {/* Botão Ver Conteúdo/Voltar */}
           <button
             onClick={() => navigate(isConteudoPage ? '/' : '/conteudo')}
-            className="px-4 py-2 text-sm font-medium text-white bg-green-800/50 hover:bg-green-700/50 
-                     transition-all duration-200 rounded-lg hover:shadow-md active:scale-95
-                     focus:outline-none focus:ring-2 focus:ring-green-400"
+            className="px-4 py-2 text-sm font-medium text-white bg-green-800/60 hover:bg-amber-700/60 
+                       transition-all duration-200 rounded-lg hover:shadow-md active:scale-95
+                       focus:outline-none focus:ring-2 focus:ring-amber-400"
           >
             {isConteudoPage ? 'Voltar ao Mapa' : 'Ver Todo Conteúdo'}
           </button>
 
-          {/* Logo Unifesp */}
+          {/* Logo UNIFESP */}
           <a 
             href="https://www.unifesp.br/" 
             target="_blank" 
@@ -89,10 +87,10 @@ const Navbar = () => {
             <img
               src="/escolasindigenas/logo.png"
               alt="Logo da Unifesp"
-              className="h-8 sm:h-10 w-auto object-contain"
+              className="h-8 sm:h-10 w-auto object-contain rounded-xl"
             />
-            <span className="text-[10px] sm:text-xs tracking-wide font-serif mt-0.5 opacity-90">
-              
+            <span className="text-[10px] sm:text-xs tracking-wide font-[Caveat] text-amber-200 mt-0.5">
+              Licenciatura Intercultural Indígena
             </span>
           </a>
 
@@ -100,19 +98,19 @@ const Navbar = () => {
           {!isAdmin ? (
             <button
               onClick={handleAdminClick}
-              className="p-2 rounded-full hover:bg-green-800/50 transition-all duration-200 group
-                       focus:outline-none focus:ring-2 focus:ring-green-400 active:scale-95"
+              className="p-2 rounded-full hover:bg-amber-800/50 transition-all duration-200 group
+                       focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95"
               aria-label="Configurações de administrador"
             >
-              <Settings className="w-5 h-5 text-white/70 group-hover:text-white transition-colors duration-200" />
+              <Leaf className="w-5 h-5 text-white/70 group-hover:text-white transition-colors duration-200" />
             </button>
           ) : (
             <div className="relative">
               <button
                 onClick={() => setShowAdminPanel(!showAdminPanel)}
                 className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white 
-                         bg-green-800/50 hover:bg-green-700/50 rounded-lg transition-all duration-200
-                         focus:outline-none focus:ring-2 focus:ring-green-400 active:scale-95"
+                         bg-green-800/60 hover:bg-amber-700/60 rounded-lg transition-all duration-200
+                         focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95"
               >
                 <Shield className="w-4 h-4" />
                 <span>Admin</span>
@@ -154,7 +152,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Menu Mobile Expandido */}
+      {/* Mobile Expandido */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -162,14 +160,14 @@ const Navbar = () => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden bg-gradient-to-b from-green-900/95 to-green-800/95 backdrop-blur-md border-t border-green-800/30"
+            className="md:hidden bg-gradient-to-b from-green-900/95 to-green-800/90 backdrop-blur-md border-t border-green-800/30"
           >
             <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
               <button
                 onClick={() => handleNavigation(isConteudoPage ? '/' : '/conteudo')}
-                className="w-full py-2.5 text-sm font-medium text-white bg-green-800/50 hover:bg-green-700/50 
+                className="w-full py-2.5 text-sm font-medium text-white bg-green-800/60 hover:bg-amber-700/60 
                          rounded-lg transition-all duration-200 active:scale-95
-                         focus:outline-none focus:ring-2 focus:ring-green-400"
+                         focus:outline-none focus:ring-2 focus:ring-amber-400"
               >
                 {isConteudoPage ? 'Voltar ao Mapa' : 'Ver Todo Conteúdo'}
               </button>
@@ -184,10 +182,10 @@ const Navbar = () => {
                   <img
                     src="/escolasindigenas/logo.png"
                     alt="Logo da Unifesp"
-                    className="h-8 w-auto object-contain"
+                    className="h-8 w-auto object-contain rounded-xl"
                   />
-                  <span className="text-[10px] tracking-wide font-serif mt-0.5 text-white/90">
-                    Serviço Social
+                  <span className="text-[10px] tracking-wide font-[Caveat] text-amber-200 mt-0.5">
+                    Licenciatura Intercultural Indígena
                   </span>
                 </a>
               </div>
@@ -195,11 +193,11 @@ const Navbar = () => {
               {!isAdmin ? (
                 <button
                   onClick={handleAdminClick}
-                  className="w-full py-2.5 text-sm font-medium text-white bg-green-800/50 hover:bg-green-700/50 
+                  className="w-full py-2.5 text-sm font-medium text-white bg-green-800/60 hover:bg-amber-700/60 
                            rounded-lg transition-all duration-200 flex items-center justify-center gap-2
-                           focus:outline-none focus:ring-2 focus:ring-green-400 active:scale-95"
+                           focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95"
                 >
-                  <Settings className="w-4 h-4" />
+                  <Leaf className="w-4 h-4" />
                   Área administrativa
                 </button>
               ) : (
@@ -214,9 +212,9 @@ const Navbar = () => {
                     <AddLocationButton />
                     <button
                       onClick={() => handleNavigation('/admin')}
-                      className="w-full py-2.5 text-sm text-white bg-green-800/50 hover:bg-green-700/50 
+                      className="w-full py-2.5 text-sm text-white bg-green-800/60 hover:bg-amber-700/60 
                                rounded-lg transition-all duration-200 flex items-center justify-center gap-2
-                               focus:outline-none focus:ring-2 focus:ring-green-400 active:scale-95"
+                               focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95"
                     >
                       <LayoutGrid className="h-4 w-4" />
                       Painel de Administração
