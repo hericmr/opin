@@ -39,7 +39,8 @@
     "test": "react-scripts test",
     "test:watch": "react-scripts test --watch",
     "test:coverage": "react-scripts test --coverage --watchAll=false",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "optimize-images": "node scripts/optimize-images.js"
   },
   "homepage": "https://hericmr.github.io/escolasindigenas",
   "eslintConfig": {
@@ -76,6 +77,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.49",
+    "sharp": "^0.34.2",
     "tailwindcss": "^3.4.16"
   },
   "browser": {

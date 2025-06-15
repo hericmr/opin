@@ -12,7 +12,7 @@
 - [ ] Atualizar todas as dependências para suas versões mais recentes e estáveis
 - [ ] Remover dependências de desenvolvimento não utilizadas
 
-## 3. Sistema de Logging (Adiado)
+## 3. Sistema de Logging (Adiado - faremos isso por ultimo)
 - [ ] Implementar sistema de logging configurável (adiado para fase posterior)
   - [ ] Adicionar `winston` ou similar
   - [ ] Criar níveis de log (error, warn, info, debug)
@@ -31,10 +31,16 @@
   - [x] Simplificar geometria de `SP.geojson` (redução de 91%)
   - [x] Implementar carregamento progressivo
   - [ ] Configurar compressão gzip/brotli
-- [ ] Otimizar imagens
-  - [ ] Converter para WebP
+- [x] Otimizar imagens
+  - [x] Converter para WebP
   - [ ] Implementar lazy loading
-  - [ ] Otimizar `logo.png`, `logo192.png`, `logo512.png`
+  - [x] Otimizar `logo.png`, `logo192.png`, `logo512.png`
+  - Convertidas para WebP com reduções significativas:
+    - logo.png: 59.53% de redução
+    - logo192.png: 83.92% de redução
+    - lindi.png: 49.78% de redução
+  - Atualizadas referências nos arquivos para usar WebP
+  - Adicionado script de otimização para futuras imagens
 
 ## 5. Refatoração de Código
 - [ ] Refatorar `App.js` (439 linhas)
