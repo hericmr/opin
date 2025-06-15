@@ -85,9 +85,9 @@ const MapaEscolasIndigenas = ({ dataPoints }) => {
         console.log("Iniciando carregamento dos arquivos GeoJSON...");
         
         const [bairrosResponse, terrasIndigenasResponse, estadoSPResponse] = await Promise.all([
-          fetch("/escolasindigenas/bairros.geojson"),
-          fetch("/escolasindigenas/terras_indigenas_simplified.geojson"),
-          fetch("/escolasindigenas/SP_simplified.geojson")
+          fetch(`${process.env.PUBLIC_URL}/bairros.geojson`),
+          fetch(`${process.env.PUBLIC_URL}/terras_indigenas_simplified.geojson`),
+          fetch(`${process.env.PUBLIC_URL}/SP_simplified.geojson`)
         ]);
 
         console.log("Respostas recebidas:", {
