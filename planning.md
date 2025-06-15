@@ -88,6 +88,13 @@
 - [ ] Adicionar monitoramento de erros
 - [ ] Configurar alertas para problemas críticos
 
+## 11. Limpeza de Dependências e Ferramentas de Conversão
+- [ ] Desinstalar bibliotecas e ferramentas utilizadas apenas para conversão de arquivos, pois as conversões já foram realizadas:
+  - Remover `sharp` (otimização de imagens)
+  - Remover `geojson` (conversão e simplificação de GeoJSON)
+  - Remover outros programas/scripts auxiliares usados para conversão
+- [ ] Documentar no README.md que as conversões foram feitas e que essas dependências não são mais necessárias para rodar o site em produção
+
 ## Ordem de Implementação
 
 1. **Fase 1 - Limpeza Inicial ✅**
