@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from
 import { supabase } from './supabaseClient';
 import MapaEscolasIndigenas from "./components/MapaEscolasIndigenas";
 import Navbar from "./components/Navbar";
+import PainelInformacoes from "./components/PainelInformacoes";
 import AddLocationButton from "./components/AddLocationButton";
 import ConteudoCartografia from "./components/ConteudoCartografia";
 import AdminPanel from "./components/AdminPanel";
