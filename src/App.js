@@ -7,6 +7,7 @@ import AddLocationButton from "./components/AddLocationButton";
 import Papa from 'papaparse';
 import { useShare } from './components/hooks/useShare';
 import './App.css';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Usar React.lazy para os componentes grandes
 const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));
@@ -435,7 +436,9 @@ const AppContent = () => {
 const App = () => {
   return (
     <Router basename="/escolasindigenas">
-      <AppContent />
+      <ErrorBoundary>
+        <AppContent />
+      </ErrorBoundary>
     </Router>
   );
 };
