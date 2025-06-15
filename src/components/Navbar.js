@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import AddLocationButton from './AddLocationButton';
 import { Leaf, ChevronDown, Shield, Menu, X, LayoutGrid, MapPin, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import LazyImage from './LazyImage';
 
 const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -85,7 +86,7 @@ const Navbar = () => {
               rel="noopener noreferrer"
               className="flex flex-col items-center group transition-transform duration-200 hover:scale-105"
             >
-              <img
+              <LazyImage
                 src={`${process.env.PUBLIC_URL}/logo.webp`}
                 alt="Logo"
                 className="h-8 w-auto"
@@ -95,7 +96,7 @@ const Navbar = () => {
               </span>
             </a>
             <a href="https://www.unifesp.br/lindi" target="_blank" rel="noopener noreferrer" className="group">
-              <img
+              <LazyImage
                 src={`${process.env.PUBLIC_URL}/lindi.webp`}
                 alt="LINDI"
                 className="h-8 w-auto"
@@ -195,7 +196,7 @@ const Navbar = () => {
                   rel="noopener noreferrer"
                   className="flex flex-col items-center transform transition-transform duration-200 hover:scale-105 touch-manipulation"
                 >
-                  <img
+                  <LazyImage
                     src={`${process.env.PUBLIC_URL}/logo.webp`}
                     alt="Logo"
                     className="h-8 w-auto"
@@ -211,7 +212,7 @@ const Navbar = () => {
                   rel="noopener noreferrer" 
                   className="transform transition-transform duration-200 hover:scale-105 touch-manipulation"
                 >
-                  <img
+                  <LazyImage
                     src={`${process.env.PUBLIC_URL}/lindi.webp`}
                     alt="LINDI"
                     className="h-8 w-auto"

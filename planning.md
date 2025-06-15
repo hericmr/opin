@@ -33,7 +33,10 @@
   - [ ] Configurar compressão gzip/brotli
 - [x] Otimizar imagens
   - [x] Converter para WebP
-  - [ ] Implementar lazy loading
+  - [x] Implementar lazy loading
+    - Criado componente LazyImage com Intersection Observer
+    - Implementado placeholder durante carregamento
+    - Adicionado efeito de fade-in suave
   - [x] Otimizar `logo.png`, `logo192.png`, `logo512.png`
   - Convertidas para WebP com reduções significativas:
     - logo.png: 59.53% de redução
