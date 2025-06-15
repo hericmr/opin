@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/escolasindigenas/static/css/main.fc3fb6fe.css",
-    "main.js": "/escolasindigenas/static/js/main.7a6a367a.js",
+    "main.js": "/escolasindigenas/static/js/main.c0b3ac1a.js",
     "static/js/488.bcb61101.chunk.js": "/escolasindigenas/static/js/488.bcb61101.chunk.js",
     "index.html": "/escolasindigenas/index.html",
     "main.fc3fb6fe.css.map": "/escolasindigenas/static/css/main.fc3fb6fe.css.map",
-    "main.7a6a367a.js.map": "/escolasindigenas/static/js/main.7a6a367a.js.map",
+    "main.c0b3ac1a.js.map": "/escolasindigenas/static/js/main.c0b3ac1a.js.map",
     "488.bcb61101.chunk.js.map": "/escolasindigenas/static/js/488.bcb61101.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.fc3fb6fe.css",
-    "static/js/main.7a6a367a.js"
+    "static/js/main.c0b3ac1a.js"
   ]
 }
