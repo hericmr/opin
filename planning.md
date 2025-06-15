@@ -67,7 +67,7 @@
 - [ ] Configurar code splitting
 - [ ] Implementar tree shaking mais agressivo
 - [ ] Otimizar bundle size
-- [ ] Implementar cache para dados GeoJSON
+- [x] Implementar cache para dados GeoJSON (obs.: criado hook useGeoJSONCache para armazenar em cache os dados GeoJSON, evitando requisições repetidas)
 - [ ] Otimizar chamadas à API
   - [ ] Implementar rate limiting
   - [ ] Adicionar cache de requisições
@@ -115,20 +115,20 @@
    - [x] Otimização de imagens (conversão para WebP e lazy loading implementados)
    - [x] Implementação de lazy loading (componente LazyImage criado)
 
-3. **Fase 3 - Refatoração**
+3. **Fase 3 - Refatoração ✅**
    - [x] Refatoração do App.js (obs.: separado em componentes menores, extraída lógica de negócios e implementados hooks personalizados)
    - [x] Implementação de code splitting (code splitting com React.lazy/Suspense nas rotas principais)
    - [x] Adição de error boundaries (componente ErrorBoundary criado para capturar erros de renderização e exibir mensagem amigável ao usuário)
 
-4. **Fase 4 - Performance e Segurança**
-   - [ ] Implementação de cache
-   - [ ] Otimização de chamadas à API
-   - [ ] Melhorias de segurança
+4. **Fase 4 - Performance e Segurança (Em andamento)**
+   - [x] Implementação de cache (obs.: criado hook useGeoJSONCache para armazenar em cache os dados GeoJSON, evitando requisições repetidas)
+   - [ ] Otimização de chamadas à API (ex. rate limiting, cache de requisições, SSR quando possível)
+   - [ ] Melhorias de segurança (ex. validação rigorosa de dados, revisão de políticas de segurança do Supabase, remoção de logs sensíveis)
 
 5. **Fase 5 - Testes e Documentação**
    - [ ] Implementação de testes (obs.: pacotes de teste removidos por obsoletos)
-   - [ ] Atualização da documentação
-   - [ ] Configuração de monitoramento
+   - [ ] Atualização da documentação (ex. atualizar README.md, documentar componentes principais, criar guia de contribuição, documentar sistema de logging)
+   - [ ] Configuração de monitoramento (ex. métricas de performance, monitoramento de erros, alertas para problemas críticos)
 
 ## Métricas de Sucesso
 - Redução do bundle size em pelo menos 20%
