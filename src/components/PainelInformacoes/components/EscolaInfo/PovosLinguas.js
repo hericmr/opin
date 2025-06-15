@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Users, Languages } from 'lucide-react';
+import { Heart, MessageSquare } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import InfoItem from '../InfoItem';
 
@@ -9,17 +9,20 @@ const PovosLinguas = memo(({ escola }) => {
   return (
     <InfoSection 
       title="Povos e Línguas" 
-      icon={Users}
+      icon={Heart}
+      secondaryIcon={MessageSquare}
       defaultCollapsed={false}
     >
       <InfoItem 
         label="Povos Indígenas" 
         value={escola.povos_indigenas} 
         className="mb-2"
+        icon={Heart}
       />
       <InfoItem 
         label="Línguas Faladas" 
-        value={escola.linguas_faladas} 
+        value={escola.linguas_faladas}
+        icon={MessageSquare}
       />
     </InfoSection>
   );

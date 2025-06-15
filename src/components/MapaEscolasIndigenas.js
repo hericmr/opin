@@ -67,11 +67,11 @@ const MapaEscolasIndigenas = ({ dataPoints }) => {
       titulo: painelInfo?.titulo,
       tipo: painelInfo?.tipo,
       hasLink: !!painelInfo?.link_para_documentos,
-      linkValue: painelInfo?.link_para_documentos,
+    linkValue: painelInfo?.link_para_documentos,
       isInitialPanel: painelInfo === initialPanel,
       isNull: painelInfo === null,
       isUndefined: painelInfo === undefined
-    });
+  });
     console.groupEnd();
   }, [painelInfo, initialPanel]);
 
