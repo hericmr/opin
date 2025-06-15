@@ -1,4 +1,7 @@
 import React, { memo } from 'react';
+import { Globe } from 'lucide-react';
+import InfoSection from './components/InfoSection';
+import InfoItem from './components/InfoItem';
 
 const TerraIndigenaInfo = memo(({ terraIndigena }) => {
   if (!terraIndigena) {
@@ -15,31 +18,23 @@ const TerraIndigenaInfo = memo(({ terraIndigena }) => {
     return `${terraIndigena.municipio || ''}, ${terraIndigena.uf || ''}`.trim();
   };
 
-  const informacoes = [
-    terraIndigena.etnia && `Etnia: ${terraIndigena.etnia}`,
-    formatarLocalizacao(),
-    formatarSuperficie(),
-    terraIndigena.fase && `Fase: ${terraIndigena.fase}`,
-    terraIndigena.modalidade && `Modalidade: ${terraIndigena.modalidade}`,
-    terraIndigena.reestudo && `Reestudo: ${terraIndigena.reestudo}`,
-    terraIndigena.cr && `Coordenação Regional: ${terraIndigena.cr}`,
-    terraIndigena.faixa_fron && `Faixa de Fronteira: ${terraIndigena.faixa_fron}`,
-    terraIndigena.undadm_nom && `Unidade Administrativa: ${terraIndigena.undadm_nom}`,
-    terraIndigena.undadm_sig && `Sigla Unidade: ${terraIndigena.undadm_sig}`,
-    terraIndigena.dominio_un && `Domínio: ${terraIndigena.dominio_un}`,
-    terraIndigena.data_atual && `Data de Atualização: ${terraIndigena.data_atual}`,
-    terraIndigena.terrai_cod && `Código Terra Indígena: ${terraIndigena.terrai_cod}`,
-    terraIndigena.undadm_cod && `Código Unidade Administrativa: ${terraIndigena.undadm_cod}`
-  ].filter(Boolean);
-
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        {informacoes.map((info, index) => (
-          <p key={index} className="text-gray-700">{info}</p>
-        ))}
-      </div>
-    </div>
+    <InfoSection title="Informações da Terra Indígena" icon={Globe}>
+      <InfoItem label="Etnia" value={terraIndigena.etnia} />
+      <InfoItem label="Localização" value={formatarLocalizacao()} />
+      <InfoItem label="Superfície" value={formatarSuperficie()} />
+      <InfoItem label="Fase" value={terraIndigena.fase} />
+      <InfoItem label="Modalidade" value={terraIndigena.modalidade} />
+      <InfoItem label="Reestudo" value={terraIndigena.reestudo} />
+      <InfoItem label="Coordenação Regional" value={terraIndigena.cr} />
+      <InfoItem label="Faixa de Fronteira" value={terraIndigena.faixa_fron} />
+      <InfoItem label="Unidade Administrativa" value={terraIndigena.undadm_nom} />
+      <InfoItem label="Sigla Unidade" value={terraIndigena.undadm_sig} />
+      <InfoItem label="Domínio" value={terraIndigena.dominio_un} />
+      <InfoItem label="Data de Atualização" value={terraIndigena.data_atual} />
+      <InfoItem label="Código Terra Indígena" value={terraIndigena.terrai_cod} />
+      <InfoItem label="Código Unidade Administrativa" value={terraIndigena.undadm_cod} />
+    </InfoSection>
   );
 });
 
