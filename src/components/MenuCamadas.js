@@ -1,6 +1,5 @@
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, useEffect, memo, useCallback } from "react";
 import PropTypes from 'prop-types';
-import Draggable from 'react-draggable';
 
 const CAMADAS = {
   ESTADO_SP: { id: 'estadoSP', label: 'Estado de São Paulo', cor: '#10B981' },
@@ -15,21 +14,22 @@ const CAMADAS = {
 };
 
 const CabecalhoMenu = memo(({ onClose, onMinimize, isMobile, isMinimized }) => (
-  <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100 cursor-move bg-white">
+  <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100 bg-white">
     <h3 className="text-sm font-medium text-gray-800">Camadas do Mapa</h3>
     <div className="flex items-center gap-2">
-      {/* ➕ Agora permite minimizar também no mobile, se quiser */}
       <button
         onClick={onMinimize}
-        className="text-gray-500 hover:text-gray-700"
+        className="text-gray-500 hover:text-gray-700 transition-colors p-1"
         aria-label={isMinimized ? "Expandir" : "Minimizar"}
+        type="button"
       >
         {isMinimized ? "▾" : "▴"}
       </button>
       <button
         onClick={onClose}
-        className="text-gray-500 hover:text-gray-700"
+        className="text-gray-500 hover:text-gray-700 transition-colors p-1"
         aria-label="Fechar"
+        type="button"
       >
         ✕
       </button>
@@ -37,12 +37,15 @@ const CabecalhoMenu = memo(({ onClose, onMinimize, isMobile, isMinimized }) => (
   </div>
 ));
 
+CabecalhoMenu.displayName = 'CabecalhoMenu';
+
 const BotaoCamada = memo(({ camada, ativo, onClick, total }) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center gap-2 px-3 py-2 rounded-md transition ${
+    className={`w-full flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
       ativo ? 'bg-gray-50' : 'hover:bg-gray-50'
     }`}
+    type="button"
   >
     {camada.id === 'terrasIndigenas' ? (
       <div className="flex flex-col gap-1">
@@ -66,95 +69,101 @@ const BotaoCamada = memo(({ camada, ativo, onClick, total }) => (
   </button>
 ));
 
+BotaoCamada.displayName = 'BotaoCamada';
+
 const MenuCamadas = ({ estados, acoes, totalEscolas }) => {
   const [menuAberto, setMenuAberto] = useState(true);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [position, setPosition] = useState({ x: 24, y: 170 });
 
-  useEffect(() => {
-    const checkMobile = () => {
-      const mobile = window.innerWidth <= 768;
-      setIsMobile(mobile);
-      // Se mudar para mobile, ajusta a posição
-      if (mobile) {
-        setPosition({ x: 24, y: 120 });
-      }
-    };
-    window.addEventListener("resize", checkMobile);
-    checkMobile(); // Verifica no carregamento inicial
-    return () => window.removeEventListener("resize", checkMobile);
+  // Função para verificar se é mobile
+  const checkMobile = useCallback(() => {
+    setIsMobile(window.innerWidth <= 768);
   }, []);
 
-  // 🔸 Menu Mobile sempre aparece fixo no rodapé
+  useEffect(() => {
+    // Verifica no carregamento inicial
+    checkMobile();
+    
+    // Adiciona listener de resize
+    window.addEventListener("resize", checkMobile);
+    
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, [checkMobile]);
+
+  // Handlers para ações do menu
+  const handleMenuClose = useCallback(() => setMenuAberto(false), []);
+  const handleMenuOpen = useCallback(() => setMenuAberto(true), []);
+  const handleMinimize = useCallback(() => setIsMinimized(prev => !prev), []);
+
+  // Renderização para mobile
   if (isMobile) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 z-[20]">
+      <div className="fixed bottom-0 left-0 right-0 z-20">
         <div className="bg-white border-t border-gray-100 shadow-lg">
           <CabecalhoMenu
-            onClose={() => setMenuAberto(false)}
-            onMinimize={() => setIsMinimized(!isMinimized)}
+            onClose={handleMenuClose}
+            onMinimize={handleMinimize}
             isMobile={true}
             isMinimized={isMinimized}
           />
           {!isMinimized && (
-            <div className="p-2 flex flex-col gap-1">
-              <BotaoCamada camada={CAMADAS.ESTADO_SP} ativo={estados.estadoSP} onClick={acoes.toggleEstadoSP} />
-              <BotaoCamada camada={CAMADAS.ESCOLAS} ativo={estados.educacao} onClick={acoes.toggleEducacao} total={totalEscolas} />
-              <BotaoCamada camada={CAMADAS.TERRAS_INDIGENAS} ativo={estados.terrasIndigenas} onClick={acoes.toggleTerrasIndigenas} />
+            <div className="p-2 flex flex-col gap-1 max-h-60 overflow-y-auto">
+              <BotaoCamada 
+                camada={CAMADAS.ESTADO_SP} 
+                ativo={estados.estadoSP} 
+                onClick={acoes.toggleEstadoSP} 
+              />
+              <BotaoCamada 
+                camada={CAMADAS.ESCOLAS} 
+                ativo={estados.educacao} 
+                onClick={acoes.toggleEducacao} 
+                total={totalEscolas} 
+              />
+              <BotaoCamada 
+                camada={CAMADAS.TERRAS_INDIGENAS} 
+                ativo={estados.terrasIndigenas} 
+                onClick={acoes.toggleTerrasIndigenas} 
+              />
             </div>
           )}
         </div>
-
-        {/* Botão de abrir menu no mobile, caso feche */}
-        {!menuAberto && (
-          <button
-            onClick={() => setMenuAberto(true)}
-            className="fixed bottom-4 right-4 bg-white border border-gray-200 shadow-md p-2 rounded-full z-50"
-          >
-            ☰
-          </button>
-        )}
       </div>
     );
   }
 
-  // 🔸 Se menu fechado no desktop, mostra botão flutuante
-  if (!menuAberto) {
-    return (
-      <button
-        onClick={() => setMenuAberto(true)}
-        className="fixed bottom-4 right-4 bg-white border border-gray-200 shadow-md p-2 rounded-full z-[20]"
-      >
-        ☰
-      </button>
-    );
-  }
-
-  // 🔸 Menu Desktop
+  // Menu desktop fixo no topo direito
   return (
-    <Draggable
-      handle=".cursor-move"
-      position={position}
-      onStop={(e, data) => setPosition({ x: data.x, y: data.y })}
-      bounds="parent"
-    >
-      <div className="fixed w-64 bg-white border border-gray-100 rounded-lg shadow-lg z-[20]">
-        <CabecalhoMenu 
-          onClose={() => setMenuAberto(false)}
-          onMinimize={() => setIsMinimized(!isMinimized)}
-          isMobile={false}
-          isMinimized={isMinimized}
-        />
-        {!isMinimized && (
-          <div className="p-2 flex flex-col gap-1">
-            <BotaoCamada camada={CAMADAS.ESTADO_SP} ativo={estados.estadoSP} onClick={acoes.toggleEstadoSP} />
-            <BotaoCamada camada={CAMADAS.ESCOLAS} ativo={estados.educacao} onClick={acoes.toggleEducacao} total={totalEscolas} />
-            <BotaoCamada camada={CAMADAS.TERRAS_INDIGENAS} ativo={estados.terrasIndigenas} onClick={acoes.toggleTerrasIndigenas} />
-          </div>
-        )}
-      </div>
-    </Draggable>
+    <div className="fixed top-24 right-4 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
+      <CabecalhoMenu 
+        onClose={handleMenuClose}
+        onMinimize={handleMinimize}
+        isMobile={false}
+        isMinimized={isMinimized}
+      />
+      {!isMinimized && (
+        <div className="p-2 flex flex-col gap-1 max-h-96 overflow-y-auto">
+          <BotaoCamada 
+            camada={CAMADAS.ESTADO_SP} 
+            ativo={estados.estadoSP} 
+            onClick={acoes.toggleEstadoSP} 
+          />
+          <BotaoCamada 
+            camada={CAMADAS.ESCOLAS} 
+            ativo={estados.educacao} 
+            onClick={acoes.toggleEducacao} 
+            total={totalEscolas} 
+          />
+          <BotaoCamada 
+            camada={CAMADAS.TERRAS_INDIGENAS} 
+            ativo={estados.terrasIndigenas} 
+            onClick={acoes.toggleTerrasIndigenas} 
+          />
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -171,5 +180,7 @@ MenuCamadas.propTypes = {
   }).isRequired,
   totalEscolas: PropTypes.number
 };
+
+MenuCamadas.displayName = 'MenuCamadas';
 
 export default memo(MenuCamadas);

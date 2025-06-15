@@ -28,13 +28,11 @@ const transformarLinkGoogleDrive = (link) => {
 // Função utilitária para extrair ID do vídeo do YouTube
 const extrairIdYoutube = (url) => {
   if (!url || typeof url !== 'string') {
-    console.log("extrairIdYoutube: URL inválida ou não é string", { url, type: typeof url });
     return null;
   }
 
   // Remove parâmetros de query para simplificar (tudo após '?')
   const baseUrl = url.split('?')[0];
-  console.log("extrairIdYoutube: URL base (sem query):", baseUrl);
 
   // Padrões para pegar o ID de vídeo
   const patterns = [
@@ -46,79 +44,22 @@ const extrairIdYoutube = (url) => {
 
   for (const pattern of patterns) {
     const match = baseUrl.match(pattern);
-    console.log("extrairIdYoutube: Testando padrão", pattern, "Resultado:", match);
     if (match && match[1]) {
       const videoId = match[1];
-      console.log("extrairIdYoutube: ID encontrado:", videoId);
       return videoId;
     }
   }
 
-  console.log("extrairIdYoutube: Nenhum padrão encontrado para URL:", url);
   return null;
 };
 
 const PainelInformacoes = ({ painelInfo, closePainel }) => {
-  // Log inicial para verificar os props recebidos
-  console.group("PainelInformacoes - Props e Estado Inicial");
-  console.log("painelInfo recebido:", {
-    titulo: painelInfo?.titulo,
-    temLinkVideo: !!painelInfo?.link_para_videos,
-    linkVideo: painelInfo?.link_para_videos,
-    tipo: painelInfo?.tipo
-  });
-  console.groupEnd();
-  
-  // Logs detalhados para debug do link do PDF
-  console.group("Debug - Link do PDF");
-  console.log("1. Link original:", painelInfo?.link_para_documentos);
-  console.log("2. Tipo do link:", typeof painelInfo?.link_para_documentos);
-  console.log("3. É string?", typeof painelInfo?.link_para_documentos === 'string');
-  console.log("4. É Google Drive?", painelInfo?.link_para_documentos?.includes('drive.google.com/file/d/'));
-  if (painelInfo?.link_para_documentos) {
-    console.log("5. Link transformado:", painelInfo.link_para_documentos.replace('/view?usp=sharing', '/preview'));
-    console.log("6. Componente pai:", painelInfo.titulo);
-    console.log("7. Outros dados relevantes:", {
-      id: painelInfo.id,
-      tipo: painelInfo.tipo,
-      temLink: !!painelInfo.link_para_documentos
-    });
-  }
-  console.groupEnd();
-  
-  // Logs detalhados para debug do link do vídeo
-  console.group("Debug - Link do Vídeo");
-  if (painelInfo?.link_para_videos) {
-    console.log("1. Link original:", painelInfo.link_para_videos);
-    console.log("2. Tipo do link:", typeof painelInfo.link_para_videos);
-    console.log("3. É string?", typeof painelInfo.link_para_videos === 'string');
-    console.log("4. É YouTube?", 
-      painelInfo.link_para_videos.includes('youtube.com') || 
-      painelInfo.link_para_videos.includes('youtu.be')
-    );
-    
-    const videoId = extrairIdYoutube(painelInfo.link_para_videos);
-    console.log("5. ID do vídeo extraído:", videoId);
-    
-    if (videoId) {
-      const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-      console.log("6. Link de embed final:", embedUrl);
-    }
-    
-    console.log("7. Componente pai:", painelInfo.titulo);
-  } else {
-    console.log("link_para_videos não está definido no painelInfo");
-  }
-  console.groupEnd();
-  
   const painelRef = useRef(null);
   const { isVisible, isMobile } = usePainelVisibility(painelInfo);
   const [isMaximized, setIsMaximized] = useState(false);
   const [iframeError, setIframeError] = useState(false);
   const [useGoogleDocsViewer, setUseGoogleDocsViewer] = useState(false);
   const iframeRef = useRef(null);
-  
-  console.log("PainelInformacoes - visibility state:", { isVisible, isMobile, isMaximized });
   
   const { isAudioEnabled, toggleAudio } = useAudio(painelInfo?.audioUrl);
   const { gerarLinkCustomizado, copiarLink, compartilhar } = useShare(painelInfo);
@@ -135,12 +76,10 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
     if (!iframe) return;
 
     const handleLoad = () => {
-      console.log("Iframe carregado com sucesso");
       setIframeError(false);
     };
 
     const handleError = () => {
-      console.log("Erro ao carregar iframe - tentando Google Docs Viewer");
       setIframeError(true);
       setUseGoogleDocsViewer(true);
     };
@@ -156,20 +95,15 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
 
   // Efeito para processar o link do vídeo
   const videoId = painelInfo?.link_para_videos ? extrairIdYoutube(painelInfo.link_para_videos) : null;
-  console.log("PainelInformacoes - videoId processado:", videoId);
 
   // Efeito para monitorar mudanças no link do vídeo
   useEffect(() => {
     if (painelInfo?.link_para_videos) {
-      console.log("PainelInformacoes - link_para_videos mudou:", {
-        link: painelInfo.link_para_videos,
-        videoId: extrairIdYoutube(painelInfo.link_para_videos)
-      });
+      // ... existing code ...
     }
   }, [painelInfo?.link_para_videos]);
 
   if (!painelInfo) {
-    console.log("PainelInformacoes: painelInfo é null ou undefined");
     return null;
   }
 
@@ -181,12 +115,10 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
   `;
   
   const visibilityClasses = isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0";
-  console.log("PainelInformacoes - computed classes:", { baseClasses, visibilityClasses });
 
   // Determina se é uma terra indígena, escola ou painel introdutório
   const isTerraIndigena = painelInfo.tipo === 'terra_indigena';
   const isIntro = painelInfo.titulo === 'Sobre o site';
-  console.log("PainelInformacoes - tipo:", { isTerraIndigena, isIntro });
 
   return (
     <div
@@ -219,7 +151,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
               <TerraIndigenaInfo terraIndigena={painelInfo} />
             ) : (
               <>
-                <EscolaInfo escola={painelInfo} />
+              <EscolaInfo escola={painelInfo} />
                 {painelInfo.link_para_documentos && (
                   <div className="mt-6">
                     <h3 className="text-lg font-semibold text-green-800 mb-2">Produções e materiais da escola:</h3>
@@ -297,7 +229,6 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
                     <h3 className="text-lg font-semibold text-green-800 mb-4">Vídeo da escola:</h3>
                     {(() => {
                       const videoId = extrairIdYoutube(painelInfo.link_para_videos);
-                      console.log("Renderizando vídeo - ID:", videoId);
                       
                       return videoId ? (
                         <div className="rounded-lg overflow-hidden shadow-lg border border-green-300">

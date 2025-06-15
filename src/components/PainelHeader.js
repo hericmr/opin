@@ -1,9 +1,8 @@
 import React from "react";
 import { X, Maximize2, Minimize2 } from "lucide-react";
-import usePainelVisibility from "./hooks/usePainelVisibility";
 
 const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized }) => {
-  const { isMobile } = usePainelVisibility();
+  const isMobile = window.innerWidth <= 640;
 
   return (
     <header className="relative px-8 py-6 border-b border-green-100">
