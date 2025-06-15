@@ -49,7 +49,6 @@ const LazyImage = ({
       ref={imgRef}
       className={`relative overflow-hidden ${className}`}
       style={{ 
-        backgroundColor: '#f0f0f0',
         transition: 'opacity 0.3s ease-in-out'
       }}
     >

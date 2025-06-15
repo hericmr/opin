@@ -151,3 +151,9 @@ Heric Rodrigues - [heric.moura@unifesp.br](mailto:heric.moura@unifesp.br)
 
 ---
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## Conversões e Limpeza de Dependências
+
+As conversões de arquivos GeoJSON e imagens (para WebP) já foram realizadas durante o processo de otimização do projeto. Por isso, as dependências e scripts auxiliares utilizados para essas tarefas (como `sharp`, `geojson` e scripts de conversão) foram removidos do projeto para manter o ambiente de produção limpo e enxuto.
+
+Essas ferramentas só são necessárias caso novas conversões sejam feitas no futuro. Para rodar o site em produção, não é preciso instalar essas dependências.
