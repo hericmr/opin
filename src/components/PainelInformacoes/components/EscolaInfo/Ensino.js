@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { GraduationCap } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import InfoItem from '../InfoItem';
 import BooleanValue from '../BooleanValue';
@@ -8,7 +8,7 @@ const Ensino = memo(({ escola }) => {
   if (!escola) return null;
 
   return (
-    <InfoSection title="Ensino" icon={GraduationCap}>
+    <InfoSection title="Ensino" icon={Sparkles}>
       <InfoItem label="Modalidade de Ensino" value={escola.modalidade_ensino} />
       <InfoItem label="Número de Alunos" value={escola.numero_alunos} />
       <InfoItem label="Disciplinas Bilíngues" value={escola.disciplinas_bilingues} />

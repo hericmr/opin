@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { UserCog, Users } from 'lucide-react';
+import { UsersRound, Star } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import InfoItem from '../InfoItem';
 import BooleanValue from '../BooleanValue';
@@ -8,7 +8,7 @@ const GestaoProfessores = memo(({ escola }) => {
   if (!escola) return null;
 
   return (
-    <InfoSection title="Gestão e Professores" icon={UserCog}>
+    <InfoSection title="Gestão e Professores" icon={UsersRound} secondaryIcon={Star}>
       <InfoItem label="Gestão/Nome" value={escola.gestao} />
       <InfoItem label="Outros Funcionários" value={escola.outros_funcionarios} />
       <InfoItem label="Professores Indígenas" value={escola.professores_indigenas} />
