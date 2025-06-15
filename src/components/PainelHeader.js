@@ -1,5 +1,6 @@
 import React from "react";
 import { X, Maximize2, Minimize2 } from "lucide-react";
+import { capitalizeWords } from "../utils/textFormatting";
 
 const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized }) => {
   const isMobile = window.innerWidth <= 640;
@@ -11,7 +12,7 @@ const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized }) => {
           id="painel-titulo"
           className="text-3xl font-semibold text-gray-900 leading-tight tracking-normal"
         >
-          {titulo}
+          {capitalizeWords(titulo)}
         </h2>
       </div>
 
