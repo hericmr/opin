@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from './supabaseClient';
-import MapaEscolasIndigenas from "./components/MapaEscolasIndigenas";
 import Navbar from "./components/Navbar";
 import PainelInformacoes from "./components/PainelInformacoes";
 import AddLocationButton from "./components/AddLocationButton";
-import ConteudoCartografia from "./components/ConteudoCartografia";
-import AdminPanel from "./components/AdminPanel";
 import Papa from 'papaparse';
-import EditLocationPanel from './components/EditLocationPanel';
-import TerrasIndigenas from './components/TerrasIndigenas';
-import Marcadores from './components/Marcadores';
 import { useShare } from './components/hooks/useShare';
 import './App.css';
+
+// Usar React.lazy para os componentes grandes
+const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));
+const ConteudoCartografia = React.lazy(() => import("./components/ConteudoCartografia"));
+const AdminPanel = React.lazy(() => import("./components/AdminPanel"));
+const EditLocationPanel = React.lazy(() => import("./components/EditLocationPanel"));
+const TerrasIndigenas = React.lazy(() => import("./components/TerrasIndigenas"));
+const Marcadores = React.lazy(() => import("./components/Marcadores"));
 
 const LoadingScreen = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-green-900 text-white">
@@ -384,46 +386,48 @@ const AppContent = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar onConteudoClick={() => navigate('/conteudo')} />
-      <Routes>
-        <Route 
-          path="/" 
-          element={
-            <main className="flex-grow">
-              <MapaEscolasIndigenas 
-                dataPoints={
-                  new URLSearchParams(location.search).get('panel')
-                    ? dataPoints
-                    : dataPoints.filter(point => point.pontuacao >= 0)
-                } 
+      <Suspense fallback={<LoadingScreen />}>
+        <Routes>
+          <Route 
+            path="/" 
+            element={
+              <main className="flex-grow">
+                <MapaEscolasIndigenas 
+                  dataPoints={
+                    new URLSearchParams(location.search).get('panel')
+                      ? dataPoints
+                      : dataPoints.filter(point => point.pontuacao >= 0)
+                  } 
+                />
+                <AddLocationButton onLocationAdded={handleLocationAdded} />
+              </main>
+            } 
+          />
+          <Route 
+            path="/conteudo" 
+            element={<ConteudoCartografia locations={dataPoints} />} 
+          />
+          <Route 
+            path="/admin" 
+            element={<AdminPanel />} 
+          />
+          <Route 
+            path="/edit/:id" 
+            element={
+              <EditLocationPanel 
+                location={getLocationById(new URLSearchParams(location.search).get('id'))}
+                onClose={() => navigate('/')}
+                onSave={() => {
+                  navigate('/');
+                  window.location.reload();
+                }}
               />
-              <AddLocationButton onLocationAdded={handleLocationAdded} />
-            </main>
-          } 
-        />
-        <Route 
-          path="/conteudo" 
-          element={<ConteudoCartografia locations={dataPoints} />} 
-        />
-        <Route 
-          path="/admin" 
-          element={<AdminPanel />} 
-        />
-        <Route 
-          path="/edit/:id" 
-          element={
-            <EditLocationPanel 
-              location={getLocationById(new URLSearchParams(location.search).get('id'))}
-              onClose={() => navigate('/')}
-              onSave={() => {
-                navigate('/');
-                window.location.reload();
-              }}
-            />
-          } 
-        />
-        <Route path="/terras" element={<TerrasIndigenas />} />
-        <Route path="/marcadores" element={<Marcadores />} />
-      </Routes>
+            } 
+          />
+          <Route path="/terras" element={<TerrasIndigenas />} />
+          <Route path="/marcadores" element={<Marcadores />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 };
