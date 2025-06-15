@@ -12,8 +12,6 @@ import Bairros from "./Bairros";
 import TerrasIndigenas from "./TerrasIndigenas";
 import EstadoSP from "./EstadoSP";
 import MenuCamadas from "./MenuCamadas";
-import PainelInformacoes from "./PainelInformacoes";
-import detalhesIntro from "./detalhesInfo"; 
 import "./MapaEscolasIndigenas.css";
 
 // Função para converter título em slug
@@ -209,11 +207,6 @@ const MapaEscolasIndigenas = ({ dataPoints }) => {
 
       {painelInfo && (
         <>
-          {console.log("MapaEscolasIndigenas - Renderizando PainelInformacoes com:", {
-            painelInfo,
-            hasLink: painelInfo?.link_para_documentos,
-            linkValue: painelInfo?.link_para_documentos
-          })}
           <PainelInformacoes painelInfo={painelInfo} closePainel={fecharPainel} />
         </>
       )}
