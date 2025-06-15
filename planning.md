@@ -56,7 +56,7 @@
 ## 5. Refatoração de Código
 - [x] Refatorar `App.js` (439 linhas)
   - [x] Separar em componentes menores
-  - [x] Extrair lógica de negócios
+  - [x] Extrair lógica de negócios (obs.: extraídas funções de manipulação de dados, cálculos e regras de negócio (por exemplo, filtragem, agregação, transformação de dados) para hooks personalizados ou utilitários, a fim de separar a lógica de negócios da interface.)
   - [x] Implementar hooks personalizados
 - [ ] Implementar lazy loading para componentes grandes
 - [ ] Adicionar error boundaries
