@@ -86,9 +86,9 @@ const Navbar = () => {
               className="flex flex-col items-center group transition-transform duration-200 hover:scale-105"
             >
               <img
-                src="/escolasindigenas/logo.png"
-                alt="Logo da Unifesp"
-                className="h-6 lg:h-8 w-auto object-contain rounded-lg"
+                src={`${process.env.PUBLIC_URL}/logo.webp`}
+                alt="Logo"
+                className="h-8 w-auto"
               />
               <span className="text-[8px] lg:text-[10px] tracking-wide font-[Caveat] text-amber-200 mt-0.5 text-center leading-tight">
                 é terra indígena!
@@ -96,10 +96,9 @@ const Navbar = () => {
             </a>
             <a href="https://www.unifesp.br/lindi" target="_blank" rel="noopener noreferrer" className="group">
               <img
-                src="/escolasindigenas/lindi.png"
-                alt="Logo LINDI"
-                className="h-10 lg:h-12 w-auto transform group-hover:scale-105 transition-transform duration-200"
-                aria-label="Logo LINDI"
+                src={`${process.env.PUBLIC_URL}/lindi.webp`}
+                alt="LINDI"
+                className="h-8 w-auto"
               />
             </a>
           </div>
@@ -197,9 +196,9 @@ const Navbar = () => {
                   className="flex flex-col items-center transform transition-transform duration-200 hover:scale-105 touch-manipulation"
                 >
                   <img
-                    src="/escolasindigenas/logo.png"
-                    alt="Logo da Unifesp"
-                    className="h-12 w-auto object-contain rounded-xl mb-1"
+                    src={`${process.env.PUBLIC_URL}/logo.webp`}
+                    alt="Logo"
+                    className="h-8 w-auto"
                   />
                   <span className="text-xs tracking-wide font-[Caveat] text-amber-200 text-center leading-tight">
                     Licenciatura<br />Intercultural Indígena
@@ -213,10 +212,9 @@ const Navbar = () => {
                   className="transform transition-transform duration-200 hover:scale-105 touch-manipulation"
                 >
                   <img
-                    src="/escolasindigenas/lindi.png"
-                    alt="Logo LINDI"
-                    className="h-16 w-auto"
-                    aria-label="Logo LINDI"
+                    src={`${process.env.PUBLIC_URL}/lindi.webp`}
+                    alt="LINDI"
+                    className="h-8 w-auto"
                   />
                 </a>
               </div>
