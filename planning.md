@@ -107,28 +107,28 @@
 
 1. **Fase 1 - Limpeza Inicial ✅**
    - [x] Remoção de arquivos obsoletos
-   - [x] Remoção de dependências não utilizadas
+   - [x] Remoção de dependências não utilizadas (incluindo ferramentas de conversão e pacotes de teste)
    - [ ] Implementação do sistema de logging (adiado)
 
-2. **Fase 2 - Otimização de Assets**
-   - Otimização de GeoJSON
-   - Otimização de imagens
-   - Implementação de lazy loading
+2. **Fase 2 - Otimização de Assets ✅**
+   - [x] Otimização de GeoJSON (simplificação e conversão realizadas)
+   - [x] Otimização de imagens (conversão para WebP e lazy loading implementados)
+   - [x] Implementação de lazy loading (componente LazyImage criado)
 
 3. **Fase 3 - Refatoração**
-   - Refatoração do App.js
-   - Implementação de code splitting
-   - Adição de error boundaries
+   - [ ] Refatoração do App.js
+   - [ ] Implementação de code splitting
+   - [ ] Adição de error boundaries
 
 4. **Fase 4 - Performance e Segurança**
-   - Implementação de cache
-   - Otimização de chamadas à API
-   - Melhorias de segurança
+   - [ ] Implementação de cache
+   - [ ] Otimização de chamadas à API
+   - [ ] Melhorias de segurança
 
 5. **Fase 5 - Testes e Documentação**
-   - Implementação de testes
-   - Atualização da documentação
-   - Configuração de monitoramento
+   - [ ] Implementação de testes (obs.: pacotes de teste removidos por obsoletos)
+   - [ ] Atualização da documentação
+   - [ ] Configuração de monitoramento
 
 ## Métricas de Sucesso
 - Redução do bundle size em pelo menos 20%
