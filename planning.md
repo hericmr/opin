@@ -59,7 +59,7 @@
   - [x] Extrair lógica de negócios (obs.: extraídas funções de manipulação de dados, cálculos e regras de negócio (por exemplo, filtragem, agregação, transformação de dados) para hooks personalizados ou utilitários, a fim de separar a lógica de negócios da interface.)
   - [x] Implementar hooks personalizados
 - [x] Implementar lazy loading para componentes grandes (code splitting com React.lazy/Suspense nas rotas principais)
-- [ ] Adicionar error boundaries
+- [x] Adicionar error boundaries (componente ErrorBoundary criado para capturar erros de renderização e exibir mensagem amigável ao usuário)
 - [ ] Implementar React.memo() para componentes com renderização frequente
 - [ ] Criar sistema de cache para dados do Supabase
 
@@ -118,7 +118,7 @@
 3. **Fase 3 - Refatoração**
    - [x] Refatoração do App.js (obs.: separado em componentes menores, extraída lógica de negócios e implementados hooks personalizados)
    - [x] Implementação de code splitting (code splitting com React.lazy/Suspense nas rotas principais)
-   - [ ] Adição de error boundaries
+   - [x] Adição de error boundaries (componente ErrorBoundary criado para capturar erros de renderização e exibir mensagem amigável ao usuário)
 
 4. **Fase 4 - Performance e Segurança**
    - [ ] Implementação de cache
