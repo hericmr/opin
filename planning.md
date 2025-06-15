@@ -11,7 +11,14 @@
 - [x] Avaliar e possivelmente remover `prop-types` se não estiver em uso ativo (mantido - em uso ativo)
 - [x] Desinstalar bibliotecas e ferramentas de conversão (sharp, geojson) (conversões já realizadas)
 - [x] Atualizar todas as dependências para suas versões mais recentes e estáveis (via npm update --save) (obs.: atualizações de major (ex. react 19, react-router-dom 6, tailwind 4) foram adiadas para evitar breaking changes)
-- [ ] Remover dependências de desenvolvimento não utilizadas
+- [x] Remover dependências de desenvolvimento não utilizadas (obs.: removidos pacotes de teste (Jest, @testing-library/*) e arquivos de teste (ex. src/App.test.js) por estarem obsoletos e não serem mais úteis para o projeto)
+  - Revisão de dependências de desenvolvimento (saída de npm ls --dev):
+    - Pacotes de teste (candidatos a remoção se não estiverem sendo usados):
+      - @testing-library/jest-dom, @testing-library/react, @testing-library/user-event, jest, jest-environment-jsdom
+    - Pacotes de build (candidatos a remoção se não forem mais necessários):
+      - babel-loader, babel-preset-react-app, autoprefixer, postcss, tailwindcss, react-app-rewired, react-scripts, gh-pages (se não for mais usado para deploy)
+    - Outros (revisar se não estão sendo usados):
+      - dompurify, leaflet-gpx, papaparse, public-google-sheets-parser, react-quill, react-rnd, slugify, url, web-vitals (se não for mais monitorado), etc.
 
 ## 3. Sistema de Logging (Adiado - faremos isso por ultimo)
 - [ ] Implementar sistema de logging configurável (adiado para fase posterior)
