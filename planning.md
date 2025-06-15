@@ -9,7 +9,8 @@
 ## 2. Otimização de Dependências ✅
 - [x] Remover `geojson` (redundante com Leaflet)
 - [x] Avaliar e possivelmente remover `prop-types` se não estiver em uso ativo (mantido - em uso ativo)
-- [ ] Atualizar todas as dependências para suas versões mais recentes e estáveis
+- [x] Desinstalar bibliotecas e ferramentas de conversão (sharp, geojson) (conversões já realizadas)
+- [x] Atualizar todas as dependências para suas versões mais recentes e estáveis (via npm update --save) (obs.: atualizações de major (ex. react 19, react-router-dom 6, tailwind 4) foram adiadas para evitar breaking changes)
 - [ ] Remover dependências de desenvolvimento não utilizadas
 
 ## 3. Sistema de Logging (Adiado - faremos isso por ultimo)
@@ -88,12 +89,12 @@
 - [ ] Adicionar monitoramento de erros
 - [ ] Configurar alertas para problemas críticos
 
-## 11. Limpeza de Dependências e Ferramentas de Conversão
-- [ ] Desinstalar bibliotecas e ferramentas utilizadas apenas para conversão de arquivos, pois as conversões já foram realizadas:
+## 11. Limpeza de Dependências e Ferramentas de Conversão ✅
+- [x] Desinstalar bibliotecas e ferramentas utilizadas apenas para conversão de arquivos, pois as conversões já foram realizadas:
   - Remover `sharp` (otimização de imagens)
   - Remover `geojson` (conversão e simplificação de GeoJSON)
   - Remover outros programas/scripts auxiliares usados para conversão
-- [ ] Documentar no README.md que as conversões foram feitas e que essas dependências não são mais necessárias para rodar o site em produção
+- [x] Documentar no README.md que as conversões foram feitas e que essas dependências não são mais necessárias para rodar o site em produção
 
 ## Ordem de Implementação
 
