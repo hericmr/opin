@@ -90,8 +90,8 @@ const Navbar = () => {
                 alt="Logo da Unifesp"
                 className="h-6 lg:h-8 w-auto object-contain rounded-lg"
               />
-              <span className="text-[9px] lg:text-[10px] tracking-wide font-[Caveat] text-amber-200 mt-0.5 text-center leading-tight">
-                Licenciatura<br className="lg:hidden" /> Intercultural Indígena
+              <span className="text-[8px] lg:text-[10px] tracking-wide font-[Caveat] text-amber-200 mt-0.5 text-center leading-tight">
+                é terra indígena!
               </span>
             </a>
             <a href="https://www.unifesp.br/lindi" target="_blank" rel="noopener noreferrer" className="group">
