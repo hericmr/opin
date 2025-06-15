@@ -86,8 +86,8 @@ const MapaEscolasIndigenas = ({ dataPoints }) => {
         
         const [bairrosResponse, terrasIndigenasResponse, estadoSPResponse] = await Promise.all([
           fetch("/escolasindigenas/bairros.geojson"),
-          fetch("/escolasindigenas/terras_indigenas.geojson"),
-          fetch("/escolasindigenas/SP.geojson")
+          fetch("/escolasindigenas/terras_indigenas_simplified.geojson"),
+          fetch("/escolasindigenas/SP_simplified.geojson")
         ]);
 
         console.log("Respostas recebidas:", {
