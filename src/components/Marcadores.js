@@ -5,6 +5,7 @@ import L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import { capitalizeWords } from "../utils/textFormatting";
 
 // Constante para definir a proximidade entre marcadores (em graus)
 const PROXIMITY_THRESHOLD = 0.00005;
@@ -260,8 +261,8 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
         zIndexOffset: 1000
       });
 
-      // Adiciona o tooltip
-      marker.bindTooltip(ponto.titulo, {
+      // Adiciona o tooltip com o título capitalizado
+      marker.bindTooltip(capitalizeWords(ponto.titulo), {
         className: "bg-white/95 text-gray-800 text-sm font-medium px-3 py-1.5 rounded shadow-sm border border-gray-100",
         direction: "top",
         offset: [0, -10],
