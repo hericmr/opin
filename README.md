@@ -41,15 +41,21 @@ npm start
 ```
 src/
 ├── components/
-│   ├── components/              # Subcomponentes modulares
-│   │   ├── EscolaInfo/         # Informações da escola
-│   │   │   ├── BasicInfo.js    # Dados básicos
-│   │   │   ├── PovosLinguas.js # Informações étnicas
-│   │   │   ├── Ensino.js       # Dados educacionais
+│   ├── PainelInformacoes/           # Componente principal de informações
+│   │   ├── components/              # Subcomponentes modulares
+│   │   │   ├── EscolaInfo/         # Informações da escola
+│   │   │   │   ├── BasicInfo.js    # Dados básicos
+│   │   │   │   ├── PovosLinguas.js # Informações étnicas
+│   │   │   │   ├── Ensino.js       # Dados educacionais
+│   │   │   │   └── ...
+│   │   │   ├── InfoSection.js      # Seção de informação reutilizável
+│   │   │   ├── InfoItem.js         # Item de informação
 │   │   │   └── ...
-│   │   ├── InfoSection.js      # Seção de informação reutilizável
-│   │   ├── InfoItem.js         # Item de informação
-│   │   └── ...
+│   │   ├── hooks/                  # Hooks customizados
+│   │   │   ├── usePainelVisibility.js
+│   │   │   ├── useAudio.js
+│   │   │   └── ...
+│   │   └── index.js               # Componente principal
 │   └── ...
 ├── data/                          # Dados estáticos
 │   ├── escolas.csv
@@ -58,6 +64,13 @@ src/
 ```
 
 ## 🎯 Componentes Principais
+
+### PainelInformacoes
+Componente central que gerencia a exibição de informações detalhadas sobre escolas e terras indígenas. Utiliza uma arquitetura modular com:
+
+- **Componentes Modulares**: Separação clara de responsabilidades
+- **Hooks Customizados**: Gerenciamento de estado e lógica reutilizável
+- **Componentes Utilitários**: Elementos reutilizáveis como `InfoSection` e `InfoItem`
 
 ### Hooks Customizados
 - `usePainelVisibility`: Controla visibilidade do painel
