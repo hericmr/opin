@@ -11,7 +11,6 @@ const BasicInfo = memo(({ escola }) => {
   return (
     <InfoSection title="Localização" icon={MapPin}>
       <div className="flex flex-col gap-2">
-
         <InfoItem label="Município" value={capitalizeWords(escola.municipio)} />
         <InfoItem label="Endereço" value={normalizeAddress(escola.endereco)} />
         <InfoItem label="Terra Indígena" value={escola.terra_indigena} />
