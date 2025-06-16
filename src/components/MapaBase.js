@@ -28,8 +28,8 @@ const MapaBase = ({ children }) => {
       >
         {/* TileLayer com o mapa de fundo */}
         <TileLayer
-          url="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-        />
+        url="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+      />
 
         {/* Conteúdo adicional do mapa (marcadores, camadas, etc.) */}
         {children}
