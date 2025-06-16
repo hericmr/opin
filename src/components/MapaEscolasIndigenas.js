@@ -5,7 +5,7 @@
  * @param {Array} props.dataPoints - Array de pontos de dados das escolas
  * @returns {React.ReactElement} - Componente renderizado
  */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import MapaBase from "./MapaBase";
 import Marcadores from "./Marcadores";
 import Bairros from "./Bairros";
@@ -38,17 +38,15 @@ const MapaEscolasIndigenas = ({ dataPoints }) => {
     } : 'Nenhum ponto'
   } : 'Nenhum dataPoint');
 
-  const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = useMemo(() => new URLSearchParams(window.location.search), []);
   const panel = urlParams.get('panel');
-  var initialPanel = detalhesIntro;
-  console.log("detalhesIntro:", detalhesIntro);
-  if (panel && panel !== '' && dataPoints && dataPoints.length > 0) {
-    const pointFound = dataPoints.find((item) => criarSlug(item.titulo) === panel);
-    if (pointFound != null) {
-      initialPanel = pointFound;
+  const initialPanel = useMemo(() => {
+    if (panel && panel !== '' && dataPoints && dataPoints.length > 0) {
+      const pointFound = dataPoints.find((item) => criarSlug(item.titulo) === panel);
+      return pointFound || detalhesIntro;
     }
-  }
-  console.log("initialPanel:", initialPanel);
+    return detalhesIntro;
+  }, [panel, dataPoints]);
 
   const [geojsonData, setGeojsonData] = useState(null);
   const [terrasIndigenasData, setTerrasIndigenasData] = useState(null);
@@ -60,6 +58,14 @@ const MapaEscolasIndigenas = ({ dataPoints }) => {
   });
   const [painelInfo, setPainelInfo] = useState(initialPanel);
   
+  // Memoize escolasVisiveis para evitar recálculos desnecessários
+  const escolasVisiveis = useMemo(() => 
+    dataPoints ? dataPoints.filter(point => point.pontuacao >= 0) : [],
+    [dataPoints]
+  );
+  
+  const totalEscolas = useMemo(() => escolasVisiveis.length, [escolasVisiveis]);
+
   // Adicionar useEffect para monitorar mudanças no painelInfo
   useEffect(() => {
     console.group("MapaEscolasIndigenas - painelInfo state changed");
@@ -75,37 +81,23 @@ const MapaEscolasIndigenas = ({ dataPoints }) => {
     console.groupEnd();
   }, [painelInfo, initialPanel]);
 
-  // Calcula o total de escolas visíveis no mapa (com pontuação >= 0)
-  const escolasVisiveis = dataPoints ? dataPoints.filter(point => point.pontuacao >= 0) : [];
-  const totalEscolas = escolasVisiveis.length;
-
+  // Otimizar o carregamento dos GeoJSONs
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
     const fetchGeoJSON = async () => {
       try {
-        console.log("Iniciando carregamento dos arquivos GeoJSON...");
-        
         const [bairrosResponse, terrasIndigenasResponse, estadoSPResponse] = await Promise.all([
-          fetch(`${process.env.PUBLIC_URL}/bairros.geojson`),
-          fetch(`${process.env.PUBLIC_URL}/terras_indigenas_simplified.geojson`),
-          fetch(`${process.env.PUBLIC_URL}/SP_simplified.geojson`)
+          fetch(`${process.env.PUBLIC_URL}/bairros.geojson`, { signal: controller.signal }),
+          fetch(`${process.env.PUBLIC_URL}/terras_indigenas_simplified.geojson`, { signal: controller.signal }),
+          fetch(`${process.env.PUBLIC_URL}/SP_simplified.geojson`, { signal: controller.signal })
         ]);
 
-        console.log("Respostas recebidas:", {
-          bairros: bairrosResponse.status,
-          terrasIndigenas: terrasIndigenasResponse.status,
-          estadoSP: estadoSPResponse.status
-        });
+        if (!isMounted) return;
 
-        if (!bairrosResponse.ok) {
-          console.error(`Erro ao carregar GeoJSON dos bairros: HTTP status ${bairrosResponse.status}`);
-          return;
-        }
-        if (!terrasIndigenasResponse.ok) {
-          console.error(`Erro ao carregar GeoJSON das terras indígenas: HTTP status ${terrasIndigenasResponse.status}`);
-          return;
-        }
-        if (!estadoSPResponse.ok) {
-          console.error(`Erro ao carregar GeoJSON do estado: HTTP status ${estadoSPResponse.status}`);
+        if (!bairrosResponse.ok || !terrasIndigenasResponse.ok || !estadoSPResponse.ok) {
+          console.error('Erro ao carregar GeoJSONs');
           return;
         }
 
@@ -115,37 +107,23 @@ const MapaEscolasIndigenas = ({ dataPoints }) => {
           estadoSPResponse.json()
         ]);
 
-        console.log("Dados GeoJSON carregados:", {
-          bairros: bairrosData ? "OK" : "Falha",
-          terrasIndigenas: terrasIndigenasData ? "OK" : "Falha",
-          estadoSP: estadoSPData ? "OK" : "Falha"
-        });
+        if (!isMounted) return;
 
-        if (!bairrosData || !bairrosData.features) {
-          console.error("Dados dos bairros inválidos:", bairrosData);
-          return;
-        }
-
-        if (!terrasIndigenasData || !terrasIndigenasData.features) {
-          console.error("Dados das terras indígenas inválidos:", terrasIndigenasData);
-          return;
-        }
-
-        if (!estadoSPData || !estadoSPData.features) {
-          console.error("Dados do estado inválidos:", estadoSPData);
-          return;
-        }
-
-        setGeojsonData(bairrosData);
-        setTerrasIndigenasData(terrasIndigenasData);
-        setEstadoSPData(estadoSPData);
-
-        console.log("Estados atualizados com os dados GeoJSON");
+        if (bairrosData?.features) setGeojsonData(bairrosData);
+        if (terrasIndigenasData?.features) setTerrasIndigenasData(terrasIndigenasData);
+        if (estadoSPData?.features) setEstadoSPData(estadoSPData);
       } catch (error) {
-        console.error("Erro ao carregar GeoJSON:", error);
+        if (error.name === 'AbortError') return;
+        console.error('Erro ao carregar GeoJSONs:', error);
       }
     };
+
     fetchGeoJSON();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
   }, []);
 
   // Adicionar logs para verificar quando os dados são renderizados
@@ -157,41 +135,27 @@ const MapaEscolasIndigenas = ({ dataPoints }) => {
     });
   }, [geojsonData, terrasIndigenasData, estadoSPData]);
 
-  const abrirPainel = (info) => {
-    console.group("MapaEscolasIndigenas - abrirPainel");
-    console.log("Info recebida:", {
-      titulo: info?.titulo,
-      tipo: info?.tipo,
-      hasLink: !!info?.link_para_documentos,
-      linkValue: info?.link_para_documentos
-    });
+  // Otimizar a função de abrir painel
+  const abrirPainel = useCallback((info) => {
+    if (!info) return;
     setPainelInfo(info);
-    console.log("painelInfo atualizado");
-    console.groupEnd();
-  };
+  }, []);
 
-  const fecharPainel = () => {
-    console.group("MapaEscolasIndigenas - fecharPainel");
-    console.log("Estado anterior:", {
-      titulo: painelInfo?.titulo,
-      tipo: painelInfo?.tipo,
-      hasLink: !!painelInfo?.link_para_documentos
-    });
+  // Otimizar a função de fechar painel
+  const fecharPainel = useCallback(() => {
     setPainelInfo(null);
-    console.log("painelInfo definido como null");
-    console.groupEnd();
-  };
+  }, []);
+
+  // Otimizar a função de toggle visibilidade
+  const toggleVisibilidade = useCallback((chave) => {
+    setVisibilidade(prev => ({ ...prev, [chave]: !prev[chave] }));
+  }, []);
 
   const geoJSONStyle = {
     fillColor: "green",
     color: "white",
     weight: 1,
     fillOpacity: 0.4,
-  };
-
-  const toggleVisibilidade = (chave) => {
-    console.log(`Alterando visibilidade: ${chave}`);
-    setVisibilidade((prev) => ({ ...prev, [chave]: !prev[chave] }));
   };
 
   return (

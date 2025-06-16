@@ -11,11 +11,11 @@ const Infraestrutura = memo(({ escola }) => {
   return (
     <InfoSection title="Infraestrutura" icon={Home}>
       <div className="p-2 border-b border-gray-200">
-        <p className="text-base text-gray-800 whitespace-pre-wrap break-words text-justify">
+        <p className="text-base text-gray-800 whitespace-pre-wrap break-words">
           {escola.espaco_escolar}
         </p>
       </div>
-      <InfoItem label="Cozinha/Merenda Escolar" value={escola.cozinha_merenda} />
+      <InfoItem label="Cozinha/Merenda escolar/diferenciada" value={escola.cozinha_merenda} />
       <InfoItem label="Acesso à Água" value={escola.acesso_agua} />
       <InfoItem label="Coleta de Lixo" value={escola.coleta_lixo} />
       <InfoItem 

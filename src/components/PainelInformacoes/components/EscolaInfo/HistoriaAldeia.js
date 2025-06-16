@@ -27,13 +27,13 @@ const HistoriaAldeia = memo(({ escola }) => {
         rounded-2xl
         px-4 sm:px-6 md:px-8 py-6
         shadow-lg
-        border border-amber-200/50
+        border border-green-200/50
       `}
     >
       <header className="mb-6 sm:mb-8">
         <div className="flex items-center gap-3 mb-3 sm:mb-4">
           <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-green-700" />
-          <h2 className="text-xl sm:text-2xl font-bold text-amber-900 m-0">
+          <h2 className="text-xl sm:text-2xl font-bold text-green-900 m-0">
             História da Aldeia
           </h2>
         </div>
