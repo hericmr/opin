@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Sun } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import InfoItem from '../InfoItem';
 import BooleanValue from '../BooleanValue';
@@ -9,7 +9,7 @@ const BasicInfo = memo(({ escola }) => {
   if (!escola) return null;
 
   return (
-    <InfoSection title="Informações Básicas" icon={Sun}>
+    <InfoSection title="Informações Básicas" icon={MapPin}>
       <InfoItem label="Nome da Escola" value={capitalizeWords(escola.titulo)} />
       <InfoItem label="Município" value={escola.municipio} />
       <InfoItem label="Endereço" value={escola.endereco} />

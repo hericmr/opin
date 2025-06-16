@@ -193,15 +193,16 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
   // Função para criar o conteúdo do tooltip com melhor acessibilidade
   const createTooltipContent = useCallback((ponto) => {
     return `
-      <button 
-        class="bg-white/95 text-gray-800 text-sm font-medium px-3 py-1.5 rounded shadow-sm border border-gray-100 text-left w-full hover:text-violet-700 focus:text-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-opacity-50 transition-colors duration-200"
-        onclick="event.stopPropagation(); window.dispatchEvent(new CustomEvent('marker-click', { detail: ${JSON.stringify(ponto)} }));"
-        aria-label="Ver detalhes da escola ${capitalizeWords(ponto.titulo)}"
-        role="tooltip"
-      >
-        <strong>${capitalizeWords(ponto.titulo)}</strong>
-        ${ponto.etnia ? `<div class="mt-1 text-xs text-gray-600">Etnia: ${ponto.etnia}</div>` : ''}
-      </button>
+      <div class="bg-white/95 text-gray-800 text-sm font-medium px-3 py-1.5 rounded shadow-sm border border-gray-100 text-left w-full hover:text-violet-700 focus:text-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-opacity-50 transition-colors duration-200">
+        <button 
+          onclick="event.stopPropagation(); window.dispatchEvent(new CustomEvent('marker-click', { detail: ${JSON.stringify(ponto)} }));"
+          aria-label="Ver detalhes da escola ${capitalizeWords(ponto.titulo)}"
+          class="w-full text-left"
+        >
+          <strong>${capitalizeWords(ponto.titulo)}</strong>
+          ${ponto.etnia ? `<div class="mt-1 text-xs text-gray-600">Etnia: ${ponto.etnia}</div>` : ''}
+        </button>
+      </div>
     `;
   }, []);
 
@@ -285,20 +286,20 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
               tabindex="0"
               aria-label="Grupo de ${count} escolas indígenas. Clique para expandir."
               style="
-                background: radial-gradient(circle at 30% 30%, ${background}, #3b2e2a);
-                color: ${textColor};
-                border-radius: 50%;
+              background: radial-gradient(circle at 30% 30%, ${background}, #3b2e2a);
+              color: ${textColor};
+              border-radius: 50%;
                 width: ${iconSize[0]}px;
                 height: ${iconSize[1]}px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                font-weight: bold;
-                border: 2px solid #f5f5dc;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              font-weight: bold;
+              border: 2px solid #f5f5dc;
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
-                padding: 2px;
+              padding: 2px;
                 cursor: pointer;
               "
             >
@@ -312,7 +313,7 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
               />
               <span 
                 style="
-                  font-size: ${size === 'large' ? '16px' : size === 'medium' ? '14px' : '12px'};
+                font-size: ${size === 'large' ? '16px' : size === 'medium' ? '14px' : '12px'};
                 "
               >${count}</span>
             </div>`,
@@ -384,11 +385,16 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
         icon: escolaIcon,
         zIndexOffset: 1000,
         keyboard: true,
-        title: capitalizeWords(ponto.titulo),
-        alt: `Marcador para ${capitalizeWords(ponto.titulo)}`
+        alt: `Marcador para ${capitalizeWords(ponto.titulo)}`,
+        riseOnHover: true,
+        interactive: true,
+        tooltip: null
       });
 
-      // Sempre adiciona o tooltip, mas configura comportamento baseado no dispositivo
+      // Remove qualquer tooltip existente antes de adicionar o novo
+      marker.unbindTooltip();
+      
+      // Adiciona apenas o tooltip customizado
       marker.bindTooltip(createTooltipContent(ponto), {
         className: "custom-tooltip",
         direction: "top",
@@ -396,7 +402,9 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
         opacity: 1,
         permanent: false,
         sticky: !isMobile, // Tooltip só é sticky em desktop
-        interactive: false // Tooltip não é interativo para evitar conflitos
+        interactive: true, // Permite interação com o tooltip
+        // Desabilita o tooltip padrão do Leaflet
+        tooltip: null
       });
 
       // Adiciona eventos de interação
@@ -405,7 +413,7 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
         marker.on('click', (e) => handleTouchInteraction(marker, ponto, e));
       } else {
         // Em desktop, mantém comportamento original
-        marker.on('click', () => onClick?.(ponto));
+      marker.on('click', () => onClick?.(ponto));
       }
 
       // Verifica se este marcador faz parte de um par próximo
@@ -418,16 +426,16 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
 
         // Aplica o efeito de fan-out aprimorado apenas em desktop
         if (!isMobile) {
-          marker.on('add', function() {
-            const transform = isFirst 
-              ? 'perspective(500px) rotateY(-20deg) translateX(-20px) rotate(-25deg) scale(0.9)'
-              : 'perspective(500px) rotateY(20deg) translateX(20px) rotate(25deg) scale(0.9)';
-            
-            this._icon.style.transform = transform;
-            this._icon.style.transition = 'transform 0.5s ease-out, filter 0.3s ease-in';
-            this._icon.style.filter = 'drop-shadow(0 4px 12px rgba(160, 82, 45, 0.35))';
-            this._icon.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.35)';
-          });
+        marker.on('add', function() {
+          const transform = isFirst 
+            ? 'perspective(500px) rotateY(-20deg) translateX(-20px) rotate(-25deg) scale(0.9)'
+            : 'perspective(500px) rotateY(20deg) translateX(20px) rotate(25deg) scale(0.9)';
+          
+          this._icon.style.transform = transform;
+          this._icon.style.transition = 'transform 0.5s ease-out, filter 0.3s ease-in';
+          this._icon.style.filter = 'drop-shadow(0 4px 12px rgba(160, 82, 45, 0.35))';
+          this._icon.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.35)';
+        });
         }
 
         // Cria o conector entre os marcadores
