@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { BookOpen } from 'lucide-react';
 
-const HistoriaAldeia = memo(({ escola }) => {
+const HistoriaEscola = memo(({ escola }) => {
   if (!escola?.historia_aldeia) return null;
 
   return (
@@ -34,7 +34,7 @@ const HistoriaAldeia = memo(({ escola }) => {
         <div className="flex items-center gap-3 mb-3 sm:mb-4">
           <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-green-700" />
           <h2 className="text-xl sm:text-2xl font-bold text-green-900 m-0">
-            História da Aldeia
+            História da Escola
           </h2>
         </div>
         <div className="h-1 w-20 sm:w-24 bg-green-300 rounded-full" />
@@ -47,4 +47,4 @@ const HistoriaAldeia = memo(({ escola }) => {
   );
 });
 
-export default HistoriaAldeia; 
+export default HistoriaEscola; 

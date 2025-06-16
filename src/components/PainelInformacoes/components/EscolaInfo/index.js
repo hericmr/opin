@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 
 // Import all section components
 import BasicInfo from './BasicInfo';
-import HistoriaAldeia from './HistoriaAldeia';
+import HistoriaEscola from './HistoriaEscola';
 import PovosLinguas from './PovosLinguas';
 import Ensino from './Ensino';
 import Infraestrutura from './Infraestrutura';
@@ -51,8 +51,8 @@ const EscolaInfo = memo(({ escola, shouldUseGrid = false }) => {
         ))}
       </GridLayoutWrapper>
 
-      {/* História da Aldeia em destaque */}
-      <HistoriaAldeia escola={escola} />
+      {/* História da Escola em destaque */}
+      <HistoriaEscola escola={escola} />
     </div>
   );
 });
