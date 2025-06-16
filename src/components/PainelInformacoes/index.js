@@ -3,6 +3,7 @@ import { useShare } from "../hooks/useShare";
 import { useDynamicURL } from "../hooks/useDynamicURL";
 import { useClickOutside } from "../hooks/useClickOutside";
 import useAudio from "../hooks/useAudio";
+import useDocumentosEscola from "../hooks/useDocumentosEscola";
 
 // Import modular components
 import EscolaInfo from "./components/EscolaInfo";
@@ -14,11 +15,21 @@ import DocumentViewer from "./components/DocumentViewer";
 import VideoPlayer from "./components/VideoPlayer";
 
 const PainelInformacoes = ({ painelInfo, closePainel }) => {
+  console.log('🎯 PainelInformacoes recebeu painelInfo:', painelInfo);
+  
   const painelRef = useRef(null);
   const [isMaximized, setIsMaximized] = useState(false);
   
   const { isAudioEnabled, toggleAudio } = useAudio(painelInfo?.audioUrl);
   const { gerarLinkCustomizado, copiarLink, compartilhar } = useShare(painelInfo);
+  const { documentos, isLoading: isLoadingDocs, error: docsError } = useDocumentosEscola(painelInfo?.id);
+  
+  console.log('📚 Estado dos documentos:', { 
+    documentos, 
+    isLoadingDocs, 
+    error: docsError,
+    escolaId: painelInfo?.id 
+  });
   
   const toggleMaximize = () => setIsMaximized(prev => !prev);
   
@@ -26,6 +37,7 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
   useClickOutside(painelRef, closePainel);
 
   if (!painelInfo) {
+    console.log('⚠️ PainelInformacoes: painelInfo é null');
     return null;
   }
 
@@ -34,6 +46,13 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
   const isIntro = painelInfo.titulo === 'Sobre o site';
 
   const renderContent = () => {
+    console.log('🎨 Renderizando conteúdo do painel:', {
+      isTerraIndigena,
+      isIntro,
+      hasDocumentos: documentos?.length > 0,
+      hasVideos: !!painelInfo.link_para_videos
+    });
+
     if (isIntro) {
       return <IntroPanel painelInfo={painelInfo} />;
     }
@@ -48,10 +67,10 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
           escola={painelInfo} 
           shouldUseGrid={true}
         />
-        {painelInfo.link_para_documentos && (
+        {documentos && documentos.length > 0 && (
           <DocumentViewer 
-            documentUrl={painelInfo.link_para_documentos}
-            title="Documento PDF da escola"
+            documentos={documentos}
+            title="Produções e materiais da escola"
           />
         )}
         {painelInfo.link_para_videos && (
