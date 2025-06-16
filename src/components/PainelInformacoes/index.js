@@ -108,13 +108,22 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
   }
 
   const baseClasses = `
-    fixed top-16 right-0 sm:left-auto
-    ${isMaximized ? 'sm:w-full lg:w-full px-4' : 'sm:w-3/4 lg:w-[49%]'}
+    fixed
+    ${isMobile 
+      ? 'inset-0 top-16 w-full h-[calc(100vh-4rem)]' 
+      : 'top-16 right-0 w-full sm:w-3/4 lg:w-[49%]'
+    }
     rounded-xl shadow-xl z-40 transform transition-all duration-500 ease-in-out
     bg-gradient-to-b from-green-50/95 to-green-50/90 backdrop-blur-sm
   `;
   
-  const visibilityClasses = isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0";
+  const visibilityClasses = isVisible 
+    ? isMobile 
+      ? "translate-y-0 opacity-100" 
+      : "translate-y-0 opacity-100"
+    : isMobile 
+      ? "translate-y-full opacity-0" 
+      : "translate-y-full opacity-0";
 
   // Determina se é uma terra indígena, escola ou painel introdutório
   const isTerraIndigena = painelInfo.tipo === 'terra_indigena';
@@ -131,9 +140,13 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
       style={{
         height: isMobile ? 'calc(100vh - 4rem)' : painelDimensions.height,
         maxHeight: isMobile ? 'calc(100vh - 4rem)' : painelDimensions.maxHeight,
-        width: painelDimensions.width,
+        width: isMobile ? '100%' : painelDimensions.width,
         display: "flex",
         flexDirection: "column",
+        ...(isMobile && {
+          borderRadius: '1rem 1rem 0 0',
+          boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)'
+        })
       }}
     >
       <PainelHeader 
