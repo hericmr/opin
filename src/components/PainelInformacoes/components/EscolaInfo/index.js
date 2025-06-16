@@ -10,7 +10,20 @@ import GestaoProfessores from './GestaoProfessores';
 import RedesSociais from './RedesSociais';
 import Localizacao from './Localizacao';
 
-const EscolaInfo = memo(({ escola }) => {
+// Componente wrapper para o grid
+const GridLayoutWrapper = memo(({ children, shouldUseGrid }) => {
+  const containerClasses = shouldUseGrid
+    ? 'grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6'
+    : 'space-y-4';
+
+  return (
+    <div className={`${containerClasses} transition-all duration-300 ease-in-out`}>
+      {children}
+    </div>
+  );
+});
+
+const EscolaInfo = memo(({ escola, shouldUseGrid = false }) => {
   console.log("EscolaInfo recebeu:", escola);
   
   if (!escola) {
@@ -18,16 +31,28 @@ const EscolaInfo = memo(({ escola }) => {
     return null;
   }
 
+  // Componentes que serão renderizados no grid
+  const gridSections = [
+    { Component: BasicInfo, props: { escola } },
+    { Component: PovosLinguas, props: { escola } },
+    { Component: Ensino, props: { escola } },
+    { Component: Infraestrutura, props: { escola } },
+    { Component: GestaoProfessores, props: { escola } },
+    { Component: RedesSociais, props: { escola } },
+    { Component: Localizacao, props: { escola } }
+  ];
+
   return (
-    <div className="space-y-4">
-      <BasicInfo escola={escola} />
+    <div className="space-y-8">
+      {/* Grid de cards */}
+      <GridLayoutWrapper shouldUseGrid={shouldUseGrid}>
+        {gridSections.map(({ Component, props }, index) => (
+          <Component key={index} {...props} />
+        ))}
+      </GridLayoutWrapper>
+
+      {/* História da Aldeia em destaque */}
       <HistoriaAldeia escola={escola} />
-      <PovosLinguas escola={escola} />
-      <Ensino escola={escola} />
-      <Infraestrutura escola={escola} />
-      <GestaoProfessores escola={escola} />
-      <RedesSociais escola={escola} />
-      <Localizacao escola={escola} />
     </div>
   );
 });
