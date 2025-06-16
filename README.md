@@ -44,23 +44,57 @@ src/
 │   ├── PainelInformacoes/           # Componente principal de informações
 │   │   ├── components/              # Subcomponentes modulares
 │   │   │   ├── EscolaInfo/         # Informações da escola
-│   │   │   │   ├── BasicInfo.js    # Dados básicos
-│   │   │   │   ├── PovosLinguas.js # Informações étnicas
+│   │   │   │   ├── BasicInfo.js    # Dados básicos (nome, endereço, etc)
+│   │   │   │   ├── HistoriaAldeia.js # História da aldeia
+│   │   │   │   ├── PovosLinguas.js # Informações étnicas e linguísticas
 │   │   │   │   ├── Ensino.js       # Dados educacionais
-│   │   │   │   └── ...
+│   │   │   │   ├── Infraestrutura.js # Dados de infraestrutura
+│   │   │   │   ├── GestaoProfessores.js # Gestão e corpo docente
+│   │   │   │   ├── RedesSociais.js # Links para redes sociais
+│   │   │   │   └── Localizacao.js  # Dados de localização
 │   │   │   ├── InfoSection.js      # Seção de informação reutilizável
-│   │   │   ├── InfoItem.js         # Item de informação
-│   │   │   └── ...
+│   │   │   ├── InfoItem.js         # Item de informação (label/valor)
+│   │   │   ├── BooleanValue.js     # Componente para valores booleanos
+│   │   │   └── ShareSection.js     # Seção de compartilhamento
 │   │   ├── hooks/                  # Hooks customizados
-│   │   │   ├── usePainelVisibility.js
-│   │   │   ├── useAudio.js
-│   │   │   └── ...
-│   │   └── index.js               # Componente principal
-│   └── ...
+│   │   │   ├── usePainelVisibility.js # Controle de visibilidade
+│   │   │   ├── useAudio.js         # Gerenciamento de áudio
+│   │   │   ├── useShare.js         # Funcionalidades de compartilhamento
+│   │   │   ├── useDynamicURL.js    # Gerenciamento de URLs
+│   │   │   ├── useClickOutside.js  # Detecção de cliques externos
+│   │   │   └── usePainelDimensions.js # Responsividade
+│   │   ├── icons/                  # Ícones customizados
+│   │   │   └── HandFistIcon.js     # Ícone para terras indígenas
+│   │   ├── IntroPanel.js           # Painel introdutório
+│   │   ├── TerraIndigenaInfo.js    # Informações de terras indígenas
+│   │   └── index.js                # Componente principal
+│   ├── MapaEscolasIndigenas/       # Componente do mapa
+│   │   ├── components/             # Componentes do mapa
+│   │   │   ├── MapaBase.js         # Base do mapa Leaflet
+│   │   │   ├── Marcadores.js       # Marcadores no mapa
+│   │   │   ├── TerrasIndigenas.js  # Camada de terras indígenas
+│   │   │   ├── EstadoSP.js         # Camada do estado de SP
+│   │   │   └── MenuCamadas.js      # Menu de controle de camadas
+│   │   └── index.js                # Componente principal do mapa
+│   ├── PainelHeader/               # Cabeçalho do painel
+│   │   └── index.js                # Componente do cabeçalho
+│   ├── PainelDescricao/            # Componente de descrição
+│   │   └── index.js                # Renderização de descrições
+│   └── PainelLinks/                # Componente de links
+│       └── index.js                # Lista de links
+├── hooks/                          # Hooks globais
+│   ├── useMapData.js               # Gerenciamento de dados do mapa
+│   └── useMapInteractions.js       # Interações com o mapa
+├── utils/                          # Utilitários
+│   ├── textFormatting.js           # Formatação de texto
+│   ├── mapUtils.js                 # Utilitários para mapas
+│   └── dataProcessing.js           # Processamento de dados
 ├── data/                          # Dados estáticos
-│   ├── escolas.csv
-│   └── terras_indigenas.geojson
-└── ...
+│   ├── escolas.csv                # Dados das escolas
+│   └── terras_indigenas.geojson   # Dados geográficos
+├── styles/                        # Estilos globais
+│   └── globals.css                # Estilos globais Tailwind
+└── App.js                         # Componente raiz
 ```
 
 ## 🎯 Componentes Principais
@@ -68,17 +102,66 @@ src/
 ### PainelInformacoes
 Componente central que gerencia a exibição de informações detalhadas sobre escolas e terras indígenas. Utiliza uma arquitetura modular com:
 
-- **Componentes Modulares**: Separação clara de responsabilidades
-- **Hooks Customizados**: Gerenciamento de estado e lógica reutilizável
-- **Componentes Utilitários**: Elementos reutilizáveis como `InfoSection` e `InfoItem`
+#### Subcomponentes
+- **EscolaInfo**: Exibe informações detalhadas das escolas
+  - `BasicInfo`: Dados básicos (nome, endereço, tipo)
+  - `HistoriaAldeia`: História da aldeia
+  - `PovosLinguas`: Informações sobre povos e línguas
+  - `Ensino`: Dados educacionais (modalidade, alunos, etc)
+  - `Infraestrutura`: Detalhes da infraestrutura
+  - `GestaoProfessores`: Gestão e corpo docente
+  - `RedesSociais`: Links para redes sociais
+  - `Localizacao`: Dados de localização
 
-### Hooks Customizados
-- `usePainelVisibility`: Controla visibilidade do painel
+- **TerraIndigenaInfo**: Exibe informações sobre terras indígenas
+  - Dados de superfície
+  - Localização
+  - Fase e modalidade
+  - Informações administrativas
+
+- **IntroPanel**: Painel introdutório com descrição e áudio
+  - Suporte a conteúdo markdown
+  - Player de áudio integrado
+
+#### Componentes Utilitários
+- `InfoSection`: Seção de informação reutilizável
+  - Suporte a ícones
+  - Colapso/expansão
+  - Estilização consistente
+
+- `InfoItem`: Item de informação (label/valor)
+  - Layout em grid
+  - Suporte a valores booleanos
+  - Estilização responsiva
+
+- `BooleanValue`: Componente para valores booleanos
+  - Exibição visual de sim/não
+  - Estilização consistente
+
+#### Hooks Customizados
+- `usePainelVisibility`: Controla visibilidade e responsividade
 - `useAudio`: Gerencia recursos de áudio
 - `useShare`: Funcionalidades de compartilhamento
 - `useDynamicURL`: Gerenciamento de URLs dinâmicas
-- `useClickOutside`: Detecção de cliques fora do componente
+- `useClickOutside`: Detecção de cliques externos
 - `usePainelDimensions`: Responsividade e dimensões
+
+### MapaEscolasIndigenas
+Componente responsável pela visualização e interação com o mapa:
+
+#### Subcomponentes
+- `MapaBase`: Configuração base do Leaflet
+- `Marcadores`: Marcadores de escolas no mapa
+- `TerrasIndigenas`: Camada de terras indígenas
+- `EstadoSP`: Camada do estado de São Paulo
+- `MenuCamadas`: Controle de visibilidade das camadas
+
+#### Funcionalidades
+- Visualização interativa
+- Controle de camadas
+- Interação com marcadores
+- Responsividade
+- Suporte a diferentes tipos de dados
 
 ## 🎨 Estilização
 
