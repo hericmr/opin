@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 
 // Import all section components
 import BasicInfo from './BasicInfo';
+import HistoriaAldeia from './HistoriaAldeia';
 import PovosLinguas from './PovosLinguas';
 import Ensino from './Ensino';
 import Infraestrutura from './Infraestrutura';
@@ -20,6 +21,7 @@ const EscolaInfo = memo(({ escola }) => {
   return (
     <div className="space-y-4">
       <BasicInfo escola={escola} />
+      <HistoriaAldeia escola={escola} />
       <PovosLinguas escola={escola} />
       <Ensino escola={escola} />
       <Infraestrutura escola={escola} />
