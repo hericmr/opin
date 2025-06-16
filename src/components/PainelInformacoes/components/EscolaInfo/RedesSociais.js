@@ -34,7 +34,6 @@ const RedesSociais = memo(({ escola }) => {
           {renderLinks(escola.links_redes_sociais)}
         </div>
       )}
-      <InfoItem label="História da Aldeia" value={escola.historia_aldeia} />
     </InfoSection>
   );
 });
