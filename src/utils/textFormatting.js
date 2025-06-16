@@ -31,4 +31,41 @@ export const capitalizeWords = (str) => {
   
   // Junta as palavras de volta em uma string
   return processedWords.join(' ');
+};
+
+/**
+ * Normalizes an address string by capitalizing words and handling common address abbreviations
+ * @param {string} address - The address string to normalize
+ * @returns {string} The normalized address string
+ */
+export const normalizeAddress = (address) => {
+  if (!address || typeof address !== 'string') return '';
+
+  // Lista de abreviações comuns em endereços
+  const abbreviations = {
+    'r.': 'Rua',
+    'av.': 'Avenida',
+    'al.': 'Alameda',
+    'pr.': 'Praça',
+    'tr.': 'Travessa',
+    'rod.': 'Rodovia',
+    'est.': 'Estrada',
+    'n.': 'Número',
+    'nº': 'Número',
+    'apt.': 'Apartamento',
+    'bl.': 'Bloco',
+    'qd.': 'Quadra',
+    'lt.': 'Lote',
+    'km': 'KM',
+    's/n': 'S/N'
+  };
+
+  // Primeiro, substitui as abreviações
+  let normalized = address.toLowerCase();
+  Object.entries(abbreviations).forEach(([abbr, full]) => {
+    normalized = normalized.replace(new RegExp(`\\b${abbr}\\b`, 'g'), full);
+  });
+
+  // Depois aplica a capitalização de palavras
+  return capitalizeWords(normalized);
 }; 
