@@ -133,3 +133,51 @@
 .marker-cluster-large {
   opacity: 1 !important;
 }
+
+/* Estilos para os tooltips dos marcadores */
+.leaflet-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.leaflet-tooltip-pane {
+  z-index: 1000 !important;
+}
+
+.custom-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.custom-tooltip .leaflet-tooltip-content-wrapper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.custom-tooltip .leaflet-tooltip-content {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Estilo do triângulo do tooltip */
+.leaflet-tooltip-top:before {
+  border-top-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.leaflet-tooltip-bottom:before {
+  border-bottom-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.leaflet-tooltip-left:before {
+  border-left-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.leaflet-tooltip-right:before {
+  border-right-color: rgba(255, 255, 255, 0.95) !important;
+}
