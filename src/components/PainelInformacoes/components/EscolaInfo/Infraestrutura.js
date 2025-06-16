@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Home } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import InfoItem from '../InfoItem';
+import InfoParagraph from '../InfoParagraph';
 import BooleanValue from '../BooleanValue';
 
 const Infraestrutura = memo(({ escola }) => {
@@ -9,7 +10,11 @@ const Infraestrutura = memo(({ escola }) => {
 
   return (
     <InfoSection title="Infraestrutura" icon={Home}>
-      <InfoItem label="Espaço Escolar e Estrutura" value={escola.espaco_escolar} />
+      <div className="p-2 border-b border-gray-200">
+        <p className="text-base text-gray-800 whitespace-pre-wrap break-words text-justify">
+          {escola.espaco_escolar}
+        </p>
+      </div>
       <InfoItem label="Cozinha/Merenda Escolar" value={escola.cozinha_merenda} />
       <InfoItem label="Acesso à Água" value={escola.acesso_agua} />
       <InfoItem label="Coleta de Lixo" value={escola.coleta_lixo} />
