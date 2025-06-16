@@ -61,7 +61,7 @@ export const formatters = {
   redesSociaisEMidia: (escola) => ({
     "Utiliza Redes Sociais": escola.usa_redes_sociais,
     "Links das Redes Sociais": escola.links_redes_sociais,
-    "História da Aldeia": escola.historia_aldeia
+    "História da Escola": escola.historia_escola
   }),
 
   midia: (escola) => ({
