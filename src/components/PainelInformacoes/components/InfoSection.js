@@ -23,7 +23,7 @@ const InfoSection = memo(({
         onClick={() => setIsCollapsed(!isCollapsed)}
         className="
           w-full flex items-center justify-between 
-          text-base font-semibold border-b border-green-300 
+          text-base font-semibold border-b border-green-100 
           pb-2 mb-3 text-green-900 hover:text-green-800 
           transition-colors focus:outline-none focus:ring-2 
           focus:ring-green-500 focus:ring-offset-2 rounded-lg

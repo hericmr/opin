@@ -13,7 +13,7 @@ const CAMADAS = {
   }
 };
 
-const CabecalhoMenu = memo(({ onClose, onMinimize, isMobile, isMinimized }) => (
+const CabecalhoMenu = memo(({ onMinimize, isMobile, isMinimized }) => (
   <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100 bg-white">
     <h3 className="text-sm font-medium text-gray-800">Camadas do Mapa</h3>
     <div className="flex items-center gap-2">
@@ -24,14 +24,6 @@ const CabecalhoMenu = memo(({ onClose, onMinimize, isMobile, isMinimized }) => (
         type="button"
       >
         {isMinimized ? "▾" : "▴"}
-      </button>
-      <button
-        onClick={onClose}
-        className="text-gray-500 hover:text-gray-700 transition-colors p-1"
-        aria-label="Fechar"
-        type="button"
-      >
-        ✕
       </button>
     </div>
   </div>
@@ -104,7 +96,6 @@ const MenuCamadas = ({ estados, acoes, totalEscolas }) => {
       <div className="fixed bottom-0 left-0 right-0 z-20">
         <div className="bg-white border-t border-gray-100 shadow-lg">
           <CabecalhoMenu
-            onClose={handleMenuClose}
             onMinimize={handleMinimize}
             isMobile={true}
             isMinimized={isMinimized}
@@ -138,7 +129,6 @@ const MenuCamadas = ({ estados, acoes, totalEscolas }) => {
   return (
     <div className="fixed top-24 right-4 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
       <CabecalhoMenu 
-        onClose={handleMenuClose}
         onMinimize={handleMinimize}
         isMobile={false}
         isMinimized={isMinimized}
