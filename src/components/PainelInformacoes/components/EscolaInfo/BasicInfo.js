@@ -9,7 +9,7 @@ const BasicInfo = memo(({ escola }) => {
   if (!escola) return null;
 
   return (
-    <InfoSection title={capitalizeWords(escola.titulo)} icon={MapPin}>
+    <InfoSection title="Localização" icon={MapPin}>
       <div className="flex flex-col gap-2">
 
         <InfoItem label="Município" value={capitalizeWords(escola.municipio)} />
