@@ -58,6 +58,25 @@
   - [x] Separar em componentes menores
   - [x] Extrair lógica de negócios (obs.: extraídas funções de manipulação de dados, cálculos e regras de negócio (por exemplo, filtragem, agregação, transformação de dados) para hooks personalizados ou utilitários, a fim de separar a lógica de negócios da interface.)
   - [x] Implementar hooks personalizados
+- [ ] Refatorar `PainelInformacoes/index.js`
+  - [ ] Extrair componentes de renderização de documentos e vídeos
+    - [ ] Criar `DocumentViewer` para gerenciar iframes e fallbacks de documentos
+    - [ ] Criar `VideoPlayer` para renderização de vídeos do YouTube
+    - [ ] Implementar tratamento de erros robusto para iframes
+  - [ ] Criar wrapper component para lógica de container e animações
+    - [ ] Centralizar classes de visibilidade e dimensões
+    - [ ] Manter compatibilidade com hooks existentes (usePainelVisibility, usePainelDimensions)
+  - [ ] Reutilizar componentes existentes
+    - [ ] Manter PainelHeader como componente separado
+    - [ ] Preservar hooks de visibilidade e dimensões
+    - [ ] Atualizar imports e referências em arquivos relacionados
+  - [ ] Critérios de aceitação:
+    - [ ] Implementação modular do index.js mantendo arquitetura atual do painel
+    - [ ] Conexões corretas entre arquivos após refatoração
+    - [ ] Tratamento confiável de erros de iframe
+    - [ ] Responsividade completa com fontes grandes em mobile
+    - [ ] Preservação da estrutura atual de pastas
+    - [ ] Manutenção da performance atual ou melhor
 - [x] Implementar lazy loading para componentes grandes (code splitting com React.lazy/Suspense nas rotas principais)
 - [x] Adicionar error boundaries (componente ErrorBoundary criado para capturar erros de renderização e exibir mensagem amigável ao usuário)
 - [ ] Implementar React.memo() para componentes com renderização frequente

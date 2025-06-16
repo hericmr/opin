@@ -31,7 +31,7 @@ export const capitalizeWords = (str) => {
   
   // Junta as palavras de volta em uma string
   return processedWords.join(' ');
-};
+}; 
 
 /**
  * Normalizes an address string by capitalizing words and handling common address abbreviations
