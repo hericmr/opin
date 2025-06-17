@@ -27,28 +27,36 @@ const Navbar = () => {
     setMobileMenuOpen(false);
   };
 
+  // Detectar se é mobile na horizontal
+  const isMobileLandscape = window.innerWidth <= 1024 && window.innerWidth > window.innerHeight;
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-green-900/95 to-green-800/90 backdrop-blur-md text-white shadow-lg">
-      <nav className="container mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between">
+      <nav className={`container mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between ${isMobileLandscape ? 'h-12' : ''}`}>
         
         {/* Logo e Título - Otimizado para mobile */}
         <div className="flex items-center space-x-2 group flex-1 min-w-0">
           <h1
             onClick={() => navigate('/')}
-            className="text-sm sm:text-base md:text-lg lg:text-2xl cursor-pointer 
-                      hover:text-amber-200 transition-colors duration-200 border-b-2 border-transparent 
-                      hover:border-amber-400 font-[Caveat] truncate leading-tight"
+            className={`cursor-pointer hover:text-amber-200 transition-colors duration-200 border-b-2 border-transparent 
+                      hover:border-amber-400 font-[Caveat] truncate leading-tight ${
+                        isMobileLandscape 
+                          ? 'text-sm' 
+                          : 'text-sm sm:text-base md:text-lg lg:text-2xl'
+                      }`}
           >
             Observatório das Escolas Indígenas
           </h1>
         </div>
 
         {/* Mobile - Botão hambúrguer maior para facilitar o toque */}
-        <div className="md:hidden flex items-center">
+        <div className="lg:hidden flex items-center">
           <button
             onClick={toggleMobileMenu}
-            className="p-3 rounded-full hover:bg-amber-800/50 transition-all duration-200 active:scale-95 
-                      focus:outline-none focus:ring-2 focus:ring-amber-400 touch-manipulation"
+            className={`rounded-full hover:bg-amber-800/50 transition-all duration-200 active:scale-95 
+                      focus:outline-none focus:ring-2 focus:ring-amber-400 touch-manipulation ${
+                        isMobileLandscape ? 'p-2' : 'p-3'
+                      }`}
             aria-label="Menu principal"
           >
             <motion.div
@@ -56,24 +64,24 @@ const Navbar = () => {
               animate={{ rotate: mobileMenuOpen ? 180 : 0 }}
               transition={{ duration: 0.2 }}
             >
-              {mobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+              {mobileMenuOpen ? <X className={isMobileLandscape ? "w-5 h-5" : "w-7 h-7"} /> : <Menu className={isMobileLandscape ? "w-5 h-5" : "w-7 h-7"} />}
             </motion.div>
           </button>
         </div>
 
         {/* Desktop - Layout compacto */}
-        <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
+        <div className="hidden lg:flex items-center space-x-4 xl:space-x-6">
           <button
             onClick={() => navigate(isConteudoPage ? '/' : '/conteudo')}
-            className="px-3 lg:px-4 py-2 text-sm font-medium text-white bg-green-800/60 hover:bg-amber-700/60 
+            className="px-3 xl:px-4 py-2 text-sm font-medium text-white bg-green-800/60 hover:bg-amber-700/60 
                        transition-all duration-200 rounded-lg hover:shadow-md active:scale-95
                        focus:outline-none focus:ring-2 focus:ring-amber-400 flex items-center gap-2"
           >
             {isConteudoPage ? <MapPin className="w-4 h-4" /> : <BookOpen className="w-4 h-4" />}
-            <span className="hidden lg:inline">
+            <span className="hidden xl:inline">
               {isConteudoPage ? 'Voltar ao Mapa' : 'Ver Todo Conteúdo'}
             </span>
-            <span className="lg:hidden">
+            <span className="xl:hidden">
               {isConteudoPage ? 'Mapa' : 'Conteúdo'}
             </span>
           </button>
@@ -91,7 +99,7 @@ const Navbar = () => {
                 alt="Logo"
                 className="h-8 w-auto"
               />
-              <span className="text-[8px] lg:text-[10px] tracking-wide font-[Caveat] text-amber-200 mt-0.5 text-center leading-tight">
+              <span className="text-[8px] xl:text-[10px] tracking-wide font-[Caveat] text-amber-200 mt-0.5 text-center leading-tight">
                 é terra indígena!
               </span>
             </a>
@@ -123,7 +131,7 @@ const Navbar = () => {
                          focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95"
               >
                 <Shield className="w-4 h-4" />
-                <span className="hidden lg:inline">Admin</span>
+                <span className="hidden xl:inline">Admin</span>
                 <motion.div
                   animate={{ rotate: showAdminPanel ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
@@ -170,26 +178,30 @@ const Navbar = () => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden bg-gradient-to-b from-green-900/95 to-green-800/90 backdrop-blur-md border-t border-green-800/30"
+            className="lg:hidden bg-gradient-to-b from-green-900/95 to-green-800/90 backdrop-blur-md border-t border-green-800/30"
           >
-            <div className="container mx-auto px-4 py-6 flex flex-col space-y-5">
+            <div className={`container mx-auto px-4 py-6 flex flex-col space-y-5 ${isMobileLandscape ? 'py-4 space-y-3' : ''}`}>
               
               {/* Botão principal de navegação - Maior e mais visível */}
               <button
                 onClick={() => handleNavigation(isConteudoPage ? '/' : '/conteudo')}
-                className="w-full py-4 text-base font-medium text-white bg-green-800/80 hover:bg-amber-700/80 
+                className={`w-full font-medium text-white bg-green-800/80 hover:bg-amber-700/80 
                          rounded-xl transition-all duration-200 active:scale-95 shadow-lg
                          focus:outline-none focus:ring-2 focus:ring-amber-400 touch-manipulation
-                         flex items-center justify-center gap-3"
+                         flex items-center justify-center gap-3 ${
+                           isMobileLandscape 
+                             ? 'py-3 text-sm' 
+                             : 'py-4 text-base'
+                         }`}
               >
-                {isConteudoPage ? <MapPin className="w-5 h-5" /> : <BookOpen className="w-5 h-5" />}
-                <span className="text-lg">
+                {isConteudoPage ? <MapPin className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} /> : <BookOpen className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />}
+                <span className={isMobileLandscape ? "text-sm" : "text-lg"}>
                   {isConteudoPage ? 'Voltar ao Mapa' : 'Ver Todo Conteúdo'}
                 </span>
               </button>
               
               {/* Logos organizadas horizontalmente no mobile */}
-              <div className="flex items-center justify-center space-x-6 py-4 bg-green-800/20 rounded-xl">
+              <div className={`flex items-center justify-center space-x-6 py-4 bg-green-800/20 rounded-xl ${isMobileLandscape ? 'py-3 space-x-4' : ''}`}>
                 <a 
                   href="https://www.unifesp.br/" 
                   target="_blank" 
@@ -201,7 +213,7 @@ const Navbar = () => {
                     alt="Logo"
                     className="h-8 w-auto"
                   />
-                  <span className="text-xs tracking-wide font-[Caveat] text-amber-200 text-center leading-tight">
+                  <span className={`tracking-wide font-[Caveat] text-amber-200 text-center leading-tight ${isMobileLandscape ? 'text-xs' : 'text-xs'}`}>
                     Licenciatura<br />Intercultural Indígena
                   </span>
                 </a>
@@ -224,19 +236,25 @@ const Navbar = () => {
               {!isAdmin ? (
                 <button
                   onClick={handleAdminClick}
-                  className="w-full py-4 text-base font-medium text-white bg-green-800/60 hover:bg-amber-700/60 
+                  className={`w-full font-medium text-white bg-green-800/60 hover:bg-amber-700/60 
                            rounded-xl transition-all duration-200 flex items-center justify-center gap-3
-                           focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95 touch-manipulation"
+                           focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95 touch-manipulation ${
+                             isMobileLandscape 
+                               ? 'py-3 text-sm' 
+                               : 'py-4 text-base'
+                           }`}
                 >
-                  <Leaf className="w-5 h-5" />
+                  <Leaf className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
                   <span>Área Administrativa</span>
                 </button>
               ) : (
                 <div className="space-y-4">
-                  <div className="w-full py-3 px-4 text-base font-medium text-white/90 text-center 
-                                border-2 border-amber-400/50 rounded-xl bg-green-800/30">
+                  <div className={`w-full px-4 font-medium text-white/90 text-center 
+                                border-2 border-amber-400/50 rounded-xl bg-green-800/30 ${
+                                  isMobileLandscape ? 'py-2 text-sm' : 'py-3 text-base'
+                                }`}>
                     <span className="flex items-center justify-center gap-2">
-                      <Shield className="w-5 h-5 text-amber-400" />
+                      <Shield className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
                       <span>Acesso de Administrador</span>
                     </span>
                   </div>
@@ -247,11 +265,15 @@ const Navbar = () => {
                     </div>
                     <button
                       onClick={() => handleNavigation('/admin')}
-                      className="w-full py-4 text-base text-white bg-green-800/60 hover:bg-amber-700/60 
+                      className={`w-full text-white bg-green-800/60 hover:bg-amber-700/60 
                                rounded-xl transition-all duration-200 flex items-center justify-center gap-3
-                               focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95 touch-manipulation"
+                               focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95 touch-manipulation ${
+                                 isMobileLandscape 
+                                   ? 'py-3 text-sm' 
+                                   : 'py-4 text-base'
+                               }`}
                     >
-                      <LayoutGrid className="h-5 w-5" />
+                      <LayoutGrid className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
                       <span>Painel de Administração</span>
                     </button>
                   </div>

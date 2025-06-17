@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import MapSection from "./components/MapSection";
 import InputField from "./components/InputField";
 import RichTextEditor from "./components/RichTextEditor";
+import PDFUploadSection from "./components/PDFUploadSection";
 import { opcoes } from "./constants";
 
 const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoading }) => {
@@ -36,6 +37,20 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
       tipo: tipo,
     }));
     setDropdownOpen(false);
+  };
+
+  const handlePDFUploadComplete = (urls) => {
+    setNewLocation(prev => ({
+      ...prev,
+      documentos: urls.join(',')
+    }));
+  };
+
+  const handlePDFRemove = (urls) => {
+    setNewLocation(prev => ({
+      ...prev,
+      documentos: urls.join(',')
+    }));
   };
 
   return (
@@ -171,21 +186,29 @@ const AddLocationPanel = ({ newLocation, setNewLocation, onSave, onClose, isLoad
               placeholder="Cole um link aqui (http://...)"
             />
 
-            <div className="mt-4 flex justify-end gap-2">
+            {/* PDF Upload Section */}
+            <PDFUploadSection
+              onUploadComplete={handlePDFUploadComplete}
+              onRemove={handlePDFRemove}
+              existingUrls={newLocation.documentos ? newLocation.documentos.split(',').filter(url => url) : []}
+            />
+
+            <div className="flex justify-end gap-2 mt-6">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-gray-800"
-                disabled={isLoading}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300"
                 disabled={isLoading}
+                className={`px-4 py-2 rounded-lg text-white font-medium ${
+                  isLoading ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'
+                }`}
               >
-                {isLoading ? "Salvando..." : "Salvar"}
+                {isLoading ? 'Salvando...' : 'Salvar'}
               </button>
             </div>
 
@@ -211,6 +234,7 @@ AddLocationPanel.propTypes = {
     latitude: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     longitude: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     links: PropTypes.string,
+    documentos: PropTypes.string,
   }).isRequired,
   setNewLocation: PropTypes.func.isRequired,
   error: PropTypes.string,

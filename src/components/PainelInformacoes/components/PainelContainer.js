@@ -47,8 +47,10 @@ const PainelContainer = ({
         display: "flex",
         flexDirection: "column",
         ...(isMobile && {
-          borderRadius: '1rem 1rem 0 0',
-          boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)'
+          borderRadius: painelDimensions.isMobileLandscape ? '0' : '1rem 1rem 0 0',
+          boxShadow: painelDimensions.isMobileLandscape 
+            ? '0 0 0 0' 
+            : '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)'
         })
       }}
     >
@@ -60,8 +62,8 @@ const PainelContainer = ({
       />
       
       <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-green-600/40 scrollbar-track-green-50/20">
-        <div className="p-6 space-y-8">
-          <div className="prose prose-lg lg:prose-xl max-w-none">
+        <div className={`${isMobile ? 'p-3 sm:p-4' : 'p-6'} space-y-6 sm:space-y-8`}>
+          <div className="prose prose-sm sm:prose-base md:prose-lg lg:prose-xl max-w-none">
             {children}
           </div>
         </div>

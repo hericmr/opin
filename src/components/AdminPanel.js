@@ -8,7 +8,7 @@ const calcularPontuacao = (location) => {
   let pontuacao = 0;
   
   // Título (15 pontos)
-  if (location.titulo && location.titulo !== "Título não disponível") {
+  if (location.Escola && location.Escola !== "Título não disponível") {
     pontuacao += 15;
   }
   
@@ -37,7 +37,12 @@ const calcularPontuacao = (location) => {
     pontuacao += 15;
   }
 
-  return Math.round((pontuacao / 100) * 100);
+  // Documentos PDF (15 pontos)
+  if (location.documentos && location.documentos.split(',').filter(url => url).length > 0) {
+    pontuacao += 15;
+  }
+
+  return Math.round((pontuacao / 115) * 100); // Ajustado para 115 pontos máximos
 };
 
 const AdminPanel = () => {
@@ -58,7 +63,7 @@ const AdminPanel = () => {
         const { data, error } = await supabase
           .from('escolas_completa')
           .select('*')
-          .order('titulo', { ascending: true });
+          .order('Escola', { ascending: true });
 
         if (error) throw error;
         setLocations(data);
@@ -75,7 +80,7 @@ const AdminPanel = () => {
 
   // Filtrar locais baseado na busca e tipo selecionado
   const filteredLocations = locations.filter(location => {
-    const matchesSearch = location.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = location.Escola?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          location.descricao_detalhada?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = selectedType === 'todos' || location.tipo === selectedType;
     return matchesSearch && matchesType;
@@ -85,7 +90,7 @@ const AdminPanel = () => {
   const uniqueTypes = ['todos', ...new Set(locations.map(loc => loc.tipo))];
 
   const handleDelete = async (location) => {
-    if (window.confirm(`Tem certeza que deseja excluir o local "${location.titulo}"?`)) {
+    if (window.confirm(`Tem certeza que deseja excluir o local "${location.Escola}"?`)) {
       try {
         setLoading(true);
         const { error } = await supabase
@@ -124,13 +129,14 @@ const AdminPanel = () => {
       const { error } = await supabase
         .from('escolas_completa')
         .update({
-          titulo: updatedLocation.titulo,
+          Escola: updatedLocation.Escola,
           tipo: updatedLocation.tipo,
           descricao_detalhada: updatedLocation.descricao_detalhada,
           localizacao: `${updatedLocation.latitude},${updatedLocation.longitude}`,
           links: updatedLocation.links,
           audio: updatedLocation.audio,
           imagens: updatedLocation.imagens,
+          documentos: updatedLocation.documentos,
         })
         .eq('id', updatedLocation.id);
 
@@ -231,13 +237,16 @@ const AdminPanel = () => {
                   <thead className="bg-gray-50 sticky top-0 z-10">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
-                        Título
+                        Escola
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
                         Tipo
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
                         Localização
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+                        Documentos
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
                         Pontuação
@@ -250,11 +259,12 @@ const AdminPanel = () => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {filteredLocations.map((location) => {
                       const pontuacao = calcularPontuacao(location);
+                      const documentos = location.documentos ? location.documentos.split(',').filter(url => url) : [];
                       return (
                         <tr key={location.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4">
                             <div className="text-sm font-medium text-gray-900">
-                              {location.titulo}
+                              {location.Escola}
                             </div>
                             <div className="text-xs text-gray-500 line-clamp-2">
                               {location.descricao_detalhada?.replace(/<[^>]*>/g, '')}
@@ -280,6 +290,17 @@ const AdminPanel = () => {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center text-sm text-gray-500">
+                              {documentos.length > 0 ? (
+                                <span className="text-green-600">
+                                  {documentos.length} {documentos.length === 1 ? 'documento' : 'documentos'}
+                                </span>
+                              ) : (
+                                <span className="text-gray-400">Sem documentos</span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden mr-2">
                                 <div 
@@ -299,16 +320,16 @@ const AdminPanel = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <button
-                              className="text-blue-600 hover:text-blue-900 mr-3"
-                              onClick={(e) => handleEdit(location)}
+                              onClick={() => handleEdit(location)}
+                              className="text-blue-600 hover:text-blue-900 mr-4"
                             >
-                              <Edit2 className="w-4 h-4" />
+                              <Edit2 className="w-4 h-4 inline" />
                             </button>
                             <button
+                              onClick={() => handleDelete(location)}
                               className="text-red-600 hover:text-red-900"
-                              onClick={(e) => handleDelete(location)}
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <Trash2 className="w-4 h-4 inline" />
                             </button>
                           </td>
                         </tr>

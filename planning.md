@@ -167,3 +167,145 @@
 1. Prosseguir com a Fase 2 - Otimização de Assets
 2. Implementar sistema de logging em uma fase posterior
 3. Manter os console.logs por enquanto, mas documentá-los para remoção futura 
+
+# Project Adaptation Plan
+
+## Overview
+This document outlines the plan to adapt the existing project for new file upload requirements and form structure changes. The main changes involve updating the Supabase bucket configuration and modifying the form structure to meet new requirements.
+
+## 1. File Upload Destination Changes
+
+### 1.1 Supabase Configuration Updates
+- [ ] Update `src/supabaseClient.js` to ensure proper access to the new 'pdfs' bucket
+- [ ] Verify and update bucket policies in Supabase dashboard for the 'pdfs' bucket
+- [ ] Add bucket configuration constants in a new `src/config/storage.js` file
+
+### 1.2 Upload Service Updates
+- [ ] Modify `src/services/uploadService.js`:
+  - Update default bucket from 'media' to 'pdfs'
+  - Add PDF-specific validation and handling
+  - Update file path structure for PDFs
+  - Add new utility functions for PDF handling
+  - Update error handling for PDF-specific cases
+
+### 1.3 Component Updates
+- [ ] Update `src/components/AddLocationPanel/components/MapSection.js`:
+  - Modify file upload handlers for PDF files
+  - Update file type validation
+  - Adjust UI for PDF upload interface
+- [ ] Update `src/components/EditLocationPanel/index.js`:
+  - Modify file upload handlers for PDF compatibility
+  - Update preview handling for PDFs
+  - Adjust validation logic
+
+## 2. Form Structure Updates
+
+### 2.1 Schema and Type Definitions
+- [ ] Create new type definitions in `src/types/form.ts`:
+  - Define PDF upload related interfaces
+  - Update location form interface
+  - Add validation schemas using Zod
+
+### 2.2 Form Component Updates
+- [ ] Update `src/components/AddLocationPanel/index.js`:
+  - Modify form structure for new fields
+  - Update validation logic
+  - Add PDF-specific form fields
+  - Update PropTypes definitions
+- [ ] Update `src/components/EditLocationPanel/index.js`:
+  - Mirror changes from AddLocationPanel
+  - Update edit form validation
+  - Add PDF handling in edit mode
+
+### 2.3 Validation and Error Handling
+- [ ] Create new validation utilities in `src/utils/validation.js`:
+  - Add PDF file validation
+  - Update form field validation
+  - Add custom error messages
+- [ ] Update error handling across components:
+  - Add PDF-specific error states
+  - Improve error messaging
+  - Add validation feedback
+
+## 3. Testing Updates
+
+### 3.1 Unit Tests
+- [ ] Update `src/services/__tests__/uploadService.test.js`:
+  - Add tests for PDF upload functionality
+  - Update existing tests for new bucket
+  - Add validation test cases
+- [ ] Update component tests:
+  - Add PDF upload test cases
+  - Update form validation tests
+  - Add new field test coverage
+
+### 3.2 Integration Tests
+- [ ] Add end-to-end tests for PDF upload flow
+- [ ] Test form submission with PDF files
+- [ ] Verify bucket access and permissions
+
+## 4. Documentation Updates
+
+### 4.1 Code Documentation
+- [ ] Update JSDoc comments for modified functions
+- [ ] Add documentation for new PDF handling utilities
+- [ ] Document form structure changes
+
+### 4.2 User Documentation
+- [ ] Update README.md with new upload requirements
+- [ ] Document PDF file restrictions and requirements
+- [ ] Add troubleshooting guide for common issues
+
+## Follow-up Tasks
+- [ ] Verify Supabase bucket permissions after deployment
+- [ ] Test PDF upload with various file sizes and types
+- [ ] Monitor error rates and user feedback
+- [ ] Consider adding analytics for upload success/failure rates
+
+## Potential Issues to Review
+1. PDF file size limits and performance impact
+2. Browser compatibility for PDF preview
+3. Mobile device support for PDF upload
+4. Storage quota management
+5. Security considerations for PDF file handling 
+
+## [IMAGENS ESCOLA] Integração de imagens vinculadas à escola
+
+### 1. Criação da tabela no Supabase
+- **Tabela criada:** `imagens_escola`
+- **Campos:**
+  - `id` (serial, chave primária)
+  - `escola_id` (inteiro, referência para escolas_completa)
+  - `url` (texto, obrigatório)
+  - `descricao` (texto, opcional)
+  - `tipo` (texto, opcional)
+  - `created_at` (timestamp, padrão now())
+- **Motivação:** Permitir o armazenamento e gerenciamento de múltiplas imagens por escola, com metadados opcionais.
+- **Atenção:** Garantir que as permissões de leitura estejam corretas para o frontend acessar as imagens.
+
+### 2. Novo componente de exibição de imagens
+- **Local:** `src/components/PainelInformacoes/components/EscolaImagens.js`
+- **Descrição:**
+  - Componente React responsável por buscar e renderizar as imagens associadas à escola exibida no painel de informações.
+  - Exibe as imagens em grid responsivo, com legenda (se houver).
+  - Permite visualização ampliada (modal/lightbox) se necessário.
+- **Integração:**
+  - O componente será importado e utilizado dentro de `PainelInformacoes` (ou em `EscolaInfo`), recebendo o `escola_id` como prop.
+  - As imagens são buscadas da tabela `imagens_escola` via Supabase.
+
+### 3. Ajustes no PainelInformacoes
+- **Alteração:**
+  - Incluir o novo componente de imagens na renderização do painel de informações da escola.
+  - Garantir que o componente só apareça se houver imagens cadastradas para a escola.
+
+### 4. Testes e validação
+- **Testar:**
+  - Upload e cadastro de imagens no Supabase.
+  - Renderização correta das imagens no painel.
+  - Responsividade e acessibilidade do componente.
+
+### 5. Follow-up
+- **Revisar:**
+  - Políticas de acesso à tabela de imagens.
+  - UX para múltiplas imagens e fallback para escolas sem imagens.
+  - Documentar a estrutura da tabela no README.md. 
