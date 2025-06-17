@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { orangeIcon, blackIcon, violetIcon, redIcon, blueIcon, greenIcon, yellowIcon } from './CustomIcon';
+import { criarSlug } from '../utils/slug';
 
 const CATEGORIAS = {
   'lazer': { cor: 'blue-700', bgCor: 'bg-blue-200', borderCor: 'border-blue-200', icone: blueIcon, label: 'Lazer' },
@@ -14,17 +15,6 @@ const CATEGORIAS = {
 const ConteudoCartografia = ({ locations }) => {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('todos');
   const [termoBusca, setTermoBusca] = useState('');
-
-  // Função para converter título em slug
-  const criarSlug = (texto) => {
-    return texto
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // Remove acentos
-      .replace(/[^a-z0-9]+/g, '-')     // Substitui caracteres especiais por hífen
-      .replace(/^-+|-+$/g, '')         // Remove hífens do início e fim
-      .trim();
-  };
 
   // Agrupa os locais por categoria
   const locaisPorCategoria = locations.reduce((acc, local) => {
