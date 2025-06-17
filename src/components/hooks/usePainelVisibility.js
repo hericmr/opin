@@ -2,16 +2,25 @@ import { useState, useEffect } from "react";
 
 const usePainelVisibility = (painelInfo) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   console.log("usePainelVisibility - painelInfo:", painelInfo);
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 640);
+      const isMobileWidth = window.innerWidth <= 768;
+      const isMobileLandscape = window.innerWidth > window.innerHeight && window.innerWidth <= 1024;
+      setIsMobile(isMobileWidth || isMobileLandscape);
     };
+    
+    checkMobile();
     window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    window.addEventListener("orientationchange", checkMobile);
+    
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("orientationchange", checkMobile);
+    };
   }, []);
 
   useEffect(() => {

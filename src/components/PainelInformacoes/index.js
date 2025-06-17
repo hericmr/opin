@@ -13,8 +13,9 @@ import IntroPanel from "./IntroPanel";
 import PainelContainer from "./components/PainelContainer";
 import DocumentViewer from "./components/DocumentViewer";
 import VideoPlayer from "./components/VideoPlayer";
+import ImagensdasEscolas from './components/ImagensdasEscolas';
 
-const PainelInformacoes = ({ painelInfo, closePainel }) => {
+const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
   console.log('🎯 PainelInformacoes recebeu painelInfo:', painelInfo);
   
   const painelRef = useRef(null);
@@ -82,6 +83,8 @@ const PainelInformacoes = ({ painelInfo, closePainel }) => {
       </>
     );
   };
+
+  console.log('🎯 PainelInformacoes - Antes de renderizar ImagensdasEscolas com escola_id:', painelInfo?.id);
 
   return (
     <div ref={painelRef}>

@@ -240,3 +240,67 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 As conversões de arquivos GeoJSON e imagens (para WebP) já foram realizadas durante o processo de otimização do projeto. Por isso, as dependências e scripts auxiliares utilizados para essas tarefas (como `sharp`, `geojson` e scripts de conversão) foram removidos do projeto para manter o ambiente de produção limpo e enxuto.
 
 Essas ferramentas só são necessárias caso novas conversões sejam feitas no futuro. Para rodar o site em produção, não é preciso instalar essas dependências.
+
+## Estrutura dos arquivos CSV utilizados no Supabase
+
+Os arquivos CSV importados/exportados para o Supabase devem seguir a estrutura abaixo para a tabela principal de escolas indígenas (`escolas_completa`). Cada coluna representa um campo da tabela. Certifique-se de que o cabeçalho do CSV corresponda exatamente aos nomes das colunas listadas.
+
+### Tabela: escolas_completa
+
+| Coluna                        | Tipo         | Descrição                                                                 |
+|-------------------------------|--------------|--------------------------------------------------------------------------|
+| id                            | inteiro      | Identificador único da escola                                            |
+| Escola                        | texto        | Nome da escola                                                          |
+| Município                     | texto        | Município onde a escola está localizada                                  |
+| Endereço                      | texto        | Endereço completo da escola                                              |
+| Terra Indigena (TI)           | texto        | Nome da terra indígena associada                                         |
+| Escola Estadual ou Municipal  | texto        | Tipo administrativo da escola                                            |
+| Parcerias com o município     | booleano     | Indica se há parcerias com o município                                   |
+| Diretoria de Ensino           | texto        | Diretoria de ensino responsável                                          |
+| Ano de criação da escola      | inteiro      | Ano de fundação da escola                                                |
+| Povos indigenas               | texto        | Povos indígenas atendidos                                               |
+| Linguas faladas               | texto        | Línguas faladas na escola                                               |
+| Modalidade de Ensino/turnos de funcionamento | texto | Modalidade e turnos de ensino                                 |
+| Numero de alunos              | inteiro      | Número de alunos                                                        |
+| Disciplinas bilíngues?        | booleano     | Indica se há disciplinas bilíngues                                       |
+| Material pedagógico não indígena | booleano  | Indica se há material pedagógico não indígena                            |
+| Material pedagógico indígena  | booleano     | Indica se há material pedagógico indígena                                |
+| Práticas pedagógicas indígenas| texto        | Descrição das práticas pedagógicas indígenas                             |
+| Formas de avaliação           | texto        | Métodos de avaliação utilizados                                          |
+| Espaço escolar e estrutura    | texto        | Descrição da infraestrutura física                                       |
+| Cozinha/Merenda escolar/diferenciada | texto | Informações sobre alimentação escolar                          |
+| Acesso à água                 | texto        | Descrição do acesso à água                                               |
+| Tem coleta de lixo?           | booleano     | Indica se há coleta de lixo                                              |
+| Acesso à internet             | booleano     | Indica se há acesso à internet                                           |
+| Equipamentos Tecnológicos (Computadores, tablets e impressoras) | texto | Equipamentos disponíveis |
+| Modo de acesso à escola       | texto        | Como se chega à escola                                                   |
+| Gestão/Nome                   | texto        | Nome da gestão                                                          |
+| Outros funcionários           | texto        | Outros funcionários da escola                                            |
+| Quantidade de professores indígenas | inteiro | Número de professores indígenas                                 |
+| Quantidade de professores não indígenas | inteiro | Número de professores não indígenas                          |
+| Professores falam a língua indígena? | booleano | Se professores falam a língua indígena                        |
+| Formação dos professores      | texto        | Formação dos professores                                                 |
+| Formação continuada oferecida | texto        | Formação continuada disponível                                           |
+| A escola possui PPP próprio?  | booleano     | Se possui Projeto Político Pedagógico próprio                            |
+| PPP elaborado com a comunidade? | booleano   | Se o PPP foi elaborado com a comunidade                                  |
+| Projetos em andamento         | texto        | Projetos em andamento                                                    |
+| Parcerias com universidades?  | booleano     | Se há parcerias com universidades                                        |
+| Ações com ONGs ou coletivos?  | booleano     | Se há ações com ONGs ou coletivos                                        |
+| Desejos da comunidade para a escola | texto  | Expectativas/desejos da comunidade                                       |
+| Escola utiliza redes sociais? | booleano     | Se a escola utiliza redes sociais                                        |
+| Links das redes sociais       | texto        | URLs das redes sociais, separados por vírgula                            |
+| historia da aldeia            | texto        | História da aldeia                                                       |
+| Latitude                      | número       | Latitude geográfica                                                      |
+| Longitude                     | número       | Longitude geográfica                                                     |
+| links                         | texto        | Links diversos relacionados à escola                                     |
+| imagens                       | texto        | URLs de imagens, separados por vírgula                                   |
+| audio                         | texto        | URLs de arquivos de áudio                                                |
+| video                         | texto        | URLs de vídeos                                                           |
+| link_para_documentos          | texto        | URLs de documentos (PDFs, etc.)                                          |
+| link_para_videos              | texto        | URLs de vídeos adicionais                                                |
+
+> **Observações:**
+> - Campos booleanos devem ser preenchidos com `TRUE`/`FALSE` ou `1`/`0`.
+> - Campos de lista (como imagens, links, redes sociais) devem ser separados por vírgula.
+> - Certifique-se de que os nomes das colunas estejam exatamente como acima para evitar erros de importação.
+> - Para outros CSVs (como documentos, mídias, etc.), siga a mesma lógica: cada coluna representa um campo da tabela correspondente no Supabase.
