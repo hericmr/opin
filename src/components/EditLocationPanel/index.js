@@ -4,6 +4,7 @@ import { supabase } from '../../supabaseClient';
 import MapSection from "../AddLocationPanel/components/MapSection";
 import InputField from "../AddLocationPanel/components/InputField";
 import RichTextEditor from "../AddLocationPanel/components/RichTextEditor";
+import PDFUploadSection from "../AddLocationPanel/components/PDFUploadSection";
 import { opcoes } from "../AddLocationPanel/constants";
 import { Upload, X } from 'lucide-react';
 
@@ -281,6 +282,20 @@ const EditLocationPanel = ({ location, onClose, onSave }) => {
     }));
   };
 
+  const handlePDFUploadComplete = (urls) => {
+    setEditedLocation(prev => ({
+      ...prev,
+      documentos: urls.join(',')
+    }));
+  };
+
+  const handlePDFRemove = (urls) => {
+    setEditedLocation(prev => ({
+      ...prev,
+      documentos: urls.join(',')
+    }));
+  };
+
   return (
     <div
       className="fixed top-16 right-0 sm:w-3/4 lg:w-[49%] bg-white rounded-xl shadow-lg z-[9999] text-gray-800"
@@ -465,6 +480,13 @@ const EditLocationPanel = ({ location, onClose, onSave }) => {
               </div>
             </div>
 
+            {/* PDF Upload Section */}
+            <PDFUploadSection
+              onUploadComplete={handlePDFUploadComplete}
+              onRemove={handlePDFRemove}
+              existingUrls={editedLocation.documentos ? editedLocation.documentos.split(',').filter(url => url) : []}
+            />
+
             <div className="mt-4 flex justify-end gap-2">
               <button
                 type="button"
@@ -506,6 +528,7 @@ EditLocationPanel.propTypes = {
     localizacao: PropTypes.string,
     links: PropTypes.string,
     imagens: PropTypes.string,
+    documentos: PropTypes.string,
   }).isRequired,
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,

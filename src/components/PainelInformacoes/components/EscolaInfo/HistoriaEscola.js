@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { BookOpen } from 'lucide-react';
+import ImagensdasEscolas from '../ImagensdasEscolas';
 
 const HistoriaEscola = memo(({ escola }) => {
   if (!escola?.historia_aldeia) return null;
@@ -20,10 +21,10 @@ const HistoriaEscola = memo(({ escola }) => {
         prose-a:text-green-700
         prose-a:no-underline
         prose-a:border-b-2
-        prose-a:border-green-300
+        prose-a:border-green-100
         prose-a:transition-colors
         hover:prose-a:border-green-600
-        bg-gradient-to-b from-green-50/50 to-amber-50/30
+        bg-white
         rounded-2xl
         px-4 sm:px-6 md:px-8 py-6
         shadow-lg
@@ -43,6 +44,9 @@ const HistoriaEscola = memo(({ escola }) => {
       <div className="text-base sm:text-lg leading-relaxed text-neutral-800">
         {escola.historia_aldeia}
       </div>
+
+      {/* Imagens da escola, responsivas e modulares */}
+      <ImagensdasEscolas escola_id={escola.id} />
     </article>
   );
 });
