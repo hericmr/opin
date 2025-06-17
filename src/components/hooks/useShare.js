@@ -1,4 +1,4 @@
-import slugify from "slugify";
+import { criarSlug } from '../../utils/slug';
 
 export const useShare = (painelInfo) => {
   const gerarLinkCustomizado = () => {
@@ -6,7 +6,7 @@ export const useShare = (painelInfo) => {
       window.location.origin +
       window.location.pathname +
       "?panel=" +
-      slugify(painelInfo.titulo, { lower: true, remove: /[*+~.()'"!:@]/g })
+      criarSlug(painelInfo.titulo)
     );
   };
 

@@ -15,17 +15,7 @@ import MenuCamadas from "./MenuCamadas";
 import PainelInformacoes from "./PainelInformacoes";
 import detalhesIntro from "./detalhesInfo";
 import "./MapaEscolasIndigenas.css";
-
-// Função para converter título em slug
-const criarSlug = (texto) => {
-  return texto
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
-    .replace(/[^a-z0-9]+/g, '-')     // Substitui caracteres especiais por hífen
-    .replace(/^-+|-+$/g, '')         // Remove hífens do início e fim
-    .trim();
-};
+import { criarSlug } from '../utils/slug';
 
 const MapaEscolasIndigenas = ({ dataPoints }) => {
   console.log("DataPoints recebidos no MapaEscolasIndigenas:", dataPoints ? {

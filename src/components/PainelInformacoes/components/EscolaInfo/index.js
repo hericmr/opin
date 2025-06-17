@@ -9,8 +9,8 @@ import Infraestrutura from './Infraestrutura';
 import GestaoProfessores from './GestaoProfessores';
 import RedesSociais from './RedesSociais';
 import Localizacao from './Localizacao';
-
 import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
+import HistoriadoProfessor from './HistoriadoProfessor';
 
 // Componente wrapper para o grid
 const GridLayoutWrapper = memo(({ children, shouldUseGrid }) => {
@@ -53,12 +53,9 @@ const EscolaInfo = memo(({ escola, shouldUseGrid = false }) => {
         ))}
       </GridLayoutWrapper>
 
-
-      {/* Imagens da história do professor */}
-      <ImagemHistoriadoProfessor escola_id={escola.id} />
-
       {/* História da Escola em destaque */}
       <HistoriaEscola escola={escola} />
+      <HistoriadoProfessor escola={escola} />
     </div>
   );
 });
