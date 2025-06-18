@@ -112,11 +112,6 @@ const ImagensdasEscolas = ({ escola_id }) => {
                 style={{ maxHeight: '350px' }}
               />
             </div>
-            {img.descricao && (
-              <figcaption className="p-2 text-sm text-gray-700 bg-gray-50 border-t">
-                {img.descricao}
-              </figcaption>
-            )}
           </figure>
         ))}
       </div>
