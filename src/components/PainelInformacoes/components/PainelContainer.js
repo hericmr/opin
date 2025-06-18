@@ -19,10 +19,10 @@ const PainelContainer = ({
     fixed
     ${isMobile 
       ? 'inset-0 top-16 w-full h-[calc(100vh-4rem)]' 
-      : 'top-16 right-0 w-full sm:w-3/4 lg:w-[49%]'
+      : 'top-16 bottom-0 right-0 w-full sm:w-3/4 lg:w-[49%] h-auto'
     }
-    rounded-xl shadow-xl z-40 transform transition-all duration-500 ease-in-out
-    bg-white
+    rounded-t-xl shadow-xl z-[9999] transform transition-all duration-500 ease-in-out
+    bg-white border-t-4 border-white
   `;
   
   const visibilityClasses = isVisible 
@@ -39,7 +39,7 @@ const PainelContainer = ({
       aria-labelledby="painel-titulo"
       aria-describedby="painel-descricao"
       aria-modal="true"
-      className={`${baseClasses} ${visibilityClasses}`}
+      className={`${baseClasses} ${visibilityClasses}${isMobile ? ' painel-informacoes-mobile' : ''}`}
       style={{
         height: isMobile ? 'calc(100vh - 4rem)' : painelDimensions.height,
         maxHeight: isMobile ? 'calc(100vh - 4rem)' : painelDimensions.maxHeight,
