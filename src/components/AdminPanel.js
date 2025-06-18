@@ -1,163 +1,314 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { Search, Filter, Edit2, Trash2, X, MapPin, Star } from 'lucide-react';
-import EditLocationPanel from './EditLocationPanel';
-
-// Função para calcular a pontuação
-const calcularPontuacao = (location) => {
-  let pontuacao = 0;
-  
-  // Título (15 pontos)
-  if (location.Escola && location.Escola !== "Título não disponível") {
-    pontuacao += 15;
-  }
-  
-  // Descrição detalhada (25 pontos)
-  if (location.descricao_detalhada && location.descricao_detalhada.length > 100) {
-    pontuacao += 25;
-  }
-  
-  // Imagens (15 pontos)
-  if (location.imagens && location.imagens.length > 0) {
-    pontuacao += 15;
-  }
-  
-  // Áudio (15 pontos)
-  if (location.audio) {
-    pontuacao += 15;
-  }
-  
-  // Links (15 pontos)
-  if (location.links && location.links.length > 0) {
-    pontuacao += 15;
-  }
-
-  // Vídeo (15 pontos)
-  if (location.video) {
-    pontuacao += 15;
-  }
-
-  // Documentos PDF (15 pontos)
-  if (location.documentos && location.documentos.split(',').filter(url => url).length > 0) {
-    pontuacao += 15;
-  }
-
-  return Math.round((pontuacao / 115) * 100); // Ajustado para 115 pontos máximos
-};
+import EditEscolaPanel from './EditEscolaPanel/EditEscolaPanel';
+import DocumentViewer from './PainelInformacoes/components/DocumentViewer';
+console.log('DEBUG: EditEscolaPanel', EditEscolaPanel);
+console.log('DEBUG: DocumentViewer', DocumentViewer);
 
 const AdminPanel = () => {
-  const [locations, setLocations] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [escolas, setEscolas] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('todos');
-  const [error, setError] = useState(null);
-  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [editingLocation, setEditingLocation] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [activeTab, setActiveTab] = useState('dados-basicos');
+  const [documentos, setDocumentos] = useState([]);
+  const [loadingDocumentos, setLoadingDocumentos] = useState(false);
+  const [showAddDocument, setShowAddDocument] = useState(false);
+  const [editingDocument, setEditingDocument] = useState(null);
+  const [newDocument, setNewDocument] = useState({
+    titulo: '',
+    autoria: '',
+    tipo: '',
+    link_pdf: ''
+  });
+
+  // Configuração das abas
+  const tabs = [
+    { id: 'dados-basicos', label: 'Dados Básicos' },
+    { id: 'povos-linguas', label: 'Povos e Línguas' },
+    { id: 'ensino', label: 'Ensino' },
+    { id: 'infraestrutura', label: 'Infraestrutura' },
+    { id: 'gestao-professores', label: 'Gestão e Professores' },
+    { id: 'material-pedagogico', label: 'Material Pedagógico' },
+    { id: 'projetos-parcerias', label: 'Projetos e Parcerias' },
+    { id: 'redes-sociais', label: 'Redes Sociais' },
+    { id: 'historias', label: 'Histórias' },
+    { id: 'coordenadas', label: 'Coordenadas' },
+    { id: 'documentos', label: 'Documentos' }
+  ];
 
   // Buscar todos os locais
   useEffect(() => {
-    const fetchLocations = async () => {
+    const fetchEscolas = async () => {
       try {
-        setLoading(true);
         const { data, error } = await supabase
           .from('escolas_completa')
           .select('*')
           .order('Escola', { ascending: true });
 
         if (error) throw error;
-        setLocations(data);
+        setEscolas(data);
       } catch (err) {
-        console.error('Erro ao buscar locais:', err);
-        setError('Não foi possível carregar os locais. Por favor, tente novamente.');
-      } finally {
-        setLoading(false);
+        console.error('Erro ao buscar escolas:', err);
       }
     };
 
-    fetchLocations();
+    fetchEscolas();
   }, []);
 
-  // Filtrar locais baseado na busca e tipo selecionado
-  const filteredLocations = locations.filter(location => {
-    const matchesSearch = location.Escola?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         location.descricao_detalhada?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = selectedType === 'todos' || location.tipo === selectedType;
-    return matchesSearch && matchesType;
-  });
+  // Buscar documentos da escola selecionada
+  const fetchDocumentos = async (escolaId) => {
+    try {
+      setLoadingDocumentos(true);
+      const { data, error } = await supabase
+        .from('documentos_escola')
+        .select('*')
+        .eq('escola_id', escolaId)
+        .order('titulo', { ascending: true });
 
-  // Tipos únicos para o filtro
-  const uniqueTypes = ['todos', ...new Set(locations.map(loc => loc.tipo))];
-
-  const handleDelete = async (location) => {
-    if (window.confirm(`Tem certeza que deseja excluir o local "${location.Escola}"?`)) {
-      try {
-        setLoading(true);
-        const { error } = await supabase
-          .from('escolas_completa')
-          .delete()
-          .eq('id', location.id);
-
-        if (error) throw error;
-
-        // Atualiza a lista local removendo o item excluído
-        setLocations(locations.filter(loc => loc.id !== location.id));
-        setError(null);
-      } catch (err) {
-        console.error('Erro ao excluir local:', err);
-        setError('Não foi possível excluir o local. Por favor, tente novamente.');
-      } finally {
-        setLoading(false);
-      }
+      if (error) throw error;
+      setDocumentos(data || []);
+    } catch (err) {
+      console.error('Erro ao buscar documentos:', err);
+      setDocumentos([]);
+    } finally {
+      setLoadingDocumentos(false);
     }
   };
 
-  const handleEdit = (location) => {
-    setEditingLocation(location);
-  };
-
-  const handleSaveEdit = async (updatedLocation) => {
-    if (!updatedLocation || !updatedLocation.id) {
-      setError('Dados do local inválidos. Por favor, tente novamente.');
-      return;
+  // Buscar documentos quando uma escola for selecionada para edição
+  useEffect(() => {
+    if (editingLocation?.id) {
+      fetchDocumentos(editingLocation.id);
     }
+  }, [editingLocation?.id]);
+
+  // Funções para gerenciar documentos
+  const handleAddDocument = async (e) => {
+    e.preventDefault();
+    if (!editingLocation?.id) return;
 
     try {
-      setIsSaving(true);
-      setError(null);
-
-      const { error } = await supabase
-        .from('escolas_completa')
-        .update({
-          Escola: updatedLocation.Escola,
-          tipo: updatedLocation.tipo,
-          descricao_detalhada: updatedLocation.descricao_detalhada,
-          localizacao: `${updatedLocation.latitude},${updatedLocation.longitude}`,
-          links: updatedLocation.links,
-          audio: updatedLocation.audio,
-          imagens: updatedLocation.imagens,
-          documentos: updatedLocation.documentos,
-        })
-        .eq('id', updatedLocation.id);
+      const { data, error } = await supabase
+        .from('documentos_escola')
+        .insert([{
+          ...newDocument,
+          escola_id: editingLocation.id
+        }])
+        .select();
 
       if (error) throw error;
 
-      // Atualiza a lista local com o item editado
-      setLocations(locations.map(loc => 
-        loc.id === updatedLocation.id ? updatedLocation : loc
-      ));
-      setEditingLocation(null);
+      setDocumentos([...documentos, data[0]]);
+      setNewDocument({ titulo: '', autoria: '', tipo: '', link_pdf: '' });
+      setShowAddDocument(false);
     } catch (err) {
-      console.error('Erro ao atualizar local:', err);
-      setError('Não foi possível atualizar o local. Por favor, tente novamente.');
+      console.error('Erro ao adicionar documento:', err);
+      alert('Erro ao adicionar documento. Tente novamente.');
+    }
+  };
+
+  const handleUpdateDocument = async (e) => {
+    e.preventDefault();
+    if (!editingDocument?.id) return;
+
+    try {
+      const { error } = await supabase
+        .from('documentos_escola')
+        .update(editingDocument)
+        .eq('id', editingDocument.id);
+
+      if (error) throw error;
+
+      setDocumentos(documentos.map(doc => 
+        doc.id === editingDocument.id ? editingDocument : doc
+      ));
+      setEditingDocument(null);
+    } catch (err) {
+      console.error('Erro ao atualizar documento:', err);
+      alert('Erro ao atualizar documento. Tente novamente.');
+    }
+  };
+
+  const handleDeleteDocument = async (documentId) => {
+    if (!window.confirm('Tem certeza que deseja excluir este documento?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('documentos_escola')
+        .delete()
+        .eq('id', documentId);
+
+      if (error) throw error;
+
+      setDocumentos(documentos.filter(doc => doc.id !== documentId));
+    } catch (err) {
+      console.error('Erro ao excluir documento:', err);
+      alert('Erro ao excluir documento. Tente novamente.');
+    }
+  };
+
+  // Função de validação
+  const validateForm = (data) => {
+    const errors = [];
+    if (!data.Escola || data.Escola.trim() === '') {
+      errors.push('Nome da escola é obrigatório');
+    }
+    return errors;
+  };
+
+  // Função para salvar com validação e feedback
+  const handleSave = async (e) => {
+    e.preventDefault();
+    
+    // Validar formulário
+    const validationErrors = validateForm(editingLocation);
+    if (validationErrors.length > 0) {
+      setSaveError(validationErrors.join(', '));
+      return;
+    }
+
+    setIsSaving(true);
+    setSaveError(null);
+    setSaveSuccess(false);
+
+    try {
+      // Preparar dados para atualização - organizados por seções
+      const updateData = {
+        // Dados Básicos
+        'Escola': editingLocation.Escola,
+        'Município': editingLocation['Município'],
+        'Endereço': editingLocation['Endereço'],
+        'Terra Indigena (TI)': editingLocation['Terra Indigena (TI)'],
+        'Escola Estadual ou Municipal': editingLocation['Escola Estadual ou Municipal'],
+        'Diretoria de Ensino': editingLocation['Diretoria de Ensino'],
+        'Ano de criação da escola': editingLocation['Ano de criação da escola'],
+        
+        // Povos e Línguas
+        'Povos indigenas': editingLocation['Povos indigenas'],
+        'Linguas faladas': editingLocation['Linguas faladas'],
+        
+        // Ensino
+        'Modalidade de Ensino/turnos de funcionamento': editingLocation['Modalidade de Ensino/turnos de funcionamento'],
+        'Numero de alunos': editingLocation['Numero de alunos'],
+        'disciplinas_bilingues': editingLocation['disciplinas_bilingues'],
+        'formas_avaliacao': editingLocation['formas_avaliacao'],
+        
+        // Infraestrutura
+        'espaco_escolar': editingLocation['espaco_escolar'],
+        'cozinha_merenda': editingLocation['cozinha_merenda'],
+        'acesso_agua': editingLocation['acesso_agua'],
+        'coleta_lixo': editingLocation['coleta_lixo'],
+        'acesso_internet': editingLocation['acesso_internet'],
+        'equipamentos': editingLocation['equipamentos'],
+        'modo_acesso': editingLocation['modo_acesso'],
+        
+        // Gestão e Professores
+        'gestao': editingLocation['gestao'],
+        'outros_funcionarios': editingLocation['outros_funcionarios'],
+        'professores_indigenas': editingLocation['professores_indigenas'],
+        'professores_nao_indigenas': editingLocation['professores_nao_indigenas'],
+        'professores_falam_lingua': editingLocation['professores_falam_lingua'],
+        'formacao_professores': editingLocation['formacao_professores'],
+        'formacao_continuada': editingLocation['formacao_continuada'],
+        
+        // Material Pedagógico
+        'material_nao_indigena': editingLocation['material_nao_indigena'],
+        'material_indigena': editingLocation['material_indigena'],
+        'praticas_pedagogicas': editingLocation['praticas_pedagogicas'],
+        
+        // Projetos e Parcerias
+        'projetos_andamento': editingLocation['projetos_andamento'],
+        'parcerias_universidades': editingLocation['parcerias_universidades'],
+        'acoes_ongs': editingLocation['acoes_ongs'],
+        'desejos_comunidade': editingLocation['desejos_comunidade'],
+        
+        // Redes Sociais e Links
+        'usa_redes_sociais': editingLocation['usa_redes_sociais'],
+        'links_redes_sociais': editingLocation['links_redes_sociais'],
+        'links': editingLocation['links'],
+        'link_para_videos': editingLocation['link_para_videos'],
+        
+        // Histórias
+        'historia_da_escola': editingLocation['historia_da_escola'],
+        'historia_do_prof': editingLocation['historia_do_prof'],
+        
+        // Coordenadas
+        'latitude': editingLocation['latitude'],
+        'longitude': editingLocation['longitude']
+      };
+
+      // Atualizar no Supabase
+      const { error } = await supabase
+        .from('escolas_completa')
+        .update(updateData)
+        .eq('id', editingLocation.id);
+
+      if (error) {
+        throw error;
+      }
+
+      // Atualizar lista local
+      setEscolas(escolas.map(escola => escola.id === editingLocation.id ? { ...escola, ...editingLocation } : escola));
+      
+      // Feedback de sucesso
+      setSaveSuccess(true);
+      setTimeout(() => {
+        setEditingLocation(null);
+        setSaveSuccess(false);
+      }, 2000);
+
+    } catch (error) {
+      console.error('Erro ao salvar:', error);
+      setSaveError(`Erro ao salvar: ${error.message}`);
     } finally {
       setIsSaving(false);
     }
   };
 
+  console.log('DEBUG: editingLocation (antes do return)', editingLocation);
+
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Menu lateral */}
+      <aside className="w-64 bg-white border-r p-4 overflow-y-auto max-h-screen">
+        <h2 className="text-lg font-bold mb-4">Escolas</h2>
+        
+        {/* Busca no menu lateral */}
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Buscar escola..."
+            className="w-full px-3 py-2 border rounded text-sm"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        <ul className="space-y-1">
+          {escolas
+            .filter(escola => 
+              escola.Escola?.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map(escola => (
+            <li key={escola.id}>
+              <button
+                className={`block w-full text-left px-2 py-1 rounded hover:bg-blue-100 text-sm ${editingLocation?.id === escola.id ? 'bg-blue-200 font-bold' : ''}`}
+                onClick={() => setEditingLocation(escola)}
+              >
+                {escola.Escola}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </aside>
+
+      {/* Conteúdo principal */}
+      <main className="flex-1 p-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Painel de Administração</h1>
         
         {/* Barra de ferramentas */}
@@ -165,7 +316,7 @@ const AdminPanel = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Campo de busca */}
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              {/* <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" /> */}
               <input
                 type="text"
                 placeholder="Buscar por título ou descrição..."
@@ -174,174 +325,788 @@ const AdminPanel = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            
             {/* Filtro por tipo */}
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              {/* <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" /> */}
               <select
                 className="pl-10 pr-4 py-2 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
               >
-                {uniqueTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type.charAt(0).toUpperCase() + type.slice(1)}
-                  </option>
-                ))}
+                <option value="todos">Todos</option>
               </select>
             </div>
           </div>
         </div>
 
-        {/* Mensagem de erro */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
-            {error}
-          </div>
-        )}
-
         {/* Painel de Edição */}
-        {editingLocation && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-            <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-              <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-                <h2 className="text-lg font-semibold">Editar Local</h2>
-                <button
-                  onClick={() => setEditingLocation(null)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+        {editingLocation && typeof editingLocation === 'object' && editingLocation.id && editingLocation.Escola && (
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold">Editar Escola</h2>
+              <button
+                onClick={() => setEditingLocation(null)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                Fechar
+              </button>
+            </div>
+
+            {/* Navegação por abas */}
+            <div className="border-b border-gray-200 mb-6">
+              <nav className="-mb-px flex space-x-8 overflow-x-auto">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm ${
+                      activeTab === tab.id
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            <form onSubmit={handleSave}>
+              {/* Conteúdo das abas */}
+              <div className="min-h-[400px]">
+                {/* Aba: Dados Básicos */}
+                {activeTab === 'dados-basicos' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Nome da Escola *</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation.Escola || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, Escola: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Município</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['Município'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Município': e.target.value })}
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Endereço</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['Endereço'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Endereço': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Terra Indígena (TI)</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['Terra Indigena (TI)'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Terra Indigena (TI)': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Escola</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['Escola Estadual ou Municipal'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Escola Estadual ou Municipal': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Diretoria de Ensino</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['Diretoria de Ensino'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Diretoria de Ensino': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Ano de Criação</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['Ano de criação da escola'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Ano de criação da escola': e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Aba: Povos e Línguas */}
+                {activeTab === 'povos-linguas' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Povos Indígenas</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['Povos indigenas'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Povos indigenas': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Línguas Faladas</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['Linguas faladas'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Linguas faladas': e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Aba: Ensino */}
+                {activeTab === 'ensino' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Modalidade de Ensino/Turnos</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['Modalidade de Ensino/turnos de funcionamento'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Modalidade de Ensino/turnos de funcionamento': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Número de Alunos</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['Numero de alunos'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Numero de alunos': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Disciplinas Bilíngues</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['disciplinas_bilingues'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'disciplinas_bilingues': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Formas de Avaliação</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['formas_avaliacao'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'formas_avaliacao': e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Aba: Infraestrutura */}
+                {activeTab === 'infraestrutura' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Espaço Escolar e Estrutura</label>
+                      <textarea
+                        className="w-full border rounded px-3 py-2 h-20"
+                        value={editingLocation['espaco_escolar'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'espaco_escolar': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Cozinha/Merenda Escolar</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['cozinha_merenda'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'cozinha_merenda': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Acesso à Água</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['acesso_agua'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'acesso_agua': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Coleta de Lixo</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['coleta_lixo'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'coleta_lixo': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Acesso à Internet</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['acesso_internet'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'acesso_internet': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Equipamentos Tecnológicos</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['equipamentos'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'equipamentos': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Modo de Acesso à Escola</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['modo_acesso'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'modo_acesso': e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Aba: Gestão e Professores */}
+                {activeTab === 'gestao-professores' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Gestão/Nome</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['gestao'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'gestao': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Outros Funcionários</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['outros_funcionarios'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'outros_funcionarios': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Professores Indígenas</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['professores_indigenas'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'professores_indigenas': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Professores Não Indígenas</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['professores_nao_indigenas'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'professores_nao_indigenas': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Professores Falam a Língua Indígena</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['professores_falam_lingua'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'professores_falam_lingua': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Formação dos Professores</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['formacao_professores'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'formacao_professores': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Formação Continuada</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['formacao_continuada'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'formacao_continuada': e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Aba: Material Pedagógico */}
+                {activeTab === 'material-pedagogico' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Material Pedagógico Não Indígena</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['material_nao_indigena'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'material_nao_indigena': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Material Pedagógico Indígena</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['material_indigena'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'material_indigena': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Práticas Pedagógicas Indígenas</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['praticas_pedagogicas'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'praticas_pedagogicas': e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Aba: Projetos e Parcerias */}
+                {activeTab === 'projetos-parcerias' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Projetos em Andamento</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['projetos_andamento'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'projetos_andamento': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Parcerias com Universidades</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['parcerias_universidades'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'parcerias_universidades': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Ações com ONGs ou Coletivos</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['acoes_ongs'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'acoes_ongs': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Desejos da Comunidade</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['desejos_comunidade'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'desejos_comunidade': e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Aba: Redes Sociais */}
+                {activeTab === 'redes-sociais' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Utiliza Redes Sociais</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['usa_redes_sociais'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'usa_redes_sociais': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Links das Redes Sociais</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['links_redes_sociais'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'links_redes_sociais': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Links Gerais</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['links'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'links': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Link para Vídeos</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['link_para_videos'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'link_para_videos': e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Aba: Histórias */}
+                {activeTab === 'historias' && (
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">História da Escola</label>
+                      <textarea
+                        className="w-full border rounded px-3 py-2 h-32"
+                        value={editingLocation['historia_da_escola'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'historia_da_escola': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">História do Professor</label>
+                      <textarea
+                        className="w-full border rounded px-3 py-2 h-32"
+                        value={editingLocation['historia_do_prof'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'historia_do_prof': e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Aba: Coordenadas */}
+                {activeTab === 'coordenadas' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
+                      <input
+                        type="number"
+                        step="any"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['latitude'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'latitude': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                      <input
+                        type="number"
+                        step="any"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['longitude'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'longitude': e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Aba: Documentos */}
+                {activeTab === 'documentos' && (
+                  <div className="space-y-6">
+                    {/* Status de carregamento */}
+                    {loadingDocumentos && (
+                      <div className="flex items-center justify-center py-8">
+                        <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                        <span className="ml-2 text-gray-600">Carregando documentos...</span>
+                      </div>
+                    )}
+
+                    {/* DocumentViewer */}
+                    {!loadingDocumentos && (
+                      <div>
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="text-lg font-medium text-gray-800">
+                            Documentos da Escola ({documentos.length})
+                          </h4>
+                          <button
+                            type="button"
+                            onClick={() => setShowAddDocument(true)}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                          >
+                            + Adicionar Documento
+                          </button>
+                        </div>
+                        
+                        {documentos.length === 0 && !showAddDocument && (
+                          <div className="text-center py-8 bg-gray-50 rounded-lg">
+                            <p className="text-gray-500 mb-4">Nenhum documento cadastrado para esta escola.</p>
+                            <button
+                              type="button"
+                              onClick={() => setShowAddDocument(true)}
+                              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                            >
+                              Adicionar Primeiro Documento
+                            </button>
+                          </div>
+                        )}
+                        
+                        {documentos.length > 0 && (
+                          <DocumentViewer 
+                            documentos={documentos} 
+                            title="Documentos da Escola"
+                          />
+                        )}
+                      </div>
+                    )}
+
+                    {/* Formulário para adicionar documento */}
+                    {showAddDocument && (
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                        <h5 className="font-medium text-blue-800 mb-4">Adicionar Novo Documento</h5>
+                        <form onSubmit={handleAddDocument} className="space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
+                              <input
+                                type="text"
+                                required
+                                className="w-full border rounded px-3 py-2"
+                                value={newDocument.titulo}
+                                onChange={e => setNewDocument({ ...newDocument, titulo: e.target.value })}
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Autor</label>
+                              <input
+                                type="text"
+                                className="w-full border rounded px-3 py-2"
+                                value={newDocument.autoria}
+                                onChange={e => setNewDocument({ ...newDocument, autoria: e.target.value })}
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+                              <input
+                                type="text"
+                                className="w-full border rounded px-3 py-2"
+                                value={newDocument.tipo}
+                                onChange={e => setNewDocument({ ...newDocument, tipo: e.target.value })}
+                                placeholder="Ex: PDF, Relatório, Plano de Aula"
+                              />
+                            </div>
+                            <div className="md:col-span-2">
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Link do PDF *</label>
+                              <input
+                                type="url"
+                                required
+                                className="w-full border rounded px-3 py-2"
+                                value={newDocument.link_pdf}
+                                onChange={e => setNewDocument({ ...newDocument, link_pdf: e.target.value })}
+                                placeholder="https://drive.google.com/file/d/..."
+                              />
+                              <p className="text-xs text-gray-500 mt-1">
+                                Recomendado: Link do Google Drive com permissão pública
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              type="submit"
+                              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                            >
+                              Adicionar Documento
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowAddDocument(false);
+                                setNewDocument({ titulo: '', autoria: '', tipo: '', link_pdf: '' });
+                              }}
+                              className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
+                            >
+                              Cancelar
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    )}
+
+                    {/* Lista de documentos com ações */}
+                    {!loadingDocumentos && documentos.length > 0 && (
+                      <div className="bg-white border border-gray-200 rounded-lg p-4">
+                        <h5 className="font-medium text-gray-800 mb-4">Gerenciar Documentos</h5>
+                        <div className="space-y-3">
+                          {documentos.map((doc) => (
+                            <div key={doc.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                              <div className="flex-1">
+                                <h6 className="font-medium text-gray-800">{doc.titulo}</h6>
+                                {doc.autoria && (
+                                  <p className="text-sm text-gray-600">Por: {doc.autoria}</p>
+                                )}
+                                {doc.tipo && (
+                                  <span className="inline-block mt-1 px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                                    {doc.tipo}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => setEditingDocument(doc)}
+                                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                >
+                                  Editar
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteDocument(doc.id)}
+                                  className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                                >
+                                  Excluir
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Formulário para editar documento */}
+                    {editingDocument && (
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                        <h5 className="font-medium text-yellow-800 mb-4">Editar Documento</h5>
+                        <form onSubmit={handleUpdateDocument} className="space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
+                              <input
+                                type="text"
+                                required
+                                className="w-full border rounded px-3 py-2"
+                                value={editingDocument.titulo}
+                                onChange={e => setEditingDocument({ ...editingDocument, titulo: e.target.value })}
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Autor</label>
+                              <input
+                                type="text"
+                                className="w-full border rounded px-3 py-2"
+                                value={editingDocument.autoria || ''}
+                                onChange={e => setEditingDocument({ ...editingDocument, autoria: e.target.value })}
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+                              <input
+                                type="text"
+                                className="w-full border rounded px-3 py-2"
+                                value={editingDocument.tipo || ''}
+                                onChange={e => setEditingDocument({ ...editingDocument, tipo: e.target.value })}
+                              />
+                            </div>
+                            <div className="md:col-span-2">
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Link do PDF *</label>
+                              <input
+                                type="url"
+                                required
+                                className="w-full border rounded px-3 py-2"
+                                value={editingDocument.link_pdf}
+                                onChange={e => setEditingDocument({ ...editingDocument, link_pdf: e.target.value })}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              type="submit"
+                              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+                            >
+                              Atualizar Documento
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditingDocument(null)}
+                              className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
+                            >
+                              Cancelar
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    )}
+
+                    {/* Informações sobre documentos */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <h5 className="font-medium text-blue-800 mb-2">Sobre os Documentos</h5>
+                      <p className="text-sm text-blue-700 mb-3">
+                        Os documentos são armazenados na tabela <code>documentos_escola</code> no Supabase.
+                        Você pode adicionar, editar e remover documentos diretamente neste painel.
+                      </p>
+                      <div className="text-xs text-blue-600">
+                        <p><strong>Estrutura da tabela:</strong></p>
+                        <ul className="list-disc list-inside mt-1 space-y-1">
+                          <li><code>id</code> - ID único do documento</li>
+                          <li><code>escola_id</code> - ID da escola (preenchido automaticamente)</li>
+                          <li><code>titulo</code> - Título do documento</li>
+                          <li><code>autoria</code> - Autor do documento (opcional)</li>
+                          <li><code>tipo</code> - Tipo do documento (opcional)</li>
+                          <li><code>link_pdf</code> - URL do documento (Google Drive ou outro)</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-              <EditLocationPanel
-                location={editingLocation}
-                onClose={() => setEditingLocation(null)}
-                onSave={handleSaveEdit}
-              />
+            </form>
+
+            {/* Feedback de erro */}
+            {saveError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+                {saveError}
+              </div>
+            )}
+            
+            {/* Feedback de sucesso */}
+            {saveSuccess && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4">
+                Escola salva com sucesso!
+              </div>
+            )}
+            
+            <div className="flex gap-2 mt-6">
+              <button 
+                onClick={handleSave}
+                className={`px-4 py-2 rounded flex items-center gap-2 ${
+                  isSaving 
+                    ? 'bg-gray-400 text-white cursor-not-allowed' 
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
+                disabled={isSaving}
+              >
+                {isSaving ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Salvando...
+                  </>
+                ) : (
+                  'Salvar'
+                )}
+              </button>
+              <button 
+                type="button" 
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400" 
+                onClick={() => setEditingLocation(null)}
+                disabled={isSaving}
+              >
+                Cancelar
+              </button>
             </div>
           </div>
         )}
-
-        {/* Tabela de locais */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          {loading ? (
-            <div className="p-8 text-center text-gray-500">Carregando...</div>
-          ) : filteredLocations.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              Nenhum local encontrado.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <div className="max-h-[calc(100vh-300px)] overflow-y-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50 sticky top-0 z-10">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
-                        Escola
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
-                        Tipo
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
-                        Localização
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
-                        Documentos
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
-                        Pontuação
-                      </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
-                        Ações
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredLocations.map((location) => {
-                      const pontuacao = calcularPontuacao(location);
-                      const documentos = location.documentos ? location.documentos.split(',').filter(url => url) : [];
-                      return (
-                        <tr key={location.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4">
-                            <div className="text-sm font-medium text-gray-900">
-                              {location.Escola}
-                            </div>
-                            <div className="text-xs text-gray-500 line-clamp-2">
-                              {location.descricao_detalhada?.replace(/<[^>]*>/g, '')}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              location.tipo === 'lazer' ? 'bg-blue-100 text-blue-800' :
-                              location.tipo === 'assistencia' ? 'bg-green-100 text-green-800' :
-                              location.tipo === 'historico' ? 'bg-yellow-100 text-yellow-800' :
-                              location.tipo === 'comunidades' ? 'bg-red-100 text-red-800' :
-                              location.tipo === 'educação' ? 'bg-violet-100 text-violet-800' :
-                              location.tipo === 'religiao' ? 'bg-gray-100 text-gray-800' :
-                              'bg-orange-100 text-orange-800'
-                            }`}>
-                              {location.tipo}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center text-sm text-gray-500">
-                              <MapPin className="w-4 h-4 mr-1" />
-                              {location.localizacao}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center text-sm text-gray-500">
-                              {documentos.length > 0 ? (
-                                <span className="text-green-600">
-                                  {documentos.length} {documentos.length === 1 ? 'documento' : 'documentos'}
-                                </span>
-                              ) : (
-                                <span className="text-gray-400">Sem documentos</span>
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden mr-2">
-                                <div 
-                                  className={`h-full rounded-full transition-all duration-300 ${
-                                    pontuacao >= 80 ? 'bg-green-500' :
-                                    pontuacao >= 60 ? 'bg-yellow-500' :
-                                    'bg-red-500'
-                                  }`}
-                                  style={{ width: `${pontuacao}%` }}
-                                />
-                              </div>
-                              <div className="flex items-center text-sm">
-                                <Star className="w-4 h-4 mr-1 text-yellow-400" />
-                                {pontuacao}%
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button
-                              onClick={() => handleEdit(location)}
-                              className="text-blue-600 hover:text-blue-900 mr-4"
-                            >
-                              <Edit2 className="w-4 h-4 inline" />
-                            </button>
-                            <button
-                              onClick={() => handleDelete(location)}
-                              className="text-red-600 hover:text-red-900"
-                            >
-                              <Trash2 className="w-4 h-4 inline" />
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+      </main>
     </div>
   );
 };

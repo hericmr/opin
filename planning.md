@@ -1,55 +1,236 @@
-## [EDITPANEL] Planejamento para Inserção de Dados no Supabase
+# PainelInformacoes Editing Flow Redesign — Implementation Plan
 
-### 1. Objetivo
-Desenvolver um EditPanel (painel de edição/cadastro) no frontend que permita inserir e editar dados diretamente nas tabelas do Supabase (`escolas_completa`, `imagens_escola`, `documentos_escola`). O painel deve ser intuitivo, seguro e facilitar o gerenciamento dos dados do mapa.
+## Execution Phases & Checklist
 
-### 2. Levantamento de Campos
-- **escolas_completa**: Todos os campos essenciais para o funcionamento do mapa (id, nome, município, latitude, longitude, etc.)
-- **imagens_escola**: Upload/URL de imagens, descrição, associação com escola_id.
-- **documentos_escola**: Upload/URL de documentos, título, tipo, associação com escola_id.
+### [x] **Phase 1: Analysis** (Complete)
+- [x] List all Supabase tables used by PainelInformacoes
+- [x] List all editable fields for each table
+- [x] Identify which fields require file uploads to buckets
 
-### 3. UX/UI do EditPanel
-- Interface em abas ou seções: Dados da escola, Imagens, Documentos.
-- Formulários dinâmicos e responsivos (mobile/desktop).
-- Campos obrigatórios destacados.
-- Feedback visual para sucesso/erro.
-- Botões claros: Salvar, Cancelar, Adicionar Imagem/Documento, Excluir.
-- Confirmação antes de excluir registros.
-- Upload de arquivos com preview (imagens/documentos).
-- Busca/autocomplete para editar escolas já cadastradas.
+### [x] **Phase 2: Component Design** (Complete)
+- [x] Define editing component structure (modal, drawer, or page)
+- [x] Specify form state and input types
+- [x] Plan media upload UI and integration
+- [x] Map Supabase client methods to actions
 
-### 4. Fluxo de Inserção/Edição
-1. Usuário acessa o EditPanel (via botão ou rota protegida).
-2. Pode buscar uma escola existente (para editar) ou clicar em "Nova Escola".
-3. Preenche os campos obrigatórios e opcionais.
-4. Adiciona imagens e documentos (upload ou URL).
-5. Validação dos campos (ex: latitude/longitude, campos obrigatórios).
-6. Ao salvar:
-   - Se for novo, insere na tabela `escolas_completa` e obtém o id.
-   - Insere imagens/documentos vinculando ao id da escola.
-   - Se for edição, atualiza os dados e gerencia imagens/documentos (adicionar/remover).
-7. Feedback de sucesso ou erro.
+### [x] **Phase 3: Implementation** (In Progress)
+- [x] Implement form and state management
+- [x] Implement Supabase insert/upsert for all tables
+- [x] Implement file upload to buckets and metadata insertion
+- [ ] Add validation, error handling, and loading states
+- [ ] Ensure real-time update of PainelInformacoes
 
-### 5. Integração com Supabase
-- Utilizar o client JS do Supabase para:
-  - Inserir (`insert`) e atualizar (`update`) dados nas tabelas.
-  - Upload de arquivos para o storage (imagens/documentos) e salvar URLs.
-  - Buscar dados para edição (`select`).
-- Tratar erros de conexão e validação.
-- Garantir que as operações sejam atômicas (rollback em caso de erro).
+### [ ] **Phase 4: Testing & Integration**
+- [ ] Add and test mock data for all field types
+- [ ] Test file uploads (valid/invalid cases)
+- [ ] Ensure immediate data reflection in PainelInformacoes
+- [ ] Handle all error and edge cases
 
-### 6. Segurança e Permissões
-- Proteger o EditPanel com autenticação (login obrigatório).
-- Restringir permissões de escrita/edição apenas a usuários autorizados.
-- Validar dados no frontend e backend (policies no Supabase).
-- Limitar tamanho e tipo de arquivos no upload.
-
-### 7. Testes e Validação
-- Testar todos os fluxos: cadastro, edição, deleção, upload.
-- Testar responsividade e acessibilidade.
-- Validar mensagens de erro e feedbacks.
-- Garantir que dados inseridos/alterados aparecem corretamente no mapa.
+### [ ] **Phase 5: Final Documentation**
+- [ ] Update README.md with usage instructions
+- [ ] Document Supabase schema and file path conventions
 
 ---
 
-Esse planejamento serve como guia para a reformulação do EditPanel, tornando o processo de inserção e edição de dados no Supabase mais eficiente, seguro e amigável.
+## Phase 1: Analysis (Complete)
+
+- **Supabase tables used:**
+  - [x] escolas_completa
+  - [x] imagens_escola
+  - [x] documentos_escola
+
+- **Editable fields checklist:**
+  - **escolas_completa** (todos os campos analisados)
+  - **imagens_escola** (todos os campos analisados)
+  - **documentos_escola** (todos os campos analisados)
+
+- **Fields requiring file upload:**
+  - [x] imagens_escola: image files (to bucket)
+  - [x] documentos_escola: document files (to bucket)
+  - [ ] audio/video: confirmar se haverá upload e bucket (opcional, depende da necessidade do projeto)
+
+---
+
+_Phase 1 concluída. Pronto para avançar para a Fase 2: Component Design._
+
+## Phase 2: Component Design (Complete)
+
+- **Component Structure:**
+  - [x] Dedicated page (recommended for full editing experience, especially with many fields and media uploads)
+  - [ ] Modal/drawer (could be used for quick edits, but not ideal for full data entry)
+  - [x] Organization: Tabs or vertical sections for "Dados da Escola", "Imagens", "Documentos" (and opcional: "Áudio/Vídeo")
+
+- **Form State & Inputs:**
+  - [x] Controlled inputs for all text, number, select, and checkbox fields
+  - [x] Arrays for images/documents to be uploaded (with preview and removal)
+  - [x] Loading and error states for async operations
+
+- **Media Upload UI:**
+  - [x] File input for images/documents (multiple allowed)
+  - [x] Preview for selected files before upload
+  - [x] Remove/cancel option for files before upload
+
+- **Supabase Client Methods Mapping:**
+  - **Salvar/atualizar dados da escola (`escolas_completa`):**
+    - Usar `supabase.from('escolas_completa').insert()` para novos registros.
+    - Usar `supabase.from('escolas_completa').upsert()` para atualizar registros existentes (baseado em `id`).
+  - **Upload de imagens (`imagens_escola` + bucket):**
+    - Para cada imagem:
+      - Usar `supabase.storage.from('imagens-das-escolas').upload('escola_id/filename.ext', file)`
+      - Após upload, obter a URL pública e inserir metadados em `imagens_escola` com `supabase.from('imagens_escola').insert({ escola_id, url, descricao })`
+  - **Upload de documentos (`documentos_escola` + bucket):**
+    - Para cada documento:
+      - Usar `supabase.storage.from('documentos-das-escolas').upload('escola_id/filename.ext', file)`
+      - Após upload, obter a URL pública e inserir metadados em `documentos_escola` com `supabase.from('documentos_escola').insert({ escola_id, url, titulo, tipo })`
+  - **(Opcional) Upload de áudio/vídeo:**
+    - Seguir padrão similar, usando buckets e tabelas/metadados apropriados.
+  - **Após qualquer operação de inserção/edição:**
+    - Atualizar o estado global/contexto para refletir as mudanças em `PainelInformacoes` imediatamente.
+  - **Tratamento de erros:**
+    - Capturar e exibir mensagens de erro para falhas de upload ou inserção.
+    - Exibir loading indicators durante operações assíncronas.
+
+---
+
+_Next step: Detalhar o mapeamento dos métodos do Supabase para cada ação do componente e avançar para a Fase 3: Implementation._
+
+## Phase 3: Implementation (In Progress)
+
+- **Primeiros passos:**
+  - [x] Criar componente de edição dedicado (ex: `EscolaEditPanel.js`)
+  - [x] Estruturar formulário inicial com campos principais de `escolas_completa`
+  - [x] Adicionar inputs para upload de imagens e documentos (com preview)
+  - [x] Integrar Supabase para inserção/atualização de dados da escola (`insert`/`upsert`)
+  - [x] Integrar Supabase Storage para upload de arquivos e inserção de metadados
+  - [ ] Adicionar validação de campos obrigatórios e tipos de arquivo
+  - [ ] Implementar feedback visual de erro e loading
+  - [ ] Garantir atualização em tempo real do PainelInformacoes após salvar
+
+---
+
+_Next step: Implementar validação, feedback visual e atualização em tempo real. Após isso, avançar para a Fase 4: Testing & Integration._
+
+## 1. Analysis Phase
+- **Identify all Supabase tables used by PainelInformacoes:**
+  - `escolas_completa` (main school data)
+  - `imagens_escola` (image metadata, linked by `escola_id`)
+  - `documentos_escola` (document metadata, linked by `escola_id`)
+- **List all editable fields:**
+  - From `escolas_completa`:
+    - `Escola`, `Município`, `Endereço`, `Terra Indigena (TI)`, `Escola Estadual ou Municipal`, `Parcerias com o município`, `Diretoria de Ensino`, `Ano de criação da escola`, `Povos indigenas`, `Linguas faladas`, `Modalidade de Ensino/turnos de funcionamento`, `Numero de alunos`, `espaco_escolar`, `cozinha_merenda`, `acesso_agua`, `coleta_lixo`, `acesso_internet`, `equipamentos`, `modo_acesso`, `gestao`, `outros_funcionarios`, `professores_indigenas`, `professores_nao_indigenas`, `professores_falam_lingua`, `formacao_professores`, `formacao_continuada`, `ppp_proprio`, `ppp_comunidade`, `disciplinas_bilingues`, `material_nao_indigena`, `material_indigena`, `praticas_pedagogicas`, `formas_avaliacao`, `projetos_andamento`, `parcerias_universidades`, `acoes_ongs`, `desejos_comunidade`, `usa_redes_sociais`, `links_redes_sociais`, `historia_da_escola`, `historia_do_prof`, `latitude`, `longitude`, `links`, `audio`, `video`, `link_para_documentos`, `link_para_videos`
+  - From `imagens_escola`:
+    - `url`, `descricao`, `escola_id`
+  - From `documentos_escola`:
+    - `url`, `titulo`, `tipo`, `escola_id`
+- **Identify which fields involve uploading to buckets:**
+  - Images: files uploaded to Supabase Storage, path: `imagens-das-escolas/{escola_id}/...`
+  - Documents: files uploaded to Supabase Storage, path: `documentos-das-escolas/{escola_id}/...`
+  - Audio/Video: (if supported) similar pattern, e.g., `audios-das-escolas/{escola_id}/...`
+
+## 2. Component Design Phase
+- **Structure:**
+  - Dedicated page or modal/drawer (choose based on UX needs; recommend a full-page for complex forms, modal/drawer for quick edits)
+  - Tabs or sections for: Dados da Escola, Imagens, Documentos, (opcional: Áudio/Vídeo)
+- **State:**
+  - Form state for all text fields (controlled inputs)
+  - Arrays for images/documents to be uploaded (with preview and removal)
+  - Loading and error states for async operations
+- **Inputs:**
+  - Text, textarea, select, checkbox for school data
+  - File input for images/documents (multiple allowed)
+  - Preview for selected files
+- **Supabase Integration:**
+  - Use `insert`/`upsert` for table data
+  - Use `storage.upload` for file uploads
+  - On successful upload, insert metadata (URL, description, etc.) into the respective table
+
+## 3. Implementation Phase
+- **Insertions & Validation:**
+  - Validate all required fields before submission
+  - On save:
+    - Insert or update record in `escolas_completa`
+    - For each image/document, upload file to bucket, then insert metadata row in `imagens_escola`/`documentos_escola`
+    - Use `escola_id` as folder and foreign key
+- **File Uploads:**
+  - Use Supabase Storage API
+  - Path convention: `imagens-das-escolas/{escola_id}/filename.ext`, `documentos-das-escolas/{escola_id}/filename.ext`
+  - Store resulting public URL in the metadata table
+- **Real-time Update:**
+  - After save, trigger a refresh of `PainelInformacoes` (via context, prop, or event)
+- **Error Handling:**
+  - Show clear error messages for failed uploads or validation
+  - Show loading indicators during async operations
+
+## 4. Testing & Integration
+- **Mock Data:**
+  - Test with all field types, including edge cases (e.g., missing required fields, large files, unsupported formats)
+- **Immediate Feedback:**
+  - Ensure new/edited data appears instantly in `PainelInformacoes` after save
+- **File Handling:**
+  - Reject invalid file types/extensions
+  - Handle Supabase/network errors gracefully
+- **Integration:**
+  - Test full flow: create, edit, delete (if supported) for all data types
+
+## 5. Final Documentation
+- **README.md:**
+  - Add a section explaining how to use the new editing interface
+  - List all required/optional fields and their types
+  - Document file path conventions for uploads
+  - Note any Supabase schema or policy requirements for editing
+
+---
+
+This phased plan ensures a maintainable, project-specific editing interface for all data and media managed by PainelInformacoes, tightly integrated with Supabase tables and storage.
+
+## Estrutura da tabela `escolas_completa` (Supabase)
+
+| Coluna                                      | Tipo     | Obrigatório | Observação |
+|---------------------------------------------|----------|-------------|------------|
+| id                                          | integer  | Sim         | Chave primária, auto-incremento |
+| Escola                                      | text     | Não         | Nome da escola |
+| Município                                   | text     | Não         | |
+| Endereço                                    | text     | Não         | |
+| Terra Indigena (TI)                         | text     | Não         | |
+| Escola Estadual ou Municipal                | text     | Não         | |
+| Parcerias com o município                   | text     | Não         | |
+| Diretoria de Ensino                         | text     | Não         | |
+| Povos indigenas                             | text     | Não         | |
+| Linguas faladas                             | text     | Não         | |
+| Ano de criação da escola                    | text     | Não         | |
+| Modalidade de Ensino/turnos de funcionamento| text     | Não         | |
+| Numero de alunos                            | text     | Não         | |
+| Espaço escolar e estrutura                  | text     | Não         | |
+| Cozinha/Merenda escolar/diferenciada        | text     | Não         | |
+| Acesso à água                               | text     | Não         | |
+| Tem coleta de lixo?                         | text     | Não         | |
+| Acesso à internet                           | text     | Não         | |
+| Equipamentos Tecnológicos                   | text     | Não         | |
+| Modo de acesso à escola                     | text     | Não         | |
+| Gestão/Nome                                 | text     | Não         | |
+| Outros funcionários                         | text     | Não         | |
+| Quantidade de professores indígenas         | text     | Não         | |
+| Quantidade de professores não indígenas     | text     | Não         | |
+| Professores falam a língua indígena?        | text     | Não         | |
+| Formação dos professores                    | text     | Não         | |
+| Formação continuada oferecida               | text     | Não         | |
+| A escola possui PPP próprio?                | text     | Não         | |
+| PPP elaborado com a comunidade?             | text     | Não         | |
+| Disciplinas bilíngues?                      | text     | Não         | |
+| Material pedagógico não indígena            | text     | Não         | |
+| Material pedagógico indígena                | text     | Não         | |
+| Práticas pedagógicas indígenas              | text     | Não         | |
+| Formas de avaliação                         | text     | Não         | |
+| Projetos em andamento                       | text     | Não         | |
+| Parcerias com universidades?                | text     | Não         | |
+| Ações com ONGs ou coletivos?                | text     | Não         | |
+| Desejos da comunidade para a escola         | text     | Não         | |
+| Escola utiliza redes sociais?               | text     | Não         | |
+| Links das redes sociais                     | text     | Não         | |
+| historia_da_escola                          | text     | Não         | |
+| Latitude                                    | numeric  | Não         | |
+| Longitude                                   | numeric  | Não         | |
+| link_para_videos                            | text     | Não         | |
+| historia_do_prof                            | text     | Não         | |
+
+> Observação: Apenas o campo 'id' é obrigatório (not null). Todos os outros campos podem ser nulos. Para uso no frontend, trate todos os campos como string, exceto 'id', 'Latitude' e 'Longitude', que devem ser tratados como números.

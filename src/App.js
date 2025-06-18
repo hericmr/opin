@@ -13,7 +13,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));
 const ConteudoCartografia = React.lazy(() => import("./components/ConteudoCartografia"));
 const AdminPanel = React.lazy(() => import("./components/AdminPanel"));
-const EditLocationPanel = React.lazy(() => import("./components/EditLocationPanel"));
+const EditEscolaPanel = React.lazy(() => import("./components/EditEscolaPanel/EditEscolaPanel"));
 const TerrasIndigenas = React.lazy(() => import("./components/TerrasIndigenas"));
 const Marcadores = React.lazy(() => import("./components/Marcadores"));
 
@@ -416,7 +416,7 @@ const AppContent = () => {
           <Route 
             path="/edit/:id" 
             element={
-              <EditLocationPanel 
+              <EditEscolaPanel 
                 location={getLocationById(new URLSearchParams(location.search).get('id'))}
                 onClose={() => navigate('/')}
                 onSave={() => {
