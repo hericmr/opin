@@ -17,4 +17,4 @@ const AudioButton = ({ isAudioEnabled, toggleAudio }) => {
   );
 };
 
-export default AudioButton;
+export default React.memo(AudioButton);

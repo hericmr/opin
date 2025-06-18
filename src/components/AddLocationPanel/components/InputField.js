@@ -35,4 +35,4 @@ InputField.defaultProps = {
   required: false
 };
 
-export default InputField; 
+export default React.memo(InputField); 
