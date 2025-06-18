@@ -12,4 +12,4 @@ const ShareButton = ({ onClick }) => {
     );
 };
 
-export default ShareButton;
+export default React.memo(ShareButton);

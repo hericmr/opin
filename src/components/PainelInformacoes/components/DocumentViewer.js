@@ -1,5 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react';
 
+/**
+ * DocumentViewer
+ * Componente para exibir uma lista de documentos (PDFs) associados a uma escola.
+ * Permite visualização via iframe (Google Drive/Docs) ou download externo, com tratamento de erros e fallback amigável.
+ * Props:
+ *   - documentos: Array de objetos { id, titulo, autoria, tipo, link_pdf }
+ *   - title: string (opcional)
+ */
+
 // Utility function to transform Google Drive links
 const transformarLinkGoogleDrive = (link) => {
   if (!link || typeof link !== 'string') return null;
@@ -11,9 +20,55 @@ const transformarLinkGoogleDrive = (link) => {
   return `https://docs.google.com/gview?url=https://drive.google.com/uc?id=${fileId}&embedded=true`;
 };
 
+/**
+ * Componente de troca de visualização (lista/grade) acessível e reutilizável
+ */
+const ViewModeToggle = ({ viewMode, setViewMode }) => (
+  <div className="flex items-center gap-2" role="tablist" aria-label="Modos de visualização dos documentos">
+    <button
+      type="button"
+      role="tab"
+      aria-selected={viewMode === 'list'}
+      aria-label="Visualizar em lista"
+      aria-pressed={viewMode === 'list'}
+      onClick={() => setViewMode('list')}
+      className={`p-2 rounded-lg flex items-center gap-1 transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 ${
+        viewMode === 'list'
+          ? 'bg-green-100 text-green-800 font-semibold'
+          : 'text-gray-600 hover:bg-gray-100'
+      }`}
+      tabIndex={0}
+    >
+      {/* Ícone de lista */}
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      <span className="hidden sm:inline">Lista</span>
+    </button>
+    <button
+      type="button"
+      role="tab"
+      aria-selected={viewMode === 'grid'}
+      aria-label="Visualizar em grade"
+      aria-pressed={viewMode === 'grid'}
+      onClick={() => setViewMode('grid')}
+      className={`p-2 rounded-lg flex items-center gap-1 transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 ${
+        viewMode === 'grid'
+          ? 'bg-green-100 text-green-800 font-semibold'
+          : 'text-gray-600 hover:bg-gray-100'
+      }`}
+      tabIndex={0}
+    >
+      {/* Ícone de grade */}
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+      </svg>
+      <span className="hidden sm:inline">Grade</span>
+    </button>
+  </div>
+);
+
 const DocumentViewer = ({ documentos, title = "Documentos" }) => {
-  console.log('📚 DocumentViewer recebeu documentos:', documentos);
-  
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [viewMode, setViewMode] = useState('list'); // 'list' ou 'grid'
   const iframeRef = useRef(null);
@@ -22,7 +77,6 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
 
   // Reset states when selected document changes
   useEffect(() => {
-    console.log('🔄 useEffect - Reset states, selectedDoc:', selectedDoc);
     if (selectedDoc) {
       setIframeError(false);
       setUseGoogleDocsViewer(false);
@@ -31,26 +85,21 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
 
   // Set first document as selected if none is selected
   useEffect(() => {
-    console.log('🔄 useEffect - Set first document, documentos:', documentos);
     if (!selectedDoc && documentos?.length > 0) {
-      console.log('📄 Selecionando primeiro documento:', documentos[0]);
       setSelectedDoc(documentos[0]);
     }
   }, [documentos, selectedDoc]);
 
   // Handle iframe events
   useEffect(() => {
-    console.log('🔄 useEffect - Handle iframe, selectedDoc:', selectedDoc);
     const iframe = iframeRef.current;
     if (!iframe || !selectedDoc) return;
 
     const handleLoad = () => {
-      console.log('✅ iframe carregado com sucesso');
       setIframeError(false);
     };
 
     const handleError = () => {
-      console.log('❌ Erro ao carregar iframe');
       setIframeError(true);
       setUseGoogleDocsViewer(true);
     };
@@ -66,39 +115,32 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
 
   // Early return after all hooks
   if (!documentos || documentos.length === 0) {
-    console.log('⚠️ DocumentViewer: Nenhum documento para renderizar');
     return null;
   }
 
-  console.log('🎨 Renderizando DocumentViewer com:', {
-    documentosCount: documentos.length,
-    selectedDoc,
-    iframeError,
-    useGoogleDocsViewer,
-    viewMode
-  });
-
   const renderDocumentGrid = () => {
-    console.log('📋 Renderizando grid de documentos');
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {documentos.map((doc) => (
           <div
             key={doc.id}
             className={`
-              rounded-lg border-2 transition-all duration-200 cursor-pointer
+              flex flex-col justify-between h-full max-w-xs mx-auto
+              rounded-2xl border-2 transition-all duration-200 cursor-pointer
+              shadow-sm hover:shadow-lg
               ${selectedDoc?.id === doc.id
-                ? 'bg-green-100 border-green-300 shadow-lg scale-[1.02]'
-                : 'bg-white border-gray-200 hover:border-green-300 hover:shadow-md'
+                ? 'bg-green-100 border-green-400 scale-[1.03]'
+                : 'bg-white border-gray-200 hover:border-green-300'
               }
             `}
             onClick={() => {
-              console.log('🖱️ Documento selecionado:', doc);
               setSelectedDoc(doc);
             }}
+            tabIndex={0}
+            aria-label={`Selecionar documento: ${doc.titulo}`}
           >
-            <div className="p-4">
-              <h4 className="font-medium text-green-800 mb-2 line-clamp-2">{doc.titulo}</h4>
+            <div className="p-5 flex-1 flex flex-col justify-between">
+              <h4 className="font-semibold text-green-800 mb-2 line-clamp-2 text-lg">{doc.titulo}</h4>
               {doc.autoria && (
                 <p className="text-sm text-gray-600 mb-2 line-clamp-1">Por: {doc.autoria}</p>
               )}
@@ -115,14 +157,12 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
   };
 
   const renderDocumentList = () => {
-    console.log('📋 Renderizando lista de documentos');
     return (
       <div className="space-y-2">
         {documentos.map((doc) => (
           <button
             key={doc.id}
             onClick={() => {
-              console.log('🖱️ Documento selecionado:', doc);
               setSelectedDoc(doc);
             }}
             className={`w-full text-left p-3 rounded-lg transition-colors duration-200 ${
@@ -147,14 +187,9 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
   };
 
   const renderDocumentViewer = () => {
-    console.log('📄 Renderizando visualizador de documento:', selectedDoc);
     if (!selectedDoc) return null;
 
     const isGoogleDriveLink = selectedDoc.link_pdf.includes('drive.google.com/file/d/');
-    console.log('🔗 Link do documento:', {
-      link: selectedDoc.link_pdf,
-      isGoogleDriveLink
-    });
 
     return (
       <div className="rounded-lg overflow-hidden shadow-lg border border-green-300 bg-white">
@@ -246,34 +281,7 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl font-semibold text-green-800">{title}:</h3>
         {documentos.length > 1 && (
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setViewMode('list')}
-              className={`p-2 rounded-lg transition-colors ${
-                viewMode === 'list'
-                  ? 'bg-green-100 text-green-800'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-              title="Visualização em lista"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-lg transition-colors ${
-                viewMode === 'grid'
-                  ? 'bg-green-100 text-green-800'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-              title="Visualização em grade"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-              </svg>
-            </button>
-          </div>
+          <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} />
         )}
       </div>
       

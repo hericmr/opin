@@ -39,4 +39,4 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-export default ErrorBoundary; 
+export default React.memo(ErrorBoundary); 

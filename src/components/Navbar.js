@@ -107,7 +107,7 @@ const Navbar = () => {
               <LazyImage
                 src={`${process.env.PUBLIC_URL}/lindi.webp`}
                 alt="LINDI"
-                className="h-8 w-auto"
+                className="h-20 w-auto"
               />
             </a>
           </div>
@@ -287,4 +287,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default React.memo(Navbar);
