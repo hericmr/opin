@@ -2,6 +2,22 @@
 
 Um portal informativo interativo que mapeia e apresenta informações detalhadas sobre escolas indígenas no estado de São Paulo, Brasil. O projeto visa facilitar o acesso a dados educacionais e culturais dessas instituições, promovendo maior visibilidade e compreensão da educação indígena.
 
+---
+
+## 🆕 Novidade: Aba de Vídeo no Painel de Edição
+
+O painel de administração agora conta com uma **aba exclusiva para inserção de vídeo**. Nela, é possível adicionar um link de vídeo (YouTube, Vimeo, etc.) relacionado à escola indígena, com pré-visualização automática do conteúdo.
+
+**Como usar:**
+1. Acesse o painel de administração e selecione uma escola para editar.
+2. Clique na aba **Vídeo**.
+3. Cole o link do vídeo desejado no campo indicado.
+4. Veja a pré-visualização do vídeo diretamente no painel.
+
+> **Obs:** O campo de vídeo foi removido da aba "Redes Sociais" e agora está centralizado na nova aba "Vídeo".
+
+---
+
 ## Tecnologias
 
 ### Frontend
@@ -171,75 +187,7 @@ O projeto utiliza TailwindCSS com configurações personalizadas:
 - Tipografia otimizada para leitura
 - Animações suaves para interações
 
-## 🧪 Testes
 
-Execute os testes com:
-```bash
-npm test           # Executa testes
-npm run test:watch # Modo watch
-npm run test:coverage # Cobertura de testes
-```
-
-## 📝 Scripts Disponíveis
-
-- `npm start`: Inicia o servidor de desenvolvimento
-- `npm build`: Gera build de produção
-- `npm test`: Executa testes
-- `npm run deploy`: Faz deploy para GitHub Pages
-
-## Sobre o Projeto
-
-Esta é uma cartografia social que busca mapear territorialidades, lutas e conquistas dos movimentos sociais e da população na cidade de Santos. O mapa destaca a presença de equipamentos sociais, culturais, religiosos, políticos, educacionais, como escolas, unidades de saúde, assistência social, espaços culturais e de lazer, além de comunidades e locais carregados de memória e história.
-
-Entre os elementos mapeados, estão histórias relacionadas à escravidão e lutas do povo negro, à opressão e resistência à ditadura empresarial-militar (1964-1984), e às lutas que moldaram e continuam moldando a identidade da região.
-
-Os materiais cartográficos e textuais disponíveis aqui foram produzidos pelas(os) estudantes de Serviço Social da UNIFESP do vespertino e noturno durante a Unidade Curricular de Política Social 2, em 2024 e 2025.
-
-### Tipos de Marcadores no Mapa
-
-- **Azul** - Lazer: equipamentos sociais, culturais e de lazer
-- **Verde** - Assistência: unidades de assistência social e saúde
-- **Amarelo** - Históricos: lugares históricos e de memória
-- **Vermelho** - Comunidades: territórios de comunidades
-- **Violeta** - Educação: escolas e unidades de ensino
-- **Preto** - Religião: estabelecimentos religiosos
-
-## Instalação e Uso
-
-1. Clone o repositório e instale as dependências:
-```bash
-git clone https://github.com/hericmr/escolasindigenas.git
-cd escolasindigenas
-npm install
-```
-
-2. Configure o ambiente:
-- Copie `.env.example` para `.env`
-- Adicione suas credenciais do Supabase
-
-3. Execute o projeto:
-```bash
-npm start
-```
-
-## Tecnologias
-
-- React.js com Leaflet para mapas
-- Tailwind CSS para estilização
-- Supabase para backend
-
-## Contato
-
-Heric Rodrigues - [heric.moura@unifesp.br](mailto:heric.moura@unifesp.br)
-
----
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
-## Conversões e Limpeza de Dependências
-
-As conversões de arquivos GeoJSON e imagens (para WebP) já foram realizadas durante o processo de otimização do projeto. Por isso, as dependências e scripts auxiliares utilizados para essas tarefas (como `sharp`, `geojson` e scripts de conversão) foram removidos do projeto para manter o ambiente de produção limpo e enxuto.
-
-Essas ferramentas só são necessárias caso novas conversões sejam feitas no futuro. Para rodar o site em produção, não é preciso instalar essas dependências.
 
 ## Estrutura dos arquivos CSV utilizados no Supabase
 
