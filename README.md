@@ -245,65 +245,57 @@ Essas ferramentas só são necessárias caso novas conversões sejam feitas no f
 
 Os arquivos CSV importados/exportados para o Supabase devem seguir a estrutura abaixo para a tabela principal de escolas indígenas (`escolas_completa`). Cada coluna representa um campo da tabela. Certifique-se de que o cabeçalho do CSV corresponda exatamente aos nomes das colunas listadas.
 
-### Tabela: escolas_completa
+### Estrutura da tabela: escolas_completa (Supabase)
 
-| Coluna                        | Tipo         | Descrição                                                                 |
-|-------------------------------|--------------|--------------------------------------------------------------------------|
-| id                            | inteiro      | Identificador único da escola                                            |
-| Escola                        | texto        | Nome da escola                                                          |
-| Município                     | texto        | Município onde a escola está localizada                                  |
-| Endereço                      | texto        | Endereço completo da escola                                              |
-| Terra Indigena (TI)           | texto        | Nome da terra indígena associada                                         |
-| Escola Estadual ou Municipal  | texto        | Tipo administrativo da escola                                            |
-| Parcerias com o município     | booleano     | Indica se há parcerias com o município                                   |
-| Diretoria de Ensino           | texto        | Diretoria de ensino responsável                                          |
-| Ano de criação da escola      | inteiro      | Ano de fundação da escola                                                |
-| Povos indigenas               | texto        | Povos indígenas atendidos                                               |
-| Linguas faladas               | texto        | Línguas faladas na escola                                               |
-| Modalidade de Ensino/turnos de funcionamento | texto | Modalidade e turnos de ensino                                 |
-| Numero de alunos              | inteiro      | Número de alunos                                                        |
-| Disciplinas bilíngues?        | booleano     | Indica se há disciplinas bilíngues                                       |
-| Material pedagógico não indígena | booleano  | Indica se há material pedagógico não indígena                            |
-| Material pedagógico indígena  | booleano     | Indica se há material pedagógico indígena                                |
-| Práticas pedagógicas indígenas| texto        | Descrição das práticas pedagógicas indígenas                             |
-| Formas de avaliação           | texto        | Métodos de avaliação utilizados                                          |
-| Espaço escolar e estrutura    | texto        | Descrição da infraestrutura física                                       |
-| Cozinha/Merenda escolar/diferenciada | texto | Informações sobre alimentação escolar                          |
-| Acesso à água                 | texto        | Descrição do acesso à água                                               |
-| Tem coleta de lixo?           | booleano     | Indica se há coleta de lixo                                              |
-| Acesso à internet             | booleano     | Indica se há acesso à internet                                           |
-| Equipamentos Tecnológicos (Computadores, tablets e impressoras) | texto | Equipamentos disponíveis |
-| Modo de acesso à escola       | texto        | Como se chega à escola                                                   |
-| Gestão/Nome                   | texto        | Nome da gestão                                                          |
-| Outros funcionários           | texto        | Outros funcionários da escola                                            |
-| Quantidade de professores indígenas | inteiro | Número de professores indígenas                                 |
-| Quantidade de professores não indígenas | inteiro | Número de professores não indígenas                          |
-| Professores falam a língua indígena? | booleano | Se professores falam a língua indígena                        |
-| Formação dos professores      | texto        | Formação dos professores                                                 |
-| Formação continuada oferecida | texto        | Formação continuada disponível                                           |
-| A escola possui PPP próprio?  | booleano     | Se possui Projeto Político Pedagógico próprio                            |
-| PPP elaborado com a comunidade? | booleano   | Se o PPP foi elaborado com a comunidade                                  |
-| Projetos em andamento         | texto        | Projetos em andamento                                                    |
-| Parcerias com universidades?  | booleano     | Se há parcerias com universidades                                        |
-| Ações com ONGs ou coletivos?  | booleano     | Se há ações com ONGs ou coletivos                                        |
-| Desejos da comunidade para a escola | texto  | Expectativas/desejos da comunidade                                       |
-| Escola utiliza redes sociais? | booleano     | Se a escola utiliza redes sociais                                        |
-| Links das redes sociais       | texto        | URLs das redes sociais, separados por vírgula                            |
-| historia_da_escola            | texto        | História da escola                                                       |
-| Latitude                      | número       | Latitude geográfica                                                      |
-| Longitude                     | número       | Longitude geográfica                                                     |
-| links                         | texto        | Links diversos relacionados à escola                                     |
-| imagens                       | texto        | URLs de imagens, separados por vírgula                                   |
-| audio                         | texto        | URLs de arquivos de áudio                                                |
-| video                         | texto        | URLs de vídeos                                                           |
-| link_para_documentos          | texto        | URLs de documentos (PDFs, etc.)                                          |
-| link_para_videos              | texto        | URLs de vídeos adicionais                                                |
+| Coluna                                      | Tipo     | Obrigatório | Observação |
+|---------------------------------------------|----------|-------------|------------|
+| id                                          | integer  | Sim         | Chave primária, auto-incremento |
+| Escola                                      | text     | Não         | Nome da escola |
+| Município                                   | text     | Não         | |
+| Endereço                                    | text     | Não         | |
+| Terra Indigena (TI)                         | text     | Não         | |
+| Escola Estadual ou Municipal                | text     | Não         | |
+| Parcerias com o município                   | text     | Não         | |
+| Diretoria de Ensino                         | text     | Não         | |
+| Povos indigenas                             | text     | Não         | |
+| Linguas faladas                             | text     | Não         | |
+| Ano de criação da escola                    | text     | Não         | |
+| Modalidade de Ensino/turnos de funcionamento| text     | Não         | |
+| Numero de alunos                            | text     | Não         | |
+| Espaço escolar e estrutura                  | text     | Não         | |
+| Cozinha/Merenda escolar/diferenciada        | text     | Não         | |
+| Acesso à água                               | text     | Não         | |
+| Tem coleta de lixo?                         | text     | Não         | |
+| Acesso à internet                           | text     | Não         | |
+| Equipamentos Tecnológicos                   | text     | Não         | |
+| Modo de acesso à escola                     | text     | Não         | |
+| Gestão/Nome                                 | text     | Não         | |
+| Outros funcionários                         | text     | Não         | |
+| Quantidade de professores indígenas         | text     | Não         | |
+| Quantidade de professores não indígenas     | text     | Não         | |
+| Professores falam a língua indígena?        | text     | Não         | |
+| Formação dos professores                    | text     | Não         | |
+| Formação continuada oferecida               | text     | Não         | |
+| A escola possui PPP próprio?                | text     | Não         | |
+| PPP elaborado com a comunidade?             | text     | Não         | |
+| Disciplinas bilíngues?                      | text     | Não         | |
+| Material pedagógico não indígena            | text     | Não         | |
+| Material pedagógico indígena                | text     | Não         | |
+| Práticas pedagógicas indígenas              | text     | Não         | |
+| Formas de avaliação                         | text     | Não         | |
+| Projetos em andamento                       | text     | Não         | |
+| Parcerias com universidades?                | text     | Não         | |
+| Ações com ONGs ou coletivos?                | text     | Não         | |
+| Desejos da comunidade para a escola         | text     | Não         | |
+| Escola utiliza redes sociais?               | text     | Não         | |
+| Links das redes sociais                     | text     | Não         | |
+| historia_da_escola                          | text     | Não         | |
+| Latitude                                    | numeric  | Não         | |
+| Longitude                                   | numeric  | Não         | |
+| link_para_videos                            | text     | Não         | |
+| historia_do_prof                            | text     | Não         | |
 
-> **Observações:**
-> - Campos booleanos devem ser preenchidos com `TRUE`/`FALSE` ou `1`/`0`.
-> - Campos de lista (como imagens, links, redes sociais) devem ser separados por vírgula.
-> - Certifique-se de que os nomes das colunas estejam exatamente como acima para evitar erros de importação.
-> - Para outros CSVs (como documentos, mídias, etc.), siga a mesma lógica: cada coluna representa um campo da tabela correspondente no Supabase.
+> Observação: Apenas o campo 'id' é obrigatório (not null). Todos os outros campos podem ser nulos. Para uso no frontend, trate todos os campos como string, exceto 'id', 'Latitude' e 'Longitude', que devem ser tratados como números.
 
 # Tutorial: Como Preencher as Tabelas no Supabase para o Mapa Leaflet
 
