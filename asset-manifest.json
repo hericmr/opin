@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/escolasindigenas/static/css/main.8d661482.css",
-    "main.js": "/escolasindigenas/static/js/main.683c7df4.js",
+    "main.css": "/escolasindigenas/static/css/main.5d741caf.css",
+    "main.js": "/escolasindigenas/static/js/main.026e23ad.js",
     "static/css/433.6c2f212a.chunk.css": "/escolasindigenas/static/css/433.6c2f212a.chunk.css",
-    "static/js/433.b684cced.chunk.js": "/escolasindigenas/static/js/433.b684cced.chunk.js",
+    "static/js/433.6a2be83d.chunk.js": "/escolasindigenas/static/js/433.6a2be83d.chunk.js",
     "static/js/383.37dd522a.chunk.js": "/escolasindigenas/static/js/383.37dd522a.chunk.js",
-    "static/js/214.f00f5b45.chunk.js": "/escolasindigenas/static/js/214.f00f5b45.chunk.js",
-    "static/js/969.659109f8.chunk.js": "/escolasindigenas/static/js/969.659109f8.chunk.js",
+    "static/js/806.3b0f3e4c.chunk.js": "/escolasindigenas/static/js/806.3b0f3e4c.chunk.js",
+    "static/js/654.536a3aba.chunk.js": "/escolasindigenas/static/js/654.536a3aba.chunk.js",
     "static/js/250.b669d4f8.chunk.js": "/escolasindigenas/static/js/250.b669d4f8.chunk.js",
     "static/css/491.d095d8aa.chunk.css": "/escolasindigenas/static/css/491.d095d8aa.chunk.css",
     "static/js/491.39958cea.chunk.js": "/escolasindigenas/static/js/491.39958cea.chunk.js",
     "static/js/488.507c0173.chunk.js": "/escolasindigenas/static/js/488.507c0173.chunk.js",
     "static/js/789.7a7a0aae.chunk.js": "/escolasindigenas/static/js/789.7a7a0aae.chunk.js",
     "index.html": "/escolasindigenas/index.html",
-    "main.8d661482.css.map": "/escolasindigenas/static/css/main.8d661482.css.map",
-    "main.683c7df4.js.map": "/escolasindigenas/static/js/main.683c7df4.js.map",
+    "main.5d741caf.css.map": "/escolasindigenas/static/css/main.5d741caf.css.map",
+    "main.026e23ad.js.map": "/escolasindigenas/static/js/main.026e23ad.js.map",
     "433.6c2f212a.chunk.css.map": "/escolasindigenas/static/css/433.6c2f212a.chunk.css.map",
-    "433.b684cced.chunk.js.map": "/escolasindigenas/static/js/433.b684cced.chunk.js.map",
+    "433.6a2be83d.chunk.js.map": "/escolasindigenas/static/js/433.6a2be83d.chunk.js.map",
     "383.37dd522a.chunk.js.map": "/escolasindigenas/static/js/383.37dd522a.chunk.js.map",
-    "214.f00f5b45.chunk.js.map": "/escolasindigenas/static/js/214.f00f5b45.chunk.js.map",
-    "969.659109f8.chunk.js.map": "/escolasindigenas/static/js/969.659109f8.chunk.js.map",
+    "806.3b0f3e4c.chunk.js.map": "/escolasindigenas/static/js/806.3b0f3e4c.chunk.js.map",
+    "654.536a3aba.chunk.js.map": "/escolasindigenas/static/js/654.536a3aba.chunk.js.map",
     "250.b669d4f8.chunk.js.map": "/escolasindigenas/static/js/250.b669d4f8.chunk.js.map",
     "491.d095d8aa.chunk.css.map": "/escolasindigenas/static/css/491.d095d8aa.chunk.css.map",
     "491.39958cea.chunk.js.map": "/escolasindigenas/static/js/491.39958cea.chunk.js.map",
@@ -27,7 +27,7 @@
     "789.7a7a0aae.chunk.js.map": "/escolasindigenas/static/js/789.7a7a0aae.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.8d661482.css",
-    "static/js/main.683c7df4.js"
+    "static/css/main.5d741caf.css",
+    "static/js/main.026e23ad.js"
   ]
 }
