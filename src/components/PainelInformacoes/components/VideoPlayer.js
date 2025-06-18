@@ -1,5 +1,14 @@
 import React from 'react';
 
+/**
+ * VideoPlayer
+ * Componente para exibir vídeos do YouTube de forma responsiva e acessível.
+ * Faz extração do ID do vídeo a partir de diferentes formatos de URL e exibe fallback amigável em caso de erro.
+ * Props:
+ *   - videoUrl: string (URL do vídeo)
+ *   - title: string (opcional)
+ */
+
 // Utility function to extract YouTube video ID
 const extrairIdYoutube = (url) => {
   if (!url || typeof url !== 'string') {

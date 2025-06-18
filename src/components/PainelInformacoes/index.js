@@ -13,15 +13,13 @@ import IntroPanel from "./IntroPanel";
 import PainelContainer from "./components/PainelContainer";
 import DocumentViewer from "./components/DocumentViewer";
 import VideoPlayer from "./components/VideoPlayer";
-import ImagensdasEscolas from './components/ImagensdasEscolas';
 
 const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
   const painelRef = useRef(null);
   const [isMaximized, setIsMaximized] = useState(false);
   
-  const { isAudioEnabled, toggleAudio } = useAudio(painelInfo?.audioUrl);
   const { gerarLinkCustomizado, copiarLink, compartilhar } = useShare(painelInfo);
-  const { documentos, isLoading: isLoadingDocs, error: docsError } = useDocumentosEscola(painelInfo?.id);
+  const { documentos } = useDocumentosEscola(painelInfo?.id);
   
   const toggleMaximize = () => setIsMaximized(prev => !prev);
   

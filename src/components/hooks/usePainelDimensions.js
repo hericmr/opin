@@ -52,10 +52,10 @@ export const usePainelDimensions = (isMobile, isMaximized) => {
     } else {
       // Desktop
       panelWidth = isMaximized 
-        ? '100%' 
-        : windowWidth >= breakpoints.lg 
-          ? '49%' 
-          : '75%';
+      ? '100%' 
+      : windowWidth >= breakpoints.lg 
+        ? '49%' 
+        : '75%';
     }
 
     return {

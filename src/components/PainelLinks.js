@@ -48,4 +48,4 @@ PainelLinks.defaultProps = {
   links: [],
 };
 
-export default PainelLinks;
+export default React.memo(PainelLinks);

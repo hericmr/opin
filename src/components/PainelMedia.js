@@ -109,4 +109,4 @@ const PainelMedia = ({ imagens = [], video, titulo, descricao_detalhada }) => {
   );
 };
 
-export default PainelMedia;
+export default React.memo(PainelMedia);
