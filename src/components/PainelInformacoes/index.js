@@ -16,8 +16,6 @@ import VideoPlayer from "./components/VideoPlayer";
 import ImagensdasEscolas from './components/ImagensdasEscolas';
 
 const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
-  console.log('🎯 PainelInformacoes recebeu painelInfo:', painelInfo);
-  
   const painelRef = useRef(null);
   const [isMaximized, setIsMaximized] = useState(false);
   
@@ -25,20 +23,12 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
   const { gerarLinkCustomizado, copiarLink, compartilhar } = useShare(painelInfo);
   const { documentos, isLoading: isLoadingDocs, error: docsError } = useDocumentosEscola(painelInfo?.id);
   
-  console.log('📚 Estado dos documentos:', { 
-    documentos, 
-    isLoadingDocs, 
-    error: docsError,
-    escolaId: painelInfo?.id 
-  });
-  
   const toggleMaximize = () => setIsMaximized(prev => !prev);
   
   useDynamicURL(painelInfo, gerarLinkCustomizado);
   useClickOutside(painelRef, closePainel);
 
   if (!painelInfo) {
-    console.log('⚠️ PainelInformacoes: painelInfo é null');
     return null;
   }
 
@@ -47,13 +37,6 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
   const isIntro = painelInfo.titulo === 'Sobre o site';
 
   const renderContent = () => {
-    console.log('🎨 Renderizando conteúdo do painel:', {
-      isTerraIndigena,
-      isIntro,
-      hasDocumentos: documentos?.length > 0,
-      hasVideos: !!painelInfo.link_para_videos
-    });
-
     if (isIntro) {
       return <IntroPanel painelInfo={painelInfo} />;
     }
@@ -83,8 +66,6 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
       </>
     );
   };
-
-  console.log('🎯 PainelInformacoes - Antes de renderizar ImagensdasEscolas com escola_id:', painelInfo?.id);
 
   return (
     <div ref={painelRef}>

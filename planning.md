@@ -309,3 +309,48 @@ This document outlines the plan to adapt the existing project for new file uploa
   - Políticas de acesso à tabela de imagens.
   - UX para múltiplas imagens e fallback para escolas sem imagens.
   - Documentar a estrutura da tabela no README.md. 
+
+# InformationPanel (PainelInformacoes) Refactor - June 2024
+
+## Summary
+
+This refactor focused on improving the performance, UI consistency, and code cleanliness of the InformationPanel (PainelInformacoes) and its subcomponents in the Indigenous Schools Mapping project.
+
+---
+
+## Refactorings & Optimizations
+
+### 1. Performance Optimization
+- **Memoization**: All major and minor components are wrapped in `React.memo` to prevent unnecessary re-renders.
+- **Image Fetching**: The `ImagensdasEscolas` component now memoizes image results by `escola_id` using a ref cache, and throttles concurrent network requests to 3 at a time to avoid network congestion and redundant fetches.
+- **Callback Memoization**: All relevant callbacks in the parent map component are already memoized with `useCallback`.
+- **No Prop Drilling**: State and props are managed at the correct level, with minimal prop drilling.
+
+### 2. UI Update
+- **Opaque Panel Background**: The panel background is now fully opaque (`bg-white`), replacing the previous semi-transparent gradient and blur.
+- **Intro Panel**: The intro card background is now fully opaque (`bg-white`), replacing the previous `bg-white/50`.
+- **Section Cards**: All section cards were already using opaque backgrounds.
+
+### 3. Code Cleanliness
+- **Console Logs**: All `console.log` statements were removed from the main panel and subcomponents for production cleanliness.
+- **Component Organization**: The codebase is already well-organized, with logic for data fetching, UI state, and rendering separated into appropriate files.
+
+---
+
+## Observations
+- The component structure is modular and maintainable.
+- All dynamic content (images, documents, video) is loaded asynchronously and efficiently.
+- No dead code or legacy CSS was found.
+
+---
+
+## Follow-ups & Suggestions
+- **Image Fetching**: Consider moving image metadata to Supabase or a manifest file to avoid HEAD request brute-forcing.
+- **Panel Animation**: If performance issues persist on mobile, consider reducing animation complexity or using CSS `will-change` for smoother transitions.
+- **Debug Logging**: If debug logs are needed, consider using a debug flag or environment variable to toggle them.
+- **Testing**: Add tests for memoization and caching logic, especially for image fetching.
+
+---
+
+## Visual/Functional Regressions
+- None found. All changes were tested for regressions in panel display, responsiveness, and dynamic content loading. 
