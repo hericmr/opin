@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 const EXTENSOES = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
@@ -8,6 +8,7 @@ const ImagensdasEscolas = ({ escola_id }) => {
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [imagemAmpliada, setImagemAmpliada] = useState(null);
+  const cacheRef = useRef({});
 
   useEffect(() => {
     if (!escola_id) {
@@ -15,29 +16,55 @@ const ImagensdasEscolas = ({ escola_id }) => {
       return;
     }
 
+    if (cacheRef.current[escola_id]) {
+      setImagens(cacheRef.current[escola_id]);
+      setLoading(false);
+      return;
+    }
+
     const buscarImagens = async () => {
       const imagensEncontradas = [];
+      const fetchQueue = [];
+      let active = 0;
+      let i = 1;
+      let stopped = false;
 
-      for (let i = 1; i <= MAX_IMAGENS; i++) {
+      const fetchWithThrottle = async (url) => {
+        while (active >= 3) {
+          await new Promise(res => setTimeout(res, 30));
+        }
+        active++;
+        try {
+          const response = await fetch(url, { method: 'HEAD' });
+          return response.ok;
+        } finally {
+          active--;
+        }
+      };
+
+      for (i = 1; i <= MAX_IMAGENS; i++) {
         for (const ext of EXTENSOES) {
           const url = `https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-das-escolas/${escola_id}/${i}.${ext}`;
-          try {
-            const response = await fetch(url, { method: 'HEAD' });
-            if (response.ok) {
-              imagensEncontradas.push({
-                id: `${escola_id}-${i}.${ext}`,
-                publicURL: url,
-                descricao: `Imagem ${i}`,
-                urlError: null,
-              });
-              break; // Se encontrou uma extensão válida, não testa as outras para esse número
-            }
-          } catch (err) {
-            // Ignora erro, só não adiciona a imagem
-          }
+          fetchQueue.push(
+            (async () => {
+              if (stopped) return;
+              const ok = await fetchWithThrottle(url);
+              if (ok) {
+                imagensEncontradas.push({
+                  id: `${escola_id}-${i}.${ext}`,
+                  publicURL: url,
+                  descricao: `Imagem ${i}`,
+                  urlError: null,
+                });
+                stopped = true; // Stop further extensions for this i
+              }
+            })()
+          );
         }
+        stopped = false;
       }
-
+      await Promise.all(fetchQueue);
+      cacheRef.current[escola_id] = imagensEncontradas;
       setImagens(imagensEncontradas);
       setLoading(false);
     };
