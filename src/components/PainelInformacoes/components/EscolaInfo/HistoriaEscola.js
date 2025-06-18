@@ -3,7 +3,7 @@ import { BookOpen } from 'lucide-react';
 import ImagensdasEscolas from '../ImagensdasEscolas';
 
 const HistoriaEscola = memo(({ escola }) => {
-  if (!escola?.historia_aldeia) return null;
+  if (!escola?.historia_da_escola) return null;
 
   return (
     <article
@@ -42,7 +42,7 @@ const HistoriaEscola = memo(({ escola }) => {
       </header>
 
       <div className="text-base sm:text-lg leading-relaxed text-neutral-800">
-        {escola.historia_aldeia}
+        {escola.historia_da_escola}
       </div>
 
       {/* Imagens da escola, responsivas e modulares */}
