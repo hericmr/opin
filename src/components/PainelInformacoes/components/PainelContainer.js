@@ -22,7 +22,7 @@ const PainelContainer = ({
       : 'top-16 right-0 w-full sm:w-3/4 lg:w-[49%]'
     }
     rounded-xl shadow-xl z-40 transform transition-all duration-500 ease-in-out
-    bg-gradient-to-b from-green-50/95 to-green-50/90 backdrop-blur-sm
+    bg-white
   `;
   
   const visibilityClasses = isVisible 
