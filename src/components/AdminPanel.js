@@ -36,6 +36,7 @@ const AdminPanel = () => {
     { id: 'material-pedagogico', label: 'Material Pedagógico' },
     { id: 'projetos-parcerias', label: 'Projetos e Parcerias' },
     { id: 'redes-sociais', label: 'Redes Sociais' },
+    { id: 'video', label: 'Vídeo' },
     { id: 'historias', label: 'Histórias' },
     { id: 'coordenadas', label: 'Coordenadas' },
     { id: 'documentos', label: 'Documentos' }
@@ -753,15 +754,38 @@ const AdminPanel = () => {
                         onChange={e => setEditingLocation({ ...editingLocation, 'links': e.target.value })}
                       />
                     </div>
+                  </div>
+                )}
+
+                {/* Aba: Vídeo */}
+                {activeTab === 'video' && (
+                  <div className="grid grid-cols-1 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Link para Vídeos</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Link para Vídeo</label>
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
                         value={editingLocation['link_para_videos'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'link_para_videos': e.target.value })}
+                        placeholder="Cole aqui o link do vídeo (YouTube, Vimeo, etc)"
                       />
+                      <p className="text-xs text-gray-500 mt-1">Exemplo: https://www.youtube.com/watch?v=...</p>
                     </div>
+                    {editingLocation['link_para_videos'] && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Pré-visualização</label>
+                        <div className="aspect-w-16 aspect-h-9 bg-black rounded overflow-hidden">
+                          <iframe
+                            src={getVideoEmbedUrl(editingLocation['link_para_videos'])}
+                            title="Pré-visualização do vídeo"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="w-full h-full"
+                          ></iframe>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -1110,5 +1134,22 @@ const AdminPanel = () => {
     </div>
   );
 };
+
+// Função utilitária para embed de vídeo
+function getVideoEmbedUrl(url) {
+  if (!url) return '';
+  // YouTube
+  const ytMatch = url.match(/(?:youtu.be\/|youtube.com\/(?:watch\?v=|embed\/|v\/))([\w-]{11})/);
+  if (ytMatch) {
+    return `https://www.youtube.com/embed/${ytMatch[1]}`;
+  }
+  // Vimeo
+  const vimeoMatch = url.match(/vimeo.com\/(\d+)/);
+  if (vimeoMatch) {
+    return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+  }
+  // Outros: retorna o próprio link
+  return url;
+}
 
 export default React.memo(AdminPanel); 
