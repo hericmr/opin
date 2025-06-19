@@ -25,14 +25,13 @@ const ImagemHistoriadoProfessor = ({ escola_id }) => {
 
     setLoading(true);
     setError(null);
-    const queryPattern = `${escola_id}/%`;
 
+    // Busca arquivos do bucket diretamente
     supabase
-      .from('imagens_escola')
-      .select('*')
-      .like('url', queryPattern)
-      .order('created_at', { ascending: true })
-      .then(async ({ data, error }) => {
+      .storage
+      .from('imagens-professores')
+      .list(`${escola_id}/`)
+      .then(({ data, error }) => {
         if (error) {
           setError(error.message);
           setLoading(false);
@@ -40,33 +39,30 @@ const ImagemHistoriadoProfessor = ({ escola_id }) => {
         }
 
         if (data && data.length > 0) {
-          const imagensComUrl = data.map((img) => {
-            try {
-              const response = supabase.storage.from('imagens-professores').getPublicUrl(img.url);
-              const publicURL =
-                response.publicURL ||
-                response.publicUrl ||
-                response.data?.publicUrl ||
-                response.data?.publicURL;
-
-              let finalURL = publicURL;
-              if (!finalURL) {
-                const baseURL = supabase.storage.from('imagens-professores').getPublicUrl('').publicURL;
-                if (baseURL) {
-                  finalURL = baseURL.replace(/\/$/, '') + '/' + img.url;
-                }
-              }
-
-              return { ...img, publicURL: finalURL };
-            } catch (err) {
-              return { ...img, publicURL: null, urlError: err.message };
+          const imagensComUrl = data.map((file, idx) => {
+            const { data: { publicUrl } } = supabase
+              .storage
+              .from('imagens-professores')
+              .getPublicUrl(`${escola_id}/${file.name}`);
+            // Extrair gênero do nome do arquivo
+            let genero = 'professor';
+            if (file.name.startsWith('professora_')) {
+              genero = 'professora';
+            } else if (file.name.startsWith('professor_')) {
+              genero = 'professor';
             }
+            return {
+              id: idx + 1,
+              publicURL: publicUrl,
+              genero,
+              nome: file.name,
+              created_at: file.created_at || '',
+            };
           });
           setImagens(imagensComUrl);
         } else {
           setImagens([]);
         }
-
         setLoading(false);
       })
       .catch(err => {
@@ -89,6 +85,9 @@ const ImagemHistoriadoProfessor = ({ escola_id }) => {
 
   return (
     <section className="my-6">
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">
+        História {imagens[0]?.genero === 'professora' ? 'da professora' : 'do professor'}
+      </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {imagens.map((img) => (
           <figure
@@ -99,7 +98,7 @@ const ImagemHistoriadoProfessor = ({ escola_id }) => {
             <div className="w-full aspect-[4/3] bg-gray-100 flex items-center justify-center">
               <img
                 src={img.publicURL}
-                alt={img.descricao || 'Imagem do professor'}
+                alt={`Imagem do ${img.genero}`}
                 className="w-full h-full object-cover object-center transition-transform duration-200 hover:scale-105"
                 loading="lazy"
                 style={{ maxHeight: '350px' }}
@@ -109,11 +108,6 @@ const ImagemHistoriadoProfessor = ({ escola_id }) => {
               <figcaption className="p-2 text-sm text-gray-700 bg-gray-50 border-t">
                 {img.descricao}
               </figcaption>
-            )}
-            {img.urlError && (
-              <div className="p-2 text-xs text-red-600 bg-red-50 border-t">
-                Erro na URL: {img.urlError}
-              </div>
             )}
           </figure>
         ))}
