@@ -21,6 +21,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   const [editingImage, setEditingImage] = useState(null);
   const [editingDescription, setEditingDescription] = useState('');
   const [genero, setGenero] = useState('professor');
+  const [titulo, setTitulo] = useState('');
 
   // Buscar imagens existentes dos professores
   const fetchExistingImages = useCallback(async () => {
@@ -149,7 +150,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         const progress = ((i + 1) / selectedFiles.length) * 100;
         setUploadProgress(progress);
 
-        const uploadedImage = await uploadProfessorImage(file, escolaId, '', genero);
+        const uploadedImage = await uploadProfessorImage(file, escolaId, '', genero, titulo);
         uploadedImages.push(uploadedImage);
       }
 
@@ -289,6 +290,19 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
               <option value="professor">Professor</option>
               <option value="professora">Professora</option>
             </select>
+          </div>
+          {/* Campo de título da história */}
+          <div className="flex items-center gap-2 mb-2">
+            <label htmlFor="titulo-historia" className="text-sm font-medium text-gray-700">Título da história:</label>
+            <input
+              id="titulo-historia"
+              type="text"
+              value={titulo}
+              onChange={e => setTitulo(e.target.value)}
+              className="border rounded px-2 py-1 text-sm w-full"
+              placeholder="Ex: História da professora Mariza"
+              disabled={uploading}
+            />
           </div>
           {/* Drag & Drop */}
           <div
