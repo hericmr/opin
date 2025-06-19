@@ -85,9 +85,6 @@ const ImagemHistoriadoProfessor = ({ escola_id }) => {
 
   return (
     <section className="my-6">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800">
-        História {imagens[0]?.genero === 'professora' ? 'da professora' : 'do professor'}
-      </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {imagens.map((img) => (
           <figure
