@@ -20,6 +20,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   const [imageLimit, setImageLimit] = useState({ current: 0, limit: 5, canUpload: true });
   const [editingImage, setEditingImage] = useState(null);
   const [editingDescription, setEditingDescription] = useState('');
+  const [genero, setGenero] = useState('professor');
 
   // Buscar imagens existentes dos professores
   const fetchExistingImages = useCallback(async () => {
@@ -148,7 +149,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         const progress = ((i + 1) / selectedFiles.length) * 100;
         setUploadProgress(progress);
 
-        const uploadedImage = await uploadProfessorImage(file, escolaId);
+        const uploadedImage = await uploadProfessorImage(file, escolaId, '', genero);
         uploadedImages.push(uploadedImage);
       }
 
@@ -275,6 +276,20 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       {/* Área de Upload */}
       {imageLimit.canUpload && (
         <div className="space-y-4">
+          {/* Campo de seleção de gênero */}
+          <div className="flex items-center gap-2 mb-2">
+            <label htmlFor="genero-professor" className="text-sm font-medium text-gray-700">Gênero:</label>
+            <select
+              id="genero-professor"
+              value={genero}
+              onChange={e => setGenero(e.target.value)}
+              className="border rounded px-2 py-1 text-sm"
+              disabled={uploading}
+            >
+              <option value="professor">Professor</option>
+              <option value="professora">Professora</option>
+            </select>
+          </div>
           {/* Drag & Drop */}
           <div
             className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
