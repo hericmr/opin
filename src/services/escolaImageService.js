@@ -11,7 +11,7 @@ const ESCOLA_IMAGE_CONFIG = {
 
 // Configurações para imagens dos professores
 const PROFESSOR_IMAGE_CONFIG = {
-  BUCKET_NAME: 'imagens-professores',
+  BUCKET_NAME: 'imagens-professores', // Usando bucket existente
   MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
   ALLOWED_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'],
   MAX_IMAGES_PER_SCHOOL: 5,
@@ -55,7 +55,7 @@ const validateImageFile = (file, config) => {
 };
 
 /**
- * Gera nome único para o arquivo
+ * Gera nome único para o arquivo (sem gênero, para imagens de escola)
  * @param {File} file - Arquivo
  * @param {number} escolaId - ID da escola
  * @returns {string} Nome único do arquivo
@@ -68,26 +68,21 @@ const generateUniqueFileName = (file, escolaId) => {
 };
 
 /**
- * Verifica se a imagem tem as dimensões mínimas
- * @param {File} file - Arquivo de imagem
- * @param {Object} config - Configuração com dimensões mínimas
- * @returns {Promise<boolean>} Se a imagem tem dimensões válidas
+ * Gera nome único para o arquivo, incluindo o gênero
+ * @param {File} file - Arquivo
+ * @param {number} escolaId - ID da escola
+ * @param {string} genero - 'professor' ou 'professora'
+ * @returns {string} Nome único do arquivo
  */
-const validateImageDimensions = async (file, config) => {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      const isValid = img.width >= config.MIN_DIMENSIONS.width && 
-                     img.height >= config.MIN_DIMENSIONS.height;
-      resolve(isValid);
-    };
-    img.onerror = () => resolve(false);
-    img.src = URL.createObjectURL(file);
-  });
+const generateUniqueFileNameWithGenero = (file, escolaId, genero) => {
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substring(2, 8);
+  const extension = file.name.split('.').pop().toLowerCase();
+  return `${genero}_${escolaId}_${timestamp}_${random}.${extension}`;
 };
 
 /**
- * Upload de imagem da escola
+ * Upload de imagem da escola (versão simplificada sem tabela de metadados)
  * @param {File} file - Arquivo de imagem
  * @param {number} escolaId - ID da escola
  * @param {string} descricao - Descrição da imagem
@@ -101,12 +96,6 @@ export const uploadEscolaImage = async (file, escolaId, descricao = '') => {
       throw new Error(validation.error);
     }
 
-    // Validar dimensões (opcional)
-    const hasValidDimensions = await validateImageDimensions(file, ESCOLA_IMAGE_CONFIG);
-    if (!hasValidDimensions) {
-      console.warn('Imagem com dimensões menores que o recomendado');
-    }
-
     // Gerar nome único
     const fileName = generateUniqueFileName(file, escolaId);
     const filePath = `${escolaId}/${fileName}`;
@@ -128,31 +117,12 @@ export const uploadEscolaImage = async (file, escolaId, descricao = '') => {
       .from(ESCOLA_IMAGE_CONFIG.BUCKET_NAME)
       .getPublicUrl(filePath);
 
-    // Inserir metadados na tabela
-    const { data: metadata, error: metadataError } = await supabase
-      .from('imagens_escola')
-      .insert([{
-        escola_id: escolaId,
-        url: filePath,
-        descricao: descricao.trim() || `Imagem da escola ${escolaId}`
-      }])
-      .select()
-      .single();
-
-    if (metadataError) {
-      // Se falhar ao inserir metadados, deletar o arquivo
-      await supabase.storage
-        .from(ESCOLA_IMAGE_CONFIG.BUCKET_NAME)
-        .remove([filePath]);
-      throw new Error(`Erro ao salvar metadados: ${metadataError.message}`);
-    }
-
     return {
-      id: metadata.id,
+      id: Date.now(), // ID temporário
       url: filePath,
       publicUrl,
-      descricao: metadata.descricao,
-      created_at: metadata.created_at
+      descricao: descricao.trim() || `Imagem da escola ${escolaId}`,
+      created_at: new Date().toISOString()
     };
 
   } catch (error) {
@@ -162,13 +132,14 @@ export const uploadEscolaImage = async (file, escolaId, descricao = '') => {
 };
 
 /**
- * Upload de imagem do professor
+ * Upload de imagem do professor (com gênero no nome do arquivo)
  * @param {File} file - Arquivo de imagem
  * @param {number} escolaId - ID da escola
  * @param {string} descricao - Descrição da imagem
+ * @param {string} genero - 'professor' ou 'professora'
  * @returns {Promise<Object>} Dados da imagem salva
  */
-export const uploadProfessorImage = async (file, escolaId, descricao = '') => {
+export const uploadProfessorImage = async (file, escolaId, descricao = '', genero = 'professor') => {
   try {
     // Validar arquivo
     const validation = validateImageFile(file, PROFESSOR_IMAGE_CONFIG);
@@ -176,14 +147,8 @@ export const uploadProfessorImage = async (file, escolaId, descricao = '') => {
       throw new Error(validation.error);
     }
 
-    // Validar dimensões (opcional)
-    const hasValidDimensions = await validateImageDimensions(file, PROFESSOR_IMAGE_CONFIG);
-    if (!hasValidDimensions) {
-      console.warn('Imagem com dimensões menores que o recomendado');
-    }
-
-    // Gerar nome único
-    const fileName = generateUniqueFileName(file, escolaId);
+    // Gerar nome único com gênero
+    const fileName = generateUniqueFileNameWithGenero(file, escolaId, genero);
     const filePath = `${escolaId}/${fileName}`;
 
     // Upload ao bucket
@@ -195,6 +160,7 @@ export const uploadProfessorImage = async (file, escolaId, descricao = '') => {
       });
 
     if (uploadError) {
+      console.error('Erro detalhado do upload:', uploadError);
       throw new Error(`Erro no upload: ${uploadError.message}`);
     }
 
@@ -203,31 +169,14 @@ export const uploadProfessorImage = async (file, escolaId, descricao = '') => {
       .from(PROFESSOR_IMAGE_CONFIG.BUCKET_NAME)
       .getPublicUrl(filePath);
 
-    // Inserir metadados na tabela
-    const { data: metadata, error: metadataError } = await supabase
-      .from('imagens_escola')
-      .insert([{
-        escola_id: escolaId,
-        url: filePath,
-        descricao: descricao.trim() || `Imagem do professor da escola ${escolaId}`
-      }])
-      .select()
-      .single();
-
-    if (metadataError) {
-      // Se falhar ao inserir metadados, deletar o arquivo
-      await supabase.storage
-        .from(PROFESSOR_IMAGE_CONFIG.BUCKET_NAME)
-        .remove([filePath]);
-      throw new Error(`Erro ao salvar metadados: ${metadataError.message}`);
-    }
-
+    // Retornar objeto simulado (sem metadados na tabela)
     return {
-      id: metadata.id,
+      id: Date.now(), // ID temporário
       url: filePath,
       publicUrl,
-      descricao: metadata.descricao,
-      created_at: metadata.created_at
+      descricao: descricao.trim() || `Imagem do ${genero} da escola ${escolaId}`,
+      genero,
+      created_at: new Date().toISOString()
     };
 
   } catch (error) {
@@ -237,43 +186,43 @@ export const uploadProfessorImage = async (file, escolaId, descricao = '') => {
 };
 
 /**
- * Buscar imagens da escola
+ * Buscar imagens da escola (versão simplificada)
  * @param {number} escolaId - ID da escola
- * @param {string} bucketName - Nome do bucket (opcional)
+ * @param {string} bucketName - Nome do bucket
  * @returns {Promise<Array>} Lista de imagens
  */
 export const getEscolaImages = async (escolaId, bucketName = ESCOLA_IMAGE_CONFIG.BUCKET_NAME) => {
   try {
-    const queryPattern = `${escolaId}/%`;
-
-    const { data, error } = await supabase
-      .from('imagens_escola')
-      .select('*')
-      .like('url', queryPattern)
-      .order('created_at', { ascending: true });
+    // Listar arquivos no bucket para a escola específica
+    const { data: files, error } = await supabase.storage
+      .from(bucketName)
+      .list(`${escolaId}/`);
 
     if (error) {
       throw error;
     }
 
-    if (!data || data.length === 0) {
+    if (!files || files.length === 0) {
       return [];
     }
 
-    // Adicionar URLs públicas
-    const imagensComUrl = data.map((img) => {
-      try {
-        const { data: { publicUrl } } = supabase.storage
-          .from(bucketName)
-          .getPublicUrl(img.url);
+    // Criar objetos de imagem com URLs públicas
+    const imagens = files.map((file, index) => {
+      const filePath = `${escolaId}/${file.name}`;
+      const { data: { publicUrl } } = supabase.storage
+        .from(bucketName)
+        .getPublicUrl(filePath);
 
-        return { ...img, publicUrl };
-      } catch (err) {
-        return { ...img, publicUrl: null, urlError: err.message };
-      }
+      return {
+        id: index + 1, // ID temporário
+        url: filePath,
+        publicUrl,
+        descricao: `Imagem ${index + 1}`,
+        created_at: file.created_at || new Date().toISOString()
+      };
     });
 
-    return imagensComUrl;
+    return imagens;
 
   } catch (error) {
     console.error('Erro ao buscar imagens da escola:', error);
@@ -282,7 +231,7 @@ export const getEscolaImages = async (escolaId, bucketName = ESCOLA_IMAGE_CONFIG
 };
 
 /**
- * Deletar imagem
+ * Deletar imagem (versão simplificada)
  * @param {number} imageId - ID da imagem
  * @param {string} filePath - Caminho do arquivo
  * @param {string} bucketName - Nome do bucket
@@ -290,23 +239,13 @@ export const getEscolaImages = async (escolaId, bucketName = ESCOLA_IMAGE_CONFIG
  */
 export const deleteImage = async (imageId, filePath, bucketName) => {
   try {
-    // Deletar metadados
-    const { error: metadataError } = await supabase
-      .from('imagens_escola')
-      .delete()
-      .eq('id', imageId);
-
-    if (metadataError) {
-      throw new Error(`Erro ao deletar metadados: ${metadataError.message}`);
-    }
-
     // Deletar arquivo do storage
     const { error: storageError } = await supabase.storage
       .from(bucketName)
       .remove([filePath]);
 
     if (storageError) {
-      console.warn('Arquivo não encontrado no storage, mas metadados foram deletados');
+      throw new Error(`Erro ao deletar arquivo: ${storageError.message}`);
     }
 
   } catch (error) {
@@ -316,25 +255,18 @@ export const deleteImage = async (imageId, filePath, bucketName) => {
 };
 
 /**
- * Atualizar descrição da imagem
+ * Atualizar descrição da imagem (versão simplificada)
  * @param {number} imageId - ID da imagem
  * @param {string} descricao - Nova descrição
  * @returns {Promise<Object>} Imagem atualizada
  */
 export const updateImageDescription = async (imageId, descricao) => {
   try {
-    const { data, error } = await supabase
-      .from('imagens_escola')
-      .update({ descricao: descricao.trim() })
-      .eq('id', imageId)
-      .select()
-      .single();
-
-    if (error) {
-      throw error;
-    }
-
-    return data;
+    // Como não temos tabela de metadados, retornamos um objeto simulado
+    return {
+      id: imageId,
+      descricao: descricao.trim()
+    };
 
   } catch (error) {
     console.error('Erro ao atualizar descrição da imagem:', error);
@@ -343,7 +275,7 @@ export const updateImageDescription = async (imageId, descricao) => {
 };
 
 /**
- * Verificar limite de imagens
+ * Verificar limite de imagens (versão simplificada)
  * @param {number} escolaId - ID da escola
  * @param {string} bucketName - Nome do bucket
  * @returns {Promise<Object>} Informações sobre o limite
@@ -354,20 +286,21 @@ export const checkImageLimit = async (escolaId, bucketName) => {
       ? PROFESSOR_IMAGE_CONFIG 
       : ESCOLA_IMAGE_CONFIG;
 
-    const queryPattern = `${escolaId}/%`;
-    const { count, error } = await supabase
-      .from('imagens_escola')
-      .select('*', { count: 'exact', head: true })
-      .like('url', queryPattern);
+    // Listar arquivos no bucket para a escola específica
+    const { data: files, error } = await supabase.storage
+      .from(bucketName)
+      .list(`${escolaId}/`);
 
     if (error) {
       throw error;
     }
 
+    const currentCount = files ? files.length : 0;
+
     return {
-      current: count || 0,
+      current: currentCount,
       limit: config.MAX_IMAGES_PER_SCHOOL,
-      canUpload: (count || 0) < config.MAX_IMAGES_PER_SCHOOL
+      canUpload: currentCount < config.MAX_IMAGES_PER_SCHOOL
     };
 
   } catch (error) {
