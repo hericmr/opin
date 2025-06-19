@@ -32,6 +32,430 @@
 
 ---
 
+## **NOVA SEÇÃO: Upload de Imagens ao Bucket no Edit Panel**
+
+### **Objetivo**
+Implementar funcionalidade completa de upload de imagens ao bucket `imagens-das-escolas` no EditEscolaPanel, incluindo:
+- Interface de upload com preview
+- Validação de arquivos
+- Upload ao bucket do Supabase
+- Inserção de metadados na tabela `imagens_escola`
+- Feedback visual de progresso e erros
+
+### **Estrutura dos Buckets e Tabelas**
+
+#### **Buckets do Supabase Storage:**
+- `imagens-das-escolas` - Para imagens das escolas
+- `imagens-professores` - Para imagens dos professores
+- `documentos-das-escolas` - Para documentos das escolas
+
+#### **Tabelas de Metadados:**
+- `imagens_escola` - Metadados das imagens das escolas e professores
+- `documentos_escola` - Metadados dos documentos das escolas
+
+### **Processo de Upload de Imagens**
+
+#### **1. Configuração dos Buckets**
+```sql
+-- Bucket: imagens-das-escolas
+-- Política de acesso público para leitura
+-- Política de upload para usuários autenticados
+
+-- Bucket: imagens-professores
+-- Política de acesso público para leitura
+-- Política de upload para usuários autenticados
+
+-- Estrutura de pastas:
+-- imagens-das-escolas/
+--   ├── {escola_id}/
+--   │   ├── {escola_id}_{timestamp}_{random}.jpg
+--   │   ├── {escola_id}_{timestamp}_{random}.png
+--   │   └── ...
+
+-- imagens-professores/
+--   ├── {escola_id}/
+--   │   ├── {escola_id}_{timestamp}_{random}.jpg
+--   │   ├── {escola_id}_{timestamp}_{random}.png
+--   │   └── ...
+```
+
+#### **2. Estrutura da Tabela `imagens_escola`**
+```sql
+CREATE TABLE imagens_escola (
+  id SERIAL PRIMARY KEY,
+  escola_id INTEGER REFERENCES escolas_completa(id),
+  url TEXT NOT NULL,
+  descricao TEXT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+#### **3. Fluxo de Upload**
+1. **Seleção de Arquivos**
+   - Interface de drag & drop ou file input
+   - Validação de tipos (JPG, PNG, WEBP, GIF)
+   - Validação de tamanho (máx 5MB por arquivo)
+   - Preview das imagens selecionadas
+
+2. **Upload ao Bucket**
+   - Geração de nome único para cada arquivo
+   - Upload para `imagens-das-escolas/{escola_id}/{filename}` ou `imagens-professores/{escola_id}/{filename}`
+   - Tratamento de erros de upload
+
+3. **Inserção de Metadados**
+   - Obtenção da URL pública após upload
+   - Inserção na tabela `imagens_escola`
+   - Relacionamento com `escola_id`
+
+4. **Feedback Visual**
+   - Progress bar durante upload
+   - Mensagens de sucesso/erro
+   - Atualização da lista de imagens
+
+### **Implementação Técnica**
+
+#### **1. Serviço de Upload de Imagens das Escolas**
+```javascript
+// src/services/escolaImageService.js
+export const uploadEscolaImage = async (file, escolaId, descricao = '') => {
+  // 1. Validar arquivo
+  // 2. Gerar nome único
+  // 3. Upload ao bucket imagens-das-escolas
+  // 4. Inserir metadados
+  // 5. Retornar dados da imagem
+};
+```
+
+#### **2. Serviço de Upload de Imagens dos Professores**
+```javascript
+// src/services/professorImageService.js
+export const uploadProfessorImage = async (file, escolaId, descricao = '') => {
+  // 1. Validar arquivo
+  // 2. Gerar nome único
+  // 3. Upload ao bucket imagens-professores
+  // 4. Inserir metadados
+  // 5. Retornar dados da imagem
+};
+```
+
+#### **3. Componente de Upload das Escolas**
+```javascript
+// src/components/EditEscolaPanel/ImageUploadSection.js
+const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
+  // Interface de upload para imagens das escolas
+  // Preview de imagens
+  // Lista de imagens existentes
+  // Funcionalidade de remoção
+};
+```
+
+#### **4. Componente de Upload dos Professores**
+```javascript
+// src/components/EditEscolaPanel/ProfessorImageUploadSection.js
+const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
+  // Interface de upload para imagens dos professores
+  // Preview de imagens
+  // Lista de imagens existentes
+  // Funcionalidade de remoção
+};
+```
+
+#### **5. Integração no EditEscolaPanel**
+- Nova aba "Imagens da Escola" no painel de edição
+- Nova aba "Imagens do Professor" no painel de edição
+- Seção de upload integrada
+- Lista de imagens existentes com opções de edição/remoção
+
+### **Validações e Restrições**
+
+#### **Tipos de Arquivo Permitidos:**
+- JPG/JPEG
+- PNG
+- WEBP
+- GIF
+
+#### **Limites:**
+- **Imagens das Escolas**: Máximo 10 imagens por escola
+- **Imagens dos Professores**: Máximo 5 imagens por escola
+- Tamanho máximo: 5MB por arquivo
+- Resolução mínima: 200x200px
+
+#### **Validações:**
+- Verificação de tipo MIME
+- Verificação de extensão
+- Verificação de tamanho
+- Verificação de dimensões (opcional)
+
+### **Tratamento de Erros**
+
+#### **Cenários de Erro:**
+1. **Arquivo inválido**
+   - Tipo não suportado
+   - Tamanho muito grande
+   - Arquivo corrompido
+
+2. **Erro de Upload**
+   - Falha de conexão
+   - Erro do Supabase
+   - Quota excedida
+
+3. **Erro de Metadados**
+   - Falha na inserção na tabela
+   - Erro de relacionamento
+
+#### **Feedback ao Usuário:**
+- Mensagens de erro específicas
+- Sugestões de correção
+- Opção de tentar novamente
+
+### **Interface do Usuário**
+
+#### **Seção de Upload das Escolas:**
+- Área de drag & drop
+- Botão "Selecionar Arquivos"
+- Lista de arquivos selecionados com preview
+- Progress bar durante upload
+- Botões de remoção individual
+- Tema azul para diferenciação
+
+#### **Seção de Upload dos Professores:**
+- Área de drag & drop
+- Botão "Selecionar Arquivos"
+- Lista de arquivos selecionados com preview
+- Progress bar durante upload
+- Botões de remoção individual
+- Tema verde para diferenciação
+
+#### **Lista de Imagens:**
+- Grid responsivo de imagens
+- Thumbnail com overlay de ações
+- Modal de preview em tamanho real
+- Opções de editar descrição e remover
+
+#### **Estados Visuais:**
+- Loading durante upload
+- Sucesso com checkmark
+- Erro com ícone de alerta
+- Hover effects para interações
+
+### **Integração com PainelInformacoes**
+
+#### **Atualização em Tempo Real:**
+- Após upload bem-sucedido, atualizar contexto global
+- Refrescar componente `ImagensdasEscolas`
+- Refrescar componente `ImagemHistoriadoProfessor`
+- Notificar outros componentes sobre mudanças
+
+#### **Cache e Performance:**
+- Cache de imagens por escola
+- Lazy loading de imagens
+- Otimização de thumbnails
+
+### **Testes e Qualidade**
+
+#### **Testes Unitários:**
+- Validação de arquivos
+- Upload de imagens
+- Inserção de metadados
+- Tratamento de erros
+
+#### **Testes de Integração:**
+- Fluxo completo de upload
+- Integração com EditEscolaPanel
+- Atualização do PainelInformacoes
+
+#### **Testes de Usabilidade:**
+- Interface responsiva
+- Acessibilidade
+- Performance com múltiplas imagens
+
+---
+
+## **NOVA SEÇÃO: Upload de Imagens dos Professores ao Bucket**
+
+### **Objetivo**
+Implementar funcionalidade específica para upload de imagens dos professores ao bucket `imagens-professores`, diferenciada das imagens das escolas.
+
+### **Diferenças das Imagens das Escolas**
+
+#### **Bucket Específico:**
+- **Escolas**: `imagens-das-escolas`
+- **Professores**: `imagens-professores`
+
+#### **Limites Diferentes:**
+- **Escolas**: Máximo 10 imagens por escola
+- **Professores**: Máximo 5 imagens por escola
+
+#### **Interface Visual:**
+- **Escolas**: Tema azul
+- **Professores**: Tema verde com ícone de usuário
+
+#### **Componentes Específicos:**
+- `ProfessorImageUploadSection.js` - Interface específica para professores
+- `professorImageService.js` - Serviço específico para professores
+
+### **Estrutura de Dados**
+
+#### **Bucket: `imagens-professores`**
+```
+imagens-professores/
+├── {escola_id}/
+│   ├── {escola_id}_{timestamp}_{random}.jpg
+│   ├── {escola_id}_{timestamp}_{random}.png
+│   └── ...
+```
+
+#### **Tabela: `imagens_escola` (compartilhada)**
+- Usa a mesma tabela `imagens_escola`
+- Diferenciação por URL (caminho do bucket)
+- Filtros específicos para cada tipo
+
+### **Fluxo de Upload dos Professores**
+
+#### **1. Seleção de Arquivos**
+- Interface específica com tema verde
+- Validação de tipos (JPG, PNG, WEBP, GIF)
+- Validação de tamanho (máx 5MB por arquivo)
+- Preview das imagens selecionadas
+- Limite de 5 imagens por escola
+
+#### **2. Upload ao Bucket**
+- Geração de nome único: `{escola_id}_{timestamp}_{random}.{ext}`
+- Upload para `imagens-professores/{escola_id}/{filename}`
+- Tratamento de erros de rede e storage
+
+#### **3. Inserção de Metadados**
+- Obtenção da URL pública após upload
+- Inserção na tabela `imagens_escola`
+- Relacionamento com `escola_id`
+
+#### **4. Feedback Visual**
+- Progress bar durante upload
+- Mensagens de sucesso/erro
+- Atualização da lista de imagens
+- Tema verde para diferenciação
+
+### **Implementação Técnica**
+
+#### **Serviço de Upload dos Professores**
+```javascript
+// src/services/professorImageService.js
+const PROFESSOR_IMAGE_CONFIG = {
+  BUCKET_NAME: 'imagens-professores',
+  MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
+  ALLOWED_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'],
+  MAX_IMAGES_PER_SCHOOL: 5,
+  MIN_DIMENSIONS: { width: 200, height: 200 }
+};
+
+export const uploadProfessorImage = async (file, escolaId, descricao = '') => {
+  // Implementação específica para professores
+};
+```
+
+#### **Componente de Upload dos Professores**
+```javascript
+// src/components/EditEscolaPanel/ProfessorImageUploadSection.js
+const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
+  // Interface específica para professores
+  // Tema verde
+  // Ícone de usuário
+  // Limite de 5 imagens
+};
+```
+
+### **Integração no Sistema**
+
+#### **EditEscolaPanel:**
+- Nova aba "Imagens do Professor"
+- Integração com `ProfessorImageUploadSection`
+- Callback específico para atualizações
+
+#### **AdminPanel:**
+- Nova aba "Imagens do Professor"
+- Interface contextual com explicações
+- Integração com o sistema de edição existente
+
+### **Validações Específicas**
+
+#### **Limites dos Professores:**
+- Máximo 5 imagens por escola
+- Tamanho máximo: 5MB por arquivo
+- Tipos: JPG, JPEG, PNG, WEBP, GIF
+
+#### **Diferenciação Visual:**
+- Tema verde para professores
+- Ícone de usuário
+- Mensagens específicas
+- Confirmações específicas
+
+### **Tratamento de Erros**
+
+#### **Cenários Específicos:**
+1. **Limite de imagens do professor atingido**
+2. **Erro de upload para bucket específico**
+3. **Falha na inserção de metadados**
+
+#### **Feedback Específico:**
+- Mensagens específicas para professores
+- Sugestões de correção
+- Opção de tentar novamente
+
+### **Interface do Usuário**
+
+#### **Tema Visual:**
+- Cores verdes para diferenciação
+- Ícone de usuário
+- Mensagens específicas para professores
+
+#### **Funcionalidades:**
+- Drag & drop específico
+- Preview de imagens
+- Gerenciamento completo
+- Modal de preview
+- Edição de descrições
+
+### **Integração com PainelInformacoes**
+
+#### **Componente Existente:**
+- `ImagemHistoriadoProfessor.js` já usa o bucket `imagens-professores`
+- Atualização automática após upload
+- Cache de imagens por escola
+
+#### **Performance:**
+- Lazy loading específico
+- Cache otimizado
+- Requisições eficientes
+
+### **Testes Específicos**
+
+#### **Testes de Limite:**
+- Verificar limite de 5 imagens por escola
+- Testar upload quando limite atingido
+- Verificar mensagens de erro específicas
+
+#### **Testes de Integração:**
+- Fluxo completo de upload de professores
+- Integração com `ImagemHistoriadoProfessor`
+- Atualização do PainelInformacoes
+
+### **Benefícios da Implementação**
+
+#### **Para o Usuário:**
+- Interface diferenciada e intuitiva
+- Limites específicos para professores
+- Feedback visual claro
+- Gerenciamento organizado
+
+#### **Para o Sistema:**
+- Separação clara de responsabilidades
+- Buckets organizados
+- Performance otimizada
+- Manutenibilidade
+
+---
+
 ## Phase 1: Analysis (Complete)
 
 - **Supabase tables used:**
