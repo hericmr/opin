@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
-import { Search, Filter, Edit2, Trash2, X, MapPin, Star } from 'lucide-react';
-import EditEscolaPanel from './EditEscolaPanel/EditEscolaPanel';
+import { ImageUploadSection, ProfessorImageUploadSection } from './EditEscolaPanel';
 import DocumentViewer from './PainelInformacoes/components/DocumentViewer';
-console.log('DEBUG: EditEscolaPanel', EditEscolaPanel);
-console.log('DEBUG: DocumentViewer', DocumentViewer);
 
 const AdminPanel = () => {
   const [escolas, setEscolas] = useState([]);
@@ -14,7 +11,6 @@ const AdminPanel = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [activeTab, setActiveTab] = useState('dados-basicos');
   const [documentos, setDocumentos] = useState([]);
   const [loadingDocumentos, setLoadingDocumentos] = useState(false);
   const [showAddDocument, setShowAddDocument] = useState(false);
@@ -39,6 +35,8 @@ const AdminPanel = () => {
     { id: 'video', label: 'Vídeo' },
     { id: 'historias', label: 'Histórias' },
     { id: 'coordenadas', label: 'Coordenadas' },
+    { id: 'imagens-escola', label: 'Imagens da Escola' },
+    { id: 'imagens-professores', label: 'Imagens dos Professores' },
     { id: 'documentos', label: 'Documentos' }
   ];
 
@@ -186,6 +184,7 @@ const AdminPanel = () => {
         'Endereço': editingLocation['Endereço'],
         'Terra Indigena (TI)': editingLocation['Terra Indigena (TI)'],
         'Escola Estadual ou Municipal': editingLocation['Escola Estadual ou Municipal'],
+        'Parcerias com o município': editingLocation['Parcerias com o município'],
         'Diretoria de Ensino': editingLocation['Diretoria de Ensino'],
         'Ano de criação da escola': editingLocation['Ano de criação da escola'],
         
@@ -196,41 +195,43 @@ const AdminPanel = () => {
         // Ensino
         'Modalidade de Ensino/turnos de funcionamento': editingLocation['Modalidade de Ensino/turnos de funcionamento'],
         'Numero de alunos': editingLocation['Numero de alunos'],
-        'disciplinas_bilingues': editingLocation['disciplinas_bilingues'],
-        'formas_avaliacao': editingLocation['formas_avaliacao'],
         
         // Infraestrutura
-        'espaco_escolar': editingLocation['espaco_escolar'],
-        'cozinha_merenda': editingLocation['cozinha_merenda'],
-        'acesso_agua': editingLocation['acesso_agua'],
-        'coleta_lixo': editingLocation['coleta_lixo'],
-        'acesso_internet': editingLocation['acesso_internet'],
-        'equipamentos': editingLocation['equipamentos'],
-        'modo_acesso': editingLocation['modo_acesso'],
+        'Espaço escolar e estrutura': editingLocation['Espaço escolar e estrutura'],
+        'Cozinha/Merenda escolar/diferenciada': editingLocation['Cozinha/Merenda escolar/diferenciada'],
+        'Acesso à água': editingLocation['Acesso à água'],
+        'Tem coleta de lixo?': editingLocation['Tem coleta de lixo?'],
+        'Acesso à internet': editingLocation['Acesso à internet'],
+        'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': editingLocation['Equipamentos Tecnológicos (Computadores, tablets e impressoras)'],
+        'Modo de acesso à escola': editingLocation['Modo de acesso à escola'],
         
         // Gestão e Professores
-        'gestao': editingLocation['gestao'],
-        'outros_funcionarios': editingLocation['outros_funcionarios'],
-        'professores_indigenas': editingLocation['professores_indigenas'],
-        'professores_nao_indigenas': editingLocation['professores_nao_indigenas'],
-        'professores_falam_lingua': editingLocation['professores_falam_lingua'],
-        'formacao_professores': editingLocation['formacao_professores'],
-        'formacao_continuada': editingLocation['formacao_continuada'],
+        'Gestão/Nome': editingLocation['Gestão/Nome'],
+        'Outros funcionários': editingLocation['Outros funcionários'],
+        'Quantidade de professores indígenas': editingLocation['Quantidade de professores indígenas'],
+        'Quantidade de professores não indígenas': editingLocation['Quantidade de professores não indígenas'],
+        'Professores falam a língua indígena?': editingLocation['Professores falam a língua indígena?'],
+        'Formação dos professores': editingLocation['Formação dos professores'],
+        'Formação continuada oferecida': editingLocation['Formação continuada oferecida'],
         
-        // Material Pedagógico
-        'material_nao_indigena': editingLocation['material_nao_indigena'],
-        'material_indigena': editingLocation['material_indigena'],
-        'praticas_pedagogicas': editingLocation['praticas_pedagogicas'],
+        // Projeto Pedagógico
+        'A escola possui PPP próprio?': editingLocation['A escola possui PPP próprio?'],
+        'PPP elaborado com a comunidade?': editingLocation['PPP elaborado com a comunidade?'],
+        'Disciplinas bilíngues?': editingLocation['Disciplinas bilíngues?'],
+        'Material pedagógico não indígena': editingLocation['Material pedagógico não indígena'],
+        'Material pedagógico indígena': editingLocation['Material pedagógico indígena'],
+        'Práticas pedagógicas indígenas': editingLocation['Práticas pedagógicas indígenas'],
+        'Formas de avaliação': editingLocation['Formas de avaliação'],
         
         // Projetos e Parcerias
-        'projetos_andamento': editingLocation['projetos_andamento'],
-        'parcerias_universidades': editingLocation['parcerias_universidades'],
-        'acoes_ongs': editingLocation['acoes_ongs'],
-        'desejos_comunidade': editingLocation['desejos_comunidade'],
+        'Projetos em andamento': editingLocation['Projetos em andamento'],
+        'Parcerias com universidades?': editingLocation['Parcerias com universidades?'],
+        'Ações com ONGs ou coletivos?': editingLocation['Ações com ONGs ou coletivos?'],
+        'Desejos da comunidade para a escola': editingLocation['Desejos da comunidade para a escola'],
         
         // Redes Sociais e Links
-        'usa_redes_sociais': editingLocation['usa_redes_sociais'],
-        'links_redes_sociais': editingLocation['links_redes_sociais'],
+        'Escola utiliza redes sociais?': editingLocation['Escola utiliza redes sociais?'],
+        'Links das redes sociais': editingLocation['Links das redes sociais'],
         'links': editingLocation['links'],
         'link_para_videos': editingLocation['link_para_videos'],
         
@@ -271,16 +272,19 @@ const AdminPanel = () => {
     }
   };
 
-  console.log('DEBUG: editingLocation (antes do return)', editingLocation);
+  // Abrir edição inline
+  const openEditModal = (escola) => {
+    setEditingLocation({ ...escola, activeTab: 'dados-basicos' });
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Menu lateral */}
-      <aside className="w-64 bg-white border-r p-4 overflow-y-auto max-h-screen">
-        <h2 className="text-lg font-bold mb-4">Escolas</h2>
+      <aside className="w-64 bg-white border-r p-4 overflow-y-auto h-screen sticky top-0">
+        <h2 className="text-lg font-bold mb-4 sticky top-0 bg-white pb-2">Escolas</h2>
         
         {/* Busca no menu lateral */}
-        <div className="mb-4">
+        <div className="mb-4 sticky top-12 bg-white pb-2">
           <input
             type="text"
             placeholder="Buscar escola..."
@@ -299,7 +303,7 @@ const AdminPanel = () => {
             <li key={escola.id}>
               <button
                 className={`block w-full text-left px-2 py-1 rounded hover:bg-blue-100 text-sm ${editingLocation?.id === escola.id ? 'bg-blue-200 font-bold' : ''}`}
-                onClick={() => setEditingLocation(escola)}
+                onClick={() => openEditModal(escola)}
               >
                 {escola.Escola}
               </button>
@@ -309,7 +313,7 @@ const AdminPanel = () => {
       </aside>
 
       {/* Conteúdo principal */}
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-6 overflow-y-auto h-screen">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Painel de Administração</h1>
         
         {/* Barra de ferramentas */}
@@ -317,7 +321,6 @@ const AdminPanel = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Campo de busca */}
             <div className="relative flex-1">
-              {/* <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" /> */}
               <input
                 type="text"
                 placeholder="Buscar por título ou descrição..."
@@ -328,7 +331,6 @@ const AdminPanel = () => {
             </div>
             {/* Filtro por tipo */}
             <div className="relative">
-              {/* <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" /> */}
               <select
                 className="pl-10 pr-4 py-2 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={selectedType}
@@ -342,8 +344,8 @@ const AdminPanel = () => {
 
         {/* Painel de Edição */}
         {editingLocation && typeof editingLocation === 'object' && editingLocation.id && editingLocation.Escola && (
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex justify-between items-center mb-4">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-h-[calc(100vh-200px)] overflow-hidden flex flex-col">
+            <div className="flex justify-between items-center mb-4 flex-shrink-0">
               <h2 className="text-lg font-semibold">Editar Escola</h2>
               <button
                 onClick={() => setEditingLocation(null)}
@@ -354,15 +356,15 @@ const AdminPanel = () => {
             </div>
 
             {/* Navegação por abas */}
-            <div className="border-b border-gray-200 mb-6">
+            <div className="border-b border-gray-200 mb-6 flex-shrink-0">
               <nav className="-mb-px flex space-x-8 overflow-x-auto">
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
                     type="button"
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => setEditingLocation({ ...editingLocation, activeTab: tab.id })}
                     className={`whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm ${
-                      activeTab === tab.id
+                      (editingLocation.activeTab || 'dados-basicos') === tab.id
                         ? 'border-blue-500 text-blue-600'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}
@@ -373,11 +375,11 @@ const AdminPanel = () => {
               </nav>
             </div>
 
-            <form onSubmit={handleSave}>
+            <form onSubmit={handleSave} className="flex-1 flex flex-col overflow-hidden">
               {/* Conteúdo das abas */}
-              <div className="min-h-[400px]">
+              <div className="flex-1 overflow-y-auto">
                 {/* Aba: Dados Básicos */}
-                {activeTab === 'dados-basicos' && (
+                {(editingLocation.activeTab || 'dados-basicos') === 'dados-basicos' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Nome da Escola *</label>
@@ -447,7 +449,7 @@ const AdminPanel = () => {
                 )}
 
                 {/* Aba: Povos e Línguas */}
-                {activeTab === 'povos-linguas' && (
+                {editingLocation.activeTab === 'povos-linguas' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Povos Indígenas</label>
@@ -471,7 +473,7 @@ const AdminPanel = () => {
                 )}
 
                 {/* Aba: Ensino */}
-                {activeTab === 'ensino' && (
+                {editingLocation.activeTab === 'ensino' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Modalidade de Ensino/Turnos</label>
@@ -496,8 +498,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['disciplinas_bilingues'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'disciplinas_bilingues': e.target.value })}
+                        value={editingLocation['Disciplinas bilíngues?'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Disciplinas bilíngues?': e.target.value })}
                       />
                     </div>
                     <div>
@@ -505,22 +507,22 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['formas_avaliacao'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'formas_avaliacao': e.target.value })}
+                        value={editingLocation['Formas de avaliação'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Formas de avaliação': e.target.value })}
                       />
                     </div>
                   </div>
                 )}
 
                 {/* Aba: Infraestrutura */}
-                {activeTab === 'infraestrutura' && (
+                {editingLocation.activeTab === 'infraestrutura' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 mb-1">Espaço Escolar e Estrutura</label>
                       <textarea
                         className="w-full border rounded px-3 py-2 h-20"
-                        value={editingLocation['espaco_escolar'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'espaco_escolar': e.target.value })}
+                        value={editingLocation['Espaço escolar e estrutura'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Espaço escolar e estrutura': e.target.value })}
                       />
                     </div>
                     <div>
@@ -528,8 +530,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['cozinha_merenda'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'cozinha_merenda': e.target.value })}
+                        value={editingLocation['Cozinha/Merenda escolar/diferenciada'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Cozinha/Merenda escolar/diferenciada': e.target.value })}
                       />
                     </div>
                     <div>
@@ -537,8 +539,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['acesso_agua'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'acesso_agua': e.target.value })}
+                        value={editingLocation['Acesso à água'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Acesso à água': e.target.value })}
                       />
                     </div>
                     <div>
@@ -546,8 +548,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['coleta_lixo'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'coleta_lixo': e.target.value })}
+                        value={editingLocation['Tem coleta de lixo?'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Tem coleta de lixo?': e.target.value })}
                       />
                     </div>
                     <div>
@@ -555,8 +557,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['acesso_internet'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'acesso_internet': e.target.value })}
+                        value={editingLocation['Acesso à internet'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Acesso à internet': e.target.value })}
                       />
                     </div>
                     <div>
@@ -564,8 +566,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['equipamentos'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'equipamentos': e.target.value })}
+                        value={editingLocation['Equipamentos Tecnológicos (Computadores, tablets e impressoras)'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': e.target.value })}
                       />
                     </div>
                     <div>
@@ -573,23 +575,23 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['modo_acesso'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'modo_acesso': e.target.value })}
+                        value={editingLocation['Modo de acesso à escola'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Modo de acesso à escola': e.target.value })}
                       />
                     </div>
                   </div>
                 )}
 
                 {/* Aba: Gestão e Professores */}
-                {activeTab === 'gestao-professores' && (
+                {editingLocation.activeTab === 'gestao-professores' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Gestão/Nome</label>
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['gestao'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'gestao': e.target.value })}
+                        value={editingLocation['Gestão/Nome'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Gestão/Nome': e.target.value })}
                       />
                     </div>
                     <div>
@@ -597,8 +599,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['outros_funcionarios'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'outros_funcionarios': e.target.value })}
+                        value={editingLocation['Outros funcionários'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Outros funcionários': e.target.value })}
                       />
                     </div>
                     <div>
@@ -606,8 +608,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['professores_indigenas'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'professores_indigenas': e.target.value })}
+                        value={editingLocation['Quantidade de professores indígenas'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Quantidade de professores indígenas': e.target.value })}
                       />
                     </div>
                     <div>
@@ -615,8 +617,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['professores_nao_indigenas'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'professores_nao_indigenas': e.target.value })}
+                        value={editingLocation['Quantidade de professores não indígenas'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Quantidade de professores não indígenas': e.target.value })}
                       />
                     </div>
                     <div>
@@ -624,8 +626,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['professores_falam_lingua'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'professores_falam_lingua': e.target.value })}
+                        value={editingLocation['Professores falam a língua indígena?'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Professores falam a língua indígena?': e.target.value })}
                       />
                     </div>
                     <div>
@@ -633,8 +635,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['formacao_professores'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'formacao_professores': e.target.value })}
+                        value={editingLocation['Formação dos professores'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Formação dos professores': e.target.value })}
                       />
                     </div>
                     <div>
@@ -642,23 +644,23 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['formacao_continuada'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'formacao_continuada': e.target.value })}
+                        value={editingLocation['Formação continuada oferecida'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Formação continuada oferecida': e.target.value })}
                       />
                     </div>
                   </div>
                 )}
 
                 {/* Aba: Material Pedagógico */}
-                {activeTab === 'material-pedagogico' && (
+                {editingLocation.activeTab === 'material-pedagogico' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Material Pedagógico Não Indígena</label>
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['material_nao_indigena'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'material_nao_indigena': e.target.value })}
+                        value={editingLocation['Material pedagógico não indígena'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Material pedagógico não indígena': e.target.value })}
                       />
                     </div>
                     <div>
@@ -666,8 +668,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['material_indigena'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'material_indigena': e.target.value })}
+                        value={editingLocation['Material pedagógico indígena'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Material pedagógico indígena': e.target.value })}
                       />
                     </div>
                     <div>
@@ -675,23 +677,23 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['praticas_pedagogicas'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'praticas_pedagogicas': e.target.value })}
+                        value={editingLocation['Práticas pedagógicas indígenas'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Práticas pedagógicas indígenas': e.target.value })}
                       />
                     </div>
                   </div>
                 )}
 
                 {/* Aba: Projetos e Parcerias */}
-                {activeTab === 'projetos-parcerias' && (
+                {editingLocation.activeTab === 'projetos-parcerias' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Projetos em Andamento</label>
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['projetos_andamento'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'projetos_andamento': e.target.value })}
+                        value={editingLocation['Projetos em andamento'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Projetos em andamento': e.target.value })}
                       />
                     </div>
                     <div>
@@ -699,8 +701,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['parcerias_universidades'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'parcerias_universidades': e.target.value })}
+                        value={editingLocation['Parcerias com universidades?'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Parcerias com universidades?': e.target.value })}
                       />
                     </div>
                     <div>
@@ -708,8 +710,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['acoes_ongs'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'acoes_ongs': e.target.value })}
+                        value={editingLocation['Ações com ONGs ou coletivos?'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Ações com ONGs ou coletivos?': e.target.value })}
                       />
                     </div>
                     <div>
@@ -717,23 +719,23 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['desejos_comunidade'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'desejos_comunidade': e.target.value })}
+                        value={editingLocation['Desejos da comunidade para a escola'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Desejos da comunidade para a escola': e.target.value })}
                       />
                     </div>
                   </div>
                 )}
 
                 {/* Aba: Redes Sociais */}
-                {activeTab === 'redes-sociais' && (
+                {editingLocation.activeTab === 'redes-sociais' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Utiliza Redes Sociais</label>
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['usa_redes_sociais'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'usa_redes_sociais': e.target.value })}
+                        value={editingLocation['Escola utiliza redes sociais?'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Escola utiliza redes sociais?': e.target.value })}
                       />
                     </div>
                     <div>
@@ -741,8 +743,8 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['links_redes_sociais'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'links_redes_sociais': e.target.value })}
+                        value={editingLocation['Links das redes sociais'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Links das redes sociais': e.target.value })}
                       />
                     </div>
                     <div>
@@ -758,7 +760,7 @@ const AdminPanel = () => {
                 )}
 
                 {/* Aba: Vídeo */}
-                {activeTab === 'video' && (
+                {editingLocation.activeTab === 'video' && (
                   <div className="grid grid-cols-1 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Link para Vídeo</label>
@@ -790,7 +792,7 @@ const AdminPanel = () => {
                 )}
 
                 {/* Aba: Histórias */}
-                {activeTab === 'historias' && (
+                {editingLocation.activeTab === 'historias' && (
                   <div className="grid grid-cols-1 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">História da Escola</label>
@@ -812,7 +814,7 @@ const AdminPanel = () => {
                 )}
 
                 {/* Aba: Coordenadas */}
-                {activeTab === 'coordenadas' && (
+                {editingLocation.activeTab === 'coordenadas' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
@@ -837,8 +839,34 @@ const AdminPanel = () => {
                   </div>
                 )}
 
+                {/* Aba: Imagens da Escola */}
+                {editingLocation.activeTab === 'imagens-escola' && (
+                  <div className="space-y-6">
+                    <ImageUploadSection 
+                      escolaId={editingLocation.id} 
+                      onImagesUpdate={() => {
+                        // Atualizar o PainelInformacoes se necessário
+                        console.log('Imagens da escola atualizadas');
+                      }}
+                    />
+                  </div>
+                )}
+
+                {/* Aba: Imagens dos Professores */}
+                {editingLocation.activeTab === 'imagens-professores' && (
+                  <div className="space-y-6">
+                    <ProfessorImageUploadSection 
+                      escolaId={editingLocation.id} 
+                      onImagesUpdate={() => {
+                        // Atualizar o PainelInformacoes se necessário
+                        console.log('Imagens dos professores atualizadas');
+                      }}
+                    />
+                  </div>
+                )}
+
                 {/* Aba: Documentos */}
-                {activeTab === 'documentos' && (
+                {editingLocation.activeTab === 'documentos' && (
                   <div className="space-y-6">
                     {/* Status de carregamento */}
                     {loadingDocumentos && (
@@ -1088,19 +1116,19 @@ const AdminPanel = () => {
 
             {/* Feedback de erro */}
             {saveError && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 flex-shrink-0">
                 {saveError}
               </div>
             )}
             
             {/* Feedback de sucesso */}
             {saveSuccess && (
-              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4">
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4 flex-shrink-0">
                 Escola salva com sucesso!
               </div>
             )}
             
-            <div className="flex gap-2 mt-6">
+            <div className="flex gap-2 mt-6 pt-6 border-t border-gray-200 flex-shrink-0">
               <button 
                 onClick={handleSave}
                 className={`px-4 py-2 rounded flex items-center gap-2 ${
