@@ -1,4 +1,4 @@
-# Escolas Indígenas
+# OPIN (Observatório dos Professores Indígenas no Estado de São Paulo)
 
 Um portal informativo interativo que mapeia e apresenta informações detalhadas sobre escolas indígenas no estado de São Paulo, Brasil. O projeto visa facilitar o acesso a dados educacionais e culturais dessas instituições, promovendo maior visibilidade e compreensão da educação indígena.
 
