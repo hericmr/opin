@@ -3,6 +3,7 @@
  * 
  * @param {Object} props - Propriedades do componente
  * @param {Array} props.dataPoints - Array de pontos de dados das escolas
+ * @param {Function} props.onPainelOpen - Função para abrir o painel de informações
  * @returns {React.ReactElement} - Componente renderizado
  */
 import React, { useState, useEffect, useMemo, useCallback } from "react";
@@ -17,7 +18,7 @@ import detalhesIntro from "./detalhesInfo";
 import "./MapaEscolasIndigenas.css";
 import { criarSlug } from '../utils/slug';
 
-const MapaEscolasIndigenas = ({ dataPoints }) => {
+const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
   console.log("DataPoints recebidos no MapaEscolasIndigenas:", dataPoints ? {
     quantidade: dataPoints.length,
     exemplo: dataPoints[0] ? {
@@ -130,6 +131,16 @@ const MapaEscolasIndigenas = ({ dataPoints }) => {
     if (!info) return;
     setPainelInfo(info);
   }, []);
+
+  // Expor a função abrirPainel para componentes externos
+  useEffect(() => {
+    console.log('MapaEscolasIndigenas: onPainelOpen disponível:', !!onPainelOpen);
+    console.log('MapaEscolasIndigenas: abrirPainel disponível:', !!abrirPainel);
+    if (onPainelOpen && typeof onPainelOpen === 'function') {
+      console.log('MapaEscolasIndigenas: Expondo função abrirPainel');
+      onPainelOpen(abrirPainel);
+    }
+  }, [abrirPainel, onPainelOpen]);
 
   // Otimizar a função de fechar painel
   const fecharPainel = useCallback(() => {

@@ -1,6 +1,7 @@
-import React, { useState, useEffect, Suspense, lazy } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from './supabaseClient';
+import { SearchProvider } from "./contexts/SearchContext";
 import Navbar from "./components/Navbar";
 import PainelInformacoes from "./components/PainelInformacoes";
 import AddLocationButton from "./components/AddLocationButton";
@@ -9,13 +10,14 @@ import { useShare } from './components/hooks/useShare';
 import './App.css';
 import ErrorBoundary from './components/ErrorBoundary';
 
-// Usar React.lazy para os componentes grandes
+// Lazy loading dos componentes
 const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));
 const ConteudoCartografia = React.lazy(() => import("./components/ConteudoCartografia"));
 const AdminPanel = React.lazy(() => import("./components/AdminPanel"));
 const EditEscolaPanel = React.lazy(() => import("./components/EditEscolaPanel/EditEscolaPanel"));
 const TerrasIndigenas = React.lazy(() => import("./components/TerrasIndigenas"));
 const Marcadores = React.lazy(() => import("./components/Marcadores"));
+const SearchResults = React.lazy(() => import("./components/SearchResults"));
 
 const LoadingScreen = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-green-900 text-white">
@@ -33,6 +35,7 @@ const AppContent = () => {
   const [dataPoints, setDataPoints] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [openPainelFunction, setOpenPainelFunction] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -336,6 +339,11 @@ const AppContent = () => {
     setDataPoints((prevDataPoints) => [...prevDataPoints, formattedLocation]);
   };
 
+  const handlePainelOpenFunction = (openPainelFn) => {
+    console.log('Função de abrir painel recebida do mapa:', !!openPainelFn);
+    setOpenPainelFunction(() => openPainelFn);
+  };
+
   useEffect(() => {
     const initializeApp = async () => {
       try {
@@ -387,7 +395,7 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar onConteudoClick={() => navigate('/conteudo')} />
+      <Navbar onConteudoClick={() => navigate('/conteudo')} dataPoints={dataPoints} openPainelFunction={openPainelFunction} />
       <Suspense fallback={<LoadingScreen />}>
         <Routes>
           <Route 
@@ -400,6 +408,7 @@ const AppContent = () => {
                       ? dataPoints
                       : dataPoints.filter(point => point.pontuacao >= 0)
                   } 
+                  onPainelOpen={handlePainelOpenFunction}
                 />
                 <AddLocationButton onLocationAdded={handleLocationAdded} />
               </main>
@@ -408,6 +417,10 @@ const AppContent = () => {
           <Route 
             path="/conteudo" 
             element={<ConteudoCartografia locations={dataPoints} />} 
+          />
+          <Route 
+            path="/search" 
+            element={<SearchResults dataPoints={dataPoints} />} 
           />
           <Route 
             path="/admin" 
@@ -436,11 +449,13 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <Router basename="/escolasindigenas">
-      <ErrorBoundary>
-        <AppContent />
-      </ErrorBoundary>
-    </Router>
+    <SearchProvider>
+      <Router basename="/escolasindigenas">
+        <ErrorBoundary>
+          <AppContent />
+        </ErrorBoundary>
+      </Router>
+    </SearchProvider>
   );
 };
 
