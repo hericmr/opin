@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, BookOpen, Leaf, Shield, LayoutGrid } from 'lucide-react';
+import { MapPin, BookOpen, Search, Home, Leaf, Shield, LayoutGrid, Users, Map } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import LazyImage from '../LazyImage';
 import AddLocationButton from '../AddLocationButton';
@@ -8,12 +8,19 @@ import AddLocationButton from '../AddLocationButton';
 const MobileMenu = ({ 
   mobileMenuOpen, 
   isConteudoPage, 
+  isSearchPage,
+  isAdminPage,
   isAdmin, 
   onAdminClick, 
   isMobileLandscape,
   onNavigation 
 }) => {
   const navigate = useNavigate();
+
+  const getActiveStyle = (isActive) => 
+    isActive 
+      ? 'bg-amber-600/80 border-amber-400/60' 
+      : 'bg-green-800/80 hover:bg-amber-700/80';
 
   return (
     <AnimatePresence>
@@ -27,80 +34,143 @@ const MobileMenu = ({
         >
           <div className={`container mx-auto px-4 py-6 flex flex-col space-y-5 ${isMobileLandscape ? 'py-4 space-y-3' : ''}`}>
             
-            {/* Botão principal de navegação */}
-            <button
-              onClick={() => onNavigation(isConteudoPage ? '/' : '/conteudo')}
-              className={`w-full font-medium text-white bg-green-800/80 hover:bg-amber-700/80 
-                       rounded-xl transition-all duration-200 active:scale-95 shadow-lg
-                       focus:outline-none focus:ring-2 focus:ring-amber-400 touch-manipulation
-                       flex items-center justify-center gap-3 ${
-                         isMobileLandscape 
-                           ? 'py-3 text-sm' 
-                           : 'py-4 text-base'
-                       }`}
-            >
-              {isConteudoPage ? <MapPin className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} /> : <BookOpen className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />}
-              <span className={isMobileLandscape ? "text-sm" : "text-lg"}>
-                {isConteudoPage ? 'Voltar ao Mapa' : 'Ver Todo Conteúdo'}
-              </span>
-            </button>
-            
-            {/* Logos organizadas horizontalmente */}
-            <div className={`flex items-center justify-center space-x-6 py-4 bg-green-800/20 rounded-xl ${isMobileLandscape ? 'py-3 space-x-4' : ''}`}>
-              <a 
-                href="https://www.unifesp.br/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex flex-col items-center transform transition-transform duration-200 hover:scale-105 touch-manipulation"
-              >
-                <LazyImage
-                  src={`${process.env.PUBLIC_URL}/logo.webp`}
-                  alt="Logo"
-                  className="h-8 w-auto"
-                />
-                <span className={`tracking-wide font-[Caveat] text-amber-200 text-center leading-tight ${isMobileLandscape ? 'text-xs' : 'text-xs'}`}>
-                  Licenciatura<br />Intercultural Indígena
-                </span>
-              </a>
+            {/* Navegação Principal */}
+            <div className="space-y-3">
+              <h3 className={`text-amber-200 font-semibold ${isMobileLandscape ? 'text-sm' : 'text-base'} mb-2`}>
+                Navegação
+              </h3>
               
-              <a 
-                href="https://www.unifesp.br/lindi" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="transform transition-transform duration-200 hover:scale-105 touch-manipulation"
-              >
-                <LazyImage
-                  src={`${process.env.PUBLIC_URL}/lindi.webp`}
-                  alt="LINDI"
-                  className="h-8 w-auto"
-                />
-              </a>
-            </div>
-            
-            {/* Área administrativa */}
-            {!isAdmin ? (
+              {/* Botão Mapa das Escolas */}
               <button
-                onClick={onAdminClick}
-                className={`w-full font-medium text-white bg-green-800/60 hover:bg-amber-700/60 
-                         rounded-xl transition-all duration-200 flex items-center justify-center gap-3
-                         focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95 touch-manipulation ${
+                onClick={() => onNavigation('/')}
+                className={`w-full font-medium text-white ${getActiveStyle(!isConteudoPage && !isSearchPage && !isAdminPage)} 
+                         rounded-xl transition-all duration-200 active:scale-95 shadow-lg
+                         focus:outline-none focus:ring-2 focus:ring-amber-400 touch-manipulation
+                         flex items-center gap-3 ${
                            isMobileLandscape 
                              ? 'py-3 text-sm' 
                              : 'py-4 text-base'
                          }`}
               >
-                <Leaf className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
-                <span>Área Administrativa</span>
+                <Home className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
+                <span className={isMobileLandscape ? "text-sm" : "text-lg"}>
+                  Mapa das Escolas Indígenas
+                </span>
               </button>
+
+              {/* Botão Conteúdo Educacional */}
+              <button
+                onClick={() => onNavigation('/conteudo')}
+                className={`w-full font-medium text-white ${getActiveStyle(isConteudoPage)} 
+                         rounded-xl transition-all duration-200 active:scale-95 shadow-lg
+                         focus:outline-none focus:ring-2 focus:ring-amber-400 touch-manipulation
+                         flex items-center gap-3 ${
+                           isMobileLandscape 
+                             ? 'py-3 text-sm' 
+                             : 'py-4 text-base'
+                         }`}
+              >
+                <BookOpen className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
+                <span className={isMobileLandscape ? "text-sm" : "text-lg"}>
+                  Conteúdo Educacional
+                </span>
+              </button>
+
+              {/* Botão Resultados da Busca (apenas se estivermos na página de busca) */}
+              {isSearchPage && (
+                <button
+                  onClick={() => onNavigation('/search')}
+                  className={`w-full font-medium text-white ${getActiveStyle(true)} 
+                           rounded-xl transition-all duration-200 active:scale-95 shadow-lg
+                           focus:outline-none focus:ring-2 focus:ring-amber-400 touch-manipulation
+                           flex items-center gap-3 ${
+                             isMobileLandscape 
+                               ? 'py-3 text-sm' 
+                               : 'py-4 text-base'
+                           }`}
+                >
+                  <Search className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
+                  <span className={isMobileLandscape ? "text-sm" : "text-lg"}>
+                    Resultados da Busca
+                  </span>
+                </button>
+              )}
+            </div>
+            
+            {/* Parceiros Institucionais */}
+            <div className="space-y-3">
+              <h3 className={`text-amber-200 font-semibold ${isMobileLandscape ? 'text-sm' : 'text-base'} mb-2`}>
+                Parceiros Institucionais
+              </h3>
+              
+              <div className={`flex items-center justify-center space-x-6 py-4 bg-green-800/20 rounded-xl ${isMobileLandscape ? 'py-3 space-x-4' : ''}`}>
+                <a 
+                  href="https://www.unifesp.br/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center transform transition-transform duration-200 hover:scale-105 touch-manipulation"
+                  aria-label="Visitar site da UNIFESP"
+                >
+                  <LazyImage
+                    src={`${process.env.PUBLIC_URL}/logo.webp`}
+                    alt="Logo UNIFESP"
+                    className="h-8 w-auto"
+                  />
+                  <span className={`tracking-wide font-[Caveat] text-amber-200 text-center leading-tight ${isMobileLandscape ? 'text-xs' : 'text-xs'}`}>
+                    Licenciatura<br />Intercultural Indígena
+                  </span>
+                </a>
+                
+                <a 
+                  href="https://www.unifesp.br/lindi" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="transform transition-transform duration-200 hover:scale-105 touch-manipulation"
+                  aria-label="Visitar site do LINDI"
+                >
+                  <LazyImage
+                    src={`${process.env.PUBLIC_URL}/lindi.webp`}
+                    alt="LINDI - Licenciatura Intercultural Indígena"
+                    className="h-8 w-auto"
+                  />
+                </a>
+              </div>
+            </div>
+            
+            {/* Área Administrativa */}
+            {!isAdmin ? (
+              <div className="space-y-3">
+                <h3 className={`text-amber-200 font-semibold ${isMobileLandscape ? 'text-sm' : 'text-base'} mb-2`}>
+                  Administração
+                </h3>
+                
+                <button
+                  onClick={onAdminClick}
+                  className={`w-full font-medium text-white bg-green-800/60 hover:bg-amber-700/60 
+                           rounded-xl transition-all duration-200 flex items-center justify-center gap-3
+                           focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95 touch-manipulation ${
+                             isMobileLandscape 
+                               ? 'py-3 text-sm' 
+                               : 'py-4 text-base'
+                           }`}
+                >
+                  <Leaf className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
+                  <span>Acesso Administrativo</span>
+                </button>
+              </div>
             ) : (
               <div className="space-y-4">
+                <h3 className={`text-amber-200 font-semibold ${isMobileLandscape ? 'text-sm' : 'text-base'} mb-2`}>
+                  Painel Administrativo
+                </h3>
+                
                 <div className={`w-full px-4 font-medium text-white/90 text-center 
                               border-2 border-amber-400/50 rounded-xl bg-green-800/30 ${
                                 isMobileLandscape ? 'py-2 text-sm' : 'py-3 text-base'
                               }`}>
                   <span className="flex items-center justify-center gap-2">
                     <Shield className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
-                    <span>Acesso de Administrador</span>
+                    <span>Acesso de Administrador Ativo</span>
                   </span>
                 </div>
                 
@@ -110,7 +180,7 @@ const MobileMenu = ({
                   </div>
                   <button
                     onClick={() => onNavigation('/admin')}
-                    className={`w-full text-white bg-green-800/60 hover:bg-amber-700/60 
+                    className={`w-full text-white ${getActiveStyle(isAdminPage)} 
                              rounded-xl transition-all duration-200 flex items-center justify-center gap-3
                              focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95 touch-manipulation ${
                                isMobileLandscape 
@@ -119,7 +189,7 @@ const MobileMenu = ({
                              }`}
                   >
                     <LayoutGrid className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
-                    <span>Painel de Administração</span>
+                    <span>Gerenciar Conteúdo</span>
                   </button>
                 </div>
               </div>

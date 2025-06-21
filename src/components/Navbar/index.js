@@ -34,6 +34,8 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   };
 
   const isConteudoPage = location.pathname === '/conteudo';
+  const isSearchPage = location.pathname === '/search';
+  const isAdminPage = location.pathname === '/admin';
   
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   
@@ -96,10 +98,10 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-green-900/95 to-green-800/90 backdrop-blur-md text-white shadow-lg">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-green-900/95 to-green-800/90 backdrop-blur-md text-white shadow-lg border-b border-green-700/30">
       <nav className={`container mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between ${isMobileLandscape ? 'h-12' : ''}`}>
         
-        {/* Logo e Título */}
+        {/* Logo e Título - Lado esquerdo */}
         <NavLogo isMobileLandscape={isMobileLandscape} />
 
         {/* Mobile - Botão hambúrguer e busca */}
@@ -118,9 +120,11 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
           />
         </div>
 
-        {/* Desktop - Layout completo */}
+        {/* Desktop - Layout completo - Lado direito */}
         <DesktopNav 
           isConteudoPage={isConteudoPage}
+          isSearchPage={isSearchPage}
+          isAdminPage={isAdminPage}
           isAdmin={isAdmin}
           onAdminClick={handleAdminClick}
           isMobileLandscape={isMobileLandscape}
@@ -134,6 +138,8 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
       <MobileMenu 
         mobileMenuOpen={mobileMenuOpen}
         isConteudoPage={isConteudoPage}
+        isSearchPage={isSearchPage}
+        isAdminPage={isAdminPage}
         isAdmin={isAdmin}
         onAdminClick={handleAdminClick}
         isMobileLandscape={isMobileLandscape}
