@@ -14,7 +14,6 @@ const HistoriadoProfessor = memo(({ escola }) => {
         bg-white rounded-2xl shadow-lg border border-green-100/50
         prose prose-sm sm:prose-base md:prose-lg lg:prose-xl
         prose-headings:text-green-900 prose-p:text-black prose-p:leading-relaxed prose-p:text-justify
-        prose-img:rounded-xl prose-img:shadow-lg
         prose-a:text-green-700 prose-a:no-underline prose-a:border-b-2 prose-a:border-green-100 hover:prose-a:border-green-600
       "
     >
@@ -25,6 +24,7 @@ const HistoriadoProfessor = memo(({ escola }) => {
               src={process.env.PUBLIC_URL + '/passaro.svg'} 
               alt="Ícone de pássaro" 
               className="w-16 h-16 sm:w-24 sm:h-24" 
+              style={{ filter: 'none', borderRadius: '0', boxShadow: 'none' }}
               aria-hidden="true"
             />
           </span>
