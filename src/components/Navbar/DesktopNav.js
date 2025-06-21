@@ -6,6 +6,8 @@ import SearchBar from './SearchBar';
 
 const DesktopNav = ({ 
   isConteudoPage, 
+  isSearchPage,
+  isAdminPage,
   isAdmin, 
   onAdminClick, 
   isMobileLandscape,
@@ -15,7 +17,12 @@ const DesktopNav = ({
 }) => {
   return (
     <div className="hidden lg:flex items-center space-x-4 xl:space-x-6">
-      <NavButtons isConteudoPage={isConteudoPage} isMobileLandscape={isMobileLandscape} />
+      <NavButtons 
+        isConteudoPage={isConteudoPage} 
+        isSearchPage={isSearchPage}
+        isAdminPage={isAdminPage}
+        isMobileLandscape={isMobileLandscape} 
+      />
       
       {/* Barra de busca */}
       <SearchBar 
@@ -26,13 +33,14 @@ const DesktopNav = ({
         dataPoints={dataPoints}
       />
       
-      <NavLogos isMobileLandscape={isMobileLandscape} />
-      
       <AdminPanel 
         isAdmin={isAdmin} 
         onAdminClick={onAdminClick} 
         isMobileLandscape={isMobileLandscape} 
       />
+      
+      {/* Logos no canto direito */}
+      <NavLogos isMobileLandscape={isMobileLandscape} />
     </div>
   );
 };

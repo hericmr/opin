@@ -9,20 +9,29 @@ const NavLogos = ({ isMobileLandscape }) => {
         target="_blank" 
         rel="noopener noreferrer"
         className="flex flex-col items-center group transition-transform duration-200 hover:scale-105"
+        aria-label="Visitar site da UNIFESP - Universidade Federal de São Paulo"
+        title="UNIFESP - Universidade Federal de São Paulo"
       >
         <LazyImage
           src={`${process.env.PUBLIC_URL}/logo.webp`}
-          alt="Logo"
+          alt="Logo UNIFESP"
           className="h-8 w-auto"
         />
         <span className="text-[8px] xl:text-[10px] tracking-wide font-[Caveat] text-amber-200 mt-0.5 text-center leading-tight">
-          é terra indígena!
+          Licenciatura Intercultural
         </span>
       </a>
-      <a href="https://www.unifesp.br/lindi" target="_blank" rel="noopener noreferrer" className="group">
+      <a 
+        href="https://www.unifesp.br/lindi" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="group transition-transform duration-200 hover:scale-105"
+        aria-label="Visitar site do LINDI - Licenciatura Intercultural Indígena"
+        title="LINDI - Licenciatura Intercultural Indígena"
+      >
         <LazyImage
           src={`${process.env.PUBLIC_URL}/lindi.webp`}
-          alt="LINDI"
+          alt="LINDI - Licenciatura Intercultural Indígena"
           className="h-20 w-auto"
         />
       </a>

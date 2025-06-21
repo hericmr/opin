@@ -12,7 +12,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 
 // Lazy loading dos componentes
 const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));
-const ConteudoCartografia = React.lazy(() => import("./components/ConteudoCartografia"));
+const BibliotecaEducacionalIndigena = React.lazy(() => import("./components/BibliotecaEducacionalIndigena"));
 const AdminPanel = React.lazy(() => import("./components/AdminPanel"));
 const EditEscolaPanel = React.lazy(() => import("./components/EditEscolaPanel/EditEscolaPanel"));
 const TerrasIndigenas = React.lazy(() => import("./components/TerrasIndigenas"));
@@ -20,14 +20,12 @@ const Marcadores = React.lazy(() => import("./components/Marcadores"));
 const SearchResults = React.lazy(() => import("./components/SearchResults"));
 
 const LoadingScreen = () => (
-  <div className="flex flex-col items-center justify-center min-h-screen bg-green-900 text-white">
-    <div className="relative">
-      <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <img src="/escolasindigenas/favicon.ico" alt="Ícone de carregamento" className="w-8 h-8" />
-      </div>
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-amber-50">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mx-auto mb-4"></div>
+      <p className="text-green-800 font-medium">Carregando OPIN...</p>
+      <p className="text-green-600 text-sm">Observatório dos Professores Indígenas</p>
     </div>
-    <p className="mt-4 text-lg font-semibold animate-pulse">Carregando dados...</p>
   </div>
 );
 
@@ -416,7 +414,7 @@ const AppContent = () => {
           />
           <Route 
             path="/conteudo" 
-            element={<ConteudoCartografia locations={dataPoints} />} 
+            element={<BibliotecaEducacionalIndigena locations={dataPoints} />} 
           />
           <Route 
             path="/search" 
