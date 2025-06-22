@@ -60,29 +60,6 @@ const GestaoProfessores = memo(({ escola }) => {
     return nome;
   };
 
-  // Função para formatar formação continuada como área de texto
-  const formatarFormacaoContinuada = (formacao) => {
-    if (!formacao) return null;
-
-    // Se já estiver formatado como parágrafos, retornar como está
-    if (formacao.includes('\n\n') || formacao.length > 200) {
-      return formacao;
-    }
-
-    // Se for uma lista simples, formatar como parágrafos
-    if (formacao.includes('•') || formacao.includes('-')) {
-      return formacao.split(/[•-]/).map(item => item.trim()).filter(item => item).join('\n\n');
-    }
-
-    // Se for uma lista separada por vírgulas, formatar como parágrafos
-    if (formacao.includes(',')) {
-      return formacao.split(',').map(item => item.trim()).filter(item => item).join('\n\n');
-    }
-
-    // Se não há formatação específica, retornar como está
-    return formacao;
-  };
-
   return (
     <InfoSection title="Gestores" icon={UsersRound} secondaryIcon={Star}>
       <InfoItem label="Gestão/Nome" value={escola.gestao} />
@@ -99,7 +76,7 @@ const GestaoProfessores = memo(({ escola }) => {
       />
       <InfoItem 
         label="Visitas de Supervisores e Formação Continuada" 
-        value={formatarFormacaoContinuada(escola.formacao_continuada)}
+        value={escola.formacao_continuada}
         isTextArea={true}
       />
     </InfoSection>

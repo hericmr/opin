@@ -13,9 +13,9 @@ const InfoItem = memo(({ label, value, className = '', isTextArea = false }) => 
       <span className="font-medium text-neutral-800">{label}:</span>
       {isTextArea ? (
         <div className="text-neutral-600">
-          <pre className="whitespace-pre-wrap break-words font-sans text-sm leading-relaxed bg-gray-50 p-3 rounded-lg border">
+          <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
             {value}
-          </pre>
+          </div>
         </div>
       ) : (
         <span className="text-neutral-600 break-words">{value}</span>

@@ -167,12 +167,12 @@ const ImagemHistoriadoProfessor = ({ escola_id }) => {
           </button>
           
           <div className="max-w-4xl max-h-full">
-            <img
-              src={imagemZoom.publicURL}
+          <img
+            src={imagemZoom.publicURL}
               alt={imagemZoom.legenda}
-              className="max-w-full max-h-full rounded-lg shadow-2xl border-4 border-white"
-              onClick={(e) => e.stopPropagation()}
-            />
+            className="max-w-full max-h-full rounded-lg shadow-2xl border-4 border-white"
+            onClick={(e) => e.stopPropagation()}
+          />
             
             {/* Legenda no modal */}
             {imagemZoom.legenda && (
