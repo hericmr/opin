@@ -40,8 +40,8 @@ const MobileMenu = ({
                 Navegação
               </h3>
               
-              {/* Botão Mapa das Escolas */}
-              <button
+              {/* Botão Mapa das Escolas - TEMPORARIAMENTE DESATIVADO */}
+              {/* <button
                 onClick={() => onNavigation('/')}
                 className={`w-full font-medium text-white ${getActiveStyle(!isConteudoPage && !isSearchPage && !isAdminPage)} 
                          rounded-xl transition-all duration-200 active:scale-95 shadow-lg
@@ -56,10 +56,10 @@ const MobileMenu = ({
                 <span className={isMobileLandscape ? "text-sm" : "text-lg"}>
                   Mapa das Escolas Indígenas
                 </span>
-              </button>
+              </button> */}
 
-              {/* Botão Conteúdo Educacional */}
-              <button
+              {/* Botão Conteúdo Educacional - TEMPORARIAMENTE DESATIVADO */}
+              {/* <button
                 onClick={() => onNavigation('/conteudo')}
                 className={`w-full font-medium text-white ${getActiveStyle(isConteudoPage)} 
                          rounded-xl transition-all duration-200 active:scale-95 shadow-lg
@@ -74,7 +74,7 @@ const MobileMenu = ({
                 <span className={isMobileLandscape ? "text-sm" : "text-lg"}>
                   Conteúdo Educacional
                 </span>
-              </button>
+              </button> */}
 
               {/* Botão Resultados da Busca (apenas se estivermos na página de busca) */}
               {isSearchPage && (

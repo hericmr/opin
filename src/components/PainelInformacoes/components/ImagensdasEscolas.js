@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { X } from 'lucide-react';
+import { X, RefreshCw } from 'lucide-react';
+import { getLegendaByImageUrl } from '../../../services/legendasService';
 
 const EXTENSOES = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
 const MAX_IMAGENS = 10;
@@ -9,7 +10,9 @@ const ImagensdasEscolas = ({ escola_id }) => {
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [imagemZoom, setImagemZoom] = useState(null);
+  const [error, setError] = useState('');
   const cacheRef = useRef({});
+  const [cacheVersion, setCacheVersion] = useState(0); // Para forçar recarga
 
   const fecharZoom = useCallback(() => {
     setImagemZoom(null);
@@ -25,19 +28,33 @@ const ImagensdasEscolas = ({ escola_id }) => {
     return () => window.removeEventListener('keydown', handleEsc);
   }, [fecharZoom]);
 
+  // Função para limpar cache e recarregar
+  const limparCacheERecarregar = useCallback(() => {
+    console.log('Limpando cache e recarregando imagens...');
+    cacheRef.current = {};
+    setCacheVersion(prev => prev + 1);
+    setImagens([]);
+    setLoading(true);
+    setError('');
+  }, []);
+
   useEffect(() => {
     if (!escola_id) {
       setLoading(false);
       return;
     }
 
-    if (cacheRef.current[escola_id]) {
-      setImagens(cacheRef.current[escola_id]);
+    // Verificar se há cache válido (com versão)
+    const cacheKey = `${escola_id}_v${cacheVersion}`;
+    if (cacheRef.current[cacheKey]) {
+      console.log('Usando cache para escola', escola_id);
+      setImagens(cacheRef.current[cacheKey]);
       setLoading(false);
       return;
     }
 
     const buscarImagens = async () => {
+      console.log('Buscando imagens para escola', escola_id);
       const imagensEncontradas = [];
       const fetchQueue = [];
       let active = 0;
@@ -64,10 +81,27 @@ const ImagensdasEscolas = ({ escola_id }) => {
               if (encontrou) return;
               const ok = await fetchWithThrottle(url);
               if (ok) {
+                console.log(`Imagem encontrada: ${url}`);
+                
+                // Buscar legenda da nova tabela com melhor tratamento de erro
+                let legenda = null;
+                try {
+                  console.log('Buscando legenda para:', url);
+                  legenda = await getLegendaByImageUrl(url, escola_id, 'escola');
+                  console.log('Legenda encontrada:', legenda);
+                } catch (error) {
+                  console.warn('Erro ao buscar legenda para', url, ':', error);
+                  // Não falhar completamente se a legenda não for encontrada
+                }
+
                 imagensEncontradas.push({
                   id: `${escola_id}-${i}.${ext}`,
                   publicURL: url,
-                  descricao: `Imagem ${i}`,
+                  descricao: legenda?.legenda || `Imagem ${i}`,
+                  descricaoDetalhada: legenda?.descricao_detalhada,
+                  autor: legenda?.autor_foto,
+                  dataFoto: legenda?.data_foto,
+                  categoria: legenda?.categoria,
                   urlError: null,
                 });
                 encontrou = true;
@@ -77,21 +111,65 @@ const ImagensdasEscolas = ({ escola_id }) => {
         }
       }
 
-      await Promise.all(fetchQueue);
-      cacheRef.current[escola_id] = imagensEncontradas;
-      setImagens(imagensEncontradas);
-      setLoading(false);
+      try {
+        await Promise.all(fetchQueue);
+        console.log('Imagens processadas:', imagensEncontradas.length);
+        
+        // Salvar no cache com versão
+        cacheRef.current[cacheKey] = imagensEncontradas;
+        setImagens(imagensEncontradas);
+        
+        if (imagensEncontradas.length === 0) {
+          setError('Nenhuma imagem encontrada para esta escola.');
+        }
+      } catch (error) {
+        console.error('Erro ao processar imagens:', error);
+        setError('Erro ao carregar imagens da escola.');
+      } finally {
+        setLoading(false);
+      }
     };
 
     buscarImagens();
-  }, [escola_id]);
+  }, [escola_id, cacheVersion]);
 
   if (loading) {
-    return <div className="text-gray-500">Carregando imagens da escola...</div>;
+    return (
+      <div className="text-gray-500 flex items-center gap-2">
+        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+        Carregando imagens da escola...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-red-600 flex items-center gap-2">
+        <span>{error}</span>
+        <button 
+          onClick={limparCacheERecarregar}
+          className="text-blue-600 hover:text-blue-800"
+          title="Tentar novamente"
+        >
+          <RefreshCw className="w-4 h-4" />
+        </button>
+      </div>
+    );
   }
 
   if (!imagens.length) {
-    return <div className="text-yellow-700">Nenhuma imagem encontrada para esta escola.</div>;
+    return (
+      <div className="text-yellow-700 flex items-center gap-2">
+        <span>Nenhuma imagem encontrada para esta escola.</span>
+        <button 
+          onClick={limparCacheERecarregar}
+          className="text-blue-600 hover:text-blue-800"
+          title="Tentar novamente"
+        >
+          <RefreshCw className="w-4 h-4" />
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -112,6 +190,37 @@ const ImagensdasEscolas = ({ escola_id }) => {
                 style={{ maxHeight: '350px' }}
               />
             </div>
+            
+            {/* Legenda da imagem */}
+            {img.descricao && (
+              <figcaption className="p-3 bg-white">
+                <h4 className="font-medium text-gray-900 text-sm mb-1">
+                  {img.descricao}
+                </h4>
+                
+                {/* Informações adicionais */}
+                <div className="flex items-center gap-4 text-xs text-gray-500">
+                  {img.categoria && (
+                    <span className="capitalize bg-gray-100 px-2 py-1 rounded">
+                      {img.categoria}
+                    </span>
+                  )}
+                  {img.autor && (
+                    <span>Por: {img.autor}</span>
+                  )}
+                  {img.dataFoto && (
+                    <span>{new Date(img.dataFoto).toLocaleDateString('pt-BR')}</span>
+                  )}
+                </div>
+                
+                {/* Descrição detalhada */}
+                {img.descricaoDetalhada && (
+                  <p className="text-xs text-gray-600 mt-2 line-clamp-2">
+                    {img.descricaoDetalhada}
+                  </p>
+                )}
+              </figcaption>
+            )}
           </figure>
         ))}
       </div>
@@ -129,12 +238,46 @@ const ImagensdasEscolas = ({ escola_id }) => {
           >
             <X size={32} />
           </button>
-          <img
-            src={imagemZoom.publicURL}
-            alt={imagemZoom.descricao}
-            className="max-w-full max-h-full rounded-lg shadow-2xl border-4 border-white"
-            onClick={(e) => e.stopPropagation()}
-          />
+          
+          <div className="max-w-4xl max-h-full">
+            <img
+              src={imagemZoom.publicURL}
+              alt={imagemZoom.descricao}
+              className="max-w-full max-h-full rounded-lg shadow-2xl border-4 border-white"
+              onClick={(e) => e.stopPropagation()}
+            />
+            
+            {/* Legenda no modal */}
+            {imagemZoom.descricao && (
+              <div className="mt-4 bg-white rounded-lg p-4 shadow-lg">
+                <h3 className="font-semibold text-gray-900 mb-2">
+                  {imagemZoom.descricao}
+                </h3>
+                
+                {/* Informações adicionais */}
+                <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                  {imagemZoom.categoria && (
+                    <span className="capitalize bg-gray-100 px-2 py-1 rounded">
+                      {imagemZoom.categoria}
+                    </span>
+                  )}
+                  {imagemZoom.autor && (
+                    <span>Fotógrafo: {imagemZoom.autor}</span>
+                  )}
+                  {imagemZoom.dataFoto && (
+                    <span>Data: {new Date(imagemZoom.dataFoto).toLocaleDateString('pt-BR')}</span>
+                  )}
+                </div>
+                
+                {/* Descrição detalhada */}
+                {imagemZoom.descricaoDetalhada && (
+                  <p className="text-gray-700 leading-relaxed">
+                    {imagemZoom.descricaoDetalhada}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </section>

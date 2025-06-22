@@ -130,7 +130,6 @@ const AppContent = () => {
           endereco: e["Endereço"],
           diretoria: e["Diretoria de Ensino"],
           terra_indigena: e["Terra Indigena (TI)"],
-          tipo_escola: e["Escola Estadual ou Municipal"],
           povos: e["Povos indigenas"],
           linguas: e["Linguas faladas"],
           latitude_original: e.Latitude,
@@ -195,7 +194,6 @@ const AppContent = () => {
           municipio: e["Município"],
           endereco: e["Endereço"],
           terra_indigena: e["Terra Indigena (TI)"],
-          tipo_escola: e["Escola Estadual ou Municipal"],
           parcerias_municipio: e["Parcerias com o município"],
           diretoria_ensino: e["Diretoria de Ensino"],
           
@@ -210,7 +208,6 @@ const AppContent = () => {
           
           // Infraestrutura
           espaco_escolar: e["Espaço escolar e estrutura"],
-          cozinha_merenda: e["Cozinha/Merenda escolar/diferenciada"],
           acesso_agua: e["Acesso à água"],
           coleta_lixo: e["Tem coleta de lixo?"],
           acesso_internet: e["Acesso à internet"],
@@ -229,11 +226,8 @@ const AppContent = () => {
           // Projeto Pedagógico
           ppp_proprio: e["A escola possui PPP próprio?"],
           ppp_comunidade: e["PPP elaborado com a comunidade?"],
-          disciplinas_bilingues: e["Disciplinas bilíngues?"],
           material_nao_indigena: e["Material pedagógico não indígena"],
           material_indigena: e["Material pedagógico indígena"],
-          praticas_pedagogicas: e["Práticas pedagógicas indígenas"],
-          formas_avaliacao: e["Formas de avaliação"],
           
           // Projetos e parcerias
           projetos_andamento: e["Projetos em andamento"],

@@ -4,7 +4,43 @@ Um portal informativo interativo que mapeia e apresenta informações detalhadas
 
 ---
 
-## 🆕 Novidade: Aba de Vídeo no Painel de Edição
+## 🆕 Novidades Recentes
+
+### Sistema Integrado de Vídeos
+O painel de administração agora conta com um **sistema integrado de gerenciamento de vídeos** que permite:
+
+- **Vídeo Principal**: Campo para o vídeo principal da escola com título editável
+- **Vídeos Adicionais**: Seção para adicionar múltiplos vídeos por escola
+- **Pré-visualização Automática**: Visualização em tempo real dos vídeos (YouTube, Vimeo, etc.)
+- **Títulos Simplificados**: Campo de input simples para títulos dos vídeos
+- **Gerenciamento Completo**: Adicionar, editar, remover e visualizar vídeos
+
+**Como usar:**
+1. Acesse o painel de administração e selecione uma escola para editar
+2. Clique na aba **Vídeo**
+3. Adicione o vídeo principal no campo "URL do Vídeo"
+4. Digite o título do vídeo no campo "Título do Vídeo"
+5. Use o botão "Adicionar Outro Vídeo" para incluir vídeos adicionais
+6. Veja a pré-visualização automática de todos os vídeos
+
+### Sistema Melhorado de Legendas de Imagens
+O sistema de gerenciamento de imagens foi aprimorado com **campos de input direto** para legendas:
+
+- **Campos Diretos**: Input de legenda diretamente abaixo de cada imagem
+- **Salvamento Automático**: Salva ao pressionar Enter ou sair do campo
+- **Feedback Visual**: Atualização imediata da interface
+- **Interface Intuitiva**: Design limpo e fácil de usar
+- **Suporte Completo**: Funciona tanto para imagens da escola quanto dos professores
+
+**Como usar:**
+1. Acesse o painel de administração e selecione uma escola
+2. Vá para a aba **Imagens da Escola** ou **Imagens dos Professores**
+3. Cada imagem exibida terá um campo de input logo abaixo
+4. Digite a legenda desejada no campo
+5. Pressione Enter ou clique no ícone de salvar
+6. A legenda será salva automaticamente
+
+### Aba de Vídeo no Painel de Edição
 
 O painel de administração agora conta com uma **aba exclusiva para inserção de vídeo**. Nela, é possível adicionar um link de vídeo (YouTube, Vimeo, etc.) relacionado à escola indígena, com pré-visualização automática do conteúdo.
 
@@ -92,6 +128,17 @@ src/
 │   │   │   ├── EstadoSP.js         # Camada do estado de SP
 │   │   │   └── MenuCamadas.js      # Menu de controle de camadas
 │   │   └── index.js                # Componente principal do mapa
+│   ├── AdminPanel/                 # Painel de administração
+│   │   ├── components/             # Componentes do painel admin
+│   │   │   ├── VideoSection.js     # Gerenciamento de vídeos
+│   │   │   ├── LegendasFotosSection.js # Gerenciamento de legendas
+│   │   │   └── HistoriaProfessorManager.js # Gerenciamento de histórias
+│   │   └── index.js                # Painel principal de admin
+│   ├── EditEscolaPanel/            # Painel de edição de escolas
+│   │   ├── ImageUploadSection.js   # Upload de imagens da escola
+│   │   ├── ProfessorImageUploadSection.js # Upload de imagens dos professores
+│   │   ├── VideoSection.js         # Seção de vídeos integrada
+│   │   └── index.js                # Painel de edição
 │   ├── PainelHeader/               # Cabeçalho do painel
 │   │   └── index.js                # Componente do cabeçalho
 │   ├── PainelDescricao/            # Componente de descrição
@@ -101,6 +148,11 @@ src/
 ├── hooks/                          # Hooks globais
 │   ├── useMapData.js               # Gerenciamento de dados do mapa
 │   └── useMapInteractions.js       # Interações com o mapa
+├── services/                       # Serviços de API
+│   ├── legendasService.js          # Serviço de legendas de fotos
+│   ├── escolaImageService.js       # Serviço de imagens da escola
+│   ├── historiaProfessorService.js # Serviço de histórias do professor
+│   └── supabaseClient.js           # Cliente Supabase
 ├── utils/                          # Utilitários
 │   ├── textFormatting.js           # Formatação de texto
 │   ├── mapUtils.js                 # Utilitários para mapas
@@ -162,6 +214,45 @@ Componente central que gerencia a exibição de informações detalhadas sobre e
 - `useClickOutside`: Detecção de cliques externos
 - `usePainelDimensions`: Responsividade e dimensões
 
+### AdminPanel
+Painel de administração para gerenciar conteúdo das escolas:
+
+#### Componentes
+- `VideoSection`: Gerenciamento integrado de vídeos
+  - Vídeo principal com título editável
+  - Múltiplos vídeos adicionais
+  - Pré-visualização automática
+  - Interface intuitiva
+
+- `LegendasFotosSection`: Gerenciamento de legendas de fotos
+  - Suporte a fotos da escola e dos professores
+  - Campo tipo_foto para diferenciação
+  - CRUD completo de legendas
+
+- `HistoriaProfessorManager`: Gerenciamento de histórias dos professores
+  - CRUD de histórias
+  - Upload de imagens para histórias
+  - Interface completa
+
+### EditEscolaPanel
+Painel de edição específico para escolas:
+
+#### Componentes
+- `ImageUploadSection`: Upload e gerenciamento de imagens da escola
+  - Drag & drop para upload
+  - Campos de legenda diretos abaixo de cada imagem
+  - Salvamento automático ao pressionar Enter
+  - Interface responsiva e intuitiva
+
+- `ProfessorImageUploadSection`: Upload e gerenciamento de imagens dos professores
+  - Mesmas funcionalidades do ImageUploadSection
+  - Suporte a gênero (professor/professora)
+  - Campo de título da história
+
+- `VideoSection`: Seção integrada de vídeos
+  - Mesma funcionalidade do AdminPanel
+  - Integração direta no painel de edição
+
 ### MapaEscolasIndigenas
 Componente responsável pela visualização e interação com o mapa:
 
@@ -187,7 +278,28 @@ O projeto utiliza TailwindCSS com configurações personalizadas:
 - Tipografia otimizada para leitura
 - Animações suaves para interações
 
+## Funcionalidades Avançadas
 
+### Sistema de Legendas de Fotos
+- **Tipos de Foto**: Suporte a fotos da escola e dos professores
+- **Campos Diretos**: Input de legenda diretamente abaixo de cada imagem
+- **Salvamento Inteligente**: Salva ao pressionar Enter ou sair do campo
+- **Feedback Visual**: Atualização imediata da interface
+- **Validação**: Prevenção de legendas duplicadas
+
+### Sistema de Vídeos Integrado
+- **Vídeo Principal**: Campo para vídeo principal com título editável
+- **Vídeos Múltiplos**: Suporte a múltiplos vídeos por escola
+- **Pré-visualização**: Visualização automática de vídeos do YouTube, Vimeo, etc.
+- **Gerenciamento Completo**: Adicionar, editar, remover vídeos
+- **Interface Intuitiva**: Design limpo e fácil de usar
+
+### Upload de Imagens
+- **Drag & Drop**: Interface moderna para upload de imagens
+- **Validação**: Verificação de tipo e tamanho de arquivo
+- **Progress Bar**: Indicador visual de progresso do upload
+- **Limites**: Controle de quantidade máxima de imagens
+- **Responsividade**: Interface adaptável a diferentes dispositivos
 
 ## Estrutura dos arquivos CSV utilizados no Supabase
 
