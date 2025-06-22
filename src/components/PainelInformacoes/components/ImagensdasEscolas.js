@@ -112,12 +112,12 @@ const ImagensdasEscolas = ({ escola_id }) => {
       }
 
       try {
-        await Promise.all(fetchQueue);
+      await Promise.all(fetchQueue);
         console.log('Imagens processadas:', imagensEncontradas.length);
         
         // Salvar no cache com versão
         cacheRef.current[cacheKey] = imagensEncontradas;
-        setImagens(imagensEncontradas);
+      setImagens(imagensEncontradas);
         
         if (imagensEncontradas.length === 0) {
           setError('Nenhuma imagem encontrada para esta escola.');
@@ -126,7 +126,7 @@ const ImagensdasEscolas = ({ escola_id }) => {
         console.error('Erro ao processar imagens:', error);
         setError('Erro ao carregar imagens da escola.');
       } finally {
-        setLoading(false);
+      setLoading(false);
       }
     };
 
@@ -240,12 +240,12 @@ const ImagensdasEscolas = ({ escola_id }) => {
           </button>
           
           <div className="max-w-4xl max-h-full">
-            <img
-              src={imagemZoom.publicURL}
-              alt={imagemZoom.descricao}
-              className="max-w-full max-h-full rounded-lg shadow-2xl border-4 border-white"
-              onClick={(e) => e.stopPropagation()}
-            />
+          <img
+            src={imagemZoom.publicURL}
+            alt={imagemZoom.descricao}
+            className="max-w-full max-h-full rounded-lg shadow-2xl border-4 border-white"
+            onClick={(e) => e.stopPropagation()}
+          />
             
             {/* Legenda no modal */}
             {imagemZoom.descricao && (

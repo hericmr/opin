@@ -157,127 +157,142 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
       {/* Modal de busca */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className={`absolute top-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 
-                       ${isMobile ? 'left-0 right-0 mx-2' : 'right-0 w-96'} z-50`}
-          >
-            {/* Header da busca */}
-            <div className="p-4 border-b border-gray-100">
-              <form onSubmit={handleSearch} className="flex items-center gap-2">
-                <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <input
-                    type="text"
-                    placeholder="Buscar escolas indígenas, terras indígenas, professores..."
-                    value={localSearchTerm}
-                    onChange={handleInputChange}
-                    onKeyDown={handleKeyDown}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg 
-                             focus:ring-2 focus:ring-green-500 focus:border-green-500
-                             text-sm text-black"
-                    autoFocus
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsOpen(false);
-                    setLocalSearchTerm('');
-                    setSearchTerm(''); // Limpar searchTerm ao fechar
-                  }}
-                  className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </form>
-            </div>
-
-            {/* Resultados da busca */}
-            <div className="max-h-64 overflow-y-auto">
-              {isSearching ? (
-                <div className="p-4 text-center text-gray-500">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-500 mx-auto"></div>
-                  <p className="mt-2 text-sm">Buscando...</p>
-                </div>
-              ) : searchResults.length > 0 ? (
-                <div className="p-2">
-                  {/* Sugestões rápidas */}
-                  {suggestions.length > 0 && (
-                    <div className="mb-3">
-                      <p className="text-xs text-gray-500 mb-2 px-2">Sugestões:</p>
-                      <div className="flex flex-wrap gap-1 px-2">
-                        {suggestions.slice(0, 3).map((suggestion, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleSuggestionClick(suggestion)}
-                            className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 
-                                     rounded-full transition-colors"
-                          >
-                            {suggestion}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Resultados */}
-                  <div className="space-y-1">
-                    {searchResults.slice(0, 8).map((result) => (
-                      <button
-                        key={result.id}
-                        onClick={() => handleResultClick(result)}
-                        className="w-full p-3 text-left hover:bg-gray-50 rounded-lg transition-colors
-                                 flex items-center gap-3 group"
-                      >
-                        <div className="text-gray-400 group-hover:text-green-600 transition-colors">
-                          {getIconForType(result.type)}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-gray-900 truncate">
-                            {highlightText(result.title, localSearchTerm)}
-                          </p>
-                          <p className="text-xs text-gray-500 truncate">
-                            {result.subtitle}
-                          </p>
-                          <p className={`text-xs ${getCategoryColor(result.category)}`}>
-                            {result.matches.join(', ')}
-                          </p>
-                        </div>
-                        {result.coordinates && (
-                          <Map className="w-4 h-4 text-gray-300 group-hover:text-green-600 transition-colors" />
-                        )}
-                      </button>
-                    ))}
+          <>
+            {isMobile && <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-black/60 z-40"
+              onClick={() => setIsOpen(false)}
+            />}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: isMobile ? -20 : -10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: isMobile ? -20 : -10 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className={`bg-white rounded-lg shadow-xl border border-gray-200 z-50
+                        ${isMobile 
+                          ? 'fixed top-16 left-4 right-4'
+                          : 'absolute top-full mt-2 right-0 w-96'
+                        }`}
+            >
+              {/* Header da busca */}
+              <div className="p-3 sm:p-4 border-b border-gray-100">
+                <form onSubmit={handleSearch} className="flex items-center gap-2">
+                  <div className="flex-1 relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <input
+                      type="text"
+                      placeholder={isMobile ? "Buscar..." : "Buscar escolas indígenas, terras indígenas, professores..."}
+                      value={localSearchTerm}
+                      onChange={handleInputChange}
+                      onKeyDown={handleKeyDown}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg 
+                               focus:ring-2 focus:ring-green-500 focus:border-green-500
+                               text-sm text-black"
+                      autoFocus
+                    />
                   </div>
-                  
-                  {searchResults.length > 8 && (
-                    <div className="p-2 text-center text-xs text-gray-500 border-t">
-                      +{searchResults.length - 8} resultados encontrados
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsOpen(false);
+                      setLocalSearchTerm('');
+                      setSearchTerm(''); // Limpar searchTerm ao fechar
+                    }}
+                    className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </form>
+              </div>
+
+              {/* Resultados da busca */}
+              <div className={`overflow-y-auto ${isMobile ? 'max-h-[70vh]' : 'max-h-64'}`}>
+                {isSearching ? (
+                  <div className="p-4 text-center text-gray-500">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-500 mx-auto"></div>
+                    <p className="mt-2 text-sm">Buscando...</p>
+                  </div>
+                ) : searchResults.length > 0 ? (
+                  <div className="p-2">
+                    {/* Sugestões rápidas */}
+                    {suggestions.length > 0 && (
+                      <div className="mb-3">
+                        <p className="text-xs text-gray-500 mb-2 px-2">Sugestões:</p>
+                        <div className="flex flex-wrap gap-1 px-2">
+                          {suggestions.slice(0, isMobile ? 3 : 5).map((suggestion, index) => (
+                            <button
+                              key={index}
+                              onClick={() => handleSuggestionClick(suggestion)}
+                              className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 
+                                       rounded-full transition-colors"
+                            >
+                              {suggestion}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Resultados */}
+                    <div className="space-y-1">
+                      {searchResults.slice(0, 10).map((result) => (
+                        <button
+                          key={result.id}
+                          onClick={() => handleResultClick(result)}
+                          className="w-full p-2 sm:p-3 text-left hover:bg-gray-50 rounded-lg transition-colors
+                                   flex items-center gap-2 sm:gap-3 group"
+                        >
+                          <div className="text-gray-400 group-hover:text-green-600 transition-colors flex-shrink-0">
+                            {getIconForType(result.type)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 text-sm sm:text-base truncate">
+                              {highlightText(result.title, localSearchTerm)}
+                            </p>
+                            <p className="text-xs text-gray-500 truncate">
+                              {result.subtitle}
+                            </p>
+                            <p className={`text-xs ${getCategoryColor(result.category)}`}>
+                              {result.matches.join(', ')}
+                            </p>
+                          </div>
+                          {result.coordinates && (
+                            <Map className="w-4 h-4 text-gray-300 group-hover:text-green-600 transition-colors flex-shrink-0" />
+                          )}
+                        </button>
+                      ))}
                     </div>
-                  )}
-                </div>
-              ) : localSearchTerm.length >= 2 ? (
-                <div className="p-4 text-center text-gray-500">
-                  <p className="text-sm">Nenhum resultado encontrado</p>
-                  <p className="text-xs mt-1">Tente outros termos de busca</p>
-                </div>
-              ) : localSearchTerm.length > 0 ? (
-                <div className="p-4 text-center text-gray-500">
-                  <p className="text-sm">Digite pelo menos 2 caracteres</p>
-                </div>
-              ) : (
-                <div className="p-4 text-center text-gray-500">
-                  <Search className="w-8 h-8 mx-auto text-gray-300 mb-2" />
-                  <p className="text-sm">Digite para buscar</p>
-                  <p className="text-xs mt-1">Escolas, terras indígenas, professores...</p>
-                </div>
-              )}
-            </div>
-          </motion.div>
+                    
+                    {searchResults.length > 10 && (
+                      <div className="p-2 text-center text-xs text-gray-500 border-t">
+                        +{searchResults.length - 10} resultados encontrados
+                      </div>
+                    )}
+                  </div>
+                ) : localSearchTerm.length >= 2 ? (
+                  <div className="p-4 text-center text-gray-500">
+                    <p className="text-sm">Nenhum resultado encontrado</p>
+                    <p className="text-xs mt-1">Tente outros termos de busca</p>
+                  </div>
+                ) : localSearchTerm.length > 0 ? (
+                  <div className="p-4 text-center text-gray-500">
+                    <p className="text-sm">Digite pelo menos 2 caracteres</p>
+                  </div>
+                ) : (
+                  <div className="p-4 text-center text-gray-500">
+                    <Search className="w-8 h-8 mx-auto text-gray-300 mb-2" />
+                    <p className="text-sm">Digite para buscar</p>
+                    <p className="text-xs mt-1">
+                      {isMobile ? "Escolas, terras indígenas..." : "Escolas, terras indígenas, professores..."}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>

@@ -391,22 +391,22 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
               <div key={image.id} className="bg-white border rounded-lg overflow-hidden shadow-sm">
                 {/* Imagem */}
                 <div className="relative group">
-                  <img
-                    src={image.publicUrl}
-                    alt={image.descricao || 'Imagem do professor'}
+                <img
+                  src={image.publicUrl}
+                  alt={image.descricao || 'Imagem do professor'}
                     className="w-full h-48 object-cover"
-                  />
-                  
-                  {/* Overlay de ações */}
+                />
+                
+                {/* Overlay de ações */}
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center">
-                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        onClick={() => handleDeleteImage(image.id, image.url)}
-                        className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
-                        title="Excluir imagem"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                  <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => handleDeleteImage(image.id, image.url)}
+                      className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
+                      title="Excluir imagem"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                     </div>
                   </div>
                 </div>
