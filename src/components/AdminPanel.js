@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { ImageUploadSection, ProfessorImageUploadSection } from './EditEscolaPanel';
+import LegendasFotosSection from './EditEscolaPanel/LegendasFotosSection';
+import VideoSection from './EditEscolaPanel/VideoSection';
 import DocumentViewer from './PainelInformacoes/components/DocumentViewer';
 
 const AdminPanel = () => {
@@ -28,7 +30,7 @@ const AdminPanel = () => {
     { id: 'povos-linguas', label: 'Povos e Línguas' },
     { id: 'ensino', label: 'Ensino' },
     { id: 'infraestrutura', label: 'Infraestrutura' },
-    { id: 'gestao-professores', label: 'Gestão e Professores' },
+    { id: 'gestao-professores', label: 'Gestores' },
     { id: 'material-pedagogico', label: 'Material Pedagógico' },
     { id: 'projetos-parcerias', label: 'Projetos e Parcerias' },
     { id: 'redes-sociais', label: 'Redes Sociais' },
@@ -37,6 +39,7 @@ const AdminPanel = () => {
     { id: 'coordenadas', label: 'Coordenadas' },
     { id: 'imagens-escola', label: 'Imagens da Escola' },
     { id: 'imagens-professores', label: 'Imagens dos Professores' },
+    { id: 'legendas-fotos', label: 'Legendas de Fotos' },
     { id: 'documentos', label: 'Documentos' }
   ];
 
@@ -178,12 +181,11 @@ const AdminPanel = () => {
     try {
       // Preparar dados para atualização - organizados por seções
       const updateData = {
-        // Dados Básicos
+        // Dados básicos
         'Escola': editingLocation.Escola,
-        'Município': editingLocation['Município'],
-        'Endereço': editingLocation['Endereço'],
+        'Município': editingLocation.Município,
+        'Endereço': editingLocation.Endereço,
         'Terra Indigena (TI)': editingLocation['Terra Indigena (TI)'],
-        'Escola Estadual ou Municipal': editingLocation['Escola Estadual ou Municipal'],
         'Parcerias com o município': editingLocation['Parcerias com o município'],
         'Diretoria de Ensino': editingLocation['Diretoria de Ensino'],
         'Ano de criação da escola': editingLocation['Ano de criação da escola'],
@@ -198,14 +200,13 @@ const AdminPanel = () => {
         
         // Infraestrutura
         'Espaço escolar e estrutura': editingLocation['Espaço escolar e estrutura'],
-        'Cozinha/Merenda escolar/diferenciada': editingLocation['Cozinha/Merenda escolar/diferenciada'],
         'Acesso à água': editingLocation['Acesso à água'],
         'Tem coleta de lixo?': editingLocation['Tem coleta de lixo?'],
         'Acesso à internet': editingLocation['Acesso à internet'],
         'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': editingLocation['Equipamentos Tecnológicos (Computadores, tablets e impressoras)'],
         'Modo de acesso à escola': editingLocation['Modo de acesso à escola'],
         
-        // Gestão e Professores
+        // Gestores
         'Gestão/Nome': editingLocation['Gestão/Nome'],
         'Outros funcionários': editingLocation['Outros funcionários'],
         'Quantidade de professores indígenas': editingLocation['Quantidade de professores indígenas'],
@@ -217,11 +218,7 @@ const AdminPanel = () => {
         // Projeto Pedagógico
         'A escola possui PPP próprio?': editingLocation['A escola possui PPP próprio?'],
         'PPP elaborado com a comunidade?': editingLocation['PPP elaborado com a comunidade?'],
-        'Disciplinas bilíngues?': editingLocation['Disciplinas bilíngues?'],
-        'Material pedagógico não indígena': editingLocation['Material pedagógico não indígena'],
-        'Material pedagógico indígena': editingLocation['Material pedagógico indígena'],
-        'Práticas pedagógicas indígenas': editingLocation['Práticas pedagógicas indígenas'],
-        'Formas de avaliação': editingLocation['Formas de avaliação'],
+        'Linguas faladas': editingLocation['Linguas faladas'],
         
         // Projetos e Parcerias
         'Projetos em andamento': editingLocation['Projetos em andamento'],
@@ -396,17 +393,17 @@ const AdminPanel = () => {
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['Município'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'Município': e.target.value })}
+                        value={editingLocation.Município || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, Município: e.target.value })}
                       />
                     </div>
-                    <div className="md:col-span-2">
+                    <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Endereço</label>
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['Endereço'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'Endereço': e.target.value })}
+                        value={editingLocation.Endereço || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, Endereço: e.target.value })}
                       />
                     </div>
                     <div>
@@ -416,15 +413,6 @@ const AdminPanel = () => {
                         className="w-full border rounded px-3 py-2"
                         value={editingLocation['Terra Indigena (TI)'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Terra Indigena (TI)': e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Escola</label>
-                      <input
-                        type="text"
-                        className="w-full border rounded px-3 py-2"
-                        value={editingLocation['Escola Estadual ou Municipal'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'Escola Estadual ou Municipal': e.target.value })}
                       />
                     </div>
                     <div>
@@ -494,21 +482,12 @@ const AdminPanel = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Disciplinas Bilíngues</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Línguas Faladas</label>
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        value={editingLocation['Disciplinas bilíngues?'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'Disciplinas bilíngues?': e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Formas de Avaliação</label>
-                      <input
-                        type="text"
-                        className="w-full border rounded px-3 py-2"
-                        value={editingLocation['Formas de avaliação'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'Formas de avaliação': e.target.value })}
+                        value={editingLocation['Linguas faladas'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Linguas faladas': e.target.value })}
                       />
                     </div>
                   </div>
@@ -523,15 +502,6 @@ const AdminPanel = () => {
                         className="w-full border rounded px-3 py-2 h-20"
                         value={editingLocation['Espaço escolar e estrutura'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Espaço escolar e estrutura': e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Cozinha/Merenda Escolar</label>
-                      <input
-                        type="text"
-                        className="w-full border rounded px-3 py-2"
-                        value={editingLocation['Cozinha/Merenda escolar/diferenciada'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'Cozinha/Merenda escolar/diferenciada': e.target.value })}
                       />
                     </div>
                     <div>
@@ -582,7 +552,7 @@ const AdminPanel = () => {
                   </div>
                 )}
 
-                {/* Aba: Gestão e Professores */}
+                {/* Aba: Gestores */}
                 {editingLocation.activeTab === 'gestao-professores' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -592,15 +562,6 @@ const AdminPanel = () => {
                         className="w-full border rounded px-3 py-2"
                         value={editingLocation['Gestão/Nome'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Gestão/Nome': e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Outros Funcionários</label>
-                      <input
-                        type="text"
-                        className="w-full border rounded px-3 py-2"
-                        value={editingLocation['Outros funcionários'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'Outros funcionários': e.target.value })}
                       />
                     </div>
                     <div>
@@ -622,64 +583,93 @@ const AdminPanel = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Professores Falam a Língua Indígena</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Outros Funcionários</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        value={editingLocation['Outros funcionários'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Outros funcionários': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Professores Falantes da Língua Indígena</label>
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
                         value={editingLocation['Professores falam a língua indígena?'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Professores falam a língua indígena?': e.target.value })}
+                        placeholder="Ex: 3 professores"
                       />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Informe o número de professores que falam a língua indígena
+                      </p>
                     </div>
-                    <div>
+                    <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 mb-1">Formação dos Professores</label>
-                      <input
-                        type="text"
-                        className="w-full border rounded px-3 py-2"
+                      <textarea
+                        className="w-full border rounded px-3 py-2 h-24"
                         value={editingLocation['Formação dos professores'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Formação dos professores': e.target.value })}
+                        placeholder="Ex: João Silva (nome indígena: Kuaray) - Pedagogia, Maria Santos (nome indígena: Araci) - Licenciatura em Matemática"
                       />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Inclua nome completo e formação de cada professor. Padronize: primeiro o nome indígena, depois o nome em português.
+                      </p>
                     </div>
-                    <div>
+                    <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 mb-1">Formação Continuada</label>
-                      <input
-                        type="text"
-                        className="w-full border rounded px-3 py-2"
+                      <textarea
+                        className="w-full border rounded px-3 py-2 h-20"
                         value={editingLocation['Formação continuada oferecida'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Formação continuada oferecida': e.target.value })}
+                        placeholder="Descreva as visitas de supervisores, formações oferecidas, etc."
                       />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Descreva as visitas de supervisores, formações continuadas e acompanhamento pedagógico
+                      </p>
                     </div>
                   </div>
                 )}
 
                 {/* Aba: Material Pedagógico */}
                 {editingLocation.activeTab === 'material-pedagogico' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Material Pedagógico Não Indígena</label>
-                      <input
-                        type="text"
-                        className="w-full border rounded px-3 py-2"
-                        value={editingLocation['Material pedagógico não indígena'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'Material pedagógico não indígena': e.target.value })}
-                      />
+                  <div className="space-y-6">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <h4 className="font-medium text-blue-800 mb-2">Materiais Pedagógicos</h4>
+                      <p className="text-sm text-blue-700">
+                        Materiais diferenciados e não diferenciados, produzidos dentro e fora da comunidade.
+                      </p>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Material Pedagógico Indígena</label>
-                      <input
-                        type="text"
-                        className="w-full border rounded px-3 py-2"
-                        value={editingLocation['Material pedagógico indígena'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'Material pedagógico indígena': e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Práticas Pedagógicas Indígenas</label>
-                      <input
-                        type="text"
-                        className="w-full border rounded px-3 py-2"
-                        value={editingLocation['Práticas pedagógicas indígenas'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'Práticas pedagógicas indígenas': e.target.value })}
-                      />
+                    
+                    <div className="grid grid-cols-1 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Material Pedagógico Não Indígena
+                        </label>
+                        <textarea
+                          className="w-full border rounded px-3 py-2 h-20"
+                          value={editingLocation['Material pedagógico não indígena'] || ''}
+                          onChange={e => setEditingLocation({ ...editingLocation, 'Material pedagógico não indígena': e.target.value })}
+                          placeholder="Descreva os materiais pedagógicos produzidos fora da comunidade indígena"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Materiais produzidos fora da comunidade indígena
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Material Pedagógico Indígena
+                        </label>
+                        <textarea
+                          className="w-full border rounded px-3 py-2 h-20"
+                          value={editingLocation['Material pedagógico indígena'] || ''}
+                          onChange={e => setEditingLocation({ ...editingLocation, 'Material pedagógico indígena': e.target.value })}
+                          placeholder="Descreva os materiais pedagógicos produzidos dentro da comunidade indígena"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Materiais produzidos dentro da comunidade indígena
+                        </p>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -761,34 +751,15 @@ const AdminPanel = () => {
 
                 {/* Aba: Vídeo */}
                 {editingLocation.activeTab === 'video' && (
-                  <div className="grid grid-cols-1 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Link para Vídeo</label>
-                      <input
-                        type="text"
-                        className="w-full border rounded px-3 py-2"
-                        value={editingLocation['link_para_videos'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'link_para_videos': e.target.value })}
-                        placeholder="Cole aqui o link do vídeo (YouTube, Vimeo, etc)"
-                      />
-                      <p className="text-xs text-gray-500 mt-1">Exemplo: https://www.youtube.com/watch?v=...</p>
-                    </div>
-                    {editingLocation['link_para_videos'] && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Pré-visualização</label>
-                        <div className="aspect-w-16 aspect-h-9 bg-black rounded overflow-hidden">
-                          <iframe
-                            src={getVideoEmbedUrl(editingLocation['link_para_videos'])}
-                            title="Pré-visualização do vídeo"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            className="w-full h-full"
-                          ></iframe>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  <VideoSection 
+                    escolaId={editingLocation.id}
+                    videoUrl={editingLocation['link_para_videos'] || ''}
+                    onVideoUrlChange={(value) => setEditingLocation({ ...editingLocation, 'link_para_videos': value })}
+                    onTitulosUpdate={() => {
+                      // Atualizar o PainelInformacoes se necessário
+                      console.log('Títulos de vídeo atualizados');
+                    }}
+                  />
                 )}
 
                 {/* Aba: Histórias */}
@@ -863,6 +834,17 @@ const AdminPanel = () => {
                       }}
                     />
                   </div>
+                )}
+
+                {/* Aba: Legendas de Fotos */}
+                {editingLocation.activeTab === 'legendas-fotos' && (
+                  <LegendasFotosSection 
+                    escolaId={editingLocation.id} 
+                    onLegendasUpdate={() => {
+                      // Atualizar o PainelInformacoes se necessário
+                      console.log('Legendas atualizadas');
+                    }}
+                  />
                 )}
 
                 {/* Aba: Documentos */}

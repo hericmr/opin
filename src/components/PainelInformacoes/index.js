@@ -59,6 +59,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
           <VideoPlayer 
             videoUrl={painelInfo.link_para_videos}
             title="Vídeo da escola"
+            escolaId={painelInfo.id}
           />
         )}
       </>

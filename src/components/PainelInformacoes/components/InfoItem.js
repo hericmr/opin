@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 
-const InfoItem = memo(({ label, value, className = '' }) => {
+const InfoItem = memo(({ label, value, className = '', isTextArea = false }) => {
   if (!value) return null;
 
   const isFlexLayout = className.includes('flex flex-col');
@@ -11,7 +11,15 @@ const InfoItem = memo(({ label, value, className = '' }) => {
   return (
     <div className={`${baseClasses} ${className}`}>
       <span className="font-medium text-neutral-800">{label}:</span>
-      <span className="text-neutral-600 break-words">{value}</span>
+      {isTextArea ? (
+        <div className="text-neutral-600">
+          <pre className="whitespace-pre-wrap break-words font-sans text-sm leading-relaxed bg-gray-50 p-3 rounded-lg border">
+            {value}
+          </pre>
+        </div>
+      ) : (
+        <span className="text-neutral-600 break-words">{value}</span>
+      )}
     </div>
   );
 });
