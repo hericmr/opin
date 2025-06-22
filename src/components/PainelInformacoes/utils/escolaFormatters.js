@@ -5,7 +5,6 @@ export const formatters = {
     "Município": escola.municipio,
     "Endereço": escola.endereco,
     "Terra Indígena": escola.terra_indigena,
-    "Tipo de Escola": escola.tipo_escola,
     "Parcerias com o Município": escola.parcerias_municipio,
     "Diretoria de Ensino": escola.diretoria_ensino,
     "Ano de Criação": escola.ano_criacao
@@ -19,16 +18,16 @@ export const formatters = {
   ensino: (escola) => ({
     "Modalidade de Ensino": escola.modalidade_ensino,
     "Número de Alunos": escola.numero_alunos,
-    "Disciplinas Bilíngues": escola.disciplinas_bilingues,
+    "Línguas Faladas": escola.linguas_faladas
+  }),
+
+  materiaisPedagogicos: (escola) => ({
     "Material Pedagógico Não Indígena": escola.material_nao_indigena,
-    "Material Pedagógico Indígena": escola.material_indigena,
-    "Práticas Pedagógicas Indígenas": escola.praticas_pedagogicas,
-    "Formas de Avaliação": escola.formas_avaliacao
+    "Material Pedagógico Indígena": escola.material_indigena
   }),
 
   infraestrutura: (escola) => ({
     "Espaço Escolar e Estrutura": escola.espaco_escolar,
-    "Cozinha/Merenda Escolar": escola.cozinha_merenda,
     "Acesso à Água": escola.acesso_agua,
     "Coleta de Lixo": escola.coleta_lixo,
     "Acesso à Internet": escola.acesso_internet,
@@ -96,6 +95,7 @@ export const getEscolaSections = (escola) => [
   { title: "Informações Básicas", data: formatters.informacoesBasicas(escola) },
   { title: "Povos e Línguas", data: formatters.povosELinguas(escola) },
   { title: "Ensino", data: formatters.ensino(escola) },
+  { title: "Materiais Pedagógicos", data: formatters.materiaisPedagogicos(escola) },
   { title: "Infraestrutura", data: formatters.infraestrutura(escola) },
   { title: "Gestão e Professores", data: formatters.gestaoEProfessores(escola) },
   { title: "Projeto Pedagógico", data: formatters.projetoPedagogico(escola) },

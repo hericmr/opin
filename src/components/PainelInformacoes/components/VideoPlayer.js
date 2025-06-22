@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { getTituloByVideoUrl } from '../../../services/legendasService';
 
 /**
  * VideoPlayer
@@ -7,6 +8,7 @@ import React from 'react';
  * Props:
  *   - videoUrl: string (URL do vídeo)
  *   - title: string (opcional)
+ *   - escolaId: number (ID da escola para buscar título personalizado)
  */
 
 // Utility function to extract YouTube video ID
@@ -36,7 +38,29 @@ const extrairIdYoutube = (url) => {
   return null;
 };
 
-const VideoPlayer = ({ videoUrl, title = "Vídeo" }) => {
+const VideoPlayer = ({ videoUrl, title = "Vídeo", escolaId }) => {
+  const [tituloPersonalizado, setTituloPersonalizado] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Buscar título personalizado da nova tabela
+  useEffect(() => {
+    const buscarTitulo = async () => {
+      if (!videoUrl || !escolaId) return;
+
+      try {
+        setLoading(true);
+        const titulo = await getTituloByVideoUrl(videoUrl, escolaId);
+        setTituloPersonalizado(titulo);
+      } catch (error) {
+        console.warn('Erro ao buscar título personalizado:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    buscarTitulo();
+  }, [videoUrl, escolaId]);
+
   if (!videoUrl) return null;
 
   const videoId = extrairIdYoutube(videoUrl);
@@ -44,7 +68,9 @@ const VideoPlayer = ({ videoUrl, title = "Vídeo" }) => {
   if (!videoId) {
     return (
       <div className="mt-8 max-w-4xl mx-auto">
-        <h3 className="text-xl font-semibold text-green-800 mb-4">Vídeo:</h3>
+        <h3 className="text-xl font-semibold text-green-800 mb-4">
+          {tituloPersonalizado?.titulo || title}:
+        </h3>
         <div className="p-6 text-center text-gray-600 bg-gray-50 rounded-lg">
           <p className="mb-3 text-lg">Link do vídeo inválido ou não suportado.</p>
           <a
@@ -81,13 +107,41 @@ const VideoPlayer = ({ videoUrl, title = "Vídeo" }) => {
 
   return (
     <div className="mt-8 max-w-4xl mx-auto">
-      <h3 className="text-xl font-semibold text-green-800 mb-4">Vídeo:</h3>
+      <h3 className="text-xl font-semibold text-green-800 mb-4">
+        {tituloPersonalizado?.titulo || title}:
+      </h3>
+      
+      {/* Informações adicionais do título personalizado */}
+      {tituloPersonalizado && (
+        <div className="mb-4 p-4 bg-green-50 rounded-lg border border-green-200">
+          {tituloPersonalizado.descricao && (
+            <p className="text-green-800 mb-2">{tituloPersonalizado.descricao}</p>
+          )}
+          
+          <div className="flex items-center gap-4 text-sm text-green-700">
+            {tituloPersonalizado.categoria && (
+              <span className="capitalize bg-green-200 px-2 py-1 rounded">
+                {tituloPersonalizado.categoria}
+              </span>
+            )}
+            {tituloPersonalizado.plataforma && (
+              <span className="capitalize">
+                {tituloPersonalizado.plataforma}
+              </span>
+            )}
+            {tituloPersonalizado.duracao && (
+              <span>Duração: {tituloPersonalizado.duracao}</span>
+            )}
+          </div>
+        </div>
+      )}
+      
       <div className="rounded-lg overflow-hidden shadow-lg border border-green-300 bg-white">
         <div className="relative pb-[56.25%] h-0">
           <iframe
             className="absolute top-0 left-0 w-full h-full"
             src={`https://www.youtube.com/embed/${videoId}`}
-            title={title}
+            title={tituloPersonalizado?.titulo || title}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -96,6 +150,7 @@ const VideoPlayer = ({ videoUrl, title = "Vídeo" }) => {
           />
         </div>
       </div>
+      
       <div className="mt-4 text-center">
         <a
           href={videoUrl}

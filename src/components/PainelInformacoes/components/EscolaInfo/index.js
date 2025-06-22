@@ -7,8 +7,6 @@ import PovosLinguas from './PovosLinguas';
 import Ensino from './Ensino';
 import Infraestrutura from './Infraestrutura';
 import GestaoProfessores from './GestaoProfessores';
-import RedesSociais from './RedesSociais';
-import Localizacao from './Localizacao';
 import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
 import HistoriadoProfessor from './HistoriadoProfessor';
 
@@ -39,9 +37,7 @@ const EscolaInfo = memo(({ escola, shouldUseGrid = false }) => {
     { Component: PovosLinguas, props: { escola } },
     { Component: Ensino, props: { escola } },
     { Component: Infraestrutura, props: { escola } },
-    { Component: GestaoProfessores, props: { escola } },
-    { Component: RedesSociais, props: { escola } },
-    { Component: Localizacao, props: { escola } }
+    { Component: GestaoProfessores, props: { escola } }
   ];
 
   return (

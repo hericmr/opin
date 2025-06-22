@@ -21,8 +21,8 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isMobileLandsca
 
   return (
     <div className="flex items-center space-x-2">
-      {/* Botão Home/Mapa */}
-      <button
+      {/* Botão Home/Mapa - TEMPORARIAMENTE DESATIVADO */}
+      {/* <button
         onClick={() => navigate('/')}
         className={getButtonStyle(isActive('/'))}
         title="Voltar ao mapa das escolas indígenas"
@@ -34,10 +34,10 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isMobileLandsca
         <span className="xl:hidden">
           Mapa
         </span>
-      </button>
+      </button> */}
 
-      {/* Botão Conteúdo Educacional */}
-      <button
+      {/* Botão Conteúdo Educacional - TEMPORARIAMENTE DESATIVADO */}
+      {/* <button
         onClick={() => navigate('/conteudo')}
         className={getButtonStyle(isActive('/conteudo'))}
         title="Ver todo o conteúdo educacional"
@@ -49,7 +49,7 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isMobileLandsca
         <span className="xl:hidden">
           Conteúdo
         </span>
-      </button>
+      </button> */}
 
       {/* Botão Busca (apenas se estivermos na página de busca) */}
       {isSearchPage && (

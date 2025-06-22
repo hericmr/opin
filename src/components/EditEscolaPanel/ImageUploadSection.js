@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Upload, X, Image as ImageIcon, Trash2, Edit3, Check, AlertCircle } from 'lucide-react';
+import { Upload, X, Image as ImageIcon, Trash2, Edit3, Check, AlertCircle, Save } from 'lucide-react';
 import { 
   uploadEscolaImage, 
   getEscolaImages, 
@@ -203,34 +203,31 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     }
   };
 
-  // Editar descrição da imagem
-  const handleEditDescription = async (imageId) => {
-    if (!editingDescription.trim()) return;
+  // Atualizar descrição da imagem
+  const handleDescriptionChange = async (imageId, novaDescricao) => {
+    if (!novaDescricao.trim()) return;
 
     try {
-      await updateImageDescription(imageId, editingDescription);
+      await updateImageDescription(imageId, novaDescricao);
       
       // Atualizar lista
       setExistingImages(prev => prev.map(img => 
         img.id === imageId 
-          ? { ...img, descricao: editingDescription.trim() }
+          ? { ...img, descricao: novaDescricao.trim() }
           : img
       ));
 
-      setEditingImage(null);
-      setEditingDescription('');
-      setSuccess('Descrição atualizada com sucesso!');
+      setSuccess('Legenda atualizada com sucesso!');
+
+      // Notificar componente pai
+      if (onImagesUpdate) {
+        onImagesUpdate();
+      }
 
     } catch (err) {
       console.error('Erro ao atualizar descrição:', err);
-      setError(`Erro ao atualizar descrição: ${err.message}`);
+      setError(`Erro ao atualizar legenda: ${err.message}`);
     }
-  };
-
-  // Cancelar edição
-  const cancelEdit = () => {
-    setEditingImage(null);
-    setEditingDescription('');
   };
 
   if (loading) {
@@ -360,76 +357,77 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       {existingImages.length > 0 && (
         <div className="space-y-4">
           <h4 className="font-medium text-gray-900">Imagens da Escola ({existingImages.length})</h4>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {existingImages.map((image) => (
-              <div key={image.id} className="relative group">
-                <img
-                  src={image.publicUrl}
-                  alt={image.descricao || 'Imagem da escola'}
-                  className="w-full h-32 object-cover rounded-lg border"
-                />
-                
-                {/* Overlay de ações */}
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded-lg flex items-center justify-center">
-                  <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={() => {
-                        setEditingImage(image.id);
-                        setEditingDescription(image.descricao || '');
-                      }}
-                      className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700"
-                      title="Editar descrição"
-                    >
-                      <Edit3 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteImage(image.id, image.url)}
-                      className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
-                      title="Excluir imagem"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+              <div key={image.id} className="bg-white border rounded-lg overflow-hidden shadow-sm">
+                {/* Imagem */}
+                <div className="relative group">
+                  <img
+                    src={image.publicUrl}
+                    alt={image.descricao || 'Imagem da escola'}
+                    className="w-full h-48 object-cover"
+                  />
+                  
+                  {/* Overlay de ações */}
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center">
+                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => handleDeleteImage(image.id, image.url)}
+                        className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
+                        title="Excluir imagem"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                {/* Descrição */}
-                {image.descricao && (
-                  <p className="text-xs text-gray-600 mt-1 line-clamp-2">
-                    {image.descricao}
+                {/* Campo de legenda */}
+                <div className="p-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Legenda da Imagem
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      className="flex-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      value={image.descricao || ''}
+                      onChange={(e) => {
+                        // Atualizar localmente primeiro para feedback imediato
+                        setExistingImages(prev => prev.map(img => 
+                          img.id === image.id 
+                            ? { ...img, descricao: e.target.value }
+                            : img
+                        ));
+                      }}
+                      onBlur={(e) => {
+                        // Salvar quando sair do campo
+                        if (e.target.value !== (image.descricao || '')) {
+                          handleDescriptionChange(image.id, e.target.value);
+                        }
+                      }}
+                      onKeyPress={(e) => {
+                        // Salvar ao pressionar Enter
+                        if (e.key === 'Enter') {
+                          e.target.blur();
+                        }
+                      }}
+                      placeholder="Digite a legenda da imagem..."
+                    />
+                    <button
+                      onClick={() => handleDescriptionChange(image.id, image.descricao || '')}
+                      className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      title="Salvar legenda"
+                    >
+                      <Save className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Pressione Enter ou clique no ícone para salvar
                   </p>
-                )}
+                </div>
               </div>
             ))}
-          </div>
-        </div>
-      )}
-
-      {/* Modal de Edição de Descrição */}
-      {editingImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold mb-4">Editar Descrição</h3>
-            <textarea
-              value={editingDescription}
-              onChange={(e) => setEditingDescription(e.target.value)}
-              className="w-full p-3 border rounded-lg resize-none"
-              rows="3"
-              placeholder="Digite a descrição da imagem..."
-            />
-            <div className="flex gap-2 mt-4">
-              <button
-                onClick={() => handleEditDescription(editingImage)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                Salvar
-              </button>
-              <button
-                onClick={cancelEdit}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
-              >
-                Cancelar
-              </button>
-            </div>
           </div>
         </div>
       )}

@@ -5,6 +5,7 @@ const InfoSection = memo(({
   title, 
   icon: Icon, 
   children, 
+  description,
   defaultCollapsed = false,
   className = '' 
 }) => {
@@ -15,7 +16,6 @@ const InfoSection = memo(({
       className={`
         bg-green-50 border-l-4 border-green-700 rounded-2xl p-5 
         shadow-md hover:shadow-lg transition-all duration-200
-        h-full flex flex-col
         ${className}
       `}
     >
@@ -41,7 +41,12 @@ const InfoSection = memo(({
       </button>
       
       {!isCollapsed && (
-        <div className="space-y-2 text-green-950 text-sm leading-relaxed flex-grow">
+        <div className="space-y-2 text-green-950 text-sm leading-relaxed">
+          {description && (
+            <p className="text-green-950 text-sm mb-3 pb-2 border-b border-green-100">
+              {description}
+            </p>
+          )}
           {children}
         </div>
       )}
