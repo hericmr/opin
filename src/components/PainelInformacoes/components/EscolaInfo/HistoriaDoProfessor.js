@@ -10,43 +10,6 @@ const HistoriaDoProfessor = memo(({ escola }) => {
   const [currentHistoriaIndex, setCurrentHistoriaIndex] = useState(0);
   const [imagemZoom, setImagemZoom] = useState(null);
 
-  // Função para formatar nomes de professores em negrito
-  const formatarTextoComNomes = (texto) => {
-    if (!texto) return '';
-    
-    // Padrões para identificar nomes de professores
-    const padroes = [
-      // Nomes indígenas entre parênteses
-      /\b([A-Z][a-z]+)\s*\(([^)]+)\)/g,
-      // Nomes indígenas sem parênteses (palavras que começam com maiúscula)
-      /\b([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+(?:é|foi|era|está|estava|trabalha|trabalhou|ensinou|ensina)/g,
-      // Nomes seguidos de "professor" ou "professora"
-      /\b([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+(?:professor|professora)/gi,
-      // Nomes indígenas específicos (comuns em comunidades indígenas)
-      /\b(Kuaray|Araci|Tupã|Guarani|Kaingang|Xavante|Yanomami|Tukano|Baniwa|Kaxinawá|Ashaninka|Terena|Pataxó|Maxakali|Krenak|Pankararu|Fulni-ô|Xucuru|Kariri|Potiguara|Tupinambá|Tupiniquim|Tamoio|Temiminó|Goitacá|Aimoré|Botocudo|Xokleng|Kaingang|Guarani|Mbyá|Nhandeva|Kaiowá|Chiripá|Pai-Tavyterã|Ñandeva|Mbyá|Kaiowá|Chiripá|Pai-Tavyterã|Ñandeva|Mbyá|Kaiowá|Chiripá|Pai-Tavyterã|Ñandeva)\b/g
-    ];
-
-    let textoFormatado = texto;
-
-    // Aplicar formatação para cada padrão
-    padroes.forEach(padrao => {
-      textoFormatado = textoFormatado.replace(padrao, (match, nome1, nome2) => {
-        if (nome2) {
-          return `<strong>${nome1} ${nome2}</strong>`;
-        }
-        return `<strong>${nome1}</strong>`;
-      });
-    });
-
-    return textoFormatado;
-  };
-
-  // Função para renderizar texto com HTML
-  const renderizarTextoFormatado = (texto) => {
-    const textoFormatado = formatarTextoComNomes(texto);
-    return <div dangerouslySetInnerHTML={{ __html: textoFormatado }} />;
-  };
-
   const fecharZoom = useCallback(() => setImagemZoom(null), []);
 
   // Fecha modal com tecla ESC
@@ -194,7 +157,7 @@ const HistoriaDoProfessor = memo(({ escola }) => {
           </h3>
         )}
         
-        {renderizarTextoFormatado(currentHistoria.historia)}
+        <div>{currentHistoria.historia}</div>
 
         {/* Imagem da história */}
         {currentHistoria.imagem_public_url && (
