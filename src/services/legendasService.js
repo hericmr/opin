@@ -94,6 +94,7 @@ export const updateLegendaFoto = async (id, updates) => {
       .single();
 
     if (error) {
+      console.error('Erro do Supabase ao atualizar:', error);
       throw error;
     }
 
@@ -234,6 +235,7 @@ export const deleteTituloVideo = async (id) => {
  */
 export const getLegendaByImageUrl = async (imagemUrl, escolaId, tipoFoto = null) => {
   try {
+    // 1. Tenta buscar por igualdade exata
     let query = supabase
       .from('legendas_fotos')
       .select('*')
@@ -241,19 +243,42 @@ export const getLegendaByImageUrl = async (imagemUrl, escolaId, tipoFoto = null)
       .eq('escola_id', escolaId)
       .eq('ativo', true);
 
-    // Verificar se a coluna tipo_foto existe antes de usá-la
     if (tipoFoto) {
       try {
         query = query.eq('tipo_foto', tipoFoto);
       } catch (columnError) {
-        // Se a coluna não existe, ignorar o filtro por tipo
         console.warn('Coluna tipo_foto não encontrada. Ignorando filtro por tipo.');
       }
     }
 
-    const { data, error } = await query.single();
+    let { data, error } = await query.single();
 
-    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+    // Se não encontrou, tenta buscar por finalização
+    if ((error && error.code === 'PGRST116') || !data) {
+      // Busca por finalização (ilike)
+      const caminhoRelativo = imagemUrl.split('/').slice(-2).join('/'); // ex: 20/2.png
+      let query2 = supabase
+        .from('legendas_fotos')
+        .select('*')
+        .ilike('imagem_url', `%/${caminhoRelativo}`)
+        .eq('escola_id', escolaId)
+        .eq('ativo', true);
+
+      if (tipoFoto) {
+        try {
+          query2 = query2.eq('tipo_foto', tipoFoto);
+        } catch (columnError) {
+          // Se a coluna não existe, ignora
+        }
+      }
+
+      const { data: data2, error: error2 } = await query2.single();
+      if (!error2 && data2) {
+        return data2;
+      }
+    }
+
+    if (error && error.code !== 'PGRST116') {
       throw error;
     }
 

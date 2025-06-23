@@ -114,6 +114,13 @@ const LegendasFotosSection = ({ escolaId, onLegendasUpdate }) => {
     setShowForm(true);
   };
 
+  // Função utilitária para extrair o caminho relativo do bucket Supabase
+  function extrairCaminhoRelativoDaUrl(url) {
+    // Exemplo: https://.../imagens-das-escolas/20/2.png => 20/2.png
+    const match = url.match(/imagens-das-escolas\/([\w\/-]+\.[a-zA-Z0-9]+)/);
+    return match ? match[1] : url;
+  }
+
   // Salvar legenda
   const handleSave = async (e) => {
     e.preventDefault();
@@ -123,17 +130,24 @@ const LegendasFotosSection = ({ escolaId, onLegendasUpdate }) => {
       return;
     }
 
+    // Sempre salvar o caminho relativo
+    const imagem_url_relativa = extrairCaminhoRelativoDaUrl(formData.imagem_url);
+
     try {
       if (editingLegenda) {
-        // Atualizar legenda existente
-        await updateLegendaFoto(editingLegenda.id, {
+        // LOG: Mostra o ID e os dados enviados para o update
+        console.log('Atualizando legenda:', editingLegenda.id, { ...formData, imagem_url: imagem_url_relativa });
+        const result = await updateLegendaFoto(editingLegenda.id, {
           ...formData,
+          imagem_url: imagem_url_relativa,
           escola_id: escolaId
         });
+        // LOG: Mostra o resultado do update
+        console.log('Resultado do update:', result);
         setSuccess('Legenda atualizada com sucesso!');
       } else {
         // Verificar se já existe legenda para esta imagem
-        const legendaExistente = await getLegendaByImageUrl(formData.imagem_url, escolaId, tipoFoto);
+        const legendaExistente = await getLegendaByImageUrl(imagem_url_relativa, escolaId, tipoFoto);
         if (legendaExistente) {
           setError('Já existe uma legenda para esta imagem');
           return;
@@ -142,8 +156,12 @@ const LegendasFotosSection = ({ escolaId, onLegendasUpdate }) => {
         // Criar nova legenda
         await addLegendaFoto({
           ...formData,
+          imagem_url: imagem_url_relativa,
           escola_id: escolaId,
-          tipo_foto: tipoFoto
+          tipo_foto: tipoFoto,
+          ativo: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         });
         setSuccess('Legenda adicionada com sucesso!');
       }
