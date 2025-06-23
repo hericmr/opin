@@ -6,6 +6,13 @@ import { getLegendaByImageUrl } from '../../../services/legendasService';
 const EXTENSOES = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
 const MAX_IMAGENS = 10;
 
+// Função utilitária para extrair o caminho relativo do bucket Supabase
+function extrairCaminhoRelativoDaUrl(url) {
+  // Exemplo: https://.../imagens-das-escolas/20/2.png => 20/2.png
+  const match = url.match(/imagens-das-escolas\/([\w\/-]+\.[a-zA-Z0-9]+)/);
+  return match ? match[1] : url;
+}
+
 const ImagensdasEscolas = ({ escola_id }) => {
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -87,7 +94,8 @@ const ImagensdasEscolas = ({ escola_id }) => {
                 let legenda = null;
                 try {
                   console.log('Buscando legenda para:', url);
-                  legenda = await getLegendaByImageUrl(url, escola_id, 'escola');
+                  const caminhoRelativo = extrairCaminhoRelativoDaUrl(url);
+                  legenda = await getLegendaByImageUrl(caminhoRelativo, escola_id, 'escola');
                   console.log('Legenda encontrada:', legenda);
                 } catch (error) {
                   console.warn('Erro ao buscar legenda para', url, ':', error);
