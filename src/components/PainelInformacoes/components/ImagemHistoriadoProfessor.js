@@ -57,7 +57,7 @@ const ImagemHistoriadoProfessor = ({ escola_id }) => {
             // Buscar legenda da nova tabela
             let legenda = null;
             try {
-              legenda = await getLegendaByImageUrl(`${escola_id}/${file.name}`, escola_id, 'professor');
+              legenda = await getLegendaByImageUrl(publicUrl, escola_id, 'professor');
             } catch (error) {
               console.warn('Erro ao buscar legenda:', error);
             }
