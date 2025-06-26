@@ -11,7 +11,8 @@ import {
 import { 
   getLegendaByImageUrl, 
   addLegendaFoto, 
-  updateLegendaFoto 
+  updateLegendaFoto,
+  testLegendasTable
 } from '../../services/legendasService';
 
 const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
@@ -50,13 +51,24 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     fetchExistingImages();
   }, [fetchExistingImages]);
 
+  // Testar estrutura da tabela quando o componente for carregado
+  useEffect(() => {
+    if (escolaId) {
+      console.log('Testando estrutura da tabela legendas_fotos...');
+      testLegendasTable();
+    }
+  }, [escolaId]);
+
   // Buscar legendas para as imagens existentes
   useEffect(() => {
     const fetchLegendas = async () => {
       if (!existingImages.length) return;
+      console.log('Buscando legendas para', existingImages.length, 'imagens');
       const legendasMap = {};
       for (const img of existingImages) {
+        console.log('Buscando legenda para imagem:', img.url);
         const legenda = await getLegendaByImageUrl(img.url, escolaId, 'escola');
+        console.log('Legenda encontrada:', legenda);
         legendasMap[img.url] = legenda;
       }
       setExistingImages(prev => prev.map(img => ({
@@ -269,17 +281,33 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   };
 
   const handleLegendaSave = async (image) => {
+    console.log('=== DEBUG: Salvando legenda ===');
+    console.log('Imagem completa:', image);
+    
     const imagem_url_relativa = image.url;
     const legendaData = image.legendaData;
+    console.log('URL relativa:', imagem_url_relativa);
+    console.log('Dados da legenda:', legendaData);
+    console.log('Escola ID:', escolaId);
+    
     try {
+      console.log('Buscando legenda existente...');
       let legenda = await getLegendaByImageUrl(imagem_url_relativa, escolaId, 'escola');
+      console.log('Legenda existente encontrada:', legenda);
+      
       if (legenda) {
-        await updateLegendaFoto(legenda.id, {
+        console.log('Atualizando legenda existente...');
+        const updateData = {
           ...legendaData,
           updated_at: new Date().toISOString()
-        });
+        };
+        console.log('Dados para atualização:', updateData);
+        
+        const resultado = await updateLegendaFoto(legenda.id, updateData);
+        console.log('Legenda atualizada com sucesso:', resultado);
       } else {
-        await addLegendaFoto({
+        console.log('Criando nova legenda...');
+        const novaLegendaData = {
           escola_id: escolaId,
           imagem_url: imagem_url_relativa,
           ...legendaData,
@@ -287,11 +315,23 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           tipo_foto: 'escola'
-        });
+        };
+        console.log('Dados para nova legenda:', novaLegendaData);
+        
+        const novaLegenda = await addLegendaFoto(novaLegendaData);
+        console.log('Nova legenda criada:', novaLegenda);
       }
+      
       setSuccess('Legenda salva com sucesso!');
-      if (onImagesUpdate) onImagesUpdate();
+      if (onImagesUpdate) {
+        console.log('Chamando onImagesUpdate...');
+        onImagesUpdate();
+      }
     } catch (err) {
+      console.error('=== ERRO ao salvar legenda ===');
+      console.error('Erro completo:', err);
+      console.error('Mensagem de erro:', err.message);
+      console.error('Stack trace:', err.stack);
       setError('Erro ao salvar legenda: ' + err.message);
     }
   };

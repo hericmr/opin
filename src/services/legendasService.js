@@ -45,32 +45,51 @@ export const getLegendasFotos = async (escolaId, tipoFoto = null) => {
  */
 export const addLegendaFoto = async (legenda) => {
   try {
+    console.log('=== DEBUG: addLegendaFoto ===');
+    console.log('Dados recebidos:', legenda);
+    
     // Remover tipo_foto se a coluna não existir no banco
     const legendaData = { ...legenda };
+    console.log('Dados iniciais:', legendaData);
     
     // Verificar se a coluna tipo_foto existe antes de incluí-la
     try {
+      console.log('Verificando se a coluna tipo_foto existe...');
       // Tentar uma consulta simples para verificar se a coluna existe
-      await supabase
+      const { data: testData, error: testError } = await supabase
         .from('legendas_fotos')
         .select('tipo_foto')
         .limit(1);
+      
+      console.log('Teste da coluna tipo_foto:', { testData, testError });
+      
+      if (testError && testError.code === '42703') {
+        // Se a coluna não existe, remover do objeto
+        console.warn('Coluna tipo_foto não encontrada. Removendo do objeto de inserção.');
+        delete legendaData.tipo_foto;
+      }
     } catch (columnError) {
       // Se a coluna não existe, remover do objeto
       console.warn('Coluna tipo_foto não encontrada. Removendo do objeto de inserção.');
       delete legendaData.tipo_foto;
     }
 
+    console.log('Dados finais para inserção:', legendaData);
+    
     const { data, error } = await supabase
       .from('legendas_fotos')
       .insert([legendaData])
       .select()
       .single();
 
+    console.log('Resposta do Supabase:', { data, error });
+
     if (error) {
+      console.error('Erro do Supabase:', error);
       throw error;
     }
 
+    console.log('Legenda criada com sucesso:', data);
     return data;
   } catch (error) {
     console.error('Erro ao adicionar legenda de foto:', error);
@@ -86,6 +105,10 @@ export const addLegendaFoto = async (legenda) => {
  */
 export const updateLegendaFoto = async (id, updates) => {
   try {
+    console.log('=== DEBUG: updateLegendaFoto ===');
+    console.log('ID da legenda:', id);
+    console.log('Dados para atualização:', updates);
+    
     const { data, error } = await supabase
       .from('legendas_fotos')
       .update(updates)
@@ -93,11 +116,14 @@ export const updateLegendaFoto = async (id, updates) => {
       .select()
       .single();
 
+    console.log('Resposta do Supabase:', { data, error });
+
     if (error) {
       console.error('Erro do Supabase ao atualizar:', error);
       throw error;
     }
 
+    console.log('Legenda atualizada com sucesso:', data);
     return data;
   } catch (error) {
     console.error('Erro ao atualizar legenda de foto:', error);
@@ -235,6 +261,8 @@ export const deleteTituloVideo = async (id) => {
  */
 export const getLegendaByImageUrl = async (imagemUrl, escolaId, tipoFoto = null) => {
   try {
+    console.log('getLegendaByImageUrl chamada com:', { imagemUrl, escolaId, tipoFoto });
+    
     // 1. Tenta buscar por igualdade exata
     let query = supabase
       .from('legendas_fotos')
@@ -252,11 +280,15 @@ export const getLegendaByImageUrl = async (imagemUrl, escolaId, tipoFoto = null)
     }
 
     let { data, error } = await query.single();
+    console.log('Busca exata resultou em:', { data, error });
 
     // Se não encontrou, tenta buscar por finalização
     if ((error && error.code === 'PGRST116') || !data) {
+      console.log('Tentando busca por finalização...');
       // Busca por finalização (ilike)
       const caminhoRelativo = imagemUrl.split('/').slice(-2).join('/'); // ex: 20/2.png
+      console.log('Caminho relativo extraído:', caminhoRelativo);
+      
       let query2 = supabase
         .from('legendas_fotos')
         .select('*')
@@ -273,6 +305,8 @@ export const getLegendaByImageUrl = async (imagemUrl, escolaId, tipoFoto = null)
       }
 
       const { data: data2, error: error2 } = await query2.single();
+      console.log('Busca por finalização resultou em:', { data2, error2 });
+      
       if (!error2 && data2) {
         return data2;
       }
@@ -424,6 +458,113 @@ export const migrarTituloExistente = async (escolaId, videoUrl) => {
   } catch (error) {
     console.error('Erro ao migrar título existente:', error);
     throw error;
+  }
+};
+
+/**
+ * Função de teste para verificar a estrutura da tabela legendas_fotos
+ * @returns {Promise<void>}
+ */
+export const testLegendasTable = async () => {
+  try {
+    console.log('=== TESTE: Verificando estrutura da tabela legendas_fotos ===');
+    
+    // Teste 1: Verificar se a tabela existe
+    const { data: tableData, error: tableError } = await supabase
+      .from('legendas_fotos')
+      .select('*')
+      .limit(1);
+    
+    console.log('Teste 1 - Tabela existe:', { tableData, tableError });
+    
+    if (tableError) {
+      console.error('❌ ERRO: Tabela legendas_fotos não existe ou não está acessível:', tableError);
+      return;
+    }
+    
+    // Teste 2: Verificar estrutura da tabela
+    const { data: structureData, error: structureError } = await supabase
+      .from('legendas_fotos')
+      .select('id, escola_id, imagem_url, legenda, descricao_detalhada, autor_foto, data_foto, categoria, ativo, created_at, updated_at')
+      .limit(1);
+    
+    console.log('Teste 2 - Estrutura da tabela:', { structureData, structureError });
+    
+    if (structureError) {
+      console.error('❌ ERRO: Problema com estrutura da tabela:', structureError);
+    } else {
+      console.log('✅ Estrutura básica da tabela está OK');
+    }
+    
+    // Teste 3: Verificar se a coluna tipo_foto existe
+    try {
+      const { data: tipoData, error: tipoError } = await supabase
+        .from('legendas_fotos')
+        .select('tipo_foto')
+        .limit(1);
+      
+      console.log('Teste 3 - Coluna tipo_foto:', { tipoData, tipoError });
+      
+      if (tipoError && tipoError.code === '42703') {
+        console.log('⚠️ AVISO: Coluna tipo_foto não existe na tabela');
+      } else if (tipoError) {
+        console.error('❌ ERRO: Problema com coluna tipo_foto:', tipoError);
+      } else {
+        console.log('✅ Coluna tipo_foto existe');
+      }
+    } catch (tipoError) {
+      console.log('⚠️ AVISO: Coluna tipo_foto não existe na tabela');
+    }
+    
+    // Teste 4: Tentar inserir um registro de teste
+    console.log('Teste 4 - Testando inserção...');
+    const testRecord = {
+      escola_id: 999999, // ID que não existe
+      imagem_url: 'test/test.jpg',
+      legenda: 'Teste de legenda',
+      descricao_detalhada: 'Descrição de teste',
+      autor_foto: 'Teste',
+      data_foto: '2024-01-01',
+      categoria: 'teste',
+      ativo: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
+    try {
+      const { data: insertData, error: insertError } = await supabase
+        .from('legendas_fotos')
+        .insert([testRecord])
+        .select()
+        .single();
+      
+      console.log('Teste 4 - Inserção de teste:', { insertData, insertError });
+      
+      if (insertError) {
+        console.error('❌ ERRO: Problema com inserção:', insertError);
+      } else {
+        console.log('✅ Inserção funcionando - removendo registro de teste...');
+        
+        // Remover o registro de teste
+        const { error: deleteError } = await supabase
+          .from('legendas_fotos')
+          .delete()
+          .eq('id', insertData.id);
+        
+        if (deleteError) {
+          console.error('⚠️ AVISO: Não foi possível remover registro de teste:', deleteError);
+        } else {
+          console.log('✅ Registro de teste removido com sucesso');
+        }
+      }
+    } catch (insertError) {
+      console.error('❌ ERRO: Falha na inserção de teste:', insertError);
+    }
+    
+    console.log('=== FIM DO TESTE ===');
+    
+  } catch (error) {
+    console.error('❌ ERRO GERAL no teste da tabela:', error);
   }
 }; 
  
