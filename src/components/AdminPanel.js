@@ -4,6 +4,7 @@ import { ImageUploadSection, ProfessorImageUploadSection } from './EditEscolaPan
 import VideoSection from './EditEscolaPanel/VideoSection';
 import DocumentViewer from './PainelInformacoes/components/DocumentViewer';
 import { useRefresh } from '../contexts/RefreshContext';
+import { Menu } from 'lucide-react';
 
 const AdminPanel = () => {
   const { triggerRefresh } = useRefresh();
@@ -24,11 +25,15 @@ const AdminPanel = () => {
     tipo: '',
     link_pdf: ''
   });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Detectar se é mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
   // Configuração das abas
   const tabs = [
     { id: 'dados-basicos', label: 'Dados Básicos' },
-    { id: 'povos-linguas', label: 'Povos e Línguas' },
+    { id: 'povos-linguas', label: 'Povos' },
     { id: 'ensino', label: 'Ensino' },
     { id: 'infraestrutura', label: 'Infraestrutura' },
     { id: 'gestao-professores', label: 'Gestores' },
@@ -275,43 +280,73 @@ const AdminPanel = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
+      {/* Botão de menu para mobile */}
+      {isMobile && !sidebarOpen && (
+        <button
+          className="fixed top-4 left-4 z-50 bg-white rounded-full shadow-lg p-2 border border-gray-200"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Abrir menu lateral"
+        >
+          <Menu className="w-6 h-6 text-gray-700" />
+        </button>
+      )}
       {/* Menu lateral */}
-      <aside className="w-64 bg-white border-r p-4 overflow-y-auto h-screen sticky top-0">
-        <h2 className="text-lg font-bold mb-4 sticky top-0 bg-white pb-2">Escolas</h2>
-        
-        {/* Busca no menu lateral */}
-        <div className="mb-4 sticky top-12 bg-white pb-2">
-          <input
-            type="text"
-            placeholder="Buscar escola..."
-            className="w-full px-3 py-2 border rounded text-sm"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        <ul className="space-y-1">
-          {escolas
-            .filter(escola => 
-              escola.Escola?.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .map(escola => (
-            <li key={escola.id}>
-              <button
-                className={`block w-full text-left px-2 py-1 rounded hover:bg-blue-100 text-sm ${editingLocation?.id === escola.id ? 'bg-blue-200 font-bold' : ''}`}
-                onClick={() => openEditModal(escola)}
-              >
-                {escola.Escola}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </aside>
-
+      {(!isMobile || sidebarOpen) && (
+        <aside
+          className={`bg-white border-r p-4 overflow-y-auto h-screen sticky top-0 z-40 transition-transform duration-300 ${
+            isMobile ? 'fixed left-0 top-0 w-64 max-w-[80vw] shadow-2xl' : 'w-64'
+          }`}
+          style={{
+            transform: isMobile && !sidebarOpen ? 'translateX(-100%)' : 'translateX(0)',
+          }}
+        >
+          {/* Botão de fechar para mobile */}
+          {isMobile && (
+            <button
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onClick={() => setSidebarOpen(false)}
+              aria-label="Fechar menu lateral"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+          <h2 className="text-lg font-bold mb-4 sticky top-0 bg-white pb-2">Escolas</h2>
+          {/* Busca no menu lateral */}
+          <div className="mb-4 sticky top-12 bg-white pb-2">
+            <input
+              type="text"
+              placeholder="Buscar escola..."
+              className="w-full px-3 py-2 border rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <ul className="space-y-1">
+            {escolas
+              .filter(escola => 
+                escola.Escola?.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map(escola => (
+              <li key={escola.id}>
+                <button
+                  className={`block w-full text-left px-2 py-1 rounded hover:bg-blue-100 text-sm ${editingLocation?.id === escola.id ? 'bg-blue-200 font-bold' : ''}`}
+                  onClick={() => {
+                    setEditingLocation({ ...escola, activeTab: 'dados-basicos' });
+                    if (isMobile) setSidebarOpen(false);
+                  }}
+                >
+                  {escola.Escola}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
       {/* Conteúdo principal */}
       <main className="flex-1 p-6 overflow-y-auto h-screen">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Painel de Administração</h1>
-        
         {/* Barra de ferramentas */}
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <div className="flex flex-col sm:flex-row gap-4">
@@ -337,7 +372,6 @@ const AdminPanel = () => {
             </div>
           </div>
         </div>
-
         {/* Painel de Edição */}
         {editingLocation && typeof editingLocation === 'object' && editingLocation.id && editingLocation.Escola && (
           <div className="bg-white rounded-lg shadow-lg p-6 max-h-[calc(100vh-200px)] overflow-hidden flex flex-col">
@@ -350,7 +384,6 @@ const AdminPanel = () => {
                 Fechar
               </button>
             </div>
-
             {/* Navegação por abas */}
             <div className="border-b border-gray-200 mb-6 flex-shrink-0">
               <nav className="-mb-px flex space-x-8 overflow-x-auto">
@@ -370,64 +403,63 @@ const AdminPanel = () => {
                 ))}
               </nav>
             </div>
-
             <form onSubmit={handleSave} className="flex-1 flex flex-col overflow-hidden">
               {/* Conteúdo das abas */}
               <div className="flex-1 overflow-y-auto">
                 {/* Aba: Dados Básicos */}
                 {(editingLocation.activeTab || 'dados-basicos') === 'dados-basicos' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Nome da Escola *</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Nome da Escola *</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation.Escola || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, Escola: e.target.value })}
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Município</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Município</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation.Município || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, Município: e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Endereço</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Endereço</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation.Endereço || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, Endereço: e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Terra Indígena (TI)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Terra Indígena (TI)</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Terra Indigena (TI)'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Terra Indigena (TI)': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Diretoria de Ensino</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Diretoria de Ensino</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Diretoria de Ensino'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Diretoria de Ensino': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Ano de Criação</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Ano de Criação</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Ano de criação da escola'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Ano de criação da escola': e.target.value })}
                       />
@@ -435,23 +467,23 @@ const AdminPanel = () => {
                   </div>
                 )}
 
-                {/* Aba: Povos e Línguas */}
+                {/* Aba: Povos */}
                 {editingLocation.activeTab === 'povos-linguas' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Povos Indígenas</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Povos</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Povos indigenas'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Povos indigenas': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Línguas Faladas</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Línguas Faladas</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Linguas faladas'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Linguas faladas': e.target.value })}
                       />
@@ -461,30 +493,30 @@ const AdminPanel = () => {
 
                 {/* Aba: Ensino */}
                 {editingLocation.activeTab === 'ensino' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Modalidade de Ensino/Turnos</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Modalidade de Ensino/Turnos</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Modalidade de Ensino/turnos de funcionamento'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Modalidade de Ensino/turnos de funcionamento': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Número de Alunos</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Número de Alunos</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Numero de alunos'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Numero de alunos': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Línguas Faladas</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Línguas Faladas</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Linguas faladas'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Linguas faladas': e.target.value })}
                       />
@@ -494,56 +526,56 @@ const AdminPanel = () => {
 
                 {/* Aba: Infraestrutura */}
                 {editingLocation.activeTab === 'infraestrutura' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Espaço Escolar e Estrutura</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Espaço Escolar e Estrutura</label>
                       <textarea
-                        className="w-full border rounded px-3 py-2 h-20"
+                        className="w-full border rounded px-3 py-2 h-24 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Espaço escolar e estrutura'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Espaço escolar e estrutura': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Acesso à Água</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Acesso à Água</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Acesso à água'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Acesso à água': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Coleta de Lixo</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Coleta de Lixo</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Tem coleta de lixo?'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Tem coleta de lixo?': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Acesso à Internet</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Acesso à Internet</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Acesso à internet'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Acesso à internet': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Equipamentos Tecnológicos</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Equipamentos Tecnológicos</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Equipamentos Tecnológicos (Computadores, tablets e impressoras)'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Modo de Acesso à Escola</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Modo de Acesso à Escola</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Modo de acesso à escola'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Modo de acesso à escola': e.target.value })}
                       />
@@ -553,48 +585,48 @@ const AdminPanel = () => {
 
                 {/* Aba: Gestores */}
                 {editingLocation.activeTab === 'gestao-professores' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Gestão/Nome</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Gestão/Nome</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Gestão/Nome'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Gestão/Nome': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Professores Indígenas</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Professores Indígenas</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Quantidade de professores indígenas'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Quantidade de professores indígenas': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Professores Não Indígenas</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Professores Não Indígenas</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Quantidade de professores não indígenas'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Quantidade de professores não indígenas': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Outros Funcionários</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Outros Funcionários</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Outros funcionários'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Outros funcionários': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Professores Falantes da Língua Indígena</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Professores Falantes da Língua Indígena</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Professores falam a língua indígena?'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Professores falam a língua indígena?': e.target.value })}
                         placeholder="Ex: 3 professores"
@@ -604,21 +636,18 @@ const AdminPanel = () => {
                       </p>
                     </div>
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Formação dos Professores</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Identificação dos Professores</label>
                       <textarea
-                        className="w-full border rounded px-3 py-2 h-24"
+                        className="w-full border rounded px-3 py-2 h-24 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Formação dos professores'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Formação dos professores': e.target.value })}
-                        placeholder="Ex: João Silva (nome indígena: Kuaray) - Pedagogia, Maria Santos (nome indígena: Araci) - Licenciatura em Matemática"
+                        placeholder="Ex: Karai Poty (Abilio Fernandes) – LINDI"
                       />
-                      <p className="text-xs text-gray-500 mt-1">
-                        Inclua nome completo e formação de cada professor. Padronize: primeiro o nome indígena, depois o nome em português.
-                      </p>
                     </div>
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Formação Continuada</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Formação Continuada</label>
                       <textarea
-                        className="w-full border rounded px-3 py-2 h-20"
+                        className="w-full border rounded px-3 py-2 h-24 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Formação continuada oferecida'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Formação continuada oferecida': e.target.value })}
                         placeholder="Descreva as visitas de supervisores, formações oferecidas, etc."
@@ -632,7 +661,7 @@ const AdminPanel = () => {
 
                 {/* Aba: Material Pedagógico */}
                 {editingLocation.activeTab === 'material-pedagogico' && (
-                  <div className="space-y-6">
+                  <div className="space-y-4 md:space-y-6">
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <h4 className="font-medium text-blue-800 mb-2">Materiais Pedagógicos</h4>
                       <p className="text-sm text-blue-700">
@@ -642,11 +671,11 @@ const AdminPanel = () => {
                     
                     <div className="grid grid-cols-1 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-2 text-base">
                           Material Pedagógico Não Indígena
                         </label>
                         <textarea
-                          className="w-full border rounded px-3 py-2 h-20"
+                          className="w-full border rounded px-3 py-2 h-20 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                           value={editingLocation['Material pedagógico não indígena'] || ''}
                           onChange={e => setEditingLocation({ ...editingLocation, 'Material pedagógico não indígena': e.target.value })}
                           placeholder="Descreva os materiais pedagógicos produzidos fora da comunidade indígena"
@@ -656,11 +685,11 @@ const AdminPanel = () => {
                         </p>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-2 text-base">
                           Material Pedagógico Indígena
                         </label>
                         <textarea
-                          className="w-full border rounded px-3 py-2 h-20"
+                          className="w-full border rounded px-3 py-2 h-20 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                           value={editingLocation['Material pedagógico indígena'] || ''}
                           onChange={e => setEditingLocation({ ...editingLocation, 'Material pedagógico indígena': e.target.value })}
                           placeholder="Descreva os materiais pedagógicos produzidos dentro da comunidade indígena"
@@ -675,39 +704,39 @@ const AdminPanel = () => {
 
                 {/* Aba: Projetos e Parcerias */}
                 {editingLocation.activeTab === 'projetos-parcerias' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Projetos em Andamento</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Projetos em Andamento</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Projetos em andamento'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Projetos em andamento': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Parcerias com Universidades</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Parcerias com Universidades</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Parcerias com universidades?'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Parcerias com universidades?': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Ações com ONGs ou Coletivos</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Ações com ONGs ou Coletivos</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Ações com ONGs ou coletivos?'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Ações com ONGs ou coletivos?': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Desejos da Comunidade</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Desejos da Comunidade</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Desejos da comunidade para a escola'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Desejos da comunidade para a escola': e.target.value })}
                       />
@@ -717,30 +746,30 @@ const AdminPanel = () => {
 
                 {/* Aba: Redes Sociais */}
                 {editingLocation.activeTab === 'redes-sociais' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Utiliza Redes Sociais</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Utiliza Redes Sociais</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Escola utiliza redes sociais?'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Escola utiliza redes sociais?': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Links das Redes Sociais</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Links das Redes Sociais</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Links das redes sociais'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Links das redes sociais': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Links Gerais</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Links Gerais</label>
                       <input
                         type="text"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['links'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'links': e.target.value })}
                       />
@@ -765,17 +794,17 @@ const AdminPanel = () => {
                 {editingLocation.activeTab === 'historias' && (
                   <div className="grid grid-cols-1 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">História da Escola</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">História da Escola</label>
                       <textarea
-                        className="w-full border rounded px-3 py-2 h-32"
+                        className="w-full border rounded px-3 py-2 h-32 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['historia_da_escola'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'historia_da_escola': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">História do Professor</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">História do Professor</label>
                       <textarea
-                        className="w-full border rounded px-3 py-2 h-32"
+                        className="w-full border rounded px-3 py-2 h-32 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['historia_do_prof'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'historia_do_prof': e.target.value })}
                       />
@@ -785,23 +814,23 @@ const AdminPanel = () => {
 
                 {/* Aba: Coordenadas */}
                 {editingLocation.activeTab === 'coordenadas' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Latitude</label>
                       <input
                         type="number"
                         step="any"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['latitude'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'latitude': e.target.value })}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Longitude</label>
                       <input
                         type="number"
                         step="any"
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['longitude'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'longitude': e.target.value })}
                       />
@@ -811,7 +840,7 @@ const AdminPanel = () => {
 
                 {/* Aba: Imagens da Escola */}
                 {editingLocation.activeTab === 'imagens-escola' && (
-                  <div className="space-y-6">
+                  <div className="space-y-4 md:space-y-6">
                     <ImageUploadSection 
                       escolaId={editingLocation.id} 
                       onImagesUpdate={() => {
@@ -825,7 +854,7 @@ const AdminPanel = () => {
 
                 {/* Aba: Imagens dos Professores */}
                 {editingLocation.activeTab === 'imagens-professores' && (
-                  <div className="space-y-6">
+                  <div className="space-y-4 md:space-y-6">
                     <ProfessorImageUploadSection 
                       escolaId={editingLocation.id} 
                       onImagesUpdate={() => {
@@ -839,7 +868,7 @@ const AdminPanel = () => {
 
                 {/* Aba: Documentos */}
                 {editingLocation.activeTab === 'documentos' && (
-                  <div className="space-y-6">
+                  <div className="space-y-4 md:space-y-6">
                     {/* Status de carregamento */}
                     {loadingDocumentos && (
                       <div className="flex items-center justify-center py-8">
@@ -858,7 +887,7 @@ const AdminPanel = () => {
                           <button
                             type="button"
                             onClick={() => setShowAddDocument(true)}
-                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                            className="px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[44px] text-base"
                           >
                             + Adicionar Documento
                           </button>
@@ -870,7 +899,7 @@ const AdminPanel = () => {
                             <button
                               type="button"
                               onClick={() => setShowAddDocument(true)}
-                              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                              className="px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[44px] text-base"
                             >
                               Adicionar Primeiro Documento
                             </button>
@@ -893,40 +922,40 @@ const AdminPanel = () => {
                         <form onSubmit={handleAddDocument} className="space-y-4">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Título *</label>
                               <input
                                 type="text"
                                 required
-                                className="w-full border rounded px-3 py-2"
+                                className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                                 value={newDocument.titulo}
                                 onChange={e => setNewDocument({ ...newDocument, titulo: e.target.value })}
                               />
                             </div>
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Autor</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Autor</label>
                               <input
                                 type="text"
-                                className="w-full border rounded px-3 py-2"
+                                className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                                 value={newDocument.autoria}
                                 onChange={e => setNewDocument({ ...newDocument, autoria: e.target.value })}
                               />
                             </div>
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Tipo</label>
                               <input
                                 type="text"
-                                className="w-full border rounded px-3 py-2"
+                                className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                                 value={newDocument.tipo}
                                 onChange={e => setNewDocument({ ...newDocument, tipo: e.target.value })}
                                 placeholder="Ex: PDF, Relatório, Plano de Aula"
                               />
                             </div>
                             <div className="md:col-span-2">
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Link do PDF *</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Link do PDF *</label>
                               <input
                                 type="url"
                                 required
-                                className="w-full border rounded px-3 py-2"
+                                className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                                 value={newDocument.link_pdf}
                                 onChange={e => setNewDocument({ ...newDocument, link_pdf: e.target.value })}
                                 placeholder="https://drive.google.com/file/d/..."
@@ -939,17 +968,19 @@ const AdminPanel = () => {
                           <div className="flex gap-2">
                             <button
                               type="submit"
-                              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                              className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[44px] text-base"
+                              disabled={isSaving}
                             >
-                              Adicionar Documento
+                              {isSaving ? 'Salvando...' : 'Salvar Alterações'}
                             </button>
                             <button
                               type="button"
+                              className="px-4 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors min-h-[44px] text-base"
                               onClick={() => {
                                 setShowAddDocument(false);
                                 setNewDocument({ titulo: '', autoria: '', tipo: '', link_pdf: '' });
                               }}
-                              className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
+                              disabled={isSaving}
                             >
                               Cancelar
                             </button>
@@ -1005,39 +1036,39 @@ const AdminPanel = () => {
                         <form onSubmit={handleUpdateDocument} className="space-y-4">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Título *</label>
                               <input
                                 type="text"
                                 required
-                                className="w-full border rounded px-3 py-2"
+                                className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                                 value={editingDocument.titulo}
                                 onChange={e => setEditingDocument({ ...editingDocument, titulo: e.target.value })}
                               />
                             </div>
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Autor</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Autor</label>
                               <input
                                 type="text"
-                                className="w-full border rounded px-3 py-2"
+                                className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                                 value={editingDocument.autoria || ''}
                                 onChange={e => setEditingDocument({ ...editingDocument, autoria: e.target.value })}
                               />
                             </div>
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Tipo</label>
                               <input
                                 type="text"
-                                className="w-full border rounded px-3 py-2"
+                                className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                                 value={editingDocument.tipo || ''}
                                 onChange={e => setEditingDocument({ ...editingDocument, tipo: e.target.value })}
                               />
                             </div>
                             <div className="md:col-span-2">
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Link do PDF *</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Link do PDF *</label>
                               <input
                                 type="url"
                                 required
-                                className="w-full border rounded px-3 py-2"
+                                className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                                 value={editingDocument.link_pdf}
                                 onChange={e => setEditingDocument({ ...editingDocument, link_pdf: e.target.value })}
                               />
@@ -1046,14 +1077,14 @@ const AdminPanel = () => {
                           <div className="flex gap-2">
                             <button
                               type="submit"
-                              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+                              className="px-4 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[44px] text-base"
                             >
                               Atualizar Documento
                             </button>
                             <button
                               type="button"
                               onClick={() => setEditingDocument(null)}
-                              className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
+                              className="px-4 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors min-h-[44px] text-base"
                             >
                               Cancelar
                             </button>
@@ -1102,26 +1133,15 @@ const AdminPanel = () => {
             
             <div className="flex gap-2 mt-6 pt-6 border-t border-gray-200 flex-shrink-0">
               <button 
-                onClick={handleSave}
-                className={`px-4 py-2 rounded flex items-center gap-2 ${
-                  isSaving 
-                    ? 'bg-gray-400 text-white cursor-not-allowed' 
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
+                type="submit"
+                className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[44px] text-base"
                 disabled={isSaving}
               >
-                {isSaving ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Salvando...
-                  </>
-                ) : (
-                  'Salvar'
-                )}
+                {isSaving ? 'Salvando...' : 'Salvar Alterações'}
               </button>
               <button 
-                type="button" 
-                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400" 
+                type="button"
+                className="px-4 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors min-h-[44px] text-base"
                 onClick={() => setEditingLocation(null)}
                 disabled={isSaving}
               >
