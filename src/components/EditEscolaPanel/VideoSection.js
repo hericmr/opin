@@ -219,9 +219,9 @@ const VideoSection = ({ escolaId, videoUrl, onVideoUrlChange, onTitulosUpdate })
                   handleTituloChange(video.id, e.target.value);
                 }
               }}
-              placeholder="Digite o título do vídeo"
+              placeholder="Das crianças da Aldeia Uru'ity para o mundo"
             />
-            <p className="text-xs text-gray-500 mt-1">Exemplo: "Aula de Matemática na Escola Indígena"</p>
+            <p className="text-xs text-gray-500 mt-1">Exemplo: "Das crianças da Aldeia Uru'ity para o mundo"</p>
           </div>
         )}
 

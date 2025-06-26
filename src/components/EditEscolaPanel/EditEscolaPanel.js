@@ -299,17 +299,34 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
     }
   };
 
+  // Detectar se é mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl h-[90vh] flex flex-col">
+    <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 ${isMobile ? 'p-0' : ''}`}
+      style={{
+        padding: isMobile ? 0 : undefined,
+      }}
+    >
+      <div
+        className={`bg-white rounded-lg shadow-xl w-full max-w-6xl h-[90vh] flex flex-col ${isMobile ? 'rounded-none h-screen max-w-full' : ''}`}
+        style={{
+          width: isMobile ? '100vw' : 'min(100vw, 640px)',
+          height: isMobile ? '100vh' : 'min(90vh, 900px)',
+          maxWidth: isMobile ? '100vw' : '96vw',
+          maxHeight: isMobile ? '100vh' : '90vh',
+          overflow: 'hidden',
+        }}
+      >
       {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-            <h2 className="text-xl font-semibold text-gray-900">
+        <div className={`flex items-center justify-between ${isMobile ? 'p-4' : 'p-6'} border-b`}>
+            <h2 className={`text-xl font-semibold text-gray-900 ${isMobile ? 'text-lg' : ''}`}>
               Editar Escola: {escola?.Escola || 'Nova Escola'}
             </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className={`text-gray-400 hover:text-gray-600 ${isMobile ? 'w-8 h-8' : ''}`}
+            style={isMobile ? { fontSize: 24 } : {}}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -318,32 +335,43 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
       </div>
 
         {/* Tabs */}
-        <div className="flex border-b bg-gray-50">
-          {tabs.map((tab) => {
+        <nav
+          className={`flex border-b bg-gray-50 ${isMobile ? 'overflow-x-auto no-scrollbar' : ''}`}
+          style={isMobile ? { WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' } : {}}
+          role="tablist"
+          aria-label="Abas de edição da escola"
+        >
+          {tabs.map((tab, idx) => {
             const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
+                id={`tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
-                  activeTab === tab.id
-                    ? 'text-blue-600 border-b-2 border-blue-600 bg-white'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                }`}
+                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                  isActive
+                    ? 'text-blue-700 border-b-4 border-blue-600 bg-white shadow-sm' // feedback visual forte
+                    : 'text-gray-600 hover:text-blue-700 hover:bg-blue-50'
+                } ${isMobile ? 'px-2 py-2 text-xs' : ''}`}
                 title={tab.description}
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={`tabpanel-${tab.id}`}
+                tabIndex={isActive ? 0 : -1}
               >
-                <Icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
+                <Icon className={`w-5 h-5 ${isActive ? 'text-blue-700' : 'text-gray-400'}`} />
+                <span className={`${isMobile ? 'hidden xs:inline' : ''}`}>{tab.label}</span>
               </button>
             );
           })}
-      </div>
+        </nav>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className={`flex-1 overflow-y-auto ${isMobile ? 'p-3' : 'p-6'}`} style={isMobile ? { fontSize: '1rem' } : {}}>
         <form onSubmit={handleSubmit}>
           {/* Conteúdo da aba ativa */}
-          <div className="min-h-[400px]">
+          <div className="min-h-[300px] md:min-h-[400px]" id={`tabpanel-${activeTab}`} role="tabpanel" aria-labelledby={`tab-${activeTab}`}> 
             {renderTabContent()}
           </div>
 
@@ -355,17 +383,18 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
           )}
 
           {/* Botões de ação */}
-          <div className="flex gap-3 mt-6 pt-6 border-t border-gray-200">
+          <div className={`flex gap-3 mt-6 pt-6 border-t border-gray-200 ${isMobile ? 'flex-col' : ''}`}
+            style={isMobile ? { gap: 8 } : {}}>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${isMobile ? 'w-full text-base' : ''}`}
               disabled={isSaving}
             >
               {isSaving ? 'Salvando...' : 'Salvar Alterações'}
             </button>
             <button
               type="button"
-              className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
+              className={`px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors ${isMobile ? 'w-full text-base' : ''}`}
               onClick={onClose}
               disabled={isSaving}
             >
