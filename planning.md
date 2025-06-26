@@ -49,3 +49,28 @@
 - [x ] Remover o item/seção "Práticas pedagógicas".(removi)
 - [ x] Remover o item/seção "Avaliação".(removi)
 - [x ] Remover o item "Cozinha" da ficha técnica.(removi)
+
+## VII. Menu de Edições e Barra Lateral (Responsividade e UX)
+
+### 1. Menu de Edições (EditEscolaPanel)
+- [x] Tornar o painel de edição responsivo (mobile, tablet, desktop) considerande que  há tambem um menu vertical com os nomes das escolas que deve se ajustavel em desktop e no celular talvez nem precise aparecer.
+- [x] Garantir que as abas fiquem acessíveis e utilizáveis em telas pequenas (scroll horizontal, ícones visíveis, labels colapsáveis).
+- [x] Melhorar a navegação entre abas (feedback visual claro da aba ativa).
+- [x] Garantir contraste e acessibilidade dos botões e campos.
+- [x] Ajustar espaçamentos e tamanhos de fonte para mobile.
+- [x] Garantir que o modal/painel não ultrapasse a viewport em nenhuma resolução.
+- [x] Tornar o upload de imagens e vídeos acessível e fácil de usar em mobile.
+- [ ] Garantir que mensagens de erro/sucesso sejam legíveis em todas as telas.
+- [ ] Testar navegação por teclado e acessibilidade ARIA.
+- [ ] Garantir que o botão de fechar e salvar estejam sempre visíveis e acessíveis.
+
+### 2. Barra Lateral de Escolas (AdminPanel)
+- [x] Tornar a barra lateral colapsável ou adaptável em telas pequenas.
+- [x] Garantir que a lista de escolas seja rolável e utilizável em mobile.
+- [x] Melhorar o campo de busca para uso em mobile (tamanho, foco, contraste).
+- [x] Garantir que o painel de edição não sobreponha a barra lateral em telas médias/pequenas.
+- [x] Ajustar largura mínima/máxima da barra lateral para diferentes breakpoints.
+- [ ] Testar navegação por teclado e acessibilidade ARIA.
+- [ ] Garantir contraste e legibilidade dos itens da lista.
+- [ ] Adicionar feedback visual para escola selecionada.
+- [ ] Garantir que o layout não quebre ao abrir/fechar o painel de edição em diferentes resoluções.
