@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { BookOpen } from 'lucide-react';
 import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
 
-const HistoriadoProfessor = memo(({ escola }) => {
+const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
   const historia = escola?.historia_do_prof;
   if (!historia) return null;
 
@@ -39,7 +39,7 @@ const HistoriadoProfessor = memo(({ escola }) => {
         <div>{historia}</div>
       </section>
 
-      <ImagemHistoriadoProfessor escola_id={escola.id} />
+      <ImagemHistoriadoProfessor escola_id={escola.id} refreshKey={refreshKey} />
     </article>
   );
 });

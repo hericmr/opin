@@ -4,7 +4,7 @@ import { supabase } from '../../../supabaseClient';
 import { getLegendaByImageUrl } from '../../../services/legendasService';
 import { X } from 'lucide-react';
 
-const ImagemHistoriadoProfessor = ({ escola_id }) => {
+const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,6 +20,16 @@ const ImagemHistoriadoProfessor = ({ escola_id }) => {
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, [fecharZoom]);
+
+  // Forçar recarga quando refreshKey mudar
+  useEffect(() => {
+    if (refreshKey > 0) {
+      console.log('ImagemHistoriadoProfessor: refreshKey mudou, forçando recarga');
+      setImagens([]);
+      setLoading(true);
+      setError(null);
+    }
+  }, [refreshKey]);
 
   useEffect(() => {
     if (!escola_id) return;
@@ -40,6 +50,7 @@ const ImagemHistoriadoProfessor = ({ escola_id }) => {
         }
 
         if (data && data.length > 0) {
+          console.log('Arquivos de professores encontrados:', data.length);
           const imagensComUrl = await Promise.all(data.map(async (file, idx) => {
             const { data: { publicUrl } } = supabase
               .storage
@@ -57,7 +68,10 @@ const ImagemHistoriadoProfessor = ({ escola_id }) => {
             // Buscar legenda da nova tabela
             let legenda = null;
             try {
-              legenda = await getLegendaByImageUrl(publicUrl, escola_id, 'professor');
+              const caminhoRelativo = `${escola_id}/${file.name}`;
+              console.log('Buscando legenda para professor:', caminhoRelativo);
+              legenda = await getLegendaByImageUrl(caminhoRelativo, escola_id, 'professor');
+              console.log('Legenda encontrada para professor:', legenda);
             } catch (error) {
               console.warn('Erro ao buscar legenda:', error);
             }
@@ -213,6 +227,7 @@ const ImagemHistoriadoProfessor = ({ escola_id }) => {
 
 ImagemHistoriadoProfessor.propTypes = {
   escola_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  refreshKey: PropTypes.number,
 };
 
 export default React.memo(ImagemHistoriadoProfessor);

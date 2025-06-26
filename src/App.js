@@ -2,6 +2,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from './supabaseClient';
 import { SearchProvider } from "./contexts/SearchContext";
+import { RefreshProvider } from "./contexts/RefreshContext";
 import Navbar from "./components/Navbar";
 import PainelInformacoes from "./components/PainelInformacoes";
 import AddLocationButton from "./components/AddLocationButton";
@@ -18,6 +19,7 @@ const EditEscolaPanel = React.lazy(() => import("./components/EditEscolaPanel/Ed
 const TerrasIndigenas = React.lazy(() => import("./components/TerrasIndigenas"));
 const Marcadores = React.lazy(() => import("./components/Marcadores"));
 const SearchResults = React.lazy(() => import("./components/SearchResults"));
+const TestLegendas = React.lazy(() => import("./components/TestLegendas"));
 
 const LoadingScreen = () => (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-amber-50">
@@ -433,6 +435,7 @@ const AppContent = () => {
           />
           <Route path="/terras" element={<TerrasIndigenas />} />
           <Route path="/marcadores" element={<Marcadores />} />
+          <Route path="/test-legendas" element={<TestLegendas />} />
         </Routes>
       </Suspense>
     </div>
@@ -442,11 +445,13 @@ const AppContent = () => {
 const App = () => {
   return (
     <SearchProvider>
-      <Router basename="/escolasindigenas">
-        <ErrorBoundary>
-          <AppContent />
-        </ErrorBoundary>
-      </Router>
+      <RefreshProvider>
+        <Router basename="/escolasindigenas">
+          <ErrorBoundary>
+            <AppContent />
+          </ErrorBoundary>
+        </Router>
+      </RefreshProvider>
     </SearchProvider>
   );
 };

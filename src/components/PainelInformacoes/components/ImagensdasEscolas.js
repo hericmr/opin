@@ -2,24 +2,23 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { X, RefreshCw } from 'lucide-react';
 import { getLegendaByImageUrl } from '../../../services/legendasService';
+import { supabase } from '../../../supabaseClient';
 
-const EXTENSOES = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-const MAX_IMAGENS = 10;
-
-// Função utilitária para extrair o caminho relativo do bucket Supabase
-function extrairCaminhoRelativoDaUrl(url) {
-  // Exemplo: https://.../imagens-das-escolas/20/2.png => 20/2.png
-  const match = url.match(/imagens-das-escolas\/([\w\/-]+\.[a-zA-Z0-9]+)/);
-  return match ? match[1] : url;
-}
-
-const ImagensdasEscolas = ({ escola_id }) => {
+const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [imagemZoom, setImagemZoom] = useState(null);
   const [error, setError] = useState('');
   const cacheRef = useRef({});
   const [cacheVersion, setCacheVersion] = useState(0); // Para forçar recarga
+
+  // Forçar recarga quando refreshKey mudar
+  useEffect(() => {
+    if (refreshKey > 0) {
+      console.log('ImagensdasEscolas: refreshKey mudou, forçando recarga');
+      limparCacheERecarregar();
+    }
+  }, [refreshKey]);
 
   const fecharZoom = useCallback(() => {
     setImagemZoom(null);
@@ -62,70 +61,62 @@ const ImagensdasEscolas = ({ escola_id }) => {
 
     const buscarImagens = async () => {
       console.log('Buscando imagens para escola', escola_id);
-      const imagensEncontradas = [];
-      const fetchQueue = [];
-      let active = 0;
-
-      const fetchWithThrottle = async (url) => {
-        while (active >= 3) {
-          await new Promise(res => setTimeout(res, 30));
-        }
-        active++;
-        try {
-          const response = await fetch(url, { method: 'HEAD' });
-          return response.ok;
-        } finally {
-          active--;
-        }
-      };
-
-      for (let i = 1; i <= MAX_IMAGENS; i++) {
-        let encontrou = false;
-        for (const ext of EXTENSOES) {
-          const url = `https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-das-escolas/${escola_id}/${i}.${ext}`;
-          fetchQueue.push(
-            (async () => {
-              if (encontrou) return;
-              const ok = await fetchWithThrottle(url);
-              if (ok) {
-                console.log(`Imagem encontrada: ${url}`);
-                
-                // Buscar legenda da nova tabela com melhor tratamento de erro
-                let legenda = null;
-                try {
-                  console.log('Buscando legenda para:', url);
-                  const caminhoRelativo = extrairCaminhoRelativoDaUrl(url);
-                  legenda = await getLegendaByImageUrl(caminhoRelativo, escola_id, 'escola');
-                  console.log('Legenda encontrada:', legenda);
-                } catch (error) {
-                  console.warn('Erro ao buscar legenda para', url, ':', error);
-                  // Não falhar completamente se a legenda não for encontrada
-                }
-
-                imagensEncontradas.push({
-                  id: `${escola_id}-${i}.${ext}`,
-                  publicURL: url,
-                  descricao: legenda?.legenda || `Imagem ${i}`,
-                  descricaoDetalhada: legenda?.descricao_detalhada,
-                  autor: legenda?.autor_foto,
-                  dataFoto: legenda?.data_foto,
-                  categoria: legenda?.categoria,
-                  urlError: null,
-                });
-                encontrou = true;
-              }
-            })()
-          );
-        }
-      }
-
+      
       try {
-      await Promise.all(fetchQueue);
+        // Usar a mesma abordagem do painel de edição: listar arquivos do bucket
+        const { data: files, error } = await supabase.storage
+          .from('imagens-das-escolas')
+          .list(`${escola_id}/`);
+
+        if (error) {
+          throw error;
+        }
+
+        if (!files || files.length === 0) {
+          console.log('Nenhum arquivo encontrado para escola', escola_id);
+          setImagens([]);
+          setLoading(false);
+          return;
+        }
+
+        console.log('Arquivos encontrados:', files.length);
+
+        // Processar cada arquivo encontrado
+        const imagensEncontradas = await Promise.all(
+          files.map(async (file, index) => {
+            const filePath = `${escola_id}/${file.name}`;
+            const { data: { publicUrl } } = supabase.storage
+              .from('imagens-das-escolas')
+              .getPublicUrl(filePath);
+
+            // Buscar legenda da nova tabela
+            let legenda = null;
+            try {
+              console.log('Buscando legenda para:', filePath);
+              legenda = await getLegendaByImageUrl(filePath, escola_id, 'escola');
+              console.log('Legenda encontrada:', legenda);
+            } catch (error) {
+              console.warn('Erro ao buscar legenda para', filePath, ':', error);
+            }
+
+            return {
+              id: `${escola_id}-${file.name}`,
+              publicURL: publicUrl,
+              descricao: legenda?.legenda || `Imagem ${index + 1}`,
+              descricaoDetalhada: legenda?.descricao_detalhada,
+              autor: legenda?.autor_foto,
+              dataFoto: legenda?.data_foto,
+              categoria: legenda?.categoria,
+              urlError: null,
+            };
+          })
+        );
+
         console.log('Imagens processadas:', imagensEncontradas.length);
         
         // Salvar no cache com versão
         cacheRef.current[cacheKey] = imagensEncontradas;
-      setImagens(imagensEncontradas);
+        setImagens(imagensEncontradas);
         
         if (imagensEncontradas.length === 0) {
           setError('Nenhuma imagem encontrada para esta escola.');
@@ -134,7 +125,7 @@ const ImagensdasEscolas = ({ escola_id }) => {
         console.error('Erro ao processar imagens:', error);
         setError('Erro ao carregar imagens da escola.');
       } finally {
-      setLoading(false);
+        setLoading(false);
       }
     };
 
@@ -294,6 +285,7 @@ const ImagensdasEscolas = ({ escola_id }) => {
 
 ImagensdasEscolas.propTypes = {
   escola_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  refreshKey: PropTypes.number,
 };
 
 export default React.memo(ImagensdasEscolas);

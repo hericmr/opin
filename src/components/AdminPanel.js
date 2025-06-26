@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { ImageUploadSection, ProfessorImageUploadSection } from './EditEscolaPanel';
-import LegendasFotosSection from './EditEscolaPanel/LegendasFotosSection';
 import VideoSection from './EditEscolaPanel/VideoSection';
 import DocumentViewer from './PainelInformacoes/components/DocumentViewer';
+import { useRefresh } from '../contexts/RefreshContext';
 
 const AdminPanel = () => {
+  const { triggerRefresh } = useRefresh();
   const [escolas, setEscolas] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('todos');
@@ -39,7 +40,6 @@ const AdminPanel = () => {
     { id: 'coordenadas', label: 'Coordenadas' },
     { id: 'imagens-escola', label: 'Imagens da Escola' },
     { id: 'imagens-professores', label: 'Imagens dos Professores' },
-    { id: 'legendas-fotos', label: 'Legendas de Fotos' },
     { id: 'documentos', label: 'Documentos' }
   ];
 
@@ -254,12 +254,11 @@ const AdminPanel = () => {
       // Atualizar lista local
       setEscolas(escolas.map(escola => escola.id === editingLocation.id ? { ...escola, ...editingLocation } : escola));
       
-      // Feedback de sucesso
+      // Feedback de sucesso - manter o painel aberto
       setSaveSuccess(true);
       setTimeout(() => {
-        setEditingLocation(null);
         setSaveSuccess(false);
-      }, 2000);
+      }, 3000);
 
     } catch (error) {
       console.error('Erro ao salvar:', error);
@@ -818,6 +817,7 @@ const AdminPanel = () => {
                       onImagesUpdate={() => {
                         // Atualizar o PainelInformacoes se necessário
                         console.log('Imagens da escola atualizadas');
+                        triggerRefresh();
                       }}
                     />
                   </div>
@@ -831,20 +831,10 @@ const AdminPanel = () => {
                       onImagesUpdate={() => {
                         // Atualizar o PainelInformacoes se necessário
                         console.log('Imagens dos professores atualizadas');
+                        triggerRefresh();
                       }}
                     />
                   </div>
-                )}
-
-                {/* Aba: Legendas de Fotos */}
-                {editingLocation.activeTab === 'legendas-fotos' && (
-                  <LegendasFotosSection 
-                    escolaId={editingLocation.id} 
-                    onLegendasUpdate={() => {
-                      // Atualizar o PainelInformacoes se necessário
-                      console.log('Legendas atualizadas');
-                    }}
-                  />
                 )}
 
                 {/* Aba: Documentos */}

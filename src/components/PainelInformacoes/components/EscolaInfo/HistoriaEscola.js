@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { BookOpen } from 'lucide-react';
 import ImagensdasEscolas from '../ImagensdasEscolas';
 
-const HistoriaEscola = memo(({ escola }) => {
+const HistoriaEscola = memo(({ escola, refreshKey = 0 }) => {
   if (!escola?.historia_da_escola) return null;
 
   return (
@@ -46,7 +46,7 @@ const HistoriaEscola = memo(({ escola }) => {
       </div>
 
       {/* Imagens da escola, responsivas e modulares */}
-      <ImagensdasEscolas escola_id={escola.id} />
+      <ImagensdasEscolas escola_id={escola.id} refreshKey={refreshKey} />
     </article>
   );
 });
