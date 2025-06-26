@@ -23,7 +23,7 @@ const GridLayoutWrapper = memo(({ children, shouldUseGrid }) => {
   );
 });
 
-const EscolaInfo = memo(({ escola, shouldUseGrid = false }) => {
+const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0 }) => {
   console.log("EscolaInfo recebeu:", escola);
   
   if (!escola) {
@@ -50,8 +50,8 @@ const EscolaInfo = memo(({ escola, shouldUseGrid = false }) => {
       </GridLayoutWrapper>
 
       {/* História da Escola em destaque */}
-      <HistoriaEscola escola={escola} />
-      <HistoriadoProfessor escola={escola} />
+      <HistoriaEscola escola={escola} refreshKey={refreshKey} />
+      <HistoriadoProfessor escola={escola} refreshKey={refreshKey} />
     </div>
   );
 });

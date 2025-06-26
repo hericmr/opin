@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Image as ImageIcon, User, BookOpen, MapPin, Users, Settings, FileText, Video } from 'lucide-react';
 import ImageUploadSection from './ImageUploadSection';
 import ProfessorImageUploadSection from './ProfessorImageUploadSection';
-import LegendasFotosSection from './LegendasFotosSection';
 import VideoSection from './VideoSection';
 
 const EditEscolaPanel = ({ escola, onClose, onSave }) => {
@@ -31,12 +30,6 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
       label: 'Imagens dos Professores', 
       icon: User,
       description: 'Upload e gerenciamento de imagens dos professores (máx. 5)'
-    },
-    { 
-      id: 'legendas-fotos', 
-      label: 'Legendas de Fotos', 
-      icon: FileText,
-      description: 'Gerenciar legendas descritivas das fotos'
     },
     { 
       id: 'video', 
@@ -87,11 +80,6 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
     // Aqui você pode adicionar lógica para atualizar o PainelInformacoes
     // Por exemplo, disparar um evento ou callback para refresh
     console.log('Imagens atualizadas - PainelInformacoes deve ser atualizado');
-  };
-
-  // Handler para atualização de legendas
-  const handleLegendasUpdate = () => {
-    console.log('Legendas atualizadas - PainelInformacoes deve ser atualizado');
   };
 
   // Handler para atualização de títulos
@@ -175,14 +163,6 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
           <ProfessorImageUploadSection 
             escolaId={escola?.id} 
             onImagesUpdate={handleImagesUpdate}
-          />
-        );
-
-      case 'legendas-fotos':
-        return (
-          <LegendasFotosSection 
-            escolaId={escola?.id} 
-            onLegendasUpdate={handleLegendasUpdate}
           />
         );
 

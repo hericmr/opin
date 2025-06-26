@@ -17,6 +17,7 @@ import PainelInformacoes from "./PainelInformacoes";
 import detalhesIntro from "./detalhesInfo";
 import "./MapaEscolasIndigenas.css";
 import { criarSlug } from '../utils/slug';
+import { useRefresh } from '../contexts/RefreshContext';
 
 const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
   console.log("DataPoints recebidos no MapaEscolasIndigenas:", dataPoints ? {
@@ -28,6 +29,8 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
       tipo: dataPoints[0].tipo
     } : 'Nenhum ponto'
   } : 'Nenhum dataPoint');
+
+  const { refreshKey } = useRefresh();
 
   const urlParams = useMemo(() => new URLSearchParams(window.location.search), []);
   const panel = urlParams.get('panel');
@@ -132,15 +135,21 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
     setPainelInfo(info);
   }, []);
 
-  // Expor a função abrirPainel para componentes externos
+  // Função para forçar refresh do painel
+  const refreshPainel = useCallback(() => {
+    console.log('Forçando refresh do painel de informações');
+    // O refresh será disparado pelo contexto
+  }, []);
+
+  // Expor a função abrirPainel e refreshPainel para componentes externos
   useEffect(() => {
     console.log('MapaEscolasIndigenas: onPainelOpen disponível:', !!onPainelOpen);
     console.log('MapaEscolasIndigenas: abrirPainel disponível:', !!abrirPainel);
     if (onPainelOpen && typeof onPainelOpen === 'function') {
-      console.log('MapaEscolasIndigenas: Expondo função abrirPainel');
-      onPainelOpen(abrirPainel);
+      console.log('MapaEscolasIndigenas: Expondo função abrirPainel e refreshPainel');
+      onPainelOpen(abrirPainel, refreshPainel);
     }
-  }, [abrirPainel, onPainelOpen]);
+  }, [abrirPainel, onPainelOpen, refreshPainel]);
 
   // Otimizar a função de fechar painel
   const fecharPainel = useCallback(() => {
@@ -179,7 +188,11 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
             hasLink: painelInfo?.link_para_documentos,
             linkValue: painelInfo?.link_para_documentos
           })}
-          <PainelInformacoes painelInfo={painelInfo} closePainel={fecharPainel} />
+          <PainelInformacoes 
+            painelInfo={painelInfo} 
+            closePainel={fecharPainel} 
+            refreshKey={refreshKey}
+          />
         </>
       )}
       

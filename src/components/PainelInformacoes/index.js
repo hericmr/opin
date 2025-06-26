@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useShare } from "../hooks/useShare";
 import { useDynamicURL } from "../hooks/useDynamicURL";
 import { useClickOutside } from "../hooks/useClickOutside";
@@ -14,7 +14,7 @@ import PainelContainer from "./components/PainelContainer";
 import DocumentViewer from "./components/DocumentViewer";
 import VideoPlayer from "./components/VideoPlayer";
 
-const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
+const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 }) => {
   const painelRef = useRef(null);
   const [isMaximized, setIsMaximized] = useState(false);
   
@@ -25,6 +25,11 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
   
   useDynamicURL(painelInfo, gerarLinkCustomizado);
   useClickOutside(painelRef, closePainel);
+
+  // Forçar re-renderização quando refreshKey mudar
+  useEffect(() => {
+    console.log('PainelInformacoes: refreshKey mudou para', refreshKey);
+  }, [refreshKey]);
 
   if (!painelInfo) {
     return null;
@@ -48,6 +53,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
         <EscolaInfo 
           escola={painelInfo} 
           shouldUseGrid={true}
+          refreshKey={refreshKey}
         />
         {documentos && documentos.length > 0 && (
           <DocumentViewer 

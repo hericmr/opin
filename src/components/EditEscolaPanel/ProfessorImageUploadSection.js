@@ -11,7 +11,8 @@ import {
 import { 
   getLegendaByImageUrl, 
   addLegendaFoto, 
-  updateLegendaFoto 
+  updateLegendaFoto,
+  testLegendasTable
 } from '../../services/legendasService';
 import {
   addProfessorImageMeta,
@@ -57,19 +58,29 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     fetchExistingImages();
   }, [fetchExistingImages]);
 
+  // Testar estrutura da tabela quando o componente for carregado
+  useEffect(() => {
+    if (escolaId) {
+      console.log('Testando estrutura da tabela legendas_fotos (professores)...');
+      testLegendasTable();
+    }
+  }, [escolaId]);
+
   // Buscar legendas para as imagens existentes
   useEffect(() => {
     const fetchLegendas = async () => {
       if (!existingImages.length) return;
+      console.log('Buscando legendas para', existingImages.length, 'imagens de professores');
       const legendasMap = {};
       for (const img of existingImages) {
-        console.log('Buscando legenda para:', img.publicUrl, escolaId, 'professor');
-        const legenda = await getLegendaByImageUrl(img.publicUrl, escolaId, 'professor');
-        legendasMap[img.publicUrl] = legenda;
+        console.log('Buscando legenda para imagem de professor:', img.url);
+        const legenda = await getLegendaByImageUrl(img.url, escolaId, 'professor');
+        console.log('Legenda encontrada para professor:', legenda);
+        legendasMap[img.url] = legenda;
       }
       setExistingImages(prev => prev.map(img => ({
         ...img,
-        legendaData: legendasMap[img.publicUrl] || {
+        legendaData: legendasMap[img.url] || {
           legenda: '',
           descricao_detalhada: '',
           autor_foto: '',
@@ -286,38 +297,71 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   };
 
   const handleLegendaSave = async (image) => {
-    const imagem_url_completa = image.publicUrl;
+    console.log('=== DEBUG: Salvando legenda de professor ===');
+    console.log('Imagem completa:', image);
+    
+    const imagem_url_relativa = image.url;
     const legendaData = image.legendaData;
-    console.log('Salvando legenda para:', imagem_url_completa, legendaData);
+    console.log('URL relativa:', imagem_url_relativa);
+    console.log('Dados da legenda:', legendaData);
+    console.log('Escola ID:', escolaId);
+    
     try {
-      let legenda = await getLegendaByImageUrl(imagem_url_completa, escolaId, 'professor');
+      console.log('Buscando legenda existente...');
+      let legenda = await getLegendaByImageUrl(imagem_url_relativa, escolaId, 'professor');
+      console.log('Legenda existente encontrada:', legenda);
+      
       if (legenda) {
-        await updateLegendaFoto(legenda.id, {
+        console.log('Atualizando legenda existente...');
+        const updateData = {
           ...legendaData,
           updated_at: new Date().toISOString()
-        });
+        };
+        console.log('Dados para atualização:', updateData);
+        
+        const resultado = await updateLegendaFoto(legenda.id, updateData);
+        console.log('Legenda de professor atualizada com sucesso:', resultado);
       } else {
-        await addLegendaFoto({
+        console.log('Criando nova legenda...');
+        const novaLegendaData = {
           escola_id: escolaId,
-          imagem_url: imagem_url_completa,
+          imagem_url: imagem_url_relativa,
           ...legendaData,
           ativo: true,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           tipo_foto: 'professor'
-        });
+        };
+        console.log('Dados para nova legenda:', novaLegendaData);
+        
+        const novaLegenda = await addLegendaFoto(novaLegendaData);
+        console.log('Nova legenda de professor criada:', novaLegenda);
       }
+      
       // Atualizar imagens_professores
-      let meta = await getProfessorImageMetaByUrl(imagem_url_completa, escolaId);
+      console.log('Atualizando metadados da imagem...');
+      let meta = await getProfessorImageMetaByUrl(image.publicUrl, escolaId);
       if (meta) {
+        console.log('Metadados encontrados:', meta);
         await updateProfessorImageMeta(meta.id, {
           autor: legendaData.autor_foto,
           updated_at: new Date().toISOString()
         });
+        console.log('Metadados atualizados com sucesso');
+      } else {
+        console.log('Nenhum metadado encontrado para atualizar');
       }
+      
       setSuccess('Legenda salva com sucesso!');
-      if (onImagesUpdate) onImagesUpdate();
+      if (onImagesUpdate) {
+        console.log('Chamando onImagesUpdate...');
+        onImagesUpdate();
+      }
     } catch (err) {
+      console.error('=== ERRO ao salvar legenda de professor ===');
+      console.error('Erro completo:', err);
+      console.error('Mensagem de erro:', err.message);
+      console.error('Stack trace:', err.stack);
       setError('Erro ao salvar legenda: ' + err.message);
     }
   };
