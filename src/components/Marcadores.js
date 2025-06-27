@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useMemo, useCallback } from "react";
-import { Marker, Tooltip, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { violetIcon } from "./CustomIcon";
 import L from 'leaflet';
 import 'leaflet.markercluster';
@@ -52,7 +52,8 @@ const findNearbyPairs = (pontos) => {
   return pairs;
 };
 
-const Marcadores = ({ dataPoints, visibility, onClick }) => {
+// Componente interno que usa o hook useMap
+const MarcadoresInternos = ({ dataPoints, visibility, onClick, mapView }) => {
   const map = useMap();
   const clusterGroupRef = useRef(null);
   const connectorsRef = useRef([]);
@@ -61,6 +62,20 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
   // Refs para controle de interação touch
   const lastTouchedMarker = useRef(null);
   const touchTimeout = useRef(null);
+
+  // Sincronizar view com o mapa OpenLayers
+  useEffect(() => {
+    if (map && mapView) {
+      map.setView(mapView.center, mapView.zoom, { animate: false });
+    }
+  }, [map, mapView]);
+
+  // Sincronizar view inicial quando o mapa for criado
+  useEffect(() => {
+    if (map && mapView && map.getZoom() !== mapView.zoom) {
+      map.setView(mapView.center, mapView.zoom, { animate: false });
+    }
+  }, [map, mapView]);
 
   // Função para limpar timeout do tooltip
   const clearTooltipTimeout = useCallback(() => {
@@ -337,16 +352,7 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
       
       // Configurações de interatividade
       singleMarkerMode: false,
-      spiderfyDistanceMultiplier: isMobile ? 2 : 1.5,
-      
-      // Configurações de estilo orgânico
-      polygonOptions: {
-        fillColor: '#A0522D',
-        color: '#5C4033',
-        weight: 1.2,
-        opacity: 0.6,
-        fillOpacity: 0.2
-      }
+      spiderfyDistanceMultiplier: isMobile ? 2 : 1.5
     });
 
     // Adiciona eventos de interação ao cluster
@@ -413,7 +419,7 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
         marker.on('click', (e) => handleTouchInteraction(marker, ponto, e));
       } else {
         // Em desktop, mantém comportamento original
-      marker.on('click', () => onClick?.(ponto));
+        marker.on('click', () => onClick?.(ponto));
       }
 
       // Verifica se este marcador faz parte de um par próximo
@@ -426,16 +432,16 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
 
         // Aplica o efeito de fan-out aprimorado apenas em desktop
         if (!isMobile) {
-        marker.on('add', function() {
-          const transform = isFirst 
-            ? 'perspective(500px) rotateY(-20deg) translateX(-20px) rotate(-25deg) scale(0.9)'
-            : 'perspective(500px) rotateY(20deg) translateX(20px) rotate(25deg) scale(0.9)';
-          
-          this._icon.style.transform = transform;
-          this._icon.style.transition = 'transform 0.5s ease-out, filter 0.3s ease-in';
-          this._icon.style.filter = 'drop-shadow(0 4px 12px rgba(160, 82, 45, 0.35))';
-          this._icon.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.35)';
-        });
+          marker.on('add', function() {
+            const transform = isFirst 
+              ? 'perspective(500px) rotateY(-20deg) translateX(-20px) rotate(-25deg) scale(0.9)'
+              : 'perspective(500px) rotateY(20deg) translateX(20px) rotate(25deg) scale(0.9)';
+            
+            this._icon.style.transform = transform;
+            this._icon.style.transition = 'transform 0.5s ease-out, filter 0.3s ease-in';
+            this._icon.style.filter = 'drop-shadow(0 4px 12px rgba(160, 82, 45, 0.35))';
+            this._icon.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.35)';
+          });
         }
 
         // Cria o conector entre os marcadores
@@ -489,6 +495,47 @@ const Marcadores = ({ dataPoints, visibility, onClick }) => {
   ]);
 
   return null;
+};
+
+// Componente principal que cria o mapa Leaflet
+const Marcadores = ({ dataPoints, visibility, onClick, mapView }) => {
+  return (
+    <MapContainer
+      center={mapView?.center || [-23.5505, -46.6333]} // Usar view sincronizada ou padrão
+      zoom={mapView?.zoom || 8}
+      style={{ height: '100%', width: '100%', background: 'transparent' }}
+      attributionControl={false}
+      zoomControl={false}
+      doubleClickZoom={false}
+      scrollWheelZoom={false}
+      dragging={false}
+      touchZoom={false}
+      boxZoom={false}
+      keyboard={false}
+      tap={false}
+      className="markers-only-map"
+      preferCanvas={true}
+      zoomSnap={0}
+      zoomDelta={0}
+      wheelPxPerZoomLevel={0}
+      wheelDebounceTime={0}
+      wheelSensitivity={0}
+    >
+      {/* TileLayer transparente para não interferir com o mapa OpenLayers */}
+      <TileLayer
+        url="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        attribution=""
+        opacity={0}
+        zIndex={-1000}
+      />
+      <MarcadoresInternos 
+        dataPoints={dataPoints}
+        visibility={visibility}
+        onClick={onClick}
+        mapView={mapView}
+      />
+    </MapContainer>
+  );
 };
 
 export default Marcadores; 
