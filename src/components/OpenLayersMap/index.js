@@ -8,9 +8,11 @@ import { useOpenLayersMap } from '../../hooks/useOpenLayersMap';
 import { useMapMarkers } from '../../hooks/useMapMarkers';
 import { useMapEvents } from '../../hooks/useMapEvents';
 import { useMapLayers } from '../../hooks/useMapLayers';
+import { useMapTooltips } from '../../hooks/useMapTooltips';
 
 // Componentes
 import MapInfo from './MapInfo';
+import MapContainer from './MapContainer';
 
 // Configurações
 import { MAP_CONFIG } from '../../utils/mapConfig';
@@ -32,7 +34,7 @@ const OpenLayersMap = ({
   showEstadoSP = true,
   // Props para marcadores
   showMarcadores = true,
-  showConectores = true
+  showNomesEscolas = false
 }) => {
   const mapContainer = useRef(null);
 
@@ -40,19 +42,22 @@ const OpenLayersMap = ({
   const { map, mapInfo } = useOpenLayersMap(mapContainer, center, zoom);
 
   // Hook para marcadores e clusters
-  useMapMarkers(map, dataPoints, showMarcadores, showConectores);
+  useMapMarkers(map, dataPoints, showMarcadores);
 
   // Hook para eventos do mapa
   useMapEvents(map, mapContainer, onPainelOpen);
 
   // Hook para camadas GeoJSON
-  useMapLayers(map, terrasIndigenasData, estadoSPData, showTerrasIndigenas, showEstadoSP, onPainelOpen);
+  useMapLayers(map, terrasIndigenasData, estadoSPData, showTerrasIndigenas, showEstadoSP);
+
+  // Hook para tooltips
+  useMapTooltips(map, mapContainer, showNomesEscolas);
 
   return (
-    <div className={className} ref={mapContainer}>
+    <MapContainer ref={mapContainer} className={className}>
       {/* Informações do mapa */}
       <MapInfo mapInfo={mapInfo} />
-    </div>
+    </MapContainer>
   );
 };
 

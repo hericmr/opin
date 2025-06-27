@@ -159,17 +159,6 @@ export const createClusterStyle = (feature) => {
   });
 };
 
-// Função para criar estilo dos conectores
-export const createConnectorStyle = () => {
-  return new Style({
-    stroke: new Stroke({
-      color: '#A0522D',
-      width: 1.2,
-      lineDash: [3, 3]
-    })
-  });
-};
-
 // Função para criar estilo das Terras Indígenas
 export const createTerrasIndigenasStyle = (feature) => {
   const properties = feature.getProperties();
