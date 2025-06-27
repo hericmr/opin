@@ -11,6 +11,11 @@ import { useShare } from './components/hooks/useShare';
 import './App.css';
 import ErrorBoundary from './components/ErrorBoundary';
 
+// Novos componentes de melhoria
+import ToastProvider from './components/Toast';
+import { SkipLink } from './components/Accessibility';
+import { MapaSkeleton } from './components/LoadingStates';
+
 // Lazy loading dos componentes
 const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));
 const BibliotecaEducacionalIndigena = React.lazy(() => import("./components/BibliotecaEducacionalIndigena"));
@@ -390,12 +395,12 @@ const AppContent = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar onConteudoClick={() => navigate('/conteudo')} dataPoints={dataPoints} openPainelFunction={openPainelFunction} />
-      <Suspense fallback={<LoadingScreen />}>
+      <Suspense fallback={<MapaSkeleton />}>
         <Routes>
           <Route 
             path="/" 
             element={
-              <main className="flex-grow">
+              <main id="main-content" className="flex-grow">
                 <MapaEscolasIndigenas 
                   dataPoints={
                     new URLSearchParams(location.search).get('panel')
@@ -410,27 +415,41 @@ const AppContent = () => {
           />
           <Route 
             path="/conteudo" 
-            element={<BibliotecaEducacionalIndigena locations={dataPoints} />} 
+            element={
+              <main id="main-content" className="flex-grow">
+                <BibliotecaEducacionalIndigena locations={dataPoints} />
+              </main>
+            } 
           />
           <Route 
             path="/search" 
-            element={<SearchResults dataPoints={dataPoints} />} 
+            element={
+              <main id="main-content" className="flex-grow">
+                <SearchResults dataPoints={dataPoints} />
+              </main>
+            } 
           />
           <Route 
             path="/admin" 
-            element={<AdminPanel />} 
+            element={
+              <main id="main-content" className="flex-grow">
+                <AdminPanel />
+              </main>
+            } 
           />
           <Route 
             path="/edit/:id" 
             element={
-              <EditEscolaPanel 
-                location={getLocationById(new URLSearchParams(location.search).get('id'))}
-                onClose={() => navigate('/')}
-                onSave={() => {
-                  navigate('/');
-                  window.location.reload();
-                }}
-              />
+              <main id="main-content" className="flex-grow">
+                <EditEscolaPanel 
+                  location={getLocationById(new URLSearchParams(location.search).get('id'))}
+                  onClose={() => navigate('/')}
+                  onSave={() => {
+                    navigate('/');
+                    window.location.reload();
+                  }}
+                />
+              </main>
             } 
           />
           <Route path="/terras" element={<TerrasIndigenas />} />
@@ -444,15 +463,18 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <SearchProvider>
-      <RefreshProvider>
-        <Router basename="/escolasindigenas">
-          <ErrorBoundary>
-            <AppContent />
-          </ErrorBoundary>
-        </Router>
-      </RefreshProvider>
-    </SearchProvider>
+    <ToastProvider>
+      <SearchProvider>
+        <RefreshProvider>
+          <Router basename="/escolasindigenas">
+            <ErrorBoundary>
+              <SkipLink targetId="main-content" />
+              <AppContent />
+            </ErrorBoundary>
+          </Router>
+        </RefreshProvider>
+      </SearchProvider>
+    </ToastProvider>
   );
 };
 

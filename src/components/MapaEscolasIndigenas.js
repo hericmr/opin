@@ -7,12 +7,7 @@
  * @returns {React.ReactElement} - Componente renderizado
  */
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import MapaBase from "./MapaBase";
-import Marcadores from "./Marcadores";
-import Bairros from "./Bairros";
-import TerrasIndigenas from "./TerrasIndigenas";
-import EstadoSP from "./EstadoSP";
-import MenuCamadas from "./MenuCamadas";
+import MapSelector from "./MapSelector";
 import PainelInformacoes from "./PainelInformacoes";
 import detalhesIntro from "./detalhesInfo";
 import "./MapaEscolasIndigenas.css";
@@ -42,14 +37,6 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
     return detalhesIntro;
   }, [panel, dataPoints]);
 
-  const [geojsonData, setGeojsonData] = useState(null);
-  const [terrasIndigenasData, setTerrasIndigenasData] = useState(null);
-  const [estadoSPData, setEstadoSPData] = useState(null);
-  const [visibilidade, setVisibilidade] = useState({
-    educacao: true,
-    terrasIndigenas: true,
-    estadoSP: true,
-  });
   const [painelInfo, setPainelInfo] = useState(initialPanel);
   
   // Memoize escolasVisiveis para evitar recálculos desnecessários
@@ -67,67 +54,13 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
       titulo: painelInfo?.titulo,
       tipo: painelInfo?.tipo,
       hasLink: !!painelInfo?.link_para_documentos,
-    linkValue: painelInfo?.link_para_documentos,
+      linkValue: painelInfo?.link_para_documentos,
       isInitialPanel: painelInfo === initialPanel,
       isNull: painelInfo === null,
       isUndefined: painelInfo === undefined
-  });
+    });
     console.groupEnd();
   }, [painelInfo, initialPanel]);
-
-  // Otimizar o carregamento dos GeoJSONs
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
-
-    const fetchGeoJSON = async () => {
-      try {
-        const [bairrosResponse, terrasIndigenasResponse, estadoSPResponse] = await Promise.all([
-          fetch(`${process.env.PUBLIC_URL}/bairros.geojson`, { signal: controller.signal }),
-          fetch(`${process.env.PUBLIC_URL}/terras_indigenas_simplified.geojson`, { signal: controller.signal }),
-          fetch(`${process.env.PUBLIC_URL}/SP_simplified.geojson`, { signal: controller.signal })
-        ]);
-
-        if (!isMounted) return;
-
-        if (!bairrosResponse.ok || !terrasIndigenasResponse.ok || !estadoSPResponse.ok) {
-          console.error('Erro ao carregar GeoJSONs');
-          return;
-        }
-
-        const [bairrosData, terrasIndigenasData, estadoSPData] = await Promise.all([
-          bairrosResponse.json(),
-          terrasIndigenasResponse.json(),
-          estadoSPResponse.json()
-        ]);
-
-        if (!isMounted) return;
-
-        if (bairrosData?.features) setGeojsonData(bairrosData);
-        if (terrasIndigenasData?.features) setTerrasIndigenasData(terrasIndigenasData);
-        if (estadoSPData?.features) setEstadoSPData(estadoSPData);
-      } catch (error) {
-        if (error.name === 'AbortError') return;
-        console.error('Erro ao carregar GeoJSONs:', error);
-      }
-    };
-
-    fetchGeoJSON();
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, []);
-
-  // Adicionar logs para verificar quando os dados são renderizados
-  useEffect(() => {
-    console.log("Estado dos dados GeoJSON:", {
-      bairros: geojsonData ? "Carregado" : "Não carregado",
-      terrasIndigenas: terrasIndigenasData ? "Carregado" : "Não carregado",
-      estadoSP: estadoSPData ? "Carregado" : "Não carregado"
-    });
-  }, [geojsonData, terrasIndigenasData, estadoSPData]);
 
   // Otimizar a função de abrir painel
   const abrirPainel = useCallback((info) => {
@@ -156,31 +89,16 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
     setPainelInfo(null);
   }, []);
 
-  // Otimizar a função de toggle visibilidade
-  const toggleVisibilidade = useCallback((chave) => {
-    setVisibilidade(prev => ({ ...prev, [chave]: !prev[chave] }));
-  }, []);
-
-  const geoJSONStyle = {
-    fillColor: "green",
-    color: "white",
-    weight: 1,
-    fillOpacity: 0.4,
-  };
-
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      <MapaBase>
-        {visibilidade.estadoSP && estadoSPData && <EstadoSP data={estadoSPData} />}
-        {visibilidade.terrasIndigenas && terrasIndigenasData && (
-          <TerrasIndigenas 
-            data={terrasIndigenasData} 
-            onClick={abrirPainel}
-          />
-        )}
-        {dataPoints && <Marcadores dataPoints={escolasVisiveis} visibility={visibilidade} onClick={abrirPainel} />}
-      </MapaBase>
+      {/* Novo mapa sem gaps */}
+      <MapSelector
+        dataPoints={escolasVisiveis}
+        onPainelOpen={abrirPainel}
+        className="h-full w-full"
+      />
 
+      {/* Painel de informações */}
       {painelInfo && (
         <>
           {console.log("MapaEscolasIndigenas - Renderizando PainelInformacoes com:", {
@@ -196,17 +114,13 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
         </>
       )}
       
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="pointer-events-auto" style={{ zIndex: 20 }}>
-          <MenuCamadas
-            estados={visibilidade}
-            acoes={{
-              toggleEducacao: () => toggleVisibilidade("educacao"),
-              toggleTerrasIndigenas: () => toggleVisibilidade("terrasIndigenas"),
-              toggleEstadoSP: () => toggleVisibilidade("estadoSP"),
-            }}
-            totalEscolas={totalEscolas}
-          />
+      {/* Informações adicionais */}
+      <div className="absolute top-20 left-4 z-30 bg-white bg-opacity-95 rounded-lg shadow-lg p-3">
+        <div className="text-sm font-semibold text-gray-800">
+          Escolas Indígenas: {totalEscolas}
+        </div>
+        <div className="text-xs text-gray-600">
+          Mapa otimizado sem gaps
         </div>
       </div>
     </div>
