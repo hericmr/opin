@@ -1,9 +1,12 @@
-import React, { useCallback, useMemo, useEffect } from 'react';
+import React, { useCallback, useMemo, useEffect, useRef } from 'react';
 import { GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import { isMobile, MobileInteractionManager } from '../utils/mobileUtils';
 
 const TerrasIndigenas = ({ data, onClick }) => {
   const map = useMap();
+  const mobileInteraction = useRef(new MobileInteractionManager());
+  const tooltipRef = useRef(null);
 
   useEffect(() => {
     if (data) {
@@ -16,6 +19,53 @@ const TerrasIndigenas = ({ data, onClick }) => {
       console.warn("TerrasIndigenas: Nenhum dado recebido");
     }
   }, [data]);
+
+  // Função para mostrar tooltip temporário em mobile
+  const showMobileTooltip = useCallback((event, content) => {
+    if (!isMobile()) return;
+
+    // Remove tooltip anterior
+    if (tooltipRef.current) {
+      tooltipRef.current.remove();
+      tooltipRef.current = null;
+    }
+
+    const element = document.createElement('div');
+    element.className = 'mobile-tooltip-terra';
+    element.textContent = content;
+    element.style.position = 'absolute';
+    element.style.backgroundColor = 'rgba(139, 0, 0, 0.95)';
+    element.style.color = 'white';
+    element.style.padding = '8px 12px';
+    element.style.borderRadius = '6px';
+    element.style.fontSize = '14px';
+    element.style.fontFamily = 'Arial, sans-serif';
+    element.style.fontWeight = '500';
+    element.style.maxWidth = '250px';
+    element.style.whiteSpace = 'nowrap';
+    element.style.overflow = 'hidden';
+    element.style.textOverflow = 'ellipsis';
+    element.style.zIndex = '1000';
+    element.style.pointerEvents = 'none';
+    element.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
+    element.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+    
+    const latlng = event.latlng;
+    const point = map.latLngToLayerPoint(latlng);
+    element.style.left = (point.x + 10) + 'px';
+    element.style.top = (point.y - 10) + 'px';
+    
+    map.getContainer().appendChild(element);
+    tooltipRef.current = element;
+
+    // Auto-remove after 2 seconds
+    setTimeout(() => {
+      if (element.parentNode) {
+        element.remove();
+        tooltipRef.current = null;
+      }
+    }, 2000);
+  }, [map]);
 
   // Estilo padrão das terras indígenas
   const defaultStyle = useMemo(
@@ -65,26 +115,30 @@ const TerrasIndigenas = ({ data, onClick }) => {
         return;
       }
 
-      // Adiciona tooltip com informações básicas
-      const tooltipContent = `
-        <div class="bg-white p-2 rounded shadow-md">
-          <strong>${feature.properties.terrai_nom || 'Nome não disponível'}</strong><br/>
-          ${feature.properties.etnia_nome || 'Etnia não disponível'}<br/>
-          ${feature.properties.fase_ti || 'Fase não disponível'}
-        </div>
-      `;
-      layer.bindTooltip(tooltipContent, {
-        sticky: true,
-        className: 'custom-tooltip'
-      });
+      // Adiciona tooltip com informações básicas (desktop only)
+      if (!isMobile()) {
+        const tooltipContent = `
+          <div class="bg-white p-2 rounded shadow-md">
+            <strong>${feature.properties.terrai_nom || 'Nome não disponível'}</strong><br/>
+            ${feature.properties.etnia_nome || 'Etnia não disponível'}<br/>
+            ${feature.properties.fase_ti || 'Fase não disponível'}
+          </div>
+        `;
+        layer.bindTooltip(tooltipContent, {
+          sticky: true,
+          className: 'custom-tooltip'
+        });
+      }
 
       layer.on({
         mouseover: (e) => {
+          if (isMobile()) return; // Skip hover on mobile
           const layer = e.target;
           layer.setStyle(hoverStyle);
           layer.bringToFront();
         },
         mouseout: (e) => {
+          if (isMobile()) return; // Skip hover on mobile
           e.target.setStyle(style(feature));
         },
         click: (e) => {
@@ -111,14 +165,30 @@ const TerrasIndigenas = ({ data, onClick }) => {
             undadm_cod: feature.properties.undadm_cod
           };
 
-          if (onClick) {
-            onClick(terraIndigenaInfo);
-          }
+          // Handle mobile two-click behavior
+          mobileInteraction.current.handleClick(
+            feature,
+            // First click - show name
+            () => showMobileTooltip(e, feature.properties.terrai_nom || 'Terra Indígena'),
+            // Second click - open panel
+            () => onClick?.(terraIndigenaInfo)
+          );
         }
       });
     },
-    [map, style, onClick]
+    [map, style, onClick, showMobileTooltip]
   );
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (tooltipRef.current) {
+        tooltipRef.current.remove();
+        tooltipRef.current = null;
+      }
+      mobileInteraction.current.reset();
+    };
+  }, []);
 
   if (!data) {
     console.warn("TerrasIndigenas: Nenhum dado recebido");
