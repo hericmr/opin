@@ -17,6 +17,8 @@ import { GeoJSON } from 'ol/format';
 import { register } from 'ol/proj/proj4';
 import proj4 from 'proj4';
 import 'ol/ol.css';
+import { MAP_CONFIG } from '../utils/mapConfig';
+import { isMobile, MobileInteractionManager } from '../utils/mobileUtils';
 
 // Componentes GeoJSON
 import OpenLayersTerrasIndigenas from './OpenLayersTerrasIndigenas';
@@ -165,6 +167,10 @@ const OpenLayersMap = ({
   
   // Referência para camada de conectores
   const connectorsLayerRef = useRef(null);
+
+  // Mobile interaction manager
+  const mobileInteraction = useRef(new MobileInteractionManager());
+  const [tooltipElement, setTooltipElement] = useState(null);
 
   // Criar camadas base
   const createBaseLayers = useCallback(() => {
@@ -324,6 +330,53 @@ const OpenLayersMap = ({
     return schoolData.titulo || 'Escola Indígena';
   }, []);
 
+  // Função para mostrar tooltip temporário em mobile
+  const showMobileTooltip = useCallback((event, content) => {
+    if (!isMobile()) return;
+
+    // Remove tooltip anterior
+    if (tooltipElement) {
+      tooltipElement.remove();
+      setTooltipElement(null);
+    }
+
+    const element = document.createElement('div');
+    element.className = 'mobile-tooltip';
+    element.textContent = content;
+    element.style.position = 'absolute';
+    element.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+    element.style.color = 'white';
+    element.style.padding = '8px 12px';
+    element.style.borderRadius = '6px';
+    element.style.fontSize = '14px';
+    element.style.fontFamily = 'Arial, sans-serif';
+    element.style.fontWeight = '500';
+    element.style.maxWidth = '250px';
+    element.style.whiteSpace = 'nowrap';
+    element.style.overflow = 'hidden';
+    element.style.textOverflow = 'ellipsis';
+    element.style.zIndex = '1000';
+    element.style.pointerEvents = 'none';
+    element.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
+    element.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+    
+    const coordinate = event.coordinate;
+    const pixel = map.current.getPixelFromCoordinate(coordinate);
+    element.style.left = (pixel[0] + 10) + 'px';
+    element.style.top = (pixel[1] - 10) + 'px';
+    
+    mapContainer.current.appendChild(element);
+    setTooltipElement(element);
+
+    // Auto-remove after 2 seconds
+    setTimeout(() => {
+      if (element.parentNode) {
+        element.remove();
+        setTooltipElement(null);
+      }
+    }, 2000);
+  }, [tooltipElement]);
+
   // Inicializar mapa
   useEffect(() => {
     if (map.current) return;
@@ -416,10 +469,16 @@ const OpenLayersMap = ({
         if (feature.get('features')) {
           const features = feature.get('features');
           if (features.length === 1) {
-            // Cluster com apenas um marcador, abrir painel
+            // Cluster com apenas um marcador
             const schoolData = features[0].get('schoolData');
-            if (schoolData && onPainelOpen) {
-              onPainelOpen(schoolData);
+            if (schoolData) {
+              mobileInteraction.current.handleClick(
+                feature,
+                // First click - show name
+                () => showMobileTooltip(event, schoolData.titulo || 'Escola Indígena'),
+                // Second click - open panel
+                () => onPainelOpen?.(schoolData)
+              );
             }
           } else {
             // Cluster com múltiplos marcadores, fazer zoom inteligente
@@ -461,21 +520,26 @@ const OpenLayersMap = ({
         } else {
           // Marcador individual
           const schoolData = feature.get('schoolData');
-          if (schoolData && onPainelOpen) {
-            onPainelOpen(schoolData);
+          if (schoolData) {
+            mobileInteraction.current.handleClick(
+              feature,
+              // First click - show name
+              () => showMobileTooltip(event, schoolData.titulo || 'Escola Indígena'),
+              // Second click - open panel
+              () => onPainelOpen?.(schoolData)
+            );
           }
         }
       }
     });
 
-    // Event listener para hover nos marcadores
-    let tooltipElement = null;
-    let currentFeature = null;
-
+    // Event listener para hover nos marcadores (desktop only)
     map.current.on('pointermove', (event) => {
+      if (isMobile()) return; // Skip hover on mobile
+
       if (tooltipElement) {
         tooltipElement.remove();
-        tooltipElement = null;
+        setTooltipElement(null);
       }
 
       const feature = map.current.forEachFeatureAtPixel(event.pixel, (feature) => feature);
@@ -488,17 +552,20 @@ const OpenLayersMap = ({
             // Cluster com apenas um marcador, mostrar tooltip
             const schoolData = features[0].get('schoolData');
             if (schoolData) {
-              tooltipElement = createTooltipElement(event, schoolData);
+              const element = createTooltipElement(event, schoolData);
+              setTooltipElement(element);
             }
           } else {
             // Cluster com múltiplos marcadores, mostrar tooltip do cluster
-            tooltipElement = createClusterTooltipElement(event, features.length);
+            const element = createClusterTooltipElement(event, features.length);
+            setTooltipElement(element);
           }
         } else {
           // Marcador individual
           const schoolData = feature.get('schoolData');
           if (schoolData) {
-            tooltipElement = createTooltipElement(event, schoolData);
+            const element = createTooltipElement(event, schoolData);
+            setTooltipElement(element);
           }
         }
       }
@@ -572,9 +639,11 @@ const OpenLayersMap = ({
       }
       if (tooltipElement) {
         tooltipElement.remove();
+        setTooltipElement(null);
       }
+      mobileInteraction.current.reset();
     };
-  }, [createBaseLayers, createClusterStyle, createTooltipHTML]);
+  }, [createBaseLayers, createClusterStyle, createTooltipHTML, showMobileTooltip, onPainelOpen]);
 
   // Atualizar marcadores quando dataPoints mudar
   useEffect(() => {

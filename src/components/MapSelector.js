@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import OpenLayersMap from './OpenLayersMap';
 import { useGeoJSONCache } from '../hooks/useGeoJSONCache';
+import { MAP_CONFIG } from '../utils/mapConfig';
+
+const MOBILE_CENTER = [-48.4222, -22.8337];
+const MOBILE_ZOOM = 5.86;
 
 const MapSelector = ({ 
   dataPoints, 
@@ -143,6 +147,10 @@ const MapSelector = ({
     </button>
   );
 
+  // Definir center/zoom iniciais conforme dispositivo
+  const mapCenter = isMobile ? MOBILE_CENTER : MAP_CONFIG.center;
+  const mapZoom = isMobile ? MOBILE_ZOOM : MAP_CONFIG.zoom;
+
   return (
     <div className={className} style={{ position: 'relative' }}>
       {/* Controles de camadas responsivos */}
@@ -255,6 +263,8 @@ const MapSelector = ({
         dataPoints={showMarcadores ? dataPoints : []}
         onPainelOpen={onPainelOpen}
         className="h-full w-full"
+        center={mapCenter}
+        zoom={mapZoom}
         // Props para camadas GeoJSON
         terrasIndigenasData={terrasIndigenasData}
         estadoSPData={estadoSPData}
