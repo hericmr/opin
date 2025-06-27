@@ -21,9 +21,6 @@ const MapSelector = ({
 
   // Estado para controlar visibilidade dos marcadores
   const [showMarcadores, setShowMarcadores] = useState(true);
-  
-  // Estado para controlar visibilidade dos conectores
-  const [showConectores, setShowConectores] = useState(true);
 
   // Estados para responsividade
   const [isMobile, setIsMobile] = useState(false);
@@ -194,14 +191,6 @@ const MapSelector = ({
                     { label: "Declaradas", color: "#8B0000" }
                   ]}
                 />
-                <BotaoCamada
-                  id="conectores"
-                  label="Mostrar Conectores"
-                  checked={showConectores}
-                  onChange={() => setShowConectores(!showConectores)}
-                  disabled={!showMarcadores}
-                  color="#A0522D"
-                />
               </div>
             )}
           </div>
@@ -245,14 +234,6 @@ const MapSelector = ({
                   { label: "Declaradas", color: "#8B0000" }
                 ]}
               />
-              <BotaoCamada
-                id="conectores"
-                label="Mostrar Conectores"
-                checked={showConectores}
-                onChange={() => setShowConectores(!showConectores)}
-                disabled={!showMarcadores}
-                color="#A0522D"
-              />
             </div>
           )}
         </div>
@@ -272,7 +253,6 @@ const MapSelector = ({
         showEstadoSP={showEstadoSP}
         // Props para marcadores
         showMarcadores={showMarcadores}
-        showConectores={showConectores}
       />
     </div>
   );

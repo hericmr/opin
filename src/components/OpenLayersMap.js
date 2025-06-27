@@ -146,8 +146,7 @@ const OpenLayersMap = ({
   showEstadoSP = true,
   // Props para marcadores
   showMarcadores = true,
-  showNomesEscolas = false,
-  showConectores = true
+  showNomesEscolas = false
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -164,9 +163,6 @@ const OpenLayersMap = ({
   // Referências para as camadas GeoJSON
   const terrasIndigenasLayerRef = useRef(null);
   const estadoSPLayerRef = useRef(null);
-  
-  // Referência para camada de conectores
-  const connectorsLayerRef = useRef(null);
 
   // Mobile interaction manager
   const mobileInteraction = useRef(new MobileInteractionManager());
@@ -405,19 +401,6 @@ const OpenLayersMap = ({
       zIndex: 15
     });
 
-    // Criar camada para conectores entre marcadores próximos
-    connectorsLayerRef.current = new VectorLayer({
-      source: new VectorSource(),
-      style: new Style({
-        stroke: new Stroke({
-          color: '#A0522D',
-          width: 1.2,
-          lineDash: [3, 3]
-        })
-      }),
-      zIndex: 14
-    });
-
     // Criar camadas base
     const { satelliteLayer } = createBaseLayers();
     baseLayer.current = satelliteLayer;
@@ -427,7 +410,6 @@ const OpenLayersMap = ({
       target: mapContainer.current,
       layers: [
         baseLayer.current,
-        connectorsLayerRef.current,
         vectorLayer.current
       ],
       view: new View({
@@ -652,11 +634,6 @@ const OpenLayersMap = ({
     // Limpar marcadores existentes
     vectorSource.current.clear();
     
-    // Limpar conectores existentes
-    if (connectorsLayerRef.current) {
-      connectorsLayerRef.current.getSource().clear();
-    }
-
     // Filtrar pontos válidos
     const pontosValidos = dataPoints.filter(point => {
       if (!point.latitude || !point.longitude) return false;
@@ -693,29 +670,8 @@ const OpenLayersMap = ({
       }
     });
 
-    // Criar conectores para pares próximos
-    if (showConectores) {
-      nearbyPairs.forEach((pair, pairIndex) => {
-        const [firstIndex, secondIndex] = pair;
-        const firstPoint = pontosValidos[firstIndex];
-        const secondPoint = pontosValidos[secondIndex];
-        
-        if (firstPoint && secondPoint) {
-          const connectorFeature = new Feature({
-            geometry: new LineString([
-              fromLonLat([firstPoint.longitude, firstPoint.latitude]),
-              fromLonLat([secondPoint.longitude, secondPoint.latitude])
-            ])
-          });
-          
-          connectorsLayerRef.current.getSource().addFeature(connectorFeature);
-        }
-      });
-    }
-
     console.log(`OpenLayersMap: Adicionados ${pontosValidos.length} marcadores com clustering inteligente`);
-    console.log(`OpenLayersMap: Criados ${nearbyPairs.length} conectores`);
-  }, [dataPoints, showMarcadores, showConectores]);
+  }, [dataPoints, showMarcadores]);
 
   // Atualizar estilo dos marcadores quando o tipo de mapa mudar
   useEffect(() => {
@@ -768,13 +724,6 @@ const OpenLayersMap = ({
     map.current.addLayer(vectorLayer.current);
 
   }, [showNomesEscolas, createClusterStyle]);
-
-  // Controlar visibilidade da camada de conectores
-  useEffect(() => {
-    if (connectorsLayerRef.current) {
-      connectorsLayerRef.current.setVisible(showConectores && showMarcadores);
-    }
-  }, [showConectores, showMarcadores]);
 
   // Gerenciar camadas GeoJSON
   useEffect(() => {
