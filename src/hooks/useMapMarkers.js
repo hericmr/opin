@@ -1,56 +1,30 @@
 import { useEffect, useRef } from 'react';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import { createMarkerFeatures, createConnectorFeatures, filterValidPoints, findNearbyPairs } from '../utils/mapUtils';
-import { createMarkerStyle, createClusterStyle, createConnectorStyle } from '../utils/mapStyles';
+import { Feature } from 'ol';
+import { Point, LineString } from 'ol/geom';
+import { fromLonLat } from 'ol/proj';
+import { findNearbyPairs } from '../utils/mapUtils';
 
-export const useMapMarkers = (map, dataPoints, showMarcadores, showConectores) => {
-  const connectorsLayerRef = useRef(null);
-
-  // Criar camada de conectores
-  useEffect(() => {
-    if (!map) return;
-
-    // Criar camada para conectores entre marcadores próximos
-    connectorsLayerRef.current = new VectorLayer({
-      source: new VectorSource(),
-      style: createConnectorStyle,
-      zIndex: 14
-    });
-
-    map.addLayer(connectorsLayerRef.current);
-
-    return () => {
-      if (connectorsLayerRef.current) {
-        map.removeLayer(connectorsLayerRef.current);
-        connectorsLayerRef.current = null;
-      }
-    };
-  }, [map]);
+export const useMapMarkers = (map, dataPoints, showMarcadores) => {
+  const vectorSourceRef = useRef(null);
+  const clusterSourceRef = useRef(null);
+  const vectorLayerRef = useRef(null);
 
   // Atualizar marcadores quando dataPoints mudar
   useEffect(() => {
-    if (!map || !dataPoints || !showMarcadores) return;
-
-    const vectorLayer = map.getLayers().getArray().find(layer => 
-      layer.getSource() && layer.getSource().constructor.name === 'ClusterSource'
-    );
-
-    if (!vectorLayer) return;
-
-    const vectorSource = vectorLayer.getSource().getSource(); // ClusterSource -> VectorSource
-    const connectorsSource = connectorsLayerRef.current?.getSource();
+    if (!map || !vectorSourceRef.current || !dataPoints || !showMarcadores) return;
 
     // Limpar marcadores existentes
-    vectorSource.clear();
-    
-    // Limpar conectores existentes
-    if (connectorsSource) {
-      connectorsSource.clear();
-    }
+    vectorSourceRef.current.clear();
 
     // Filtrar pontos válidos
-    const pontosValidos = filterValidPoints(dataPoints);
+    const pontosValidos = dataPoints.filter(point => {
+      if (!point.latitude || !point.longitude) return false;
+      const lat = parseFloat(point.latitude);
+      const lng = parseFloat(point.longitude);
+      return !isNaN(lat) && !isNaN(lng) && 
+             lat >= -90 && lat <= 90 && 
+             lng >= -180 && lng <= 180;
+    });
 
     // Encontrar pares de marcadores próximos
     const nearbyPairs = findNearbyPairs(pontosValidos);
@@ -59,40 +33,30 @@ export const useMapMarkers = (map, dataPoints, showMarcadores, showConectores) =
     console.log(`useMapMarkers: Encontrados ${nearbyPairs.length} pares próximos`);
 
     // Adicionar novos marcadores
-    const markerFeatures = createMarkerFeatures(pontosValidos, nearbyPairs);
-    markerFeatures.forEach(feature => vectorSource.addFeature(feature));
-
-    // Criar conectores para pares próximos
-    if (showConectores && connectorsSource) {
-      const connectorFeatures = createConnectorFeatures(nearbyPairs, pontosValidos);
-      connectorFeatures.forEach(feature => connectorsSource.addFeature(feature));
-    }
+    pontosValidos.forEach((point, index) => {
+      if (point.latitude && point.longitude) {
+        const feature = new Feature({
+          geometry: new Point(fromLonLat([point.longitude, point.latitude]))
+        });
+        feature.set('schoolData', point);
+        
+        // Marcar se este marcador faz parte de um par próximo
+        const pairIndex = nearbyPairs.findIndex(pair => pair.includes(index));
+        if (pairIndex !== -1) {
+          feature.set('isNearbyPair', true);
+          feature.set('pairIndex', pairIndex);
+        }
+        
+        vectorSourceRef.current.addFeature(feature);
+      }
+    });
 
     console.log(`useMapMarkers: Adicionados ${pontosValidos.length} marcadores com clustering inteligente`);
-    console.log(`useMapMarkers: Criados ${nearbyPairs.length} conectores`);
-  }, [map, dataPoints, showMarcadores, showConectores]);
-
-  // Atualizar estilo dos marcadores
-  useEffect(() => {
-    if (!map) return;
-
-    const vectorLayer = map.getLayers().getArray().find(layer => 
-      layer.getSource() && layer.getSource().constructor.name === 'ClusterSource'
-    );
-
-    if (vectorLayer) {
-      vectorLayer.setStyle(createClusterStyle);
-    }
-  }, [map]);
-
-  // Controlar visibilidade da camada de conectores
-  useEffect(() => {
-    if (connectorsLayerRef.current) {
-      connectorsLayerRef.current.setVisible(showConectores && showMarcadores);
-    }
-  }, [showConectores, showMarcadores]);
+  }, [map, dataPoints, showMarcadores]);
 
   return {
-    connectorsLayer: connectorsLayerRef.current
+    vectorSourceRef,
+    clusterSourceRef,
+    vectorLayerRef
   };
 }; 

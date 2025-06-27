@@ -17,14 +17,7 @@ export const MAP_CONFIG = {
   disableClusteringAtZoom: 12,
   
   // Configurações de tooltip
-  tooltipOffset: 10,
-  
-  // Configurações de conectores
-  connectorStyle: {
-    color: '#A0522D',
-    width: 1.2,
-    lineDash: [3, 3]
-  }
+  tooltipOffset: 10
 };
 
 // Configurações de cores dos marcadores
