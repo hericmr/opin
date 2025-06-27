@@ -93,6 +93,56 @@
   border-bottom: none !important; /* Remove a borda entre os botões */
 }
 
+/* Estilos para o mapa Leaflet dos marcadores (sobreposto ao OpenLayers) */
+.markers-only-map {
+  background: transparent !important;
+  pointer-events: none !important;
+}
+
+.markers-only-map .leaflet-pane {
+  background: transparent !important;
+  pointer-events: none !important;
+}
+
+.markers-only-map .leaflet-control-container {
+  display: none !important;
+}
+
+.markers-only-map .leaflet-attribution-flag {
+  display: none !important;
+}
+
+/* Permitir apenas interações com marcadores */
+.markers-only-map .leaflet-marker-icon {
+  z-index: 1000 !important;
+  pointer-events: auto !important;
+}
+
+.markers-only-map .leaflet-marker-shadow {
+  z-index: 999 !important;
+  pointer-events: auto !important;
+}
+
+.markers-only-map .leaflet-tooltip {
+  z-index: 1001 !important;
+  pointer-events: auto !important;
+}
+
+.markers-only-map .leaflet-popup {
+  z-index: 1002 !important;
+  pointer-events: auto !important;
+}
+
+/* Garantir que o canvas do Leaflet não bloqueie interações */
+.markers-only-map .leaflet-pane canvas {
+  pointer-events: none !important;
+}
+
+/* Permitir interações apenas com clusters */
+.markers-only-map .marker-cluster {
+  pointer-events: auto !important;
+}
+
 /* Estilos para os clusters de marcadores com estética indígena */
 .marker-cluster {
   background: transparent !important;
@@ -180,4 +230,115 @@
 
 .leaflet-tooltip-right:before {
   border-right-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Estilos para tooltips do OpenLayers */
+.ol-tooltip {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e5e7eb;
+  font-size: 12px;
+  max-width: 250px;
+  z-index: 1000;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  backdrop-filter: blur(4px);
+}
+
+.ol-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.95) transparent transparent transparent;
+}
+
+/* Estilos para clusters do OpenLayers */
+.ol-cluster {
+  transition: all 0.3s ease;
+}
+
+.ol-cluster:hover {
+  transform: scale(1.1);
+  filter: brightness(1.1);
+}
+
+/* Estilos para marcadores individuais */
+.ol-marker {
+  transition: all 0.2s ease;
+}
+
+.ol-marker:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* Estilos para garantir visibilidade das camadas GeoJSON do OpenLayers */
+.ol-layer {
+  z-index: auto !important;
+}
+
+.ol-layer canvas {
+  z-index: auto !important;
+  pointer-events: auto !important;
+}
+
+/* Garantir que as camadas vetoriais sejam visíveis */
+.ol-layer.ol-layer-vector {
+  z-index: 10 !important;
+}
+
+/* Estilos específicos para camadas GeoJSON */
+.ol-layer[data-layer-type="terras-indigenas"] {
+  z-index: 10 !important;
+}
+
+.ol-layer[data-layer-type="estado-sp"] {
+  z-index: 5 !important;
+}
+
+/* Garantir que o mapa OpenLayers seja interativo */
+.ol-viewport {
+  cursor: grab !important;
+}
+
+.ol-viewport:active {
+  cursor: grabbing !important;
+}
+
+/* Garantir que o mapa responda a eventos de mouse */
+.ol-map {
+  pointer-events: auto !important;
+}
+
+/* Garantir que o container do mapa OpenLayers seja interativo */
+.ol-map-container {
+  pointer-events: auto !important;
+  cursor: grab !important;
+}
+
+.ol-map-container:active {
+  cursor: grabbing !important;
+}
+
+/* Garantir que os controles do OpenLayers sejam visíveis e interativos */
+.ol-control {
+  pointer-events: auto !important;
+  z-index: 1000 !important;
+}
+
+.ol-control button {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Garantir que o canvas do mapa seja interativo */
+.ol-viewport canvas {
+  pointer-events: auto !important;
 }

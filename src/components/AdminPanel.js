@@ -312,37 +312,37 @@ const AdminPanel = () => {
               </svg>
             </button>
           )}
-          <h2 className="text-lg font-bold mb-4 sticky top-0 bg-white pb-2">Escolas</h2>
-          {/* Busca no menu lateral */}
-          <div className="mb-4 sticky top-12 bg-white pb-2">
-            <input
-              type="text"
-              placeholder="Buscar escola..."
+        <h2 className="text-lg font-bold mb-4 sticky top-0 bg-white pb-2">Escolas</h2>
+        {/* Busca no menu lateral */}
+        <div className="mb-4 sticky top-12 bg-white pb-2">
+          <input
+            type="text"
+            placeholder="Buscar escola..."
               className="w-full px-3 py-2 border rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <ul className="space-y-1">
-            {escolas
-              .filter(escola => 
-                escola.Escola?.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              .map(escola => (
-              <li key={escola.id}>
-                <button
-                  className={`block w-full text-left px-2 py-1 rounded hover:bg-blue-100 text-sm ${editingLocation?.id === escola.id ? 'bg-blue-200 font-bold' : ''}`}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <ul className="space-y-1">
+          {escolas
+            .filter(escola => 
+              escola.Escola?.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map(escola => (
+            <li key={escola.id}>
+              <button
+                className={`block w-full text-left px-2 py-1 rounded hover:bg-blue-100 text-sm ${editingLocation?.id === escola.id ? 'bg-blue-200 font-bold' : ''}`}
                   onClick={() => {
                     setEditingLocation({ ...escola, activeTab: 'dados-basicos' });
                     if (isMobile) setSidebarOpen(false);
                   }}
-                >
-                  {escola.Escola}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </aside>
+              >
+                {escola.Escola}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </aside>
       )}
       {/* Conteúdo principal */}
       <main className="flex-1 p-6 overflow-y-auto h-screen">
@@ -1140,7 +1140,7 @@ const AdminPanel = () => {
                 {isSaving ? 'Salvando...' : 'Salvar Alterações'}
               </button>
               <button 
-                type="button"
+                type="button" 
                 className="px-4 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors min-h-[44px] text-base"
                 onClick={() => setEditingLocation(null)}
                 disabled={isSaving}
