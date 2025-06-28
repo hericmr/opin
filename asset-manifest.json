@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/escolasindigenas/static/css/main.f2be23c0.css",
-    "main.js": "/escolasindigenas/static/js/main.a0fd9834.js",
-    "static/css/992.926545cc.chunk.css": "/escolasindigenas/static/css/992.926545cc.chunk.css",
+    "main.css": "/escolasindigenas/static/css/main.351b81f2.css",
+    "main.js": "/escolasindigenas/static/js/main.9d2615b2.js",
+    "static/css/992.d19a7f58.chunk.css": "/escolasindigenas/static/css/992.d19a7f58.chunk.css",
     "static/js/992.af31a3ed.chunk.js": "/escolasindigenas/static/js/992.af31a3ed.chunk.js",
     "static/js/302.becb65c0.chunk.js": "/escolasindigenas/static/js/302.becb65c0.chunk.js",
     "static/js/237.d968c4d3.chunk.js": "/escolasindigenas/static/js/237.d968c4d3.chunk.js",
@@ -16,9 +16,9 @@
     "static/js/885.09f144db.chunk.js": "/escolasindigenas/static/js/885.09f144db.chunk.js",
     "static/js/789.54c192ca.chunk.js": "/escolasindigenas/static/js/789.54c192ca.chunk.js",
     "index.html": "/escolasindigenas/index.html",
-    "main.f2be23c0.css.map": "/escolasindigenas/static/css/main.f2be23c0.css.map",
-    "main.a0fd9834.js.map": "/escolasindigenas/static/js/main.a0fd9834.js.map",
-    "992.926545cc.chunk.css.map": "/escolasindigenas/static/css/992.926545cc.chunk.css.map",
+    "main.351b81f2.css.map": "/escolasindigenas/static/css/main.351b81f2.css.map",
+    "main.9d2615b2.js.map": "/escolasindigenas/static/js/main.9d2615b2.js.map",
+    "992.d19a7f58.chunk.css.map": "/escolasindigenas/static/css/992.d19a7f58.chunk.css.map",
     "992.af31a3ed.chunk.js.map": "/escolasindigenas/static/js/992.af31a3ed.chunk.js.map",
     "302.becb65c0.chunk.js.map": "/escolasindigenas/static/js/302.becb65c0.chunk.js.map",
     "237.d968c4d3.chunk.js.map": "/escolasindigenas/static/js/237.d968c4d3.chunk.js.map",
@@ -33,7 +33,7 @@
     "789.54c192ca.chunk.js.map": "/escolasindigenas/static/js/789.54c192ca.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f2be23c0.css",
-    "static/js/main.a0fd9834.js"
+    "static/css/main.351b81f2.css",
+    "static/js/main.9d2615b2.js"
   ]
 }
