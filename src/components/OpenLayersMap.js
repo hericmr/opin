@@ -148,6 +148,15 @@ const OpenLayersMap = ({
   showMarcadores = true,
   showNomesEscolas = false
 }) => {
+  // Log para debug do zoom recebido
+  console.log('OpenLayersMap - Debug zoom recebido:', {
+    center,
+    zoom,
+    defaultCenter: MAP_CONFIG.center,
+    defaultZoom: MAP_CONFIG.zoom,
+    mobileZoom: MAP_CONFIG.mobile.zoom
+  });
+
   const mapContainer = useRef(null);
   const map = useRef(null);
   const vectorSource = useRef(null);
