@@ -10,7 +10,7 @@ export const MAP_CONFIG = {
   // Configurações específicas para mobile
   mobile: {
     center: [-48.5935, -21.9212], // longitude, latitude - Coordenadas especificadas
-    zoom: 5.84 // Zoom especificado
+    zoom: 4.5 // Zoom mais distante para visualização mais ampla
   },
   
   // Configurações de clusterização
