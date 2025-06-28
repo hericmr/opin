@@ -145,6 +145,17 @@ const MapSelector = ({
   const mapCenter = isMobile ? MAP_CONFIG.mobile.center : MAP_CONFIG.center;
   const mapZoom = isMobile ? MAP_CONFIG.mobile.zoom : MAP_CONFIG.zoom;
 
+  // Log para debug do zoom
+  console.log('MapSelector - Debug zoom:', {
+    isMobile,
+    mobileZoom: MAP_CONFIG.mobile.zoom,
+    desktopZoom: MAP_CONFIG.zoom,
+    selectedZoom: mapZoom,
+    mobileCenter: MAP_CONFIG.mobile.center,
+    desktopCenter: MAP_CONFIG.center,
+    selectedCenter: mapCenter
+  });
+
   return (
     <div className={className} style={{ position: 'relative' }}>
       {/* Controles de camadas responsivos */}
