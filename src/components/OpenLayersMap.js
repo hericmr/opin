@@ -136,8 +136,8 @@ const createMarkerSVG = (color, size = 24, options = {}) => {
 const OpenLayersMap = ({ 
   dataPoints = [], 
   onPainelOpen,
-  center = [-48.4129, -22.3794], // Coordenadas especificadas: longitude, latitude
-  zoom = 7.63, // Zoom especificado
+  center = MAP_CONFIG.center, // Usar configuração padrão
+  zoom = MAP_CONFIG.zoom, // Usar configuração padrão
   className = "h-screen w-full",
   // Props para camadas GeoJSON
   terrasIndigenasData = null,
