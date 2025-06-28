@@ -3,9 +3,6 @@ import OpenLayersMap from './OpenLayersMap';
 import { useGeoJSONCache } from '../hooks/useGeoJSONCache';
 import { MAP_CONFIG } from '../utils/mapConfig';
 
-const MOBILE_CENTER = [-48.4222, -22.8337];
-const MOBILE_ZOOM = 5.86;
-
 const MapSelector = ({ 
   dataPoints, 
   onPainelOpen, 
@@ -145,8 +142,8 @@ const MapSelector = ({
   );
 
   // Definir center/zoom iniciais conforme dispositivo
-  const mapCenter = isMobile ? MOBILE_CENTER : MAP_CONFIG.center;
-  const mapZoom = isMobile ? MOBILE_ZOOM : MAP_CONFIG.zoom;
+  const mapCenter = isMobile ? MAP_CONFIG.mobile.center : MAP_CONFIG.center;
+  const mapZoom = isMobile ? MAP_CONFIG.mobile.zoom : MAP_CONFIG.zoom;
 
   return (
     <div className={className} style={{ position: 'relative' }}>

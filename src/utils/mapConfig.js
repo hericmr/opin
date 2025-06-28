@@ -7,6 +7,12 @@ export const MAP_CONFIG = {
   maxZoom: 18,
   minZoom: 4,
   
+  // Configurações específicas para mobile
+  mobile: {
+    center: [-48.5935, -21.9212], // longitude, latitude - Coordenadas especificadas
+    zoom: 5.84 // Zoom especificado
+  },
+  
   // Configurações de clusterização
   clusterDistance: 30,
   
