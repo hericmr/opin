@@ -199,8 +199,8 @@ const OpenLayersMap = ({
       const isNearbyPair = feature.get('isNearbyPair');
       const pairIndex = feature.get('pairIndex');
 
-      // Usar a função createMarkerSVG para criar o marcador
-      const svg = createMarkerSVG(baseColor, 32, {
+      // Usar a função createMarkerSVG para criar o marcador (tamanho reduzido)
+      const svg = createMarkerSVG(baseColor, 24, {
         borderColor: borderColor,
         showShadow: true,
         showGradient: true,
@@ -211,11 +211,11 @@ const OpenLayersMap = ({
       // Criar URL de dados para o SVG
       const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 
-      // Criar estilo base com ícone
+      // Criar estilo base com ícone (escala reduzida)
       const style = new Style({
         image: new Icon({
           src: svgUrl,
-          scale: isNearbyPair ? 1.3 : 1.2, // Marcadores de pares próximos são ligeiramente maiores
+          scale: isNearbyPair ? 1.1 : 1.0, // Marcadores de pares próximos são ligeiramente maiores
           anchor: [0.5, 1],
           anchorXUnits: 'fraction',
           anchorYUnits: 'fraction'
@@ -226,7 +226,7 @@ const OpenLayersMap = ({
       if (showNomesEscolas) {
         style.setText(new Text({
           text: schoolData.titulo || 'Escola',
-          font: 'bold 11px Arial',
+          font: 'bold 10px Arial',
           fill: new Fill({
             color: '#FFFFFF'
           }),
@@ -234,7 +234,7 @@ const OpenLayersMap = ({
             color: '#000000',
             width: 2
           }),
-          offsetY: isNearbyPair ? -50 : -40, // Ajustar posição para marcadores maiores
+          offsetY: isNearbyPair ? -35 : -30, // Ajustar posição para marcadores menores
           textAlign: 'center',
           textBaseline: 'middle'
         }));
@@ -264,26 +264,26 @@ const OpenLayersMap = ({
         return createMarkerStyle(singleFeature);
       }
 
-      // Determinar cor e tamanho base baseado na quantidade de escolas
+      // Determinar cor e tamanho base baseado na quantidade de escolas (tamanhos reduzidos)
       let baseColor = '#3B82F6';
-      let baseSize = 48; // Tamanho base para clusters
+      let baseSize = 32; // Tamanho base reduzido para clusters
       
       if (size > 100) {
         baseColor = '#1E40AF';
-        baseSize = 64;
+        baseSize = 40;
       } else if (size > 50) {
         baseColor = '#2563EB';
-        baseSize = 56;
+        baseSize = 36;
       } else if (size > 20) {
         baseColor = '#3B82F6';
-        baseSize = 52;
+        baseSize = 34;
       } else if (size > 10) {
         baseColor = '#60A5FA';
-        baseSize = 50;
+        baseSize = 33;
       }
 
-      // Calcular escala proporcional (mínimo 1.2x, máximo 2.5x)
-      const scale = Math.min(1.2 + (size * 0.02), 2.5);
+      // Calcular escala proporcional (mínimo 1.0x, máximo 1.8x)
+      const scale = Math.min(1.0 + (size * 0.015), 1.8);
       const finalSize = Math.round(baseSize * scale);
 
       // Usar a função createMarkerSVG para criar o cluster
@@ -298,16 +298,16 @@ const OpenLayersMap = ({
       // Criar URL de dados para o SVG
       const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 
-      // Determinar tamanho da fonte baseado no tamanho do cluster
-      let fontSize = '14px';
+      // Determinar tamanho da fonte baseado no tamanho do cluster (reduzido)
+      let fontSize = '12px';
       let fontWeight = 'bold';
       
       if (size > 100) {
-        fontSize = '18px';
+        fontSize = '14px';
       } else if (size > 50) {
-        fontSize = '16px';
+        fontSize = '13px';
       } else if (size > 20) {
-        fontSize = '15px';
+        fontSize = '12px';
       }
 
       return new Style({
