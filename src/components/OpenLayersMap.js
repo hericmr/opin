@@ -344,49 +344,59 @@ const OpenLayersMap = ({
 
   // Função para mostrar tooltip temporário em mobile
   const showMobileTooltip = useCallback((event, content) => {
-    if (!isMobile()) return;
+    try {
+      if (!isMobile()) return;
 
-    // Remove tooltip anterior
-    if (tooltipElement) {
-      tooltipElement.remove();
-      setTooltipElement(null);
-    }
+      console.log('OpenLayersMap: Mostrando tooltip mobile:', content);
 
-    const element = document.createElement('div');
-    element.className = 'mobile-tooltip';
-    element.textContent = content;
-    element.style.position = 'absolute';
-    element.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-    element.style.color = 'white';
-    element.style.padding = '8px 12px';
-    element.style.borderRadius = '6px';
-    element.style.fontSize = '14px';
-    element.style.fontFamily = 'Arial, sans-serif';
-    element.style.fontWeight = '500';
-    element.style.maxWidth = '250px';
-    element.style.whiteSpace = 'nowrap';
-    element.style.overflow = 'hidden';
-    element.style.textOverflow = 'ellipsis';
-    element.style.zIndex = '1000';
-    element.style.pointerEvents = 'none';
-    element.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
-    element.style.border = '1px solid rgba(255, 255, 255, 0.2)';
-    
-    const coordinate = event.coordinate;
-    const pixel = map.current.getPixelFromCoordinate(coordinate);
-    element.style.left = (pixel[0] + 10) + 'px';
-    element.style.top = (pixel[1] - 10) + 'px';
-    
-    mapContainer.current.appendChild(element);
-    setTooltipElement(element);
-
-    // Auto-remove after 2 seconds
-    setTimeout(() => {
-      if (element.parentNode) {
-        element.remove();
+      // Remove tooltip anterior
+      if (tooltipElement) {
+        tooltipElement.remove();
         setTooltipElement(null);
       }
-    }, 2000);
+
+      const element = document.createElement('div');
+      element.className = 'mobile-tooltip';
+      element.textContent = content;
+      element.style.position = 'absolute';
+      element.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+      element.style.color = 'white';
+      element.style.padding = '8px 12px';
+      element.style.borderRadius = '6px';
+      element.style.fontSize = '14px';
+      element.style.fontFamily = 'Arial, sans-serif';
+      element.style.fontWeight = '500';
+      element.style.maxWidth = '250px';
+      element.style.whiteSpace = 'nowrap';
+      element.style.overflow = 'hidden';
+      element.style.textOverflow = 'ellipsis';
+      element.style.zIndex = '1000';
+      element.style.pointerEvents = 'none';
+      element.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
+      element.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+      
+      if (map.current && event.coordinate) {
+        const coordinate = event.coordinate;
+        const pixel = map.current.getPixelFromCoordinate(coordinate);
+        if (pixel && mapContainer.current) {
+          element.style.left = (pixel[0] + 10) + 'px';
+          element.style.top = (pixel[1] - 10) + 'px';
+          
+          mapContainer.current.appendChild(element);
+          setTooltipElement(element);
+
+          // Auto-remove after 2 seconds
+          setTimeout(() => {
+            if (element.parentNode) {
+              element.remove();
+              setTooltipElement(null);
+            }
+          }, 2000);
+        }
+      }
+    } catch (error) {
+      console.error('OpenLayersMap: Erro ao mostrar tooltip mobile:', error);
+    }
   }, [tooltipElement]);
 
   // Inicializar mapa
@@ -519,13 +529,29 @@ const OpenLayersMap = ({
           // Marcador individual
           const schoolData = feature.get('schoolData');
           if (schoolData) {
-            mobileInteraction.current.handleClick(
-              feature,
-              // First click - show name
-              () => showMobileTooltip(event, schoolData.titulo || 'Escola Indígena'),
-              // Second click - open panel
-              () => onPainelOpen?.(schoolData)
-            );
+            console.log('OpenLayersMap: Marcador individual clicado:', schoolData.titulo);
+            
+            // Verificar se é mobile
+            if (isMobile()) {
+              // Mobile: usar sistema de dois cliques
+              mobileInteraction.current.handleClick(
+                feature,
+                // First click - show name
+                () => {
+                  console.log('OpenLayersMap: Primeiro clique mobile - mostrando nome');
+                  showMobileTooltip(event, schoolData.titulo || 'Escola Indígena');
+                },
+                // Second click - open panel
+                () => {
+                  console.log('OpenLayersMap: Segundo clique mobile - abrindo painel');
+                  onPainelOpen?.(schoolData);
+                }
+              );
+            } else {
+              // Desktop: abrir painel diretamente
+              console.log('OpenLayersMap: Clique desktop - abrindo painel diretamente');
+              onPainelOpen?.(schoolData);
+            }
           }
         }
       }

@@ -6,9 +6,7 @@ import 'ol/ol.css';
 // Hooks customizados
 import { useOpenLayersMap } from '../../hooks/useOpenLayersMap';
 import { useMapMarkers } from '../../hooks/useMapMarkers';
-import { useMapEvents } from '../../hooks/useMapEvents';
 import { useMapLayers } from '../../hooks/useMapLayers';
-import { useMapTooltips } from '../../hooks/useMapTooltips';
 
 // Componentes
 import MapInfo from './MapInfo';
@@ -44,14 +42,8 @@ const OpenLayersMap = ({
   // Hook para marcadores e clusters
   useMapMarkers(map, dataPoints, showMarcadores);
 
-  // Hook para eventos do mapa
-  useMapEvents(map, mapContainer, onPainelOpen);
-
   // Hook para camadas GeoJSON
   useMapLayers(map, terrasIndigenasData, estadoSPData, showTerrasIndigenas, showEstadoSP);
-
-  // Hook para tooltips
-  useMapTooltips(map, mapContainer, showNomesEscolas);
 
   return (
     <MapContainer ref={mapContainer} className={className}>
