@@ -188,137 +188,153 @@ const OpenLayersMap = ({
 
   // Função para criar estilo dos marcadores individuais
   const createMarkerStyle = useCallback((feature) => {
-    const schoolData = feature.get('schoolData');
-    if (!schoolData) return null;
+    try {
+      const schoolData = feature.get('schoolData');
+      if (!schoolData) return null;
 
-    const baseColor = '#3B82F6'; // Azul para satélite, violeta para rua
-    const borderColor = '#1E40AF';
+      const baseColor = '#3B82F6'; // Azul para satélite, violeta para rua
+      const borderColor = '#1E40AF';
 
-    // Verificar se é parte de um par próximo
-    const isNearbyPair = feature.get('isNearbyPair');
-    const pairIndex = feature.get('pairIndex');
+      // Verificar se é parte de um par próximo
+      const isNearbyPair = feature.get('isNearbyPair');
+      const pairIndex = feature.get('pairIndex');
 
-    // Usar a função createMarkerSVG para criar o marcador
-    const svg = createMarkerSVG(baseColor, 32, {
-      borderColor: borderColor,
-      showShadow: true,
-      showGradient: true,
-      showGlow: false,
-      isNearbyPair: isNearbyPair
-    });
+      // Usar a função createMarkerSVG para criar o marcador
+      const svg = createMarkerSVG(baseColor, 32, {
+        borderColor: borderColor,
+        showShadow: true,
+        showGradient: true,
+        showGlow: false,
+        isNearbyPair: isNearbyPair
+      });
 
-    // Criar URL de dados para o SVG
-    const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      // Criar URL de dados para o SVG
+      const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 
-    // Criar estilo base com ícone
-    const style = new Style({
-      image: new Icon({
-        src: svgUrl,
-        scale: isNearbyPair ? 1.3 : 1.2, // Marcadores de pares próximos são ligeiramente maiores
-        anchor: [0.5, 1],
-        anchorXUnits: 'fraction',
-        anchorYUnits: 'fraction'
-      })
-    });
+      // Criar estilo base com ícone
+      const style = new Style({
+        image: new Icon({
+          src: svgUrl,
+          scale: isNearbyPair ? 1.3 : 1.2, // Marcadores de pares próximos são ligeiramente maiores
+          anchor: [0.5, 1],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'fraction'
+        })
+      });
 
-    // Adicionar texto apenas se showNomesEscolas for true
-    if (showNomesEscolas) {
-      style.setText(new Text({
-        text: schoolData.titulo || 'Escola',
-        font: 'bold 11px Arial',
-        fill: new Fill({
-          color: '#FFFFFF'
-        }),
-        stroke: new Stroke({
-          color: '#000000',
-          width: 2
-        }),
-        offsetY: isNearbyPair ? -50 : -40, // Ajustar posição para marcadores maiores
-        textAlign: 'center',
-        textBaseline: 'middle'
-      }));
+      // Adicionar texto apenas se showNomesEscolas for true
+      if (showNomesEscolas) {
+        style.setText(new Text({
+          text: schoolData.titulo || 'Escola',
+          font: 'bold 11px Arial',
+          fill: new Fill({
+            color: '#FFFFFF'
+          }),
+          stroke: new Stroke({
+            color: '#000000',
+            width: 2
+          }),
+          offsetY: isNearbyPair ? -50 : -40, // Ajustar posição para marcadores maiores
+          textAlign: 'center',
+          textBaseline: 'middle'
+        }));
+      }
+
+      return style;
+    } catch (error) {
+      console.error('OpenLayersMap: Erro ao criar estilo do marcador:', error);
+      return null; // Return null on error to prevent rendering issues
     }
-
-    return style;
   }, [showNomesEscolas]);
 
   // Função para criar estilo dos clusters
   const createClusterStyle = useCallback((feature) => {
-    const features = feature.get('features');
-    const size = features.length;
+    try {
+      const features = feature.get('features');
+      if (!features || features.length === 0) {
+        return null; // Return null for invalid features
+      }
+      
+      const size = features.length;
 
-    // Se for apenas um marcador, retorna estilo individual
-    if (size === 1) {
-      return createMarkerStyle(features[0]);
-    }
+      // Se for apenas um marcador, retorna estilo individual
+      if (size === 1) {
+        const singleFeature = features[0];
+        if (!singleFeature) return null;
+        return createMarkerStyle(singleFeature);
+      }
 
-    // Determinar cor e tamanho base baseado na quantidade de escolas
-    let baseColor = '#3B82F6';
-    let baseSize = 48; // Tamanho base para clusters
-    
-    if (size > 100) {
-      baseColor = '#1E40AF';
-      baseSize = 64;
-    } else if (size > 50) {
-      baseColor = '#2563EB';
-      baseSize = 56;
-    } else if (size > 20) {
-      baseColor = '#3B82F6';
-      baseSize = 52;
-    } else if (size > 10) {
-      baseColor = '#60A5FA';
-      baseSize = 50;
-    }
+      // Determinar cor e tamanho base baseado na quantidade de escolas
+      let baseColor = '#3B82F6';
+      let baseSize = 48; // Tamanho base para clusters
+      
+      if (size > 100) {
+        baseColor = '#1E40AF';
+        baseSize = 64;
+      } else if (size > 50) {
+        baseColor = '#2563EB';
+        baseSize = 56;
+      } else if (size > 20) {
+        baseColor = '#3B82F6';
+        baseSize = 52;
+      } else if (size > 10) {
+        baseColor = '#60A5FA';
+        baseSize = 50;
+      }
 
-    // Calcular escala proporcional (mínimo 1.2x, máximo 2.5x)
-    const scale = Math.min(1.2 + (size * 0.02), 2.5);
-    const finalSize = Math.round(baseSize * scale);
+      // Calcular escala proporcional (mínimo 1.2x, máximo 2.5x)
+      const scale = Math.min(1.2 + (size * 0.02), 2.5);
+      const finalSize = Math.round(baseSize * scale);
 
-    // Usar a função createMarkerSVG para criar o cluster
-    const svg = createMarkerSVG(baseColor, finalSize, {
-      borderColor: baseColor,
-      showShadow: true,
-      showGradient: true,
-      showGlow: size > 20, // Adicionar brilho para clusters grandes
-      isNearbyPair: false // Clusters não têm indicador de par próximo
-    });
+      // Usar a função createMarkerSVG para criar o cluster
+      const svg = createMarkerSVG(baseColor, finalSize, {
+        borderColor: baseColor,
+        showShadow: true,
+        showGradient: true,
+        showGlow: size > 20, // Adicionar brilho para clusters grandes
+        isNearbyPair: false // Clusters não têm indicador de par próximo
+      });
 
-    // Criar URL de dados para o SVG
-    const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      // Criar URL de dados para o SVG
+      const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 
-    // Determinar tamanho da fonte baseado no tamanho do cluster
-    let fontSize = '14px';
-    let fontWeight = 'bold';
-    
-    if (size > 100) {
-      fontSize = '18px';
-    } else if (size > 50) {
-      fontSize = '16px';
-    } else if (size > 20) {
-      fontSize = '15px';
-    }
+      // Determinar tamanho da fonte baseado no tamanho do cluster
+      let fontSize = '14px';
+      let fontWeight = 'bold';
+      
+      if (size > 100) {
+        fontSize = '18px';
+      } else if (size > 50) {
+        fontSize = '16px';
+      } else if (size > 20) {
+        fontSize = '15px';
+      }
 
-    return new Style({
-      image: new Icon({
-        src: svgUrl,
-        scale: 1,
-        anchor: [0.5, 0.5],
-        anchorXUnits: 'fraction',
-        anchorYUnits: 'fraction'
-      }),
-      text: new Text({
-        text: size.toString(),
-        font: `${fontWeight} ${fontSize} Arial`,
-        fill: new Fill({
-          color: '#FFFFFF'
+      return new Style({
+        image: new Icon({
+          src: svgUrl,
+          scale: 1,
+          anchor: [0.5, 0.5],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'fraction'
         }),
-        stroke: new Stroke({
-          color: '#000000',
-          width: 2
-        }),
-        offsetY: finalSize * 0.6 // Posicionar texto abaixo do marcador
-      })
-    });
+        text: new Text({
+          text: size.toString(),
+          font: `${fontWeight} ${fontSize} Arial`,
+          fill: new Fill({
+            color: '#FFFFFF'
+          }),
+          stroke: new Stroke({
+            color: '#000000',
+            width: 2
+          }),
+          offsetY: finalSize * 0.6 // Posicionar texto abaixo do marcador
+        })
+      });
+    } catch (error) {
+      console.error('OpenLayersMap: Erro ao criar estilo do cluster:', error);
+      return null; // Return null on error to prevent rendering issues
+    }
   }, [createMarkerStyle]);
 
   // Função para criar tooltip HTML
@@ -516,9 +532,17 @@ const OpenLayersMap = ({
     });
 
     // Event listener para hover nos marcadores (desktop only)
+    let hoverTimeout = null;
     map.current.on('pointermove', (event) => {
       if (isMobile()) return; // Skip hover on mobile
 
+      // Clear previous timeout
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = null;
+      }
+
+      // Remove existing tooltip immediately
       if (tooltipElement) {
         tooltipElement.remove();
         setTooltipElement(null);
@@ -527,29 +551,45 @@ const OpenLayersMap = ({
       const feature = map.current.forEachFeatureAtPixel(event.pixel, (feature) => feature);
       
       if (feature) {
-        // Verificar se é um cluster
-        if (feature.get('features')) {
-          const features = feature.get('features');
-          if (features.length === 1) {
-            // Cluster com apenas um marcador, mostrar tooltip
-            const schoolData = features[0].get('schoolData');
+        // Add small delay to prevent flickering
+        hoverTimeout = setTimeout(() => {
+          // Verificar se é um cluster
+          if (feature.get('features')) {
+            const features = feature.get('features');
+            if (features.length === 1) {
+              // Cluster com apenas um marcador, mostrar tooltip
+              const schoolData = features[0].get('schoolData');
+              if (schoolData) {
+                const element = createTooltipElement(event, schoolData);
+                setTooltipElement(element);
+              }
+            } else {
+              // Cluster com múltiplos marcadores, mostrar tooltip do cluster
+              const element = createClusterTooltipElement(event, features.length);
+              setTooltipElement(element);
+            }
+          } else {
+            // Marcador individual
+            const schoolData = feature.get('schoolData');
             if (schoolData) {
               const element = createTooltipElement(event, schoolData);
               setTooltipElement(element);
             }
-          } else {
-            // Cluster com múltiplos marcadores, mostrar tooltip do cluster
-            const element = createClusterTooltipElement(event, features.length);
-            setTooltipElement(element);
           }
-        } else {
-          // Marcador individual
-          const schoolData = feature.get('schoolData');
-          if (schoolData) {
-            const element = createTooltipElement(event, schoolData);
-            setTooltipElement(element);
-          }
-        }
+        }, 100); // Small delay to prevent rapid tooltip creation/destruction
+      }
+    });
+
+    // Event listener para quando o mouse sai do mapa
+    map.current.on('pointerout', () => {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = null;
+      }
+      
+      if (tooltipElement) {
+        tooltipElement.remove();
+        setTooltipElement(null);
       }
     });
 
@@ -615,6 +655,11 @@ const OpenLayersMap = ({
 
     // Cleanup
     return () => {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = null;
+      }
+      
       if (map.current) {
         map.current.setTarget(undefined);
         map.current = null;
