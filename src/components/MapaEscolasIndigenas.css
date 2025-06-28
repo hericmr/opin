@@ -237,15 +237,17 @@
   position: absolute;
   background: rgba(255, 255, 255, 0.95);
   padding: 8px 12px;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid #e5e7eb;
-  font-size: 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  font-weight: 500;
   max-width: 250px;
   z-index: 1000;
   pointer-events: none;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   backdrop-filter: blur(4px);
+  color: #374151;
 }
 
 .ol-tooltip::after {

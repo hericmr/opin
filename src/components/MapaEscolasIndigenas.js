@@ -9,7 +9,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import MapSelector from "./MapSelector";
 import PainelInformacoes from "./PainelInformacoes";
-import detalhesIntro from "./detalhesInfo";
 import "./MapaEscolasIndigenas.css";
 import { criarSlug } from '../utils/slug';
 import { useRefresh } from '../contexts/RefreshContext';
@@ -32,9 +31,9 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
   const initialPanel = useMemo(() => {
     if (panel && panel !== '' && dataPoints && dataPoints.length > 0) {
       const pointFound = dataPoints.find((item) => criarSlug(item.titulo) === panel);
-      return pointFound || detalhesIntro;
+      return pointFound || null;
     }
-    return detalhesIntro;
+    return null;
   }, [panel, dataPoints]);
 
   const [painelInfo, setPainelInfo] = useState(initialPanel);

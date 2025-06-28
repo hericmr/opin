@@ -557,6 +557,118 @@ const OpenLayersMap = ({
       }
     });
 
+    // Event listener para hover nos marcadores (tooltips)
+    let tooltipElement = null;
+    let currentFeature = null;
+
+    map.current.on('pointermove', (event) => {
+      if (tooltipElement) {
+        tooltipElement.remove();
+        tooltipElement = null;
+      }
+
+      const feature = map.current.forEachFeatureAtPixel(event.pixel, (feature) => feature);
+      
+      if (feature) {
+        // Verificar se é um cluster
+        if (feature.get('features')) {
+          const features = feature.get('features');
+          if (features.length === 1) {
+            // Cluster com apenas um marcador, mostrar tooltip
+            const schoolData = features[0].get('schoolData');
+            if (schoolData) {
+              tooltipElement = createTooltipElement(event, schoolData);
+            }
+          } else {
+            // Cluster com múltiplos marcadores, mostrar tooltip do cluster
+            tooltipElement = createClusterTooltipElement(event, features.length);
+          }
+        } else {
+          // Marcador individual
+          const schoolData = feature.get('schoolData');
+          if (schoolData) {
+            tooltipElement = createTooltipElement(event, schoolData);
+          }
+        }
+      }
+    });
+
+    // Função para criar tooltip de marcador individual
+    const createTooltipElement = (event, schoolData) => {
+      const element = document.createElement('div');
+      element.className = 'ol-tooltip';
+      element.textContent = createTooltipHTML(schoolData);
+      element.style.position = 'absolute';
+      element.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+      element.style.color = '#374151';
+      element.style.padding = '8px 12px';
+      element.style.borderRadius = '8px';
+      element.style.fontSize = '13px';
+      element.style.fontFamily = 'Arial, sans-serif';
+      element.style.fontWeight = '500';
+      element.style.maxWidth = '200px';
+      element.style.whiteSpace = 'nowrap';
+      element.style.overflow = 'hidden';
+      element.style.textOverflow = 'ellipsis';
+      element.style.zIndex = '1000';
+      element.style.pointerEvents = 'none';
+      element.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+      element.style.border = '1px solid rgba(0, 0, 0, 0.1)';
+      element.style.backdropFilter = 'blur(4px)';
+      
+      const coordinate = event.coordinate;
+      const pixel = map.current.getPixelFromCoordinate(coordinate);
+      
+      // Centralizar o tooltip horizontalmente com o marcador
+      const elementWidth = 200; // Largura estimada do tooltip
+      const offsetX = -elementWidth / 2; // Centralizar horizontalmente
+      const offsetY = -40; // Posicionar acima do marcador
+      
+      element.style.left = (pixel[0] + offsetX) + 'px';
+      element.style.top = (pixel[1] + offsetY) + 'px';
+      
+      mapContainer.current.appendChild(element);
+      return element;
+    };
+
+    // Função para criar tooltip de cluster
+    const createClusterTooltipElement = (event, count) => {
+      const element = document.createElement('div');
+      element.className = 'ol-tooltip';
+      element.textContent = `${count} escolas indígenas`;
+      element.style.position = 'absolute';
+      element.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+      element.style.color = '#374151';
+      element.style.padding = '8px 12px';
+      element.style.borderRadius = '8px';
+      element.style.fontSize = '13px';
+      element.style.fontFamily = 'Arial, sans-serif';
+      element.style.fontWeight = '500';
+      element.style.maxWidth = '200px';
+      element.style.whiteSpace = 'nowrap';
+      element.style.overflow = 'hidden';
+      element.style.textOverflow = 'ellipsis';
+      element.style.zIndex = '1000';
+      element.style.pointerEvents = 'none';
+      element.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+      element.style.border = '1px solid rgba(0, 0, 0, 0.1)';
+      element.style.backdropFilter = 'blur(4px)';
+      
+      const coordinate = event.coordinate;
+      const pixel = map.current.getPixelFromCoordinate(coordinate);
+      
+      // Centralizar o tooltip horizontalmente com o cluster
+      const elementWidth = 200; // Largura estimada do tooltip
+      const offsetX = -elementWidth / 2; // Centralizar horizontalmente
+      const offsetY = -40; // Posicionar acima do cluster
+      
+      element.style.left = (pixel[0] + offsetX) + 'px';
+      element.style.top = (pixel[1] + offsetY) + 'px';
+      
+      mapContainer.current.appendChild(element);
+      return element;
+    };
+
     // Cleanup
     return () => {
       if (map.current) {
@@ -566,6 +678,9 @@ const OpenLayersMap = ({
       if (tooltipElement) {
         tooltipElement.remove();
         setTooltipElement(null);
+      }
+      if (tooltipElement) {
+        tooltipElement.remove();
       }
       mobileInteraction.current.reset();
     };
