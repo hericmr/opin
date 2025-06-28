@@ -15,6 +15,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import ToastProvider from './components/Toast';
 import { SkipLink } from './components/Accessibility';
 import { MapaSkeleton } from './components/LoadingStates';
+import WelcomeModal from './components/WelcomeModal';
 
 // Lazy loading dos componentes
 const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));
@@ -469,6 +470,7 @@ const App = () => {
           <Router basename="/escolasindigenas">
             <ErrorBoundary>
               <SkipLink targetId="main-content" />
+              <WelcomeModal />
               <AppContent />
             </ErrorBoundary>
           </Router>
