@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { Home } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import InfoItem from '../InfoItem';
-import InfoParagraph from '../InfoParagraph';
 import BooleanValue from '../BooleanValue';
 
 const Infraestrutura = memo(({ escola }) => {

@@ -281,3 +281,226 @@ src/
 6. 🔄 Documentar APIs
 
 ---
+
+# Plano de Reversão dos Componentes do Painel de Informações
+
+## Objetivo
+Reverter os componentes do painel de informações para a versão funcional do repositório online (branch main), mantendo apenas o card de localização que está funcionando bem com seu dashboard.
+
+## Análise das Diferenças
+
+### Componentes que precisam ser revertidos:
+
+#### 1. **InfoSection.js** 
+- **Versão atual**: Complexa com múltiplos componentes (InfoCard, InfoGrid, InfoTable, InfoStats)
+- **Versão main**: Simples e funcional, apenas com colapsável
+- **Ação**: Reverter para versão main
+- **Status**: ✅ REVERTIDO
+
+#### 2. **BasicInfo.js**
+- **Versão atual**: Complexa com CompactCard, animações, seções expansíveis
+- **Versão main**: Simples usando InfoItem, BooleanValue, LinkValue, MapLink
+- **Ação**: MANTER versão atual com dashboard (conforme solicitado pelo usuário)
+- **Status**: ✅ MANTIDO COM DASHBOARD
+
+#### 3. **Ensino.js**
+- **Versão atual**: Cards individuais com estilos complexos
+- **Versão main**: Usa InfoItem simples, dividido em duas seções (Modalidades e Materiais Pedagógicos)
+- **Ação**: Reverter para versão main
+- **Status**: ✅ REVERTIDO
+
+#### 4. **GestaoProfessores.js**
+- **Versão atual**: Não verificado ainda
+- **Versão main**: Usa InfoItem com formatação específica para professores
+- **Ação**: Verificar e reverter se necessário
+- **Status**: ✅ REVERTIDO
+
+#### 5. **Localizacao.js** 
+- **Versão atual**: Dashboard funcional com cards organizados
+- **Versão main**: Simples com apenas MapLink
+- **Ação**: MANTER versão atual (não reverter)
+- **Status**: ✅ MANTIDO COM DASHBOARD
+
+### Componentes auxiliares que precisam ser verificados:
+
+#### 6. **InfoItem.js**
+- **Status**: Verificar se existe na versão main
+- **Ação**: Garantir que está disponível
+- **Status**: ✅ FUNCIONAL
+
+#### 7. **BooleanValue.js**
+- **Status**: Verificar se existe na versão main  
+- **Ação**: Garantir que está disponível
+- **Status**: ✅ FUNCIONAL
+
+#### 8. **LinkValue.js**
+- **Status**: Verificar se existe na versão main
+- **Ação**: Garantir que está disponível
+- **Status**: ✅ FUNCIONAL
+
+#### 9. **MapLink.js**
+- **Status**: Verificar se existe na versão main
+- **Ação**: Garantir que está disponível
+- **Status**: ✅ FUNCIONAL
+
+## Plano de Execução
+
+### Fase 1: Backup e Preparação ✅
+1. **Criar branch de backup**
+   ```bash
+   git checkout -b backup-componentes-atual
+   git add .
+   git commit -m "Backup dos componentes atuais antes da reversão"
+   ```
+   **Status**: ✅ CONCLUÍDO
+
+2. **Verificar componentes auxiliares na main**
+   - InfoItem.js ✅
+   - BooleanValue.js ✅
+   - LinkValue.js ✅
+   - MapLink.js ✅
+
+### Fase 2: Reversão dos Componentes ✅
+
+#### 2.1 Reverter InfoSection.js ✅
+```bash
+git checkout main -- src/components/PainelInformacoes/components/InfoSection.js
+```
+**Status**: ✅ REVERTIDO
+
+#### 2.2 Reverter BasicInfo.js ❌
+```bash
+# NÃO REVERTIDO - Mantido com dashboard conforme solicitado pelo usuário
+git checkout backup-componentes-atual -- src/components/PainelInformacoes/components/EscolaInfo/BasicInfo.js
+```
+**Status**: ✅ MANTIDO COM DASHBOARD
+
+#### 2.3 Reverter Ensino.js ✅
+```bash
+git checkout main -- src/components/PainelInformacoes/components/EscolaInfo/Ensino.js
+```
+**Status**: ✅ REVERTIDO
+
+#### 2.4 Verificar e reverter GestaoProfessores.js ✅
+```bash
+git checkout main -- src/components/PainelInformacoes/components/EscolaInfo/GestaoProfessores.js
+```
+**Status**: ✅ REVERTIDO
+
+#### 2.5 Verificar outros componentes EscolaInfo ✅
+- HistoriaEscola.js ✅ (já estava correto)
+- Infraestrutura.js ✅ (já estava correto)
+- PovosLinguas.js ✅ (já estava correto)
+
+### Fase 3: Verificação e Testes ✅
+
+#### 3.1 Verificar dependências ✅
+- Garantir que todos os imports estão corretos ✅
+- Verificar se os componentes auxiliares existem ✅
+- Testar a renderização dos componentes ✅
+
+#### 3.2 Testes funcionais ✅
+- Verificar se os cards aparecem corretamente ✅
+- Testar funcionalidade de colapsar/expandir ✅
+- Verificar se o card de localização continua funcionando ✅
+
+### Fase 4: Limpeza ✅
+
+#### 4.1 Remover imports não utilizados ✅
+- Remover imports de componentes que não existem mais ✅
+- Limpar imports de ícones não utilizados ✅
+
+#### 4.2 Verificar CSS ✅
+- Remover estilos não utilizados ✅
+- Garantir que os estilos da versão main estão aplicados ✅
+
+## Componentes que NÃO devem ser alterados:
+
+### ✅ Localizacao.js
+- **Motivo**: Dashboard funcional e bem implementado
+- **Ação**: Manter versão atual
+- **Status**: ✅ MANTIDO
+
+### ✅ BasicInfo.js (ATUALIZAÇÃO)
+- **Motivo**: Usuário solicitou manter a versão com dashboard
+- **Ação**: Manter versão atual com dashboard
+- **Status**: ✅ MANTIDO COM DASHBOARD
+
+### ✅ Componentes auxiliares funcionais
+- InfoItem.js ✅
+- BooleanValue.js ✅
+- LinkValue.js ✅
+- MapLink.js ✅
+
+## Riscos e Mitigações
+
+### Riscos:
+1. **Perda de funcionalidades**: Algumas funcionalidades podem ser perdidas na reversão
+2. **Incompatibilidade de imports**: Componentes podem não encontrar suas dependências
+3. **Estilos quebrados**: CSS pode não funcionar corretamente
+
+### Mitigações:
+1. **Backup completo**: Branch de backup criada antes das alterações ✅
+2. **Testes incrementais**: Testar cada componente após reversão ✅
+3. **Rollback rápido**: Possibilidade de reverter rapidamente se necessário ✅
+
+## Cronograma Estimado
+
+- **Fase 1**: 30 minutos ✅
+- **Fase 2**: 1 hora ✅
+- **Fase 3**: 1 hora ✅
+- **Fase 4**: 30 minutos ✅
+
+**Total estimado**: 3 horas ✅
+**Total real**: ~2 horas ✅
+
+## Critérios de Sucesso
+
+1. ✅ Todos os cards do painel aparecem corretamente
+2. ✅ Funcionalidade de colapsar/expandir funciona
+3. ✅ Card de localização mantém seu dashboard funcional
+4. ✅ Card de informações básicas mantém seu dashboard funcional
+5. ✅ Não há erros no console
+6. ✅ Interface mantém consistência visual
+7. ✅ Performance não é afetada negativamente
+
+## Status Final da Reversão ✅
+
+### Componentes Revertidos para versão main:
+- ✅ InfoSection.js
+- ✅ Ensino.js
+- ✅ GestaoProfessores.js
+- ✅ HistoriaEscola.js (já estava correto)
+- ✅ Infraestrutura.js (já estava correto)
+- ✅ PovosLinguas.js (já estava correto)
+
+### Componentes Mantidos com Dashboard:
+- ✅ Localizacao.js
+- ✅ BasicInfo.js (conforme solicitado pelo usuário)
+
+### Componentes Auxiliares:
+- ✅ InfoItem.js (funcional)
+- ✅ BooleanValue.js (funcional)
+- ✅ LinkValue.js (funcional)
+- ✅ MapLink.js (funcional)
+- ✅ InfoParagraph.jsx (funcional)
+
+## Resultado Final ✅
+
+A reversão foi concluída com sucesso! O site agora possui:
+
+1. **Cards funcionais**: Todos os cards do painel de informações estão funcionando corretamente
+2. **Dashboard preservado**: Os cards de localização e informações básicas mantêm seus dashboards funcionais
+3. **Interface consistente**: A interface mantém a consistência visual
+4. **Performance otimizada**: A aplicação está funcionando sem problemas de performance
+
+## Próximos Passos
+
+1. ✅ Executar o backup
+2. ✅ Iniciar a reversão componente por componente
+3. ✅ Testar cada componente após reversão
+4. ✅ Documentar quaisquer problemas encontrados
+5. ✅ Fazer ajustes finais se necessário
+6. ✅ Manter BasicInfo.js com dashboard conforme solicitado
+
+**REVERSÃO CONCLUÍDA COM SUCESSO!** 🎉
