@@ -16,8 +16,8 @@ export class MobileInteractionManager {
     this.clickDelay = 300; // Time in ms to wait for second click
   }
 
-  handleClick(feature, onFirstClick, onSecondClick) {
-    if (!isMobile()) {
+  handleClick(feature, onFirstClick, onSecondClick, isMobileDevice = false) {
+    if (!isMobileDevice) {
       // Desktop behavior - direct action
       onSecondClick(feature);
       return;
