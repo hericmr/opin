@@ -103,7 +103,7 @@ const WelcomeModal = () => {
           <div className="p-6 space-y-4">
             <div className="text-gray-700 leading-relaxed font-['Nunito'] text-base">
               <p className="mb-4">
-                O OPIN (Observatório da Educação Escolar Indígena) é um espaço dedicado aos professores indígenas do estado de São Paulo. Aqui, sistematizamos dados educacionais e disponibilizamos materiais pedagógicos, registros e ferramentas para o fortalecimento das culturas e línguas originárias em uma educação intercultural e multilingue.
+                O OPIN (Observatório da Educação Escolar Indígena) é um espaço dedicado aos professores indígenas do estado de São Paulo. Aqui, sistematizamos dados educacionais e disponibilizamos materiais pedagógicos, registros e ferramentas...
               </p>
             </div>
 
