@@ -1,122 +1,95 @@
 import React, { memo, useState } from 'react';
-import { 
-  MapPin, 
-  Users, 
-  Globe, 
-  Calendar, 
-  Building, 
+import {
+  MapPin,
+  Users,
+  Globe,
+  Calendar,
+  Building,
   Link as LinkIcon,
   ExternalLink,
   ChevronRight,
-  Eye,
-  EyeOff,
   Check,
-  X
+  X,
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
 
-// Utilitários de formatação
-const capitalizeWords = (str) => {
+// Utilitário de capitalização simples
+const capitalize = (str) => {
   if (!str) return '';
-  return str.split(' ').map(word => 
-    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-  ).join(' ');
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
 
-const normalizeAddress = (address) => {
-  if (!address) return '';
-  return capitalizeWords(address);
-};
-
-// Componente de card compacto e animado - versão refinada
+// CompactCard reutilizável
 const CompactCard = ({ icon: Icon, label, value, type = 'text', onClick, className = '' }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
   const renderValue = () => {
-    if (type === 'boolean') {
-      return value ? (
-        <div className="flex items-center gap-1 text-green-600">
-          <Check className="w-2.5 h-2.5" />
-          <span className="text-xs font-medium">Sim</span>
-        </div>
-      ) : (
-        <div className="flex items-center gap-1 text-red-500">
-          <X className="w-2.5 h-2.5" />
-          <span className="text-xs font-medium">Não</span>
-        </div>
-      );
+    switch (type) {
+      case 'boolean':
+        return value ? (
+          <span className="flex items-center gap-1 text-green-600 text-sm">
+            <Check className="w-3 h-3" />
+            Sim
+          </span>
+        ) : (
+          <span className="flex items-center gap-1 text-red-500 text-sm">
+            <X className="w-3 h-3" />
+            Não
+          </span>
+        );
+      case 'link':
+        return (
+          <span className="flex items-center gap-1 text-blue-600 text-sm truncate max-w-[100px]">
+            <ExternalLink className="w-3 h-3" />
+            {value}
+          </span>
+        );
+      default:
+        return <span className="text-sm text-gray-800 truncate">{value}</span>;
     }
-    
-    if (type === 'link') {
-      return (
-        <div className="flex items-center gap-1 text-blue-600">
-          <ExternalLink className="w-2.5 h-2.5" />
-          <span className="text-xs truncate max-w-[100px]">{value}</span>
-        </div>
-      );
-    }
-    
-    return <span className="text-xs font-medium text-gray-800 truncate">{value}</span>;
   };
 
   return (
-    <div 
-      className={`
-        relative bg-white/80 backdrop-blur-sm rounded-lg p-2 
-        transition-all duration-200 cursor-pointer group
-        hover:shadow-sm hover:bg-white hover:-translate-y-0.5
-        ring-1 ring-inset ring-gray-100/50 hover:ring-green-200/50
-        ${className}
-      `}
+    <div
       onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
-      aria-label={label}
+      className={`bg-white/70 p-2 rounded-lg ring-1 ring-inset ring-gray-100 hover:ring-green-200 transition-all text-sm cursor-pointer ${className}`}
     >
-      {/* Gradient decorativo sutil */}
-      <div className="absolute inset-0 bg-gradient-to-br from-green-50/30 to-blue-50/30 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
-      
-      <div className="relative z-10">
-        <div className="flex items-center justify-between mb-1.5">
-          <div className={`
-            p-1.5 rounded-md transition-colors duration-200
-            ${isHovered ? 'bg-green-100/80 text-green-600' : 'bg-gray-50/80 text-gray-600'}
-          `}>
-            <Icon className="w-3 h-3" />
-          </div>
-          {onClick && <ChevronRight className="w-2.5 h-2.5 text-gray-500 group-hover:text-green-500 transition-colors" />}
+      <div className="flex items-center justify-between mb-1">
+        <div className="flex items-center gap-1.5">
+          <Icon className="w-3 h-3 text-gray-600" />
+          <span className="text-xs text-gray-500 font-medium">{label}</span>
         </div>
-        
-        <div className="space-y-0.5">
-          <p className="text-xs text-gray-500 uppercase tracking-wide font-medium leading-tight">
-            {label}
-          </p>
-          {renderValue()}
-        </div>
+        {onClick && <ChevronRight className="w-3 h-3 text-gray-400" />}
       </div>
-      
-      {/* Pulse effect sutil para cards interativos */}
-      {onClick && (
-        <div className="absolute inset-0 rounded-lg ring-1 ring-green-300/30 opacity-0 group-hover:opacity-100 animate-pulse transition-opacity" />
-      )}
+      <div>
+        {renderValue()}
+      </div>
     </div>
   );
 };
 
-// Componente principal refinado
+// Renderiza blocos informativos simples e reutilizáveis
+const InfoBlock = ({ icon: Icon, label, value }) => (
+  <div className="flex items-center gap-2 bg-white/70 p-2 rounded-md ring-1 ring-inset ring-gray-100 text-xs">
+    <Icon className="w-3 h-3 text-green-600" />
+    <span className="text-gray-700 font-medium">{label}:</span>
+    <span className="font-semibold text-green-800">{capitalize(value)}</span>
+  </div>
+);
+
 const BasicInfo = memo(({ escola }) => {
-  const [expandedSections, setExpandedSections] = useState({});
-  
+  const [expanded, setExpanded] = useState({});
+
   if (!escola) return null;
 
-  const toggleSection = (section) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
+  const toggle = (key) => {
+    setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
   };
+
+  const parseLinks = (links) =>
+    (links || '').split(',').map((url) => url.trim()).filter(Boolean);
+
+  const socialLinks = parseLinks(escola.links_redes_sociais);
 
   const openMap = () => {
     if (escola.latitude && escola.longitude) {
@@ -124,131 +97,100 @@ const BasicInfo = memo(({ escola }) => {
     }
   };
 
-  const parseLinks = (links) => {
-    if (!links) return [];
-    return links.split(',').map(url => url.trim()).filter(Boolean);
-  };
-
-  const socialLinks = parseLinks(escola.links_redes_sociais);
-
   return (
-    <InfoSection 
-      title="Informações Básicas" 
-      icon={MapPin}
-    >
-      {/* Grid principal compacto */}
+    <InfoSection title="Informações Básicas" icon={MapPin}>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mb-4">
-        <CompactCard
-          icon={Building}
-          label="Município"
-          value={capitalizeWords(escola.municipio)}
-        />
-        
-        <CompactCard
-          icon={Calendar}
-          label="Fundação"
-          value={escola.ano_criacao}
-          type="number"
-        />
-        
-        <CompactCard
-          icon={Users}
-          label="Parcerias"
-          value={escola.parcerias_municipio}
-          type="boolean"
-        />
-        
-        <CompactCard
-          icon={Globe}
-          label="Redes Sociais"
-          value={escola.usa_redes_sociais}
-          type="boolean"
-        />
-        
-        {escola.latitude && escola.longitude && (
-          <CompactCard
-            icon={MapPin}
-            label="Localização"
-            value="Ver no mapa"
-            onClick={openMap}
-          />
-        )}
+        {[
+          {
+            icon: Building,
+            label: 'Município',
+            value: capitalize(escola.municipio),
+          },
+          {
+            icon: Calendar,
+            label: 'Fundação',
+            value: escola.ano_criacao,
+          },
+          {
+            icon: Users,
+            label: 'Parcerias',
+            value: escola.parcerias_municipio,
+            type: 'boolean',
+          },
+          {
+            icon: Globe,
+            label: 'Redes sociais',
+            value: escola.usa_redes_sociais,
+            type: 'boolean',
+          },
+          escola.latitude && escola.longitude && {
+            icon: MapPin,
+            label: 'Localização',
+            value: 'Ver no mapa',
+            onClick: openMap,
+          },
+        ]
+          .filter(Boolean)
+          .map((item, index) => (
+            <CompactCard key={index} {...item} />
+          ))}
       </div>
 
-      {/* Seções expansíveis compactas */}
       <div className="space-y-2">
-        {/* Terra Indígena */}
         {escola.terra_indigena && (
-          <div className="bg-white/60 backdrop-blur-sm rounded-md p-2 ring-1 ring-inset ring-green-100/50">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-3 h-3 text-green-600" />
-              <span className="text-xs text-green-700 uppercase tracking-wide font-medium">Terra Indígena:</span>
-              <span className="text-xs font-semibold text-green-800">{escola.terra_indigena}</span>
-            </div>
-          </div>
+          <InfoBlock icon={MapPin} label="Terra indígena" value={escola.terra_indigena} />
         )}
 
-        {/* Diretoria de Ensino */}
         {escola.diretoria_ensino && (
-          <div className="bg-white/60 backdrop-blur-sm rounded-md p-2 ring-1 ring-inset ring-green-100/50">
-            <div className="flex items-center gap-2">
-              <Building className="w-3 h-3 text-green-600" />
-              <span className="text-xs text-green-700 uppercase tracking-wide font-medium">Diretoria de Ensino:</span>
-              <span className="text-xs font-semibold text-green-800">{escola.diretoria_ensino}</span>
-            </div>
-          </div>
+          <InfoBlock icon={Building} label="Diretoria de ensino" value={escola.diretoria_ensino} />
         )}
 
-        {/* Endereço expansível */}
         {escola.endereco && (
-          <div className="bg-white/60 backdrop-blur-sm rounded-md ring-1 ring-inset ring-gray-100/50 overflow-hidden">
+          <div className="bg-white/70 rounded-md ring-1 ring-gray-100">
             <button
-              onClick={() => toggleSection('endereco')}
-              className="w-full p-2 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
-              aria-expanded={expandedSections.endereco}
-              aria-controls="endereco-content"
+              onClick={() => toggle('endereco')}
+              className="w-full flex justify-between items-center p-2 hover:bg-gray-50 text-xs"
+              aria-expanded={expanded.endereco}
             >
-              <div className="flex items-center gap-2">
-                <Building className="w-3 h-3 text-gray-600" />
-                <span className="text-xs font-medium text-gray-700">Endereço Completo</span>
-              </div>
-              <ChevronRight className={`w-3 h-3 text-gray-400 transition-transform ${
-                expandedSections.endereco ? 'rotate-90' : ''
-              }`} />
+              <span className="flex items-center gap-2 text-gray-700 font-medium">
+                <Building className="w-3 h-3" />
+                Endereço completo
+              </span>
+              <ChevronRight
+                className={`w-3 h-3 text-gray-400 transition-transform ${
+                  expanded.endereco ? 'rotate-90' : ''
+                }`}
+              />
             </button>
-            
-            {expandedSections.endereco && (
-              <div className="px-2 pb-2 border-t border-gray-100/50" id="endereco-content">
-                <div className="mt-2 p-2 bg-gray-50/50 rounded-md break-words">
-                  <p className="text-xs text-gray-700 leading-snug">{normalizeAddress(escola.endereco)}</p>
-                </div>
+            {expanded.endereco && (
+              <div className="px-2 pb-2 border-t border-gray-100">
+                <p className="text-xs text-gray-700 leading-snug">
+                  {capitalize(escola.endereco)}
+                </p>
               </div>
             )}
           </div>
         )}
 
-        {/* Links das redes sociais */}
         {socialLinks.length > 0 && (
-          <div className="bg-white/60 backdrop-blur-sm rounded-md ring-1 ring-inset ring-blue-100/50 overflow-hidden">
+          <div className="bg-white/70 rounded-md ring-1 ring-blue-100">
             <button
-              onClick={() => toggleSection('social')}
-              className="w-full p-2 flex items-center justify-between hover:bg-blue-50/50 transition-colors"
-              aria-expanded={expandedSections.social}
-              aria-controls="social-content"
+              onClick={() => toggle('social')}
+              className="w-full flex justify-between items-center p-2 hover:bg-blue-50 text-xs"
+              aria-expanded={expanded.social}
             >
-              <div className="flex items-center gap-2">
+              <span className="flex items-center gap-2 text-gray-700 font-medium">
                 <Globe className="w-3 h-3 text-blue-600" />
-                <span className="text-xs font-medium text-gray-700">
-                  Redes Sociais ({socialLinks.length})
-                </span>
-              </div>
-              <ChevronRight className={`w-3 h-3 text-gray-400 transition-transform ${
-                expandedSections.social ? 'rotate-90' : ''
-              }`} />
+                Redes sociais ({socialLinks.length})
+              </span>
+              <ChevronRight
+                className={`w-3 h-3 text-gray-400 transition-transform ${
+                  expanded.social ? 'rotate-90' : ''
+                }`}
+              />
             </button>
-            
-            {expandedSections.social && (
-              <div className="px-2 pb-2 border-t border-blue-100/50 bg-blue-50/30" id="social-content">
+            {expanded.social && (
+              <div className="px-2 pb-2 border-t border-blue-100 bg-blue-50/30">
                 <div className="mt-2 space-y-1">
                   {socialLinks.map((link, index) => (
                     <a
@@ -256,11 +198,11 @@ const BasicInfo = memo(({ escola }) => {
                       href={link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 p-1.5 bg-white/80 rounded-md hover:bg-blue-100/50 transition-colors group"
+                      className="flex items-center gap-1.5 p-1.5 bg-white/80 rounded-md hover:bg-blue-100/50 group text-xs"
                     >
-                      <LinkIcon className="w-2.5 h-2.5 text-blue-600" />
-                      <span className="text-xs text-gray-700 truncate flex-1">{link}</span>
-                      <ExternalLink className="w-2.5 h-2.5 text-gray-400 group-hover:text-blue-600" />
+                      <LinkIcon className="w-3 h-3 text-blue-600" />
+                      <span className="truncate flex-1 text-gray-700">{link}</span>
+                      <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-blue-600" />
                     </a>
                   ))}
                 </div>
@@ -273,4 +215,4 @@ const BasicInfo = memo(({ escola }) => {
   );
 });
 
-export default BasicInfo; 
+export default BasicInfo;
