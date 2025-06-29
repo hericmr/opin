@@ -116,12 +116,6 @@ const BasicInfo = memo(({ escola }) => {
             value: escola.ano_criacao,
           },
           {
-            icon: Users,
-            label: 'Parcerias',
-            value: escola.parcerias_municipio,
-            type: 'boolean',
-          },
-          {
             icon: Globe,
             label: 'Redes sociais',
             value: escola.usa_redes_sociais,
@@ -150,7 +144,7 @@ const BasicInfo = memo(({ escola }) => {
         )}
 
         {/* Projetos e Parcerias */}
-        {(escola['Projetos em andamento'] || escola['Parcerias com universidades?'] || escola['Ações com ONGs ou coletivos?'] || escola['Desejos da comunidade para a escola']) && (
+        {(escola['Projetos em andamento'] || escola['Parcerias com universidades?'] || escola['Ações com ONGs ou coletivos?'] || escola['Desejos da comunidade para a escola'] || escola.parcerias_municipio) && (
           <div className="bg-white/70 rounded-md ring-1 ring-green-100">
             <button
               onClick={() => toggle('projetos')}
@@ -170,6 +164,16 @@ const BasicInfo = memo(({ escola }) => {
             {expanded.projetos && (
               <div className="px-2 pb-2 border-t border-green-100 bg-green-50/30">
                 <div className="mt-2 space-y-2">
+                  {escola.parcerias_municipio && (
+                    <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
+                      <Building className="w-3 h-3 text-green-600 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-gray-700 mb-1">Parcerias com o Município</div>
+                        <div className="text-xs text-gray-800 leading-snug">{escola.parcerias_municipio}</div>
+                      </div>
+                    </div>
+                  )}
+                  
                   {escola['Projetos em andamento'] && (
                     <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
                       <BookOpen className="w-3 h-3 text-blue-600 mt-0.5 flex-shrink-0" />
