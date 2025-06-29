@@ -464,6 +464,16 @@ const AdminPanel = () => {
                         onChange={e => setEditingLocation({ ...editingLocation, 'Ano de criação da escola': e.target.value })}
                       />
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Parcerias com o Município</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
+                        value={editingLocation['Parcerias com o município'] || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, 'Parcerias com o município': e.target.value })}
+                        placeholder="Descreva as parcerias com o município..."
+                      />
+                    </div>
                   </div>
                 )}
 
