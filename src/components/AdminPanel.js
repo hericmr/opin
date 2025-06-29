@@ -968,8 +968,11 @@ const AdminPanel = () => {
                 {editingLocation.activeTab === 'imagens-escola' && (
                   <div className="space-y-4">
                     <ImageUploadSection 
-                      editingLocation={editingLocation}
-                      setEditingLocation={setEditingLocation}
+                      escolaId={editingLocation.id}
+                      onImagesUpdate={() => {
+                        // Trigger refresh se necessário
+                        if (triggerRefresh) triggerRefresh();
+                      }}
                     />
                   </div>
                 )}
@@ -978,8 +981,11 @@ const AdminPanel = () => {
                 {editingLocation.activeTab === 'imagens-professores' && (
                   <div className="space-y-4">
                     <ProfessorImageUploadSection 
-                      editingLocation={editingLocation}
-                      setEditingLocation={setEditingLocation}
+                      escolaId={editingLocation.id}
+                      onImagesUpdate={() => {
+                        // Trigger refresh se necessário
+                        if (triggerRefresh) triggerRefresh();
+                      }}
                     />
                   </div>
                 )}
