@@ -18,7 +18,7 @@ import { register } from 'ol/proj/proj4';
 import proj4 from 'proj4';
 import 'ol/ol.css';
 import { MAP_CONFIG } from '../utils/mapConfig';
-import { isMobile, MobileInteractionManager } from '../utils/mobileUtils';
+import { isMobile } from '../utils/mobileUtils';
 
 // Componentes GeoJSON
 import OpenLayersTerrasIndigenas from './OpenLayersTerrasIndigenas';
@@ -173,20 +173,8 @@ const OpenLayersMap = ({
   const terrasIndigenasLayerRef = useRef(null);
   const estadoSPLayerRef = useRef(null);
 
-  // Mobile interaction manager
-  const mobileInteraction = useRef(null);
+  // Tooltip element para mobile (mantido para compatibilidade)
   const [tooltipElement, setTooltipElement] = useState(null);
-
-  // Inicializar mobileInteraction de forma segura
-  useEffect(() => {
-    try {
-      mobileInteraction.current = new MobileInteractionManager();
-      console.log('OpenLayersMap: MobileInteractionManager inicializado com sucesso');
-    } catch (error) {
-      console.error('OpenLayersMap: Erro ao inicializar MobileInteractionManager:', error);
-      mobileInteraction.current = null;
-    }
-  }, []);
 
   // Criar camadas base
   const createBaseLayers = useCallback(() => {
@@ -362,75 +350,6 @@ const OpenLayersMap = ({
     return schoolData.titulo || 'Escola Indígena';
   }, []);
 
-  // Função para mostrar tooltip temporário em mobile
-  const showMobileTooltip = useCallback((event, content) => {
-    try {
-      if (!isMobile()) {
-        console.log('OpenLayersMap: showMobileTooltip chamado em desktop, ignorando');
-        return;
-      }
-
-      if (!event || !content) {
-        console.warn('OpenLayersMap: showMobileTooltip chamado sem event ou content');
-        return;
-      }
-
-      console.log('OpenLayersMap: Mostrando tooltip mobile:', content);
-
-      // Remove tooltip anterior
-      if (tooltipElement && tooltipElement.parentNode) {
-        tooltipElement.remove();
-        setTooltipElement(null);
-      }
-
-      const element = document.createElement('div');
-      element.className = 'mobile-tooltip';
-      element.textContent = content;
-      element.style.position = 'absolute';
-      element.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-      element.style.color = 'white';
-      element.style.padding = '8px 12px';
-      element.style.borderRadius = '6px';
-      element.style.fontSize = '14px';
-      element.style.fontFamily = 'Arial, sans-serif';
-      element.style.fontWeight = '500';
-      element.style.maxWidth = '250px';
-      element.style.whiteSpace = 'nowrap';
-      element.style.overflow = 'hidden';
-      element.style.textOverflow = 'ellipsis';
-      element.style.zIndex = '1000';
-      element.style.pointerEvents = 'none';
-      element.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
-      element.style.border = '1px solid rgba(255, 255, 255, 0.2)';
-      
-      if (map.current && event.coordinate && mapContainer.current) {
-        const coordinate = event.coordinate;
-        const pixel = map.current.getPixelFromCoordinate(coordinate);
-        if (pixel) {
-          element.style.left = (pixel[0] + 10) + 'px';
-          element.style.top = (pixel[1] - 10) + 'px';
-          
-          mapContainer.current.appendChild(element);
-          setTooltipElement(element);
-
-          // Auto-remove after 2 seconds
-          setTimeout(() => {
-            if (element.parentNode) {
-              element.remove();
-              setTooltipElement(null);
-            }
-          }, 2000);
-        } else {
-          console.warn('OpenLayersMap: Não foi possível obter pixel do coordinate');
-        }
-      } else {
-        console.warn('OpenLayersMap: map.current, event.coordinate ou mapContainer.current não disponível');
-      }
-    } catch (error) {
-      console.error('OpenLayersMap: Erro ao mostrar tooltip mobile:', error);
-    }
-  }, [tooltipElement]);
-
   // Inicializar mapa
   useEffect(() => {
     if (map.current) return;
@@ -527,33 +446,9 @@ const OpenLayersMap = ({
             if (schoolData) {
               console.log('OpenLayersMap: Cluster com 1 marcador clicado:', schoolData.titulo);
               
-              // Verificar se mobileInteraction está disponível
-              if (mobileInteraction.current && typeof mobileInteraction.current.handleClick === 'function') {
-                try {
-                  mobileInteraction.current.handleClick(
-                    feature,
-                    // First click - show name
-                    () => {
-                      console.log('OpenLayersMap: Primeiro clique mobile (cluster) - mostrando nome');
-                      showMobileTooltip(event, schoolData.titulo || 'Escola Indígena');
-                    },
-                    // Second click - open panel
-                    () => {
-                      console.log('OpenLayersMap: Segundo clique mobile (cluster) - abrindo painel');
-                      onPainelOpen?.(schoolData);
-                    },
-                    isMobile()
-                  );
-                } catch (error) {
-                  console.error('OpenLayersMap: Erro no handleClick do cluster:', error);
-                  // Fallback para desktop behavior
-                  onPainelOpen?.(schoolData);
-                }
-              } else {
-                console.log('OpenLayersMap: MobileInteraction não disponível, usando fallback desktop');
-                // Fallback para desktop behavior
-                onPainelOpen?.(schoolData);
-              }
+              // Comportamento igual para mobile e desktop - abrir painel diretamente
+              console.log('OpenLayersMap: Abrindo painel para cluster com 1 marcador');
+              onPainelOpen?.(schoolData);
             }
           } else {
             // Cluster com múltiplos marcadores, fazer zoom inteligente
@@ -598,42 +493,9 @@ const OpenLayersMap = ({
           if (schoolData) {
             console.log('OpenLayersMap: Marcador individual clicado:', schoolData.titulo);
             
-            // Verificar se é mobile
-            if (isMobile()) {
-              console.log('OpenLayersMap: Clique mobile detectado no marcador individual');
-              
-              // Mobile: usar sistema de dois cliques
-              if (mobileInteraction.current && typeof mobileInteraction.current.handleClick === 'function') {
-                try {
-                  mobileInteraction.current.handleClick(
-                    feature,
-                    // First click - show name
-                    () => {
-                      console.log('OpenLayersMap: Primeiro clique mobile - mostrando nome');
-                      showMobileTooltip(event, schoolData.titulo || 'Escola Indígena');
-                    },
-                    // Second click - open panel
-                    () => {
-                      console.log('OpenLayersMap: Segundo clique mobile - abrindo painel');
-                      onPainelOpen?.(schoolData);
-                    },
-                    isMobile()
-                  );
-                } catch (error) {
-                  console.error('OpenLayersMap: Erro no handleClick do marcador individual:', error);
-                  // Fallback se mobileInteraction falhar
-                  onPainelOpen?.(schoolData);
-                }
-              } else {
-                console.log('OpenLayersMap: MobileInteraction não disponível para marcador individual, usando fallback');
-                // Fallback se mobileInteraction não estiver disponível
-                onPainelOpen?.(schoolData);
-              }
-            } else {
-              // Desktop: abrir painel diretamente
-              console.log('OpenLayersMap: Clique desktop - abrindo painel diretamente');
-              onPainelOpen?.(schoolData);
-            }
+            // Comportamento igual para mobile e desktop - abrir painel diretamente
+            console.log('OpenLayersMap: Abrindo painel para marcador individual');
+            onPainelOpen?.(schoolData);
           }
         }
       }
@@ -758,7 +620,7 @@ const OpenLayersMap = ({
         map.current = null;
       }
     };
-  }, [center, zoom, createBaseLayers, createClusterStyle, createTooltipHTML, showMobileTooltip, onPainelOpen]);
+  }, [center, zoom, createBaseLayers, createClusterStyle, createTooltipHTML, onPainelOpen]);
 
   // Atualizar configurações do mapa quando props mudarem
   useEffect(() => {
