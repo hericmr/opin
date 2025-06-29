@@ -3,7 +3,6 @@ import { supabase } from '../supabaseClient';
 import { ImageUploadSection, ProfessorImageUploadSection } from './EditEscolaPanel';
 import VideoSection from './EditEscolaPanel/VideoSection';
 import DocumentViewer from './PainelInformacoes/components/DocumentViewer';
-import RichTextEditor from './RichTextEditor';
 import { useRefresh } from '../contexts/RefreshContext';
 import { Menu } from 'lucide-react';
 
@@ -922,20 +921,18 @@ const AdminPanel = () => {
                   <div className="grid grid-cols-1 gap-4 md:gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2 text-base">História da Escola</label>
-                      <RichTextEditor
+                      <textarea
+                        className="w-full border rounded px-3 py-2 h-32 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['historia_da_escola'] || ''}
-                        onChange={(value) => setEditingLocation({ ...editingLocation, 'historia_da_escola': value })}
-                        placeholder="Digite a história da escola..."
-                        height="200px"
+                        onChange={e => setEditingLocation({ ...editingLocation, 'historia_da_escola': e.target.value })}
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2 text-base">História do Professor</label>
-                      <RichTextEditor
+                      <textarea
+                        className="w-full border rounded px-3 py-2 h-32 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['historia_do_prof'] || ''}
-                        onChange={(value) => setEditingLocation({ ...editingLocation, 'historia_do_prof': value })}
-                        placeholder="Digite a história do professor..."
-                        height="200px"
+                        onChange={e => setEditingLocation({ ...editingLocation, 'historia_do_prof': e.target.value })}
                       />
                     </div>
                   </div>
