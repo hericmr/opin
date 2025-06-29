@@ -61,7 +61,7 @@ const GestaoProfessores = memo(({ escola }) => {
   };
 
   return (
-    <InfoSection title="Gestores" icon={UsersRound} secondaryIcon={Star}>
+    <InfoSection title="Gestores" icon={UsersRound}>
       <InfoItem label="Gestão/Nome" value={escola.gestao} />
       <InfoItem label="Professores Indígenas" value={escola.professores_indigenas} />
       <InfoItem label="Outros Funcionários" value={escola.outros_funcionarios} />

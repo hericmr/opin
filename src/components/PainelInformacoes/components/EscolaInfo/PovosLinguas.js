@@ -16,7 +16,6 @@ const PovosLinguas = memo(({ escola }) => {
         label="Povos Indígenas" 
         value={escola.povos_indigenas} 
         className="mb-2"
-        icon={Heart}
       />
     </InfoSection>
   );
