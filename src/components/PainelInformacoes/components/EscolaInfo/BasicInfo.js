@@ -10,10 +10,6 @@ import {
   ChevronRight,
   Check,
   X,
-  BookOpen,
-  Heart,
-  Target,
-  GraduationCap,
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
 
@@ -135,87 +131,8 @@ const BasicInfo = memo(({ escola }) => {
       </div>
 
       <div className="space-y-2">
-        {escola.terra_indigena && (
-          <InfoBlock icon={MapPin} label="Terra indígena" value={escola.terra_indigena} />
-        )}
-
         {escola.diretoria_ensino && (
           <InfoBlock icon={Building} label="Diretoria de ensino" value={escola.diretoria_ensino} />
-        )}
-
-        {/* Projetos e Parcerias */}
-        {(escola['Projetos em andamento'] || escola['Parcerias com universidades?'] || escola['Ações com ONGs ou coletivos?'] || escola['Desejos da comunidade para a escola'] || escola.parcerias_municipio) && (
-          <div className="bg-white/70 rounded-md ring-1 ring-green-100">
-            <button
-              onClick={() => toggle('projetos')}
-              className="w-full flex justify-between items-center p-2 hover:bg-green-50 text-xs"
-              aria-expanded={expanded.projetos}
-            >
-              <span className="flex items-center gap-2 text-gray-700 font-medium">
-                <Target className="w-3 h-3 text-green-600" />
-                Projetos e Parcerias
-              </span>
-              <ChevronRight
-                className={`w-3 h-3 text-gray-400 transition-transform ${
-                  expanded.projetos ? 'rotate-90' : ''
-                }`}
-              />
-            </button>
-            {expanded.projetos && (
-              <div className="px-2 pb-2 border-t border-green-100 bg-green-50/30">
-                <div className="mt-2 space-y-2">
-                  {escola['Projetos em andamento'] && escola['Projetos em andamento'].trim() && (
-                    <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
-                      <BookOpen className="w-3 h-3 text-blue-600 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        <div className="text-xs font-medium text-gray-700 mb-1">Projetos em andamento</div>
-                        {escola['Projetos em andamento'].trim().toLowerCase() === 'não' ? (
-                          <div className="text-xs text-gray-400 flex items-center gap-1"><X className="w-3 h-3 text-gray-400" />Não</div>
-                        ) : (
-                          <div className="text-xs text-gray-800 leading-snug">{escola['Projetos em andamento']}</div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  {escola['Parcerias com universidades?'] && escola['Parcerias com universidades?'].trim() && (
-                    <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
-                      <GraduationCap className="w-3 h-3 text-purple-600 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        <div className="text-xs font-medium text-gray-700 mb-1">Parcerias com universidades?</div>
-                        {escola['Parcerias com universidades?'].trim().toLowerCase() === 'não' ? (
-                          <div className="text-xs text-gray-400 flex items-center gap-1"><X className="w-3 h-3 text-gray-400" />Não</div>
-                        ) : (
-                          <div className="text-xs text-gray-800 leading-snug">{escola['Parcerias com universidades?']}</div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  {escola['Ações com ONGs ou coletivos?'] && escola['Ações com ONGs ou coletivos?'].trim() && (
-                    <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
-                      <Users className="w-3 h-3 text-orange-600 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        <div className="text-xs font-medium text-gray-700 mb-1">Ações com ONGs ou coletivos?</div>
-                        {escola['Ações com ONGs ou coletivos?'].trim().toLowerCase() === 'não' ? (
-                          <div className="text-xs text-gray-400 flex items-center gap-1"><X className="w-3 h-3 text-gray-400" />Não</div>
-                        ) : (
-                          <div className="text-xs text-gray-800 leading-snug">{escola['Ações com ONGs ou coletivos?']}</div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  {escola['Desejos da comunidade para a escola'] && escola['Desejos da comunidade para a escola'].trim() && (
-                    <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
-                      <Heart className="w-3 h-3 text-red-600 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        <div className="text-xs font-medium text-gray-700 mb-1">Desejos da comunidade para a escola</div>
-                        <div className="text-xs text-gray-800 leading-snug">{escola['Desejos da comunidade para a escola']}</div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
         )}
 
         {escola.endereco && (
@@ -227,7 +144,7 @@ const BasicInfo = memo(({ escola }) => {
             >
               <span className="flex items-center gap-2 text-gray-700 font-medium">
                 <Building className="w-3 h-3" />
-                Endereço completo
+                Endereço
               </span>
               <ChevronRight
                 className={`w-3 h-3 text-gray-400 transition-transform ${
@@ -237,9 +154,63 @@ const BasicInfo = memo(({ escola }) => {
             </button>
             {expanded.endereco && (
               <div className="px-2 pb-2 border-t border-gray-100">
-                <p className="text-xs text-gray-700 leading-snug">
-                  {capitalize(escola.endereco)}
-                </p>
+                {/* Endereço detalhado se disponível */}
+                {(escola.logradouro || escola.numero || escola.bairro || escola.cep) ? (
+                  <div className="mt-2 space-y-2">
+                    {escola.logradouro && (
+                      <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
+                        <MapPin className="w-3 h-3 text-blue-600 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <div className="text-xs font-medium text-gray-700 mb-1">Logradouro</div>
+                          <div className="text-xs text-gray-800 leading-snug">{escola.logradouro}</div>
+                        </div>
+                      </div>
+                    )}
+                    {escola.numero && (
+                      <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
+                        <MapPin className="w-3 h-3 text-green-600 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <div className="text-xs font-medium text-gray-700 mb-1">Número</div>
+                          <div className="text-xs text-gray-800 leading-snug">{escola.numero}</div>
+                        </div>
+                      </div>
+                    )}
+                    {escola.complemento && (
+                      <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
+                        <MapPin className="w-3 h-3 text-purple-600 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <div className="text-xs font-medium text-gray-700 mb-1">Complemento</div>
+                          <div className="text-xs text-gray-800 leading-snug">{escola.complemento}</div>
+                        </div>
+                      </div>
+                    )}
+                    {escola.bairro && (
+                      <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
+                        <MapPin className="w-3 h-3 text-orange-600 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <div className="text-xs font-medium text-gray-700 mb-1">Bairro</div>
+                          <div className="text-xs text-gray-800 leading-snug">{escola.bairro}</div>
+                        </div>
+                      </div>
+                    )}
+                    {(escola.cep || escola.estado) && (
+                      <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
+                        <MapPin className="w-3 h-3 text-red-600 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <div className="text-xs font-medium text-gray-700 mb-1">Localização</div>
+                          <div className="text-xs text-gray-800 leading-snug">
+                            {[escola.municipio, escola.estado, escola.cep].filter(Boolean).join(', ')}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  /* Endereço completo (formato antigo) */
+                  <p className="text-xs text-gray-700 leading-snug">
+                    {capitalize(escola.endereco)}
+                  </p>
+                )}
               </div>
             )}
           </div>

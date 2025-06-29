@@ -36,8 +36,8 @@ const HistoriaEscola = memo(({ escola, refreshKey = 0 }) => {
             <img 
               src={process.env.PUBLIC_URL + '/onça.svg'} 
               alt="Ícone de onça" 
-              className="w-16 h-16 sm:w-24 sm:h-24" 
-              style={{ filter: 'none', borderRadius: '0', boxShadow: 'none' }}
+              className="w-32 h-32 sm:w-36 sm:h-36" 
+              style={{ filter: 'none', borderRadius: '0', boxShadow: 'none', marginTop: '80px' }}
               aria-hidden="true"
             />
           </span>

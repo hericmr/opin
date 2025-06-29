@@ -23,7 +23,7 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
             <img 
               src={process.env.PUBLIC_URL + '/passaro.svg'} 
               alt="Ícone de pássaro" 
-              className="w-16 h-16 sm:w-24 sm:h-24" 
+              className="w-14 h-14 sm:w-24 sm:h-24 mt-1" 
               style={{ filter: 'none', borderRadius: '0', boxShadow: 'none' }}
               aria-hidden="true"
             />
