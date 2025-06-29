@@ -173,9 +173,6 @@ const OpenLayersMap = ({
   const terrasIndigenasLayerRef = useRef(null);
   const estadoSPLayerRef = useRef(null);
 
-  // Tooltip element para mobile (mantido para compatibilidade)
-  const [tooltipElement, setTooltipElement] = useState(null);
-
   // Criar camadas base
   const createBaseLayers = useCallback(() => {
     const satelliteLayer = new TileLayer({
@@ -406,10 +403,14 @@ const OpenLayersMap = ({
         center: fromLonLat(initialCenter),
         zoom: initialZoom,
         maxZoom: 18,
-        minZoom: 4
+        minZoom: 4,
+        enableRotation: false // Desabilitar rotação
       }),
       controls: defaultControls(),
-      interactions: defaultInteractions()
+      interactions: defaultInteractions({
+        dragRotate: false, // Desabilitar rotação com arraste
+        pinchRotate: false // Desabilitar rotação com pinch (dois dedos)
+      })
     });
 
     // Event listeners
