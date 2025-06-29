@@ -312,7 +312,13 @@ Os arquivos CSV importados/exportados para o Supabase devem seguir a estrutura a
 | id                                          | integer  | Sim         | Chave primária, auto-incremento |
 | Escola                                      | text     | Não         | Nome da escola |
 | Município                                   | text     | Não         | |
-| Endereço                                    | text     | Não         | |
+| Endereço                                    | text     | Não         | Endereço completo (gerado automaticamente) |
+| logradouro                                  | text     | Não         | Nome da rua, avenida, etc. |
+| numero                                      | text     | Não         | Número do endereço |
+| complemento                                 | text     | Não         | Complemento do endereço |
+| bairro                                      | text     | Não         | Nome do bairro |
+| cep                                         | text     | Não         | CEP do endereço |
+| estado                                      | text     | Não         | Estado (padrão: SP) |
 | Terra Indigena (TI)                         | text     | Não         | |
 | Escola Estadual ou Municipal                | text     | Não         | |
 | Parcerias com o município                   | text     | Não         | |
@@ -382,6 +388,12 @@ O site utiliza o Supabase como banco de dados para alimentar o mapa interativo f
 | Escola                        | texto        | Sim         | Escola Indígena X      | Nome da escola                            |
 | Município                     | texto        | Sim         | Santos                 | Município                                 |
 | Endereço                      | texto        | Não         | Rua Exemplo, 123       | Endereço completo                         |
+| logradouro                    | texto        | Não         | Rua Exemplo, 123       | Nome da rua, avenida, etc.                 |
+| numero                        | texto        | Não         | 123                   | Número do endereço                         |
+| complemento                   | texto        | Não         | Apto 101               | Complemento do endereço                     |
+| bairro                        | texto        | Não         | Centro                 | Nome do bairro                             |
+| cep                           | texto        | Não         | 12345-678             | CEP do endereço                            |
+| estado                        | texto        | Não         | SP                    | Estado (padrão: SP)                         |
 | Terra Indigena (TI)           | texto        | Não         | Terra X                | Nome da terra indígena associada          |
 | Escola Estadual ou Municipal  | texto        | Não         | Estadual               | Tipo administrativo                       |
 | Parcerias com o município     | booleano     | Não         | TRUE                   | Parcerias com município                   |
