@@ -58,7 +58,20 @@ const AdminPanel = () => {
           .order('Escola', { ascending: true });
 
         if (error) throw error;
-        setEscolas(data);
+        
+        // Mapear os dados para usar os nomes originais das colunas
+        const escolasMapeadas = data.map(escola => ({
+          ...escola,
+          // Garantir que os novos campos de endereço existam
+          logradouro: escola.logradouro || '',
+          numero: escola.numero || '',
+          complemento: escola.complemento || '',
+          bairro: escola.bairro || '',
+          cep: escola.cep || '',
+          estado: escola.estado || 'SP'
+        }));
+        
+        setEscolas(escolasMapeadas);
       } catch (err) {
         console.error('Erro ao buscar escolas:', err);
       }
@@ -184,12 +197,26 @@ const AdminPanel = () => {
     setSaveSuccess(false);
 
     try {
+      // Antes de montar o updateData, remova qualquer campo 'municipio' (sem acento)
+      if ('municipio' in editingLocation) {
+        delete editingLocation['municipio'];
+      }
+
       // Preparar dados para atualização - organizados por seções
       const updateData = {
         // Dados básicos
         'Escola': editingLocation.Escola,
         'Município': editingLocation.Município,
         'Endereço': editingLocation.Endereço,
+        
+        // Novos campos de endereço detalhado
+        'logradouro': editingLocation.logradouro,
+        'numero': editingLocation.numero,
+        'complemento': editingLocation.complemento,
+        'bairro': editingLocation.bairro,
+        'cep': editingLocation.cep,
+        'estado': editingLocation.estado,
+        
         'Terra Indigena (TI)': editingLocation['Terra Indigena (TI)'],
         'Parcerias com o município': editingLocation['Parcerias com o município'],
         'Diretoria de Ensino': editingLocation['Diretoria de Ensino'],
@@ -246,6 +273,16 @@ const AdminPanel = () => {
         'longitude': editingLocation['longitude']
       };
 
+      // Debug: Log dos campos que estão sendo enviados para o Supabase
+      console.log('=== DEBUG: Campos sendo enviados para o Supabase ===');
+      console.log('updateData:', updateData);
+      console.log('Campos com "municipio" (sem acento):', Object.keys(updateData).filter(key => key.includes('municipio')));
+      console.log('Campos com "Município" (com acento):', Object.keys(updateData).filter(key => key.includes('Município')));
+      console.log('editingLocation completo:', editingLocation);
+      console.log('Todas as chaves do editingLocation:', Object.keys(editingLocation));
+      console.log('Chaves que contêm "municipio":', Object.keys(editingLocation).filter(key => key.includes('municipio')));
+      console.log('==================================================');
+
       // Atualizar no Supabase
       const { error } = await supabase
         .from('escolas_completa')
@@ -275,7 +312,59 @@ const AdminPanel = () => {
 
   // Abrir edição inline
   const openEditModal = (escola) => {
-    setEditingLocation({ ...escola, activeTab: 'dados-basicos' });
+    // Garantir que apenas os campos originais do banco sejam usados
+    const escolaOriginal = {
+      id: escola.id,
+      Escola: escola.Escola,
+      'Município': escola['Município'],
+      'Endereço': escola['Endereço'],
+      'Terra Indigena (TI)': escola['Terra Indigena (TI)'],
+      'Parcerias com o município': escola['Parcerias com o município'],
+      'Diretoria de Ensino': escola['Diretoria de Ensino'],
+      'Ano de criação da escola': escola['Ano de criação da escola'],
+      'Povos indigenas': escola['Povos indigenas'],
+      'Linguas faladas': escola['Linguas faladas'],
+      'Modalidade de Ensino/turnos de funcionamento': escola['Modalidade de Ensino/turnos de funcionamento'],
+      'Numero de alunos': escola['Numero de alunos'],
+      'Espaço escolar e estrutura': escola['Espaço escolar e estrutura'],
+      'Acesso à água': escola['Acesso à água'],
+      'Tem coleta de lixo?': escola['Tem coleta de lixo?'],
+      'Acesso à internet': escola['Acesso à internet'],
+      'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': escola['Equipamentos Tecnológicos (Computadores, tablets e impressoras)'],
+      'Modo de acesso à escola': escola['Modo de acesso à escola'],
+      'Gestão/Nome': escola['Gestão/Nome'],
+      'Outros funcionários': escola['Outros funcionários'],
+      'Quantidade de professores indígenas': escola['Quantidade de professores indígenas'],
+      'Quantidade de professores não indígenas': escola['Quantidade de professores não indígenas'],
+      'Professores falam a língua indígena?': escola['Professores falam a língua indígena?'],
+      'Formação dos professores': escola['Formação dos professores'],
+      'Formação continuada oferecida': escola['Formação continuada oferecida'],
+      'A escola possui PPP próprio?': escola['A escola possui PPP próprio?'],
+      'PPP elaborado com a comunidade?': escola['PPP elaborado com a comunidade?'],
+      'Projetos em andamento': escola['Projetos em andamento'],
+      'Parcerias com universidades?': escola['Parcerias com universidades?'],
+      'Ações com ONGs ou coletivos?': escola['Ações com ONGs ou coletivos?'],
+      'Desejos da comunidade para a escola': escola['Desejos da comunidade para a escola'],
+      'Escola utiliza redes sociais?': escola['Escola utiliza redes sociais?'],
+      'Links das redes sociais': escola['Links das redes sociais'],
+      'historia_da_escola': escola['historia_da_escola'],
+      'historia_do_prof': escola['historia_do_prof'],
+      'latitude': escola['latitude'],
+      'longitude': escola['longitude'],
+      'links': escola['links'],
+      'link_para_videos': escola['link_para_videos'],
+      // Novos campos de endereço detalhado
+      'logradouro': escola['logradouro'] || '',
+      'numero': escola['numero'] || '',
+      'complemento': escola['complemento'] || '',
+      'bairro': escola['bairro'] || '',
+      'cep': escola['cep'] || '',
+      'estado': escola['estado'] || 'SP',
+      // Campo para controle da aba ativa
+      activeTab: 'dados-basicos'
+    };
+    
+    setEditingLocation(escolaOriginal);
   };
 
   return (
@@ -333,7 +422,7 @@ const AdminPanel = () => {
               <button
                 className={`block w-full text-left px-2 py-1 rounded hover:bg-blue-100 text-sm ${editingLocation?.id === escola.id ? 'bg-blue-200 font-bold' : ''}`}
                   onClick={() => {
-                    setEditingLocation({ ...escola, activeTab: 'dados-basicos' });
+                    openEditModal(escola);
                     if (isMobile) setSidebarOpen(false);
                   }}
               >
@@ -428,13 +517,67 @@ const AdminPanel = () => {
                         onChange={e => setEditingLocation({ ...editingLocation, Município: e.target.value })}
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Endereço</label>
+                    
+                    {/* Novos campos de endereço detalhado */}
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Endereço Detalhado</label>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <input
+                          type="text"
+                          className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-sm"
+                          value={editingLocation.logradouro || ''}
+                          onChange={e => setEditingLocation({ ...editingLocation, logradouro: e.target.value })}
+                          placeholder="Logradouro (Rua, Avenida, etc.)"
+                        />
+                        <input
+                          type="text"
+                          className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-sm"
+                          value={editingLocation.numero || ''}
+                          onChange={e => setEditingLocation({ ...editingLocation, numero: e.target.value })}
+                          placeholder="Número"
+                        />
+                        <input
+                          type="text"
+                          className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-sm"
+                          value={editingLocation.complemento || ''}
+                          onChange={e => setEditingLocation({ ...editingLocation, complemento: e.target.value })}
+                          placeholder="Complemento"
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-2">
+                        <input
+                          type="text"
+                          className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-sm"
+                          value={editingLocation.bairro || ''}
+                          onChange={e => setEditingLocation({ ...editingLocation, bairro: e.target.value })}
+                          placeholder="Bairro"
+                        />
+                        <input
+                          type="text"
+                          className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-sm"
+                          value={editingLocation.cep || ''}
+                          onChange={e => setEditingLocation({ ...editingLocation, cep: e.target.value })}
+                          placeholder="CEP"
+                        />
+                        <input
+                          type="text"
+                          className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-sm"
+                          value={editingLocation.estado || 'SP'}
+                          onChange={e => setEditingLocation({ ...editingLocation, estado: e.target.value })}
+                          placeholder="Estado"
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Campo de endereço completo */}
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Endereço Completo</label>
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation.Endereço || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, Endereço: e.target.value })}
+                        placeholder="Digite o endereço completo da escola..."
                       />
                     </div>
                     <div>

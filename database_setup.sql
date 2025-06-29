@@ -116,4 +116,125 @@ END $$;
 -- 11. Verificar políticas criadas
 SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual, with_check
 FROM pg_policies 
-WHERE tablename = 'legendas_fotos'; 
+WHERE tablename = 'legendas_fotos';
+
+-- Script para adicionar campos de endereço detalhado à tabela escolas_completa
+-- Execute este script no SQL Editor do Supabase
+
+-- Adicionar novos campos de endereço
+ALTER TABLE escolas_completa 
+ADD COLUMN IF NOT EXISTS logradouro TEXT,
+ADD COLUMN IF NOT EXISTS numero TEXT,
+ADD COLUMN IF NOT EXISTS complemento TEXT,
+ADD COLUMN IF NOT EXISTS bairro TEXT,
+ADD COLUMN IF NOT EXISTS cep TEXT,
+ADD COLUMN IF NOT EXISTS estado TEXT DEFAULT 'SP';
+
+-- Adicionar comentários para documentação
+COMMENT ON COLUMN escolas_completa.logradouro IS 'Nome da rua, avenida, etc.';
+COMMENT ON COLUMN escolas_completa.numero IS 'Número do endereço';
+COMMENT ON COLUMN escolas_completa.complemento IS 'Complemento do endereço (apartamento, sala, etc.)';
+COMMENT ON COLUMN escolas_completa.bairro IS 'Nome do bairro';
+COMMENT ON COLUMN escolas_completa.cep IS 'CEP do endereço';
+COMMENT ON COLUMN escolas_completa.estado IS 'Estado (padrão: SP)';
+
+-- Criar função para gerar endereço completo a partir dos campos separados
+CREATE OR REPLACE FUNCTION gerar_endereco_completo()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Montar endereço completo a partir dos campos separados
+    NEW."Endereço" = COALESCE(
+        TRIM(
+            CONCAT_WS(', ',
+                NULLIF(NEW.logradouro, ''),
+                NULLIF(NEW.numero, ''),
+                NULLIF(NEW.complemento, ''),
+                NULLIF(NEW.bairro, ''),
+                NULLIF(NEW.municipio, ''),
+                NULLIF(NEW.estado, ''),
+                NULLIF(NEW.cep, '')
+            )
+        ),
+        NEW."Endereço" -- Manter endereço original se não houver campos separados
+    );
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Criar trigger para atualizar automaticamente o campo "Endereço"
+DROP TRIGGER IF EXISTS trigger_gerar_endereco_completo ON escolas_completa;
+CREATE TRIGGER trigger_gerar_endereco_completo
+    BEFORE INSERT OR UPDATE ON escolas_completa
+    FOR EACH ROW
+    EXECUTE FUNCTION gerar_endereco_completo();
+
+-- Atualizar registros existentes (opcional - execute apenas se quiser preencher os novos campos)
+-- UPDATE escolas_completa 
+-- SET logradouro = SPLIT_PART("Endereço", ',', 1),
+--     numero = SPLIT_PART("Endereço", ',', 2),
+--     bairro = SPLIT_PART("Endereço", ',', 3)
+-- WHERE "Endereço" IS NOT NULL AND "Endereço" != '';
+
+-- Verificar se as alterações foram aplicadas
+SELECT column_name, data_type, is_nullable 
+FROM information_schema.columns 
+WHERE table_name = 'escolas_completa' 
+AND column_name IN ('logradouro', 'numero', 'complemento', 'bairro', 'cep', 'estado')
+ORDER BY column_name;
+
+-- Script de migração para dados existentes (opcional)
+-- Execute este script apenas se quiser tentar extrair informações dos endereços existentes
+
+-- Função para tentar extrair informações do endereço existente
+CREATE OR REPLACE FUNCTION extrair_info_endereco(endereco_completo TEXT)
+RETURNS TABLE (
+    logradouro_ext TEXT,
+    numero_ext TEXT,
+    bairro_ext TEXT
+) AS $$
+BEGIN
+    -- Tentar extrair logradouro (primeira parte antes da vírgula)
+    logradouro_ext := TRIM(SPLIT_PART(endereco_completo, ',', 1));
+    
+    -- Tentar extrair número (segunda parte, se contiver números)
+    numero_ext := TRIM(SPLIT_PART(endereco_completo, ',', 2));
+    IF numero_ext ~ '^[0-9]+$' THEN
+        -- Se a segunda parte é apenas números, é o número
+    ELSE
+        -- Tentar encontrar número no logradouro
+        numero_ext := (REGEXP_MATCH(logradouro_ext, '([0-9]+)'))[1];
+        IF numero_ext IS NOT NULL THEN
+            logradouro_ext := TRIM(REGEXP_REPLACE(logradouro_ext, '[0-9]+', ''));
+        END IF;
+    END IF;
+    
+    -- Tentar extrair bairro (terceira parte)
+    bairro_ext := TRIM(SPLIT_PART(endereco_completo, ',', 3));
+    
+    RETURN NEXT;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Atualizar registros existentes com informações extraídas
+-- DESCOMENTE AS LINHAS ABAIXO SE QUISER EXECUTAR A MIGRAÇÃO
+/*
+UPDATE escolas_completa 
+SET 
+    logradouro = info.logradouro_ext,
+    numero = info.numero_ext,
+    bairro = info.bairro_ext
+FROM (
+    SELECT 
+        id,
+        (extrair_info_endereco("Endereço")).logradouro_ext,
+        (extrair_info_endereco("Endereço")).numero_ext,
+        (extrair_info_endereco("Endereço")).bairro_ext
+    FROM escolas_completa 
+    WHERE "Endereço" IS NOT NULL AND "Endereço" != ''
+) AS info
+WHERE escolas_completa.id = info.id;
+*/
+
+-- Limpar função após uso
+-- DROP FUNCTION IF EXISTS extrair_info_endereco(TEXT); 

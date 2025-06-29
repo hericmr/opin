@@ -201,6 +201,15 @@ const AppContent = () => {
           titulo: e.Escola,
           municipio: e["Município"],
           endereco: e["Endereço"],
+          
+          // Novos campos de endereço detalhado
+          logradouro: e.logradouro,
+          numero: e.numero,
+          complemento: e.complemento,
+          bairro: e.bairro,
+          cep: e.cep,
+          estado: e.estado,
+          
           terra_indigena: e["Terra Indigena (TI)"],
           parcerias_municipio: e["Parcerias com o município"],
           diretoria_ensino: e["Diretoria de Ensino"],
