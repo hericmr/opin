@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { isMobile } from '../../utils/mobileUtils';
+import { isMobile, MobileInteractionManager } from '../../utils/mobileUtils';
 
 /**
  * Hook para gerenciar interações com marcadores
@@ -12,24 +12,32 @@ export const useMarkerInteractions = ({ onPainelOpen, map, isMobileDevice }) => 
   const [lastClickedFeature, setLastClickedFeature] = useState(null);
   const [clickTimeout, setClickTimeout] = useState(null);
 
-  // Função para gerenciar cliques no mobile
-  const handleMobileClick = useCallback((feature, schoolData, event) => {
-    if (!isMobileDevice) {
-      // Desktop: abrir painel diretamente
-      onPainelOpen?.(schoolData);
-      return;
-    }
-    // Mobile: abrir painel diretamente, sem dois cliques ou tooltip
-    onPainelOpen?.(schoolData);
-  }, [onPainelOpen, isMobileDevice]);
+  // Instância do gerenciador de interações mobile
+  const mobileInteractionManager = useMemo(() => new MobileInteractionManager(), []);
+
+  // Função para gerenciar cliques
+  const handleFeatureClick = useCallback((feature, schoolData) => {
+    mobileInteractionManager.handleClick(
+      feature,
+      () => {
+        // Primeiro clique: mostrar tooltip
+        // (se necessário, implementar tooltip)
+      },
+      () => {
+        // Segundo clique: abrir painel
+        onPainelOpen?.(schoolData);
+      },
+      isMobileDevice
+    );
+  }, [onPainelOpen, isMobileDevice, mobileInteractionManager]);
 
   // Função para lidar com clique em marcador individual
   const handleMarkerClick = useCallback((feature, event) => {
     const schoolData = feature.get('schoolData');
     if (schoolData) {
-      handleMobileClick(feature, schoolData, event);
+      handleFeatureClick(feature, schoolData);
     }
-  }, [handleMobileClick]);
+  }, [handleFeatureClick]);
 
   // Função para lidar com clique em cluster
   const handleClusterClick = useCallback((feature, event) => {
