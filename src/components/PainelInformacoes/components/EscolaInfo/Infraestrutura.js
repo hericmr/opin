@@ -11,8 +11,8 @@ import InfoSection from '../InfoSection';
 import BooleanValue from '../BooleanValue';
 
 const MiniCard = ({ icon: Icon, label, value }) => (
-  <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2 border border-green-200 text-sm">
-    <Icon className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" />
+  <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2 text-sm">
+    <Icon className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
     <div className="flex-1">
       <div className="text-gray-500">{label}</div>
       <div className="text-gray-800 font-medium">{value}</div>
