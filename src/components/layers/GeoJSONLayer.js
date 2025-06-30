@@ -55,25 +55,28 @@ const GeoJSONLayer = ({
       map.addLayer(vectorLayer);
       layerRef.current = vectorLayer;
 
-      // Adicionar event listener se for interativa
-      if (interactive && onFeatureClick) {
-        const handleClick = (event) => {
+      // Adicionar event listener se for interativa e houver onFeatureClick
+      let handleClick;
+      if (interactive && typeof onFeatureClick === 'function') {
+        handleClick = (event) => {
           const feature = map.forEachFeatureAtPixel(event.pixel, (feature) => feature);
           if (feature && vectorLayer.getSource().getFeatures().includes(feature)) {
             onFeatureClick(feature, event);
           }
         };
-
         map.on('click', handleClick);
-
-        // Cleanup do event listener
-        return () => {
-          if (map) {
-            map.un('click', handleClick);
-          }
-        };
       }
 
+      // Cleanup do event listener e da camada
+      return () => {
+        if (handleClick) {
+          map.un('click', handleClick);
+        }
+        if (layerRef.current && map) {
+          map.removeLayer(layerRef.current);
+          layerRef.current = null;
+        }
+      };
     } catch (error) {
       console.error('Erro ao processar camada GeoJSON:', error);
     }

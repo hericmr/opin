@@ -3,5 +3,5 @@ const useClickHandling = () => {
   // Implementação futura
   return null;
 };
-
+ 
 export default useClickHandling; 

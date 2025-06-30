@@ -164,9 +164,13 @@ const OpenLayersMap = ({
   const terrasIndigenasLayerRef = useRef(null);
   const estadoSPLayerRef = useRef(null);
 
-  // Estado para controle de dois cliques no mobile
-  const [lastClickedFeature, setLastClickedFeature] = useState(null);
-  const [clickTimeout, setClickTimeout] = useState(null);
+  // Função para gerenciar cliques em marcador de escola (um clique abre o painel)
+  const handleMarkerClick = useCallback((feature, event) => {
+    const schoolData = feature.get('schoolData');
+    if (schoolData) {
+      onPainelOpen?.(schoolData);
+    }
+  }, [onPainelOpen]);
 
   // Criar camadas base
   const createBaseLayers = useCallback(() => {
@@ -340,83 +344,6 @@ const OpenLayersMap = ({
     return schoolData.titulo || 'Escola Indígena';
   }, []);
 
-  // Função para gerenciar cliques no mobile
-  const handleMobileClick = useCallback((feature, schoolData, event) => {
-    if (!isMobile()) {
-      // Desktop: abrir painel diretamente
-      onPainelOpen?.(schoolData);
-      return;
-    }
-
-    // Mobile: sistema de dois cliques
-    if (lastClickedFeature === feature) {
-      // Segundo clique no mesmo marcador
-      setLastClickedFeature(null);
-      if (clickTimeout) {
-        clearTimeout(clickTimeout);
-        setClickTimeout(null);
-      }
-      onPainelOpen?.(schoolData);
-    } else {
-      // Primeiro clique ou clique em marcador diferente
-      
-      // Limpar clique anterior
-      if (lastClickedFeature) {
-        setLastClickedFeature(null);
-      }
-      if (clickTimeout) {
-        clearTimeout(clickTimeout);
-      }
-
-      // Mostrar tooltip temporário
-      const tooltipElement = document.createElement('div');
-      tooltipElement.className = 'mobile-tooltip';
-      tooltipElement.textContent = schoolData.titulo || 'Escola Indígena';
-      tooltipElement.style.position = 'absolute';
-      tooltipElement.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-      tooltipElement.style.color = 'white';
-      tooltipElement.style.padding = '8px 12px';
-      tooltipElement.style.borderRadius = '6px';
-      tooltipElement.style.fontSize = '14px';
-      tooltipElement.style.fontFamily = 'Arial, sans-serif';
-      tooltipElement.style.fontWeight = '500';
-      tooltipElement.style.maxWidth = '250px';
-      tooltipElement.style.whiteSpace = 'nowrap';
-      tooltipElement.style.overflow = 'hidden';
-      tooltipElement.style.textOverflow = 'ellipsis';
-      tooltipElement.style.zIndex = '1000';
-      tooltipElement.style.pointerEvents = 'none';
-      tooltipElement.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
-      tooltipElement.style.border = '1px solid rgba(255, 255, 255, 0.2)';
-      
-      if (map.current && event.coordinate && mapContainer.current) {
-        const coordinate = event.coordinate;
-        const pixel = map.current.getPixelFromCoordinate(coordinate);
-        if (pixel) {
-          tooltipElement.style.left = (pixel[0] + 10) + 'px';
-          tooltipElement.style.top = (pixel[1] - 10) + 'px';
-          
-          mapContainer.current.appendChild(tooltipElement);
-
-          // Auto-remove after 2 seconds
-          setTimeout(() => {
-            if (tooltipElement.parentNode) {
-              tooltipElement.remove();
-            }
-          }, 2000);
-        }
-      }
-
-      // Configurar para segundo clique
-      setLastClickedFeature(feature);
-      const timeout = setTimeout(() => {
-        setLastClickedFeature(null);
-        setClickTimeout(null);
-      }, 300); // 300ms para segundo clique
-      setClickTimeout(timeout);
-    }
-  }, [lastClickedFeature, clickTimeout, onPainelOpen]);
-
   // Inicializar mapa
   useEffect(() => {
     if (map.current) return;
@@ -505,52 +432,31 @@ const OpenLayersMap = ({
           const features = feature.get('features');
           if (features.length === 1) {
             // Cluster com apenas um marcador
-            const schoolData = features[0].get('schoolData');
-            if (schoolData) {
-              // Usar sistema de dois cliques para mobile
-              handleMobileClick(feature, schoolData, event);
-            }
+            handleMarkerClick(features[0], event);
           } else {
             // Cluster com múltiplos marcadores, fazer zoom inteligente
-            
-            // Calcular a extensão específica do cluster clicado
             const clusterExtent = feature.getGeometry().getExtent();
-            
-            // Obter o zoom atual
             const currentZoom = map.current.getView().getZoom();
-            
-            // Calcular zoom ideal baseado na quantidade de escolas no cluster
-            let targetZoom = 12; // Zoom padrão para clusters
+            let targetZoom = 12;
             if (features.length > 20) {
-              targetZoom = 10; // Zoom menor para clusters muito grandes
+              targetZoom = 10;
             } else if (features.length > 10) {
-              targetZoom = 11; // Zoom médio para clusters grandes
+              targetZoom = 11;
             } else if (features.length > 5) {
-              targetZoom = 12; // Zoom padrão para clusters médios
+              targetZoom = 12;
             } else {
-              targetZoom = 13; // Zoom maior para clusters pequenos
+              targetZoom = 13;
             }
-            
-            // Garantir que o zoom não seja menor que o atual (evitar zoom out)
             targetZoom = Math.max(targetZoom, currentZoom + 1);
-            
-            // Fazer zoom suave para a extensão do cluster
             map.current.getView().fit(clusterExtent, {
-              duration: 800, // Animação mais suave
-              padding: [80, 80, 80, 80], // Padding maior para melhor visualização
-              maxZoom: targetZoom, // Limitar o zoom máximo
-              callback: () => {
-                // Zoom concluído
-              }
+              duration: 800,
+              padding: [80, 80, 80, 80],
+              maxZoom: targetZoom
             });
           }
         } else {
           // Marcador individual
-          const schoolData = feature.get('schoolData');
-          if (schoolData) {
-            // Usar sistema de dois cliques para mobile
-            handleMobileClick(feature, schoolData, event);
-          }
+          handleMarkerClick(feature, event);
         }
       }
     });
@@ -676,12 +582,8 @@ const OpenLayersMap = ({
         map.current.setTarget(undefined);
         map.current = null;
       }
-      // Limpar timeout se existir
-      if (clickTimeout) {
-        clearTimeout(clickTimeout);
-      }
     };
-  }, [center, zoom, createBaseLayers, createClusterStyle, createTooltipHTML, onPainelOpen, handleMobileClick]);
+  }, [center, zoom, createBaseLayers, createClusterStyle, createTooltipHTML, onPainelOpen, handleMarkerClick]);
 
   // Atualizar configurações do mapa quando props mudarem
   useEffect(() => {

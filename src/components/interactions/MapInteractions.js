@@ -3,5 +3,5 @@ const MapInteractions = () => {
   // Implementação futura
   return null;
 };
-
+ 
 export default MapInteractions; 
