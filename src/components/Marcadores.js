@@ -414,13 +414,7 @@ const MarcadoresInternos = ({ dataPoints, visibility, onClick, mapView }) => {
       });
 
       // Adiciona eventos de interação
-      if (isMobile) {
-        // Em mobile, usa o gerenciador de touch
-        marker.on('click', (e) => handleTouchInteraction(marker, ponto, e));
-      } else {
-        // Em desktop, mantém comportamento original
-        marker.on('click', () => onClick?.(ponto));
-      }
+      marker.on('click', () => onClick?.(ponto));
 
       // Verifica se este marcador faz parte de um par próximo
       const pairIndex = nearbyPairs.findIndex(pair => pair.includes(index));
