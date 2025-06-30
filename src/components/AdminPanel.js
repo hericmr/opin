@@ -34,7 +34,7 @@ const AdminPanel = () => {
   const tabs = [
     { id: 'dados-basicos', label: 'Dados Básicos' },
     { id: 'povos-linguas', label: 'Povos' },
-    { id: 'ensino', label: 'Ensino' },
+    { id: 'modalidades', label: 'Modalidades' },
     { id: 'infraestrutura', label: 'Infraestrutura' },
     { id: 'gestao-professores', label: 'Gestores' },
     { id: 'material-pedagogico', label: 'Material Pedagógico' },
@@ -226,9 +226,10 @@ const AdminPanel = () => {
         'Povos indigenas': editingLocation['Povos indigenas'],
         'Linguas faladas': editingLocation['Linguas faladas'],
         
-        // Ensino
+        // Modalidades
         'Modalidade de Ensino/turnos de funcionamento': editingLocation['Modalidade de Ensino/turnos de funcionamento'],
         'Numero de alunos': editingLocation['Numero de alunos'],
+        'turnos_funcionamento': editingLocation.turnos_funcionamento,
         
         // Infraestrutura
         'Espaço escolar e estrutura': editingLocation['Espaço escolar e estrutura'],
@@ -326,6 +327,7 @@ const AdminPanel = () => {
       'Linguas faladas': escola['Linguas faladas'],
       'Modalidade de Ensino/turnos de funcionamento': escola['Modalidade de Ensino/turnos de funcionamento'],
       'Numero de alunos': escola['Numero de alunos'],
+      'turnos_funcionamento': escola['turnos_funcionamento'] || '',
       'Espaço escolar e estrutura': escola['Espaço escolar e estrutura'],
       'Acesso à água': escola['Acesso à água'],
       'Tem coleta de lixo?': escola['Tem coleta de lixo?'],
@@ -644,8 +646,8 @@ const AdminPanel = () => {
                   </div>
                 )}
 
-                {/* Aba: Ensino */}
-                {editingLocation.activeTab === 'ensino' && (
+                {/* Aba: Modalidades */}
+                {editingLocation.activeTab === 'modalidades' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Modalidade de Ensino/Turnos</label>
@@ -666,12 +668,13 @@ const AdminPanel = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Línguas Faladas</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Turnos de Funcionamento</label>
                       <input
                         type="text"
                         className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
-                        value={editingLocation['Linguas faladas'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'Linguas faladas': e.target.value })}
+                        value={editingLocation.turnos_funcionamento || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, turnos_funcionamento: e.target.value })}
+                        placeholder="Ex: Diurno, Noturno, Vespertino, etc."
                       />
                     </div>
                   </div>
