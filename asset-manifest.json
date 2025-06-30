@@ -1,9 +1,9 @@
 {
   "files": {
     "main.css": "/escolasindigenas/static/css/main.c19ca726.css",
-    "main.js": "/escolasindigenas/static/js/main.7beb80e5.js",
-    "static/css/992.926545cc.chunk.css": "/escolasindigenas/static/css/992.926545cc.chunk.css",
-    "static/js/992.6cce6178.chunk.js": "/escolasindigenas/static/js/992.6cce6178.chunk.js",
+    "main.js": "/escolasindigenas/static/js/main.36d31e8f.js",
+    "static/css/151.5f0b07e9.chunk.css": "/escolasindigenas/static/css/151.5f0b07e9.chunk.css",
+    "static/js/151.c036e391.chunk.js": "/escolasindigenas/static/js/151.c036e391.chunk.js",
     "static/js/302.becb65c0.chunk.js": "/escolasindigenas/static/js/302.becb65c0.chunk.js",
     "static/js/237.38c92315.chunk.js": "/escolasindigenas/static/js/237.38c92315.chunk.js",
     "static/js/17.0063fe88.chunk.js": "/escolasindigenas/static/js/17.0063fe88.chunk.js",
@@ -17,9 +17,9 @@
     "static/js/789.54c192ca.chunk.js": "/escolasindigenas/static/js/789.54c192ca.chunk.js",
     "index.html": "/escolasindigenas/index.html",
     "main.c19ca726.css.map": "/escolasindigenas/static/css/main.c19ca726.css.map",
-    "main.7beb80e5.js.map": "/escolasindigenas/static/js/main.7beb80e5.js.map",
-    "992.926545cc.chunk.css.map": "/escolasindigenas/static/css/992.926545cc.chunk.css.map",
-    "992.6cce6178.chunk.js.map": "/escolasindigenas/static/js/992.6cce6178.chunk.js.map",
+    "main.36d31e8f.js.map": "/escolasindigenas/static/js/main.36d31e8f.js.map",
+    "151.5f0b07e9.chunk.css.map": "/escolasindigenas/static/css/151.5f0b07e9.chunk.css.map",
+    "151.c036e391.chunk.js.map": "/escolasindigenas/static/js/151.c036e391.chunk.js.map",
     "302.becb65c0.chunk.js.map": "/escolasindigenas/static/js/302.becb65c0.chunk.js.map",
     "237.38c92315.chunk.js.map": "/escolasindigenas/static/js/237.38c92315.chunk.js.map",
     "17.0063fe88.chunk.js.map": "/escolasindigenas/static/js/17.0063fe88.chunk.js.map",
@@ -34,6 +34,6 @@
   },
   "entrypoints": [
     "static/css/main.c19ca726.css",
-    "static/js/main.7beb80e5.js"
+    "static/js/main.36d31e8f.js"
   ]
 }
