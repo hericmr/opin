@@ -61,6 +61,7 @@ export default MapWrapper;
 - **Função `terrasIndigenasStyle` extraída para `src/utils/markers/featureStyles.js`**
 - Motivo: função pura de estilo, sem dependências de React ou estado, fácil de testar e reutilizar em outros componentes de camada ou hooks.
 - O componente principal agora importa de `utils/markers/featureStyles.js`.
+- **Correção:** A função foi ajustada para retornar um objeto `Style` do OpenLayers, garantindo compatibilidade e funcionamento correto.
 - Teste manual realizado após a mudança.
 
 ---
@@ -100,7 +101,7 @@ Antes ou durante a refatoração incremental, resolver todos os avisos do ESLint
 - [x] Integrar `MapWrapper` ao componente principal (com forwardRef)
 - [x] Corrigir todos os erros/warnings de lint
 - [x] Extrair função utilitária `findNearbyPairs`
-- [x] Extrair função de estilo `terrasIndigenasStyle`
+- [x] Extrair função de estilo `terrasIndigenasStyle` (com retorno Style do OL)
 - [ ] Extrair hook de inicialização do mapa
 - [ ] Extrair hook de eventos do mapa
 - [ ] Extrair camada de cluster
