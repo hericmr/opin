@@ -1,11 +1,9 @@
 import React, { useCallback, useMemo, useEffect, useRef } from 'react';
 import { GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { isMobile, MobileInteractionManager } from '../utils/mobileUtils';
 
 const TerrasIndigenas = ({ data, onClick }) => {
   const map = useMap();
-  const mobileInteraction = useRef(new MobileInteractionManager());
   const tooltipRef = useRef(null);
 
   useEffect(() => {
@@ -166,13 +164,7 @@ const TerrasIndigenas = ({ data, onClick }) => {
           };
 
           // Handle mobile two-click behavior
-          mobileInteraction.current.handleClick(
-            feature,
-            // First click - show name
-            () => showMobileTooltip(e, feature.properties.terrai_nom || 'Terra Indígena'),
-            // Second click - open panel
-            () => onClick?.(terraIndigenaInfo)
-          );
+          onSecondClick(feature);
         }
       });
     },
@@ -186,7 +178,6 @@ const TerrasIndigenas = ({ data, onClick }) => {
         tooltipRef.current.remove();
         tooltipRef.current = null;
       }
-      mobileInteraction.current.reset();
     };
   }, []);
 
