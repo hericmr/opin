@@ -222,6 +222,7 @@ const AppContent = () => {
           ano_criacao: e["Ano de criação da escola"],
           modalidade_ensino: e["Modalidade de Ensino/turnos de funcionamento"],
           numero_alunos: e["Numero de alunos"],
+          turnos_funcionamento: e["turnos_funcionamento"],
           
           // Infraestrutura
           espaco_escolar: e["Espaço escolar e estrutura"],

@@ -147,6 +147,19 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
                 placeholder="Endereço completo da escola"
               />
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Turnos de Funcionamento
+              </label>
+              <input
+                type="text"
+                className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                value={escola?.turnos_funcionamento || ''}
+                onChange={e => onSave({ ...escola, turnos_funcionamento: e.target.value })}
+                placeholder="Ex: Diurno, Noturno, Vespertino, etc."
+              />
+            </div>
           </div>
         );
 
