@@ -199,7 +199,7 @@ const OpenLayersMap = ({
     // Criar camada vetorial para marcadores com clustering
     vectorLayer.current = new VectorLayer({
       source: clusterSource.current,
-      style: createClusterStyle,
+      style: (feature) => createClusterStyle(feature, (f) => createMarkerStyle(f, showNomesEscolas)),
       zIndex: 15
     });
 
@@ -472,14 +472,14 @@ const OpenLayersMap = ({
   // Atualizar estilo dos marcadores quando o tipo de mapa mudar
   useEffect(() => {
     if (vectorLayer.current) {
-      vectorLayer.current.setStyle(createClusterStyle);
+      vectorLayer.current.setStyle((feature) => createClusterStyle(feature, (f) => createMarkerStyle(f, showNomesEscolas)));
     }
-  }, [createClusterStyle]);
+  }, [showNomesEscolas, createClusterStyle]);
 
   // Atualizar estilo dos marcadores quando showNomesEscolas mudar
   useEffect(() => {
     if (vectorLayer.current) {
-      vectorLayer.current.setStyle(createClusterStyle);
+      vectorLayer.current.setStyle((feature) => createClusterStyle(feature, (f) => createMarkerStyle(f, showNomesEscolas)));
       vectorLayer.current.changed(); // Força a atualização da renderização
     }
   }, [showNomesEscolas, createClusterStyle]);
@@ -509,7 +509,7 @@ const OpenLayersMap = ({
     // Criar nova camada
     vectorLayer.current = new VectorLayer({
       source: clusterSource.current,
-      style: createClusterStyle,
+      style: (feature) => createClusterStyle(feature, (f) => createMarkerStyle(f, showNomesEscolas)),
       zIndex: 15
     });
 
