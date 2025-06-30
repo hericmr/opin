@@ -5,12 +5,11 @@ import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import ClusterSource from 'ol/source/Cluster';
-import OSM from 'ol/source/OSM';
 import XYZ from 'ol/source/XYZ';
 import { fromLonLat, toLonLat } from 'ol/proj';
-import { Point, LineString } from 'ol/geom';
+import { Point } from 'ol/geom';
 import { Feature } from 'ol';
-import { Style, Circle, Fill, Stroke, Text, Icon } from 'ol/style';
+import { Style, Fill, Stroke, Text, Icon } from 'ol/style';
 import { defaults as defaultControls } from 'ol/control';
 import { defaults as defaultInteractions } from 'ol/interaction';
 import { GeoJSON } from 'ol/format';
@@ -19,10 +18,11 @@ import proj4 from 'proj4';
 import 'ol/ol.css';
 import { MAP_CONFIG } from '../utils/mapConfig';
 import { isMobile } from '../utils/mobileUtils';
+import MapWrapper from './map/MapWrapper';
 
 // Componentes GeoJSON
-import OpenLayersTerrasIndigenas from './OpenLayersTerrasIndigenas';
-import OpenLayersEstadoSP from './OpenLayersEstadoSP';
+// import OpenLayersTerrasIndigenas from './OpenLayersTerrasIndigenas';
+// import OpenLayersEstadoSP from './OpenLayersEstadoSP';
 
 // Registrar projeção SIRGAS 2000 (EPSG:4674) usada nos dados GeoJSON
 proj4.defs('EPSG:4674', '+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs');
@@ -201,7 +201,6 @@ const OpenLayersMap = ({
 
       // Verificar se é parte de um par próximo
       const isNearbyPair = feature.get('isNearbyPair');
-      const pairIndex = feature.get('pairIndex');
 
       // Usar a função createMarkerSVG para criar o marcador (tamanho reduzido)
       const svg = createMarkerSVG(baseColor, 24, {
@@ -463,7 +462,6 @@ const OpenLayersMap = ({
 
     // Event listener para hover nos marcadores (tooltips)
     let tooltipElement = null;
-    let currentFeature = null;
 
     map.current.on('pointermove', (event) => {
       // Desabilitar tooltips de hover no mobile
@@ -637,7 +635,6 @@ const OpenLayersMap = ({
         const pairIndex = nearbyPairs.findIndex(pair => pair.includes(index));
         if (pairIndex !== -1) {
           feature.set('isNearbyPair', true);
-          feature.set('pairIndex', pairIndex);
         }
         
         vectorSource.current.addFeature(feature);
@@ -848,7 +845,7 @@ const OpenLayersMap = ({
   }, [onPainelOpen]);
 
   return (
-    <div className={className} ref={mapContainer}>
+    <MapWrapper ref={mapContainer}>
       {/* Informações do mapa */}
       <div className="absolute bottom-20 sm:bottom-4 left-4 z-10 bg-white bg-opacity-95 rounded-lg shadow-lg p-3">
         <div className="text-xs text-gray-600">
@@ -858,7 +855,7 @@ const OpenLayersMap = ({
           Zoom: {mapInfo.zoom}
         </div>
       </div>
-    </div>
+    </MapWrapper>
   );
 };
 
