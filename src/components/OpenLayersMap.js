@@ -21,6 +21,7 @@ import { isMobile } from '../utils/mobileUtils';
 import MapWrapper from './map/MapWrapper';
 import { findNearbyPairs } from '../utils/markers/proximityUtils';
 import { terrasIndigenasStyle, estadoSPStyle } from '../utils/markers/featureStyles';
+import { handleMarkerClick, handleGeoJSONClick } from '../utils/markers/handlers';
 
 // Componentes GeoJSON
 // import OpenLayersTerrasIndigenas from './OpenLayersTerrasIndigenas';
