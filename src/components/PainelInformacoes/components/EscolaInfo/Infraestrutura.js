@@ -1,29 +1,75 @@
 import React, { memo } from 'react';
-import { Home } from 'lucide-react';
+import {
+  Home,
+  Droplet,
+  Trash2,
+  Wifi,
+  Monitor,
+  MapPin,
+} from 'lucide-react';
 import InfoSection from '../InfoSection';
-import InfoItem from '../InfoItem';
 import BooleanValue from '../BooleanValue';
+
+const MiniCard = ({ icon: Icon, label, value }) => (
+  <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2 border border-green-200 text-sm">
+    <Icon className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" />
+    <div className="flex-1">
+      <div className="text-gray-500">{label}</div>
+      <div className="text-gray-800 font-medium">{value}</div>
+    </div>
+  </div>
+);
 
 const Infraestrutura = memo(({ escola }) => {
   if (!escola) return null;
 
+  const items = [
+    {
+      icon: Droplet,
+      label: 'Acesso à Água',
+      value: escola.acesso_agua,
+    },
+    {
+      icon: Trash2,
+      label: 'Coleta de Lixo',
+      value: escola.coleta_lixo,
+    },
+    {
+      icon: Wifi,
+      label: 'Acesso à Internet',
+      value: <BooleanValue value={escola.acesso_internet} />,
+    },
+    {
+      icon: Monitor,
+      label: 'Equipamentos Tecnológicos',
+      value: escola.equipamentos,
+    },
+    {
+      icon: MapPin,
+      label: 'Modo de Acesso à Escola',
+      value: escola.modo_acesso,
+    },
+  ];
+
   return (
     <InfoSection title="Infraestrutura" icon={Home}>
-      <div className="p-2 border-b border-gray-200">
-        <p className="text-base text-gray-800 whitespace-pre-wrap break-words">
+      {escola.espaco_escolar && (
+        <div className="p-2 text-sm text-gray-800 border-b border-gray-200 whitespace-pre-wrap">
           {escola.espaco_escolar}
-        </p>
+        </div>
+      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">
+        {items.map((item, idx) => (
+          <MiniCard
+            key={idx}
+            icon={item.icon}
+            label={item.label}
+            value={item.value}
+          />
+        ))}
       </div>
-      <InfoItem label="Acesso à Água" value={escola.acesso_agua} />
-      <InfoItem label="Coleta de Lixo" value={escola.coleta_lixo} />
-      <InfoItem 
-        label="Acesso à Internet" 
-        value={<BooleanValue value={escola.acesso_internet} />} 
-      />
-      <InfoItem label="Equipamentos Tecnológicos" value={escola.equipamentos} />
-      <InfoItem label="Modo de Acesso à Escola" value={escola.modo_acesso} />
     </InfoSection>
   );
 });
 
-export default Infraestrutura; 
+export default Infraestrutura;
