@@ -4,7 +4,7 @@ import InfoSection from '../InfoSection';
 import InfoItem from '../InfoItem';
 import BooleanValue from '../BooleanValue';
 
-const Ensino = memo(({ escola }) => {
+const Modalidades = memo(({ escola }) => {
   if (!escola) return null;
 
   return (
@@ -33,4 +33,4 @@ const Ensino = memo(({ escola }) => {
   );
 });
 
-export default Ensino; 
+export default Modalidades; 

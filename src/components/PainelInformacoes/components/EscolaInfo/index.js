@@ -4,7 +4,7 @@ import React, { memo } from 'react';
 import BasicInfo from './BasicInfo';
 import HistoriaEscola from './HistoriaEscola';
 import PovosLinguas from './PovosLinguas';
-import Ensino from './Ensino';
+import Modalidades from './Modalidades';
 import Infraestrutura from './Infraestrutura';
 import GestaoProfessores from './GestaoProfessores';
 import ProjetosParcerias from './ProjetosParcerias';
@@ -36,7 +36,7 @@ const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0 }) => {
   const gridSections = [
     { Component: BasicInfo, props: { escola } },
     { Component: PovosLinguas, props: { escola } },
-    { Component: Ensino, props: { escola } },
+    { Component: Modalidades, props: { escola } },
     { Component: Infraestrutura, props: { escola } },
     { Component: GestaoProfessores, props: { escola } },
     { Component: ProjetosParcerias, props: { escola } }

@@ -11,6 +11,8 @@ import { isMobile } from '../../utils/mobileUtils';
 export const useMarkerInteractions = ({ onPainelOpen, map, isMobileDevice }) => {
   // Função para lidar com clique em marcador individual
   const handleMarkerClick = useCallback((feature, event) => {
+    if (event && event.preventDefault) event.preventDefault();
+    if (event && event.stopPropagation) event.stopPropagation();
     const schoolData = feature.get('schoolData');
     if (schoolData) {
       onPainelOpen?.(schoolData);
@@ -19,6 +21,8 @@ export const useMarkerInteractions = ({ onPainelOpen, map, isMobileDevice }) => 
 
   // Função para lidar com clique em cluster
   const handleClusterClick = useCallback((feature, event) => {
+    if (event && event.preventDefault) event.preventDefault();
+    if (event && event.stopPropagation) event.stopPropagation();
     const features = feature.get('features');
     if (features.length === 1) {
       // Cluster com apenas um marcador
