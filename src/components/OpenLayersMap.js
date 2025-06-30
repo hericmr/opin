@@ -143,6 +143,9 @@ const OpenLayersMap = ({
   const handleMarkerClick = useCallback((feature, event) => {
     const schoolData = feature.get('schoolData');
     if (schoolData) {
+      if (isMobile()) {
+        console.log('[MOBILE] Marcador de escola clicado:', schoolData);
+      }
       onPainelOpen?.(schoolData);
     }
   }, [onPainelOpen]);
@@ -257,9 +260,10 @@ const OpenLayersMap = ({
         if (feature.get('features')) {
           const features = feature.get('features');
           if (features.length === 1) {
-            // Cluster com apenas um marcador
+            console.log('[CLUSTER] Clique em cluster com 1 marcador', features[0].get('schoolData'));
             handleMarkerClick(features[0], event);
-          } else {
+          } else if (features.length > 1) {
+            console.log('[CLUSTER] Clique em cluster com', features.length, 'marcadores. Fazendo zoom.');
             // Cluster com múltiplos marcadores, fazer zoom inteligente
             const clusterExtent = feature.getGeometry().getExtent();
             const currentZoom = map.current.getView().getZoom();
@@ -281,6 +285,7 @@ const OpenLayersMap = ({
             });
           }
         } else {
+          console.log('[MARCADOR] Clique em marcador individual', feature.get('schoolData'));
           // Marcador individual
           handleMarkerClick(feature, event);
         }
@@ -400,6 +405,19 @@ const OpenLayersMap = ({
       mapContainer.current.appendChild(element);
       return element;
     };
+
+    // Desabilitar zoom no double click em marcadores individuais ou cluster de 1 escola
+    map.current.on('dblclick', (event) => {
+      const feature = map.current.forEachFeatureAtPixel(event.pixel, (feature) => feature);
+      if (feature) {
+        // Se for marcador individual ou cluster de 1 escola, previne o zoom
+        if (!feature.get('features') || (feature.get('features') && feature.get('features').length === 1)) {
+          event.preventDefault();
+          event.stopPropagation();
+          console.log('[DBLCLICK] Zoom desabilitado em marcador individual ou cluster de 1 escola');
+        }
+      }
+    });
 
     // Cleanup
     return () => {
