@@ -49,15 +49,19 @@ export default MapWrapper;
 
 ---
 
-#### Etapas concluídas: Extração de funções utilitárias
+#### Etapa concluída: Extração de função utilitária
 - **Função `findNearbyPairs` extraída para `src/utils/markers/proximityUtils.js`**
-  - Motivo: função pura, sem dependências de React ou estado, fácil de testar e reutilizar em outros componentes ou hooks.
-  - O componente principal agora importa de `utils/markers/proximityUtils.js`.
-  - Teste manual realizado após a mudança.
-- **Função `createMarkerSVG` extraída para `src/utils/markers/svgGenerator.js`**
-  - Motivo: função pura, sem dependências de React ou estado, fácil de testar e reutilizar em outros componentes ou hooks.
-  - O componente principal agora importa de `utils/markers/svgGenerator.js`.
-  - Teste manual realizado após a mudança.
+- Motivo: função pura, sem dependências de React ou estado, fácil de testar e reutilizar em outros componentes ou hooks.
+- O componente principal agora importa de `utils/markers/proximityUtils.js`.
+- Teste manual realizado após a mudança.
+
+---
+
+#### Etapa concluída: Extração de função de estilo
+- **Função `terrasIndigenasStyle` extraída para `src/utils/markers/featureStyles.js`**
+- Motivo: função pura de estilo, sem dependências de React ou estado, fácil de testar e reutilizar em outros componentes de camada ou hooks.
+- O componente principal agora importa de `utils/markers/featureStyles.js`.
+- Teste manual realizado após a mudança.
 
 ---
 
@@ -96,7 +100,7 @@ Antes ou durante a refatoração incremental, resolver todos os avisos do ESLint
 - [x] Integrar `MapWrapper` ao componente principal (com forwardRef)
 - [x] Corrigir todos os erros/warnings de lint
 - [x] Extrair função utilitária `findNearbyPairs`
-- [x] Extrair função utilitária `createMarkerSVG`
+- [x] Extrair função de estilo `terrasIndigenasStyle`
 - [ ] Extrair hook de inicialização do mapa
 - [ ] Extrair hook de eventos do mapa
 - [ ] Extrair camada de cluster
