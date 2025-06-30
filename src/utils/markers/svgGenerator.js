@@ -1,16 +1,11 @@
 /**
- * Função para criar SVG base do marcador (gota invertida com bolinha branca)
- * @param {string} color - Cor base do marcador
- * @param {number} size - Tamanho do marcador (padrão: 24)
- * @param {Object} options - Opções adicionais
- * @param {string} options.borderColor - Cor da borda
- * @param {boolean} options.showShadow - Se deve mostrar sombra
- * @param {boolean} options.showGradient - Se deve mostrar gradiente
- * @param {boolean} options.showGlow - Se deve mostrar brilho
- * @param {boolean} options.isNearbyPair - Se é parte de um par próximo
- * @returns {string} SVG como string
+ * Gera SVG para marcador customizado (gota invertida com bolinha branca).
+ * @param {string} color - Cor base do marcador.
+ * @param {number} [size=24] - Tamanho do marcador em px.
+ * @param {Object} [options] - Opções visuais (borderColor, showShadow, showGradient, showGlow, isNearbyPair).
+ * @returns {string} SVG string.
  */
-export const createMarkerSVG = (color, size = 24, options = {}) => {
+export function createMarkerSVG(color, size = 24, options = {}) {
   const {
     borderColor = null,
     showShadow = true,
@@ -80,7 +75,7 @@ export const createMarkerSVG = (color, size = 24, options = {}) => {
       ` : ''}
     </svg>
   `;
-};
+}
 
 /**
  * Função para criar SVG de cluster
