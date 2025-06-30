@@ -10,36 +10,28 @@ import {
   ChevronRight,
   Check,
   X,
+  Navigation,
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
 
-// Utilitário de capitalização simples
 const capitalize = (str) => {
   if (!str) return '';
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
 
-// CompactCard reutilizável
-const CompactCard = ({ icon: Icon, label, value, type = 'text', onClick, className = '' }) => {
+const CompactCard = ({ icon: Icon, label, value, type = 'text' }) => {
   const renderValue = () => {
     switch (type) {
       case 'boolean':
         return value ? (
           <span className="flex items-center gap-1 text-green-600 text-sm">
-            <Check className="w-3 h-3" />
+            <Check className="w-4 h-4" />
             Sim
           </span>
         ) : (
           <span className="flex items-center gap-1 text-red-500 text-sm">
-            <X className="w-3 h-3" />
+            <X className="w-4 h-4" />
             Não
-          </span>
-        );
-      case 'link':
-        return (
-          <span className="flex items-center gap-1 text-blue-600 text-sm truncate max-w-[100px]">
-            <ExternalLink className="w-3 h-3" />
-            {value}
           </span>
         );
       default:
@@ -48,34 +40,138 @@ const CompactCard = ({ icon: Icon, label, value, type = 'text', onClick, classNa
   };
 
   return (
-    <div
-      onClick={onClick}
-      role={onClick ? 'button' : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      className={`bg-white/70 p-2 rounded-lg ring-1 ring-inset ring-gray-100 hover:ring-green-200 transition-all text-sm cursor-pointer ${className}`}
-    >
-      <div className="flex items-center justify-between mb-1">
-        <div className="flex items-center gap-1.5">
-          <Icon className="w-3 h-3 text-gray-600" />
-          <span className="text-xs text-gray-500 font-medium">{label}</span>
-        </div>
-        {onClick && <ChevronRight className="w-3 h-3 text-gray-400" />}
+    <div className="bg-white/70 p-1  transition-all">
+      <div className="flex items-center gap-1.5 mb-1">
+        <Icon className="w-4 h-4 text-gray-600" />
+        <span className="text-xs text-gray-500 font-medium">{label}</span>
       </div>
-      <div>
-        {renderValue()}
-      </div>
+      {renderValue()}
     </div>
   );
 };
 
-// Renderiza blocos informativos simples e reutilizáveis
 const InfoBlock = ({ icon: Icon, label, value }) => (
-  <div className="flex items-center gap-2 bg-white/70 p-2 rounded-md ring-1 ring-inset ring-gray-100 text-xs">
-    <Icon className="w-3 h-3 text-green-600" />
+  <div className="flex items-center gap-2 bg-white/70 p-1.5 rounded-md ring-1 ring-inset ring-gray-100 text-xs">
+    <Icon className="w-4 h-4 text-green-600" />
     <span className="text-gray-700 font-medium">{label}:</span>
     <span className="font-semibold text-green-800">{capitalize(value)}</span>
   </div>
 );
+
+const AddressDetails = ({ escola }) => {
+  const hasDetailedAddress = escola.logradouro || escola.numero || escola.bairro || escola.cep;
+  
+  if (!hasDetailedAddress) {
+    return (
+      <div className="mt-2 p-2 bg-white/80 rounded-md">
+        <p className="text-xs text-gray-700 leading-snug">
+          {capitalize(escola.endereco)}
+        </p>
+      </div>
+    );
+  }
+
+  const addressFields = [
+    { field: 'logradouro', label: 'Logradouro' },
+    { field: 'numero', label: 'Número' },
+    { field: 'complemento', label: 'Complemento' },
+    { field: 'bairro', label: 'Bairro' },
+  ];
+
+  return (
+    <div className="mt-2 space-y-1">
+      {addressFields.map(({ field, label }) => 
+        escola[field] && (
+          <div key={field} className="flex items-start gap-2 p-1.5 bg-white/80 rounded-md">
+            <MapPin className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" />
+            <div className="flex-1">
+              <div className="text-xs font-medium text-gray-700 mb-0.5">{label}</div>
+              <div className="text-xs text-gray-800 leading-snug">{escola[field]}</div>
+            </div>
+          </div>
+        )
+      )}
+      
+      {(escola.cep || escola.estado) && (
+        <div className="flex items-start gap-2 p-1.5 bg-white/80 rounded-md">
+          <MapPin className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" />
+          <div className="flex-1">
+            <div className="text-xs font-medium text-gray-700 mb-0.5">Localização</div>
+            <div className="text-xs text-gray-800 leading-snug">
+              {[escola.municipio, escola.estado, escola.cep].filter(Boolean).join(', ')}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const MapButton = ({ escola }) => {
+  const hasCoordinates = escola.latitude && escola.longitude;
+  
+  if (!hasCoordinates) return null;
+
+  const openMap = () => {
+    window.open(`https://www.google.com/maps?q=${escola.latitude},${escola.longitude}`, '_blank');
+  };
+
+  return (
+    <button
+      onClick={openMap}
+      className="mt-2 w-full flex items-center justify-center gap-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors text-xs font-medium"
+    >
+      <Navigation className="w-4 h-4" />
+      Ver no Google Maps
+    </button>
+  );
+};
+
+const SocialLinks = ({ links, expanded, onToggle }) => {
+  const socialLinks = (links || '').split(',').map(url => url.trim()).filter(Boolean);
+  
+  if (socialLinks.length === 0) return null;
+
+  return (
+    <div className="bg-white/70 rounded-md ring-1 ring-blue-100">
+      <button
+        onClick={() => onToggle('social')}
+        className="w-full flex justify-between items-center p-1.5 hover:bg-blue-50 text-xs"
+        aria-expanded={expanded.social}
+      >
+        <span className="flex items-center gap-2 text-gray-700 font-medium">
+          <Globe className="w-4 h-4 text-blue-600" />
+          Redes sociais ({socialLinks.length})
+        </span>
+        <ChevronRight
+          className={`w-4 h-4 text-gray-400 transition-transform ${
+            expanded.social ? 'rotate-90' : ''
+          }`}
+        />
+      </button>
+      
+      {expanded.social && (
+        <div className="px-2 pb-2 border-t border-blue-100 bg-blue-50/30">
+          <div className="mt-1 space-y-1">
+            {socialLinks.map((link, index) => (
+              <a
+                key={index}
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 p-1.5 bg-white/80 rounded-md hover:bg-blue-100/50 group text-xs"
+              >
+                <LinkIcon className="w-4 h-4 text-blue-600" />
+                <span className="truncate flex-1 text-gray-700">{link}</span>
+                <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const BasicInfo = memo(({ escola }) => {
   const [expanded, setExpanded] = useState({});
@@ -83,177 +179,81 @@ const BasicInfo = memo(({ escola }) => {
   if (!escola) return null;
 
   const toggle = (key) => {
-    setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
+    setExpanded(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const parseLinks = (links) =>
-    (links || '').split(',').map((url) => url.trim()).filter(Boolean);
-
-  const socialLinks = parseLinks(escola.links_redes_sociais);
-
-  const openMap = () => {
-    if (escola.latitude && escola.longitude) {
-      window.open(`https://www.google.com/maps?q=${escola.latitude},${escola.longitude}`, '_blank');
-    }
-  };
+  const basicInfoCards = [
+    {
+      icon: Building,
+      label: 'Município',
+      value: capitalize(escola.municipio),
+    },
+    {
+      icon: Calendar,
+      label: 'Fundação',
+      value: escola.ano_criacao,
+    },
+    {
+      icon: Globe,
+      label: 'Redes sociais',
+      value: escola.usa_redes_sociais,
+      type: 'boolean',
+    },
+  ].filter(item => item.value);
 
   return (
-    <InfoSection title="Informações Básicas" icon={MapPin}>
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mb-4">
-        {[
-          {
-            icon: Building,
-            label: 'Município',
-            value: capitalize(escola.municipio),
-          },
-          {
-            icon: Calendar,
-            label: 'Fundação',
-            value: escola.ano_criacao,
-          },
-          {
-            icon: Globe,
-            label: 'Redes sociais',
-            value: escola.usa_redes_sociais,
-            type: 'boolean',
-          },
-          escola.latitude && escola.longitude && {
-            icon: MapPin,
-            label: 'Localização',
-            value: 'Ver no mapa',
-            onClick: openMap,
-          },
-        ]
-          .filter(Boolean)
-          .map((item, index) => (
-            <CompactCard key={index} {...item} />
-          ))}
+    <InfoSection title="Localização" icon={MapPin}>
+      {/* Cards informativos básicos */}
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mb-3">
+        {basicInfoCards.map((item, index) => (
+          <CompactCard key={index} {...item} />
+        ))}
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1.5">
+        {/* Diretoria de ensino */}
         {escola.diretoria_ensino && (
-          <InfoBlock icon={Building} label="Diretoria de ensino" value={escola.diretoria_ensino} />
+          <InfoBlock 
+            icon={Building} 
+            label="Diretoria de ensino" 
+            value={escola.diretoria_ensino} 
+          />
         )}
 
+        {/* Gaveta do endereço */}
         {escola.endereco && (
           <div className="bg-white/70 rounded-md ring-1 ring-gray-100">
             <button
               onClick={() => toggle('endereco')}
-              className="w-full flex justify-between items-center p-2 hover:bg-gray-50 text-xs"
+              className="w-full flex justify-between items-center p-1.5 hover:bg-gray-50 text-xs"
               aria-expanded={expanded.endereco}
             >
               <span className="flex items-center gap-2 text-gray-700 font-medium">
-                <Building className="w-3 h-3" />
+                <Building className="w-4 h-4" />
                 Endereço
               </span>
               <ChevronRight
-                className={`w-3 h-3 text-gray-400 transition-transform ${
+                className={`w-4 h-4 text-gray-400 transition-transform ${
                   expanded.endereco ? 'rotate-90' : ''
                 }`}
               />
             </button>
+            
             {expanded.endereco && (
               <div className="px-2 pb-2 border-t border-gray-100">
-                {/* Endereço detalhado se disponível */}
-                {(escola.logradouro || escola.numero || escola.bairro || escola.cep) ? (
-                  <div className="mt-2 space-y-2">
-                    {escola.logradouro && (
-                      <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
-                        <MapPin className="w-3 h-3 text-blue-600 mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                          <div className="text-xs font-medium text-gray-700 mb-1">Logradouro</div>
-                          <div className="text-xs text-gray-800 leading-snug">{escola.logradouro}</div>
-                        </div>
-                      </div>
-                    )}
-                    {escola.numero && (
-                      <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
-                        <MapPin className="w-3 h-3 text-green-600 mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                          <div className="text-xs font-medium text-gray-700 mb-1">Número</div>
-                          <div className="text-xs text-gray-800 leading-snug">{escola.numero}</div>
-                        </div>
-                      </div>
-                    )}
-                    {escola.complemento && (
-                      <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
-                        <MapPin className="w-3 h-3 text-purple-600 mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                          <div className="text-xs font-medium text-gray-700 mb-1">Complemento</div>
-                          <div className="text-xs text-gray-800 leading-snug">{escola.complemento}</div>
-                        </div>
-                      </div>
-                    )}
-                    {escola.bairro && (
-                      <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
-                        <MapPin className="w-3 h-3 text-orange-600 mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                          <div className="text-xs font-medium text-gray-700 mb-1">Bairro</div>
-                          <div className="text-xs text-gray-800 leading-snug">{escola.bairro}</div>
-                        </div>
-                      </div>
-                    )}
-                    {(escola.cep || escola.estado) && (
-                      <div className="flex items-start gap-2 p-2 bg-white/80 rounded-md">
-                        <MapPin className="w-3 h-3 text-red-600 mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                          <div className="text-xs font-medium text-gray-700 mb-1">Localização</div>
-                          <div className="text-xs text-gray-800 leading-snug">
-                            {[escola.municipio, escola.estado, escola.cep].filter(Boolean).join(', ')}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  /* Endereço completo (formato antigo) */
-                  <p className="text-xs text-gray-700 leading-snug">
-                    {capitalize(escola.endereco)}
-                  </p>
-                )}
+                <AddressDetails escola={escola} />
+                <MapButton escola={escola} />
               </div>
             )}
           </div>
         )}
 
-        {socialLinks.length > 0 && (
-          <div className="bg-white/70 rounded-md ring-1 ring-blue-100">
-            <button
-              onClick={() => toggle('social')}
-              className="w-full flex justify-between items-center p-2 hover:bg-blue-50 text-xs"
-              aria-expanded={expanded.social}
-            >
-              <span className="flex items-center gap-2 text-gray-700 font-medium">
-                <Globe className="w-3 h-3 text-blue-600" />
-                Redes sociais ({socialLinks.length})
-              </span>
-              <ChevronRight
-                className={`w-3 h-3 text-gray-400 transition-transform ${
-                  expanded.social ? 'rotate-90' : ''
-                }`}
-              />
-            </button>
-            {expanded.social && (
-              <div className="px-2 pb-2 border-t border-blue-100 bg-blue-50/30">
-                <div className="mt-2 space-y-1">
-                  {socialLinks.map((link, index) => (
-                    <a
-                      key={index}
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 p-1.5 bg-white/80 rounded-md hover:bg-blue-100/50 group text-xs"
-                    >
-                      <LinkIcon className="w-3 h-3 text-blue-600" />
-                      <span className="truncate flex-1 text-gray-700">{link}</span>
-                      <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-blue-600" />
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+        {/* Redes sociais */}
+        <SocialLinks 
+          links={escola.links_redes_sociais}
+          expanded={expanded}
+          onToggle={toggle}
+        />
       </div>
     </InfoSection>
   );

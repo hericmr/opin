@@ -1,86 +1,167 @@
 import React, { memo } from 'react';
-import { UsersRound, Star } from 'lucide-react';
+import {
+  UsersRound,
+  Star,
+  User,
+  UserCheck,
+  UserMinus,
+  MessageCircle,
+  NotebookPen,
+  Check,
+  X,
+} from 'lucide-react';
 import InfoSection from '../InfoSection';
-import InfoItem from '../InfoItem';
-import BooleanValue from '../BooleanValue';
+
+const MiniCard = ({ icon: Icon, label, value, description }) => (
+  <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2 border border-green-200 text-sm">
+    <Icon className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" />
+    <div className="flex-1">
+      <div className="text-xs text-gray-500">{label}</div>
+      <div className="text-gray-800 font-medium mt-0.5">{value}</div>
+      {description && (
+        <div className="text-xs text-gray-600 mt-1 whitespace-pre-line">
+          {description}
+        </div>
+      )}
+    </div>
+  </div>
+);
+
+const formatarNomeProfessor = (nome) => {
+  if (!nome) return nome;
+
+  const padroesIndigenas = [
+    /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+\(([^)]+)\)/,
+    /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+-\s+([^)]+)/,
+    /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+ou\s+([^)]+)/,
+  ];
+
+  for (const padrao of padroesIndigenas) {
+    const match = nome.match(padrao);
+    if (match) {
+      const nomeIndigena = `${match[1]} ${match[2]}`;
+      const nomePortugues = match[3];
+      return `${nomeIndigena} (${nomePortugues})`;
+    }
+  }
+
+  return nome.includes('(') && nome.includes(')') ? nome : nome;
+};
+
+const formatarFormacaoProfessores = (formacao) => {
+  if (!formacao) return null;
+
+  const [status, ...resto] = formacao.split('/');
+  const descricao = resto.join('/').trim();
+
+  return {
+    status: status.trim().toLowerCase() === 'sim' ? 'Sim' : status.trim(),
+    descricao: descricao || null,
+  };
+};
+
+const formatarFormacaoContinuada = (valor) => {
+  if (!valor) return null;
+
+  const [status, ...resto] = valor.split('/');
+  const descricao = resto.join('/').trim();
+
+  return {
+    status: status.trim().toLowerCase() === 'sim' ? 'Sim' : status.trim(),
+    descricao: descricao || null,
+  };
+};
+
+const renderBooleanStatus = (valor) => {
+  const normalizado = String(valor).trim().toLowerCase();
+  if (normalizado === 'sim') {
+    return (
+      <div className="flex items-center gap-1 text-green-700">
+        <Check className="w-4 h-4" />
+        Sim
+      </div>
+    );
+  } else if (normalizado === 'não' || normalizado === 'nao') {
+    return (
+      <div className="flex items-center gap-1 text-gray-500">
+        <X className="w-4 h-4" />
+        Não
+      </div>
+    );
+  }
+  return valor;
+};
 
 const GestaoProfessores = memo(({ escola }) => {
   if (!escola) return null;
 
-  // Função para formatar a formação dos professores
-  const formatarFormacaoProfessores = (formacao) => {
-    if (!formacao) return null;
+  const formacao = formatarFormacaoProfessores(escola.formacao_professores);
+  const continuada = formatarFormacaoContinuada(escola.formacao_continuada);
 
-    // Se já estiver formatado como lista, retornar como está
-    if (formacao.includes('•') || formacao.includes('-')) {
-      return formacao;
-    }
-
-    // Tentar identificar professores individuais
-    const professores = formacao.split(/[,;]/).map(p => p.trim()).filter(p => p);
-    
-    if (professores.length === 1) {
-      // Se há apenas um professor, formatar com nome indígena primeiro
-      const professor = professores[0];
-      return formatarNomeProfessor(professor);
-    }
-
-    // Se há múltiplos professores, formatar como lista
-    return professores.map(professor => 
-      `• ${formatarNomeProfessor(professor)}`
-    ).join('\n');
-  };
-
-  // Função para formatar nome do professor (nome indígena primeiro)
-  const formatarNomeProfessor = (nome) => {
-    if (!nome) return nome;
-
-    // Padrões comuns para nomes indígenas
-    const padroesIndigenas = [
-      /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+\(([^)]+)\)/, // Nome Indígena (Nome Português)
-      /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+-\s+([^)]+)/, // Nome Indígena - Nome Português
-      /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+ou\s+([^)]+)/, // Nome Indígena ou Nome Português
-    ];
-
-    for (const padrao of padroesIndigenas) {
-      const match = nome.match(padrao);
-      if (match) {
-        const nomeIndigena = `${match[1]} ${match[2]}`;
-        const nomePortugues = match[3];
-        return `${nomeIndigena} (${nomePortugues})`;
-      }
-    }
-
-    // Se não encontrar padrão específico, verificar se há parênteses
-    if (nome.includes('(') && nome.includes(')')) {
-      return nome; // Já está formatado
-    }
-
-    // Se não há formatação específica, retornar como está
-    return nome;
-  };
+  const infoCards = [
+    {
+      icon: User,
+      label: 'Gestão/Nome',
+      value: escola.gestao,
+    },
+    {
+      icon: UserCheck,
+      label: 'Professores Indígenas',
+      value: escola.professores_indigenas,
+    },
+    {
+      icon: UserMinus,
+      label: 'Professores Não Indígenas',
+      value: escola.professores_nao_indigenas,
+    },
+    {
+      icon: UsersRound,
+      label: 'Outros Funcionários',
+      value: escola.outros_funcionarios,
+    },
+    {
+      icon: MessageCircle,
+      label: 'Professores que falam língua indígena',
+      value: renderBooleanStatus(escola.professores_falam_lingua),
+    },
+  ];
 
   return (
     <InfoSection title="Gestores" icon={UsersRound}>
-      <InfoItem label="Gestão/Nome" value={escola.gestao} />
-      <InfoItem label="Professores Indígenas" value={escola.professores_indigenas} />
-      <InfoItem label="Outros Funcionários" value={escola.outros_funcionarios} />
-      <InfoItem label="Professores Não Indígenas" value={escola.professores_nao_indigenas} />
-      <InfoItem 
-        label="Professores Falantes da Língua Indígena" 
-        value={escola.professores_falam_lingua} 
-      />
-      <InfoItem 
-        label="Formação dos Professores" 
-        value={formatarFormacaoProfessores(escola.formacao_professores)} 
-      />
-      <InfoItem 
-        label="Visitas de Supervisores e Formação Continuada" 
-        value={escola.formacao_continuada}
-        isTextArea={true}
-      />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-1">
+        {infoCards.map((item, idx) => (
+          <MiniCard
+            key={idx}
+            icon={item.icon}
+            label={item.label}
+            value={item.value}
+          />
+        ))}
+      </div>
+
+      {formacao?.status && (
+        <div className="mt-4">
+          <MiniCard
+            icon={Star}
+            label="Formação dos Professores"
+            value={renderBooleanStatus(formacao.status)}
+            description={formacao.descricao}
+          />
+        </div>
+      )}
+
+      {continuada?.status && (
+        <div className="mt-4">
+          <MiniCard
+            icon={NotebookPen}
+            label="Visitas de Supervisores e Formação Continuada"
+            value={renderBooleanStatus(continuada.status)}
+            description={continuada.descricao}
+          />
+        </div>
+      )}
     </InfoSection>
   );
 });
 
-export default GestaoProfessores; 
+export default GestaoProfessores;
