@@ -6,104 +6,85 @@ import {
   Users,
   Heart,
   X,
+  Check, // ✅ novo ícone adicionado
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
+
+const ProjectCard = ({ icon: Icon, label, value }) => {
+  const isNegative = value?.trim().toLowerCase() === 'não';
+
+  return (
+    <div className="flex items-start gap-3 bg-white/80 rounded-lg p-2 border border-green-200">
+      <Icon className="w-5 h-5 text-gray-600 mt-0.5 flex-shrink-0" />
+      <div className="flex-1">
+        <div className="text-sm font-medium text-gray-700 mb-1">{label}</div>
+        {isNegative ? (
+          <div className="text-sm text-gray-400 flex items-center gap-1">
+            <X className="w-4 h-4 text-gray-400" />
+            Não
+          </div>
+        ) : (
+          <div className="text-sm text-gray-800 leading-relaxed flex items-start gap-1">
+            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+            <span>{value}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const ProjetosParcerias = memo(({ escola }) => {
   if (!escola) return null;
 
-  // Verificar se há dados de projetos e parcerias
-  const hasProjetosData = escola.projetos_andamento || 
-                         escola.parcerias_universidades || 
-                         escola.acoes_ongs || 
-                         escola.desejos_comunidade || 
-                         escola.parcerias_municipio;
+  const projectsData = [
+    {
+      field: 'projetos_andamento',
+      icon: BookOpen,
+      label: 'Projetos em andamento',
+    },
+    {
+      field: 'parcerias_universidades',
+      icon: GraduationCap,
+      label: 'Parcerias com universidades',
+    },
+    {
+      field: 'acoes_ongs',
+      icon: Users,
+      label: 'Ações com ONGs ou coletivos',
+    },
+    {
+      field: 'desejos_comunidade',
+      icon: Heart,
+      label: 'Desejos da comunidade para a escola',
+    },
+    {
+      field: 'parcerias_municipio',
+      icon: Target,
+      label: 'Parcerias com o município',
+    },
+  ];
 
-  if (!hasProjetosData) return null;
+  const availableProjects = projectsData.filter(
+    project => escola[project.field] && escola[project.field].trim()
+  );
+
+  if (availableProjects.length === 0) return null;
 
   return (
     <InfoSection title="Projetos e Parcerias" icon={Target}>
-      <div className="space-y-3">
-        {escola.projetos_andamento && escola.projetos_andamento.trim() && (
-          <div className="flex items-start gap-3 bg-white/80 rounded-lg p-3 border border-green-200">
-            <BookOpen className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-            <div className="flex-1">
-              <div className="text-sm font-medium text-gray-700 mb-1">Projetos em andamento</div>
-              {escola.projetos_andamento.trim().toLowerCase() === 'não' ? (
-                <div className="text-sm text-gray-400 flex items-center gap-1">
-                  <X className="w-4 h-4 text-gray-400" />
-                  Não
-                </div>
-              ) : (
-                <div className="text-sm text-gray-800 leading-relaxed">{escola.projetos_andamento}</div>
-              )}
-            </div>
-          </div>
-        )}
-        
-        {escola.parcerias_universidades && escola.parcerias_universidades.trim() && (
-          <div className="flex items-start gap-3 bg-white/80 rounded-lg p-3 border border-green-200">
-            <GraduationCap className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
-            <div className="flex-1">
-              <div className="text-sm font-medium text-gray-700 mb-1">Parcerias com universidades</div>
-              {escola.parcerias_universidades.trim().toLowerCase() === 'não' ? (
-                <div className="text-sm text-gray-400 flex items-center gap-1">
-                  <X className="w-4 h-4 text-gray-400" />
-                  Não
-                </div>
-              ) : (
-                <div className="text-sm text-gray-800 leading-relaxed">{escola.parcerias_universidades}</div>
-              )}
-            </div>
-          </div>
-        )}
-        
-        {escola.acoes_ongs && escola.acoes_ongs.trim() && (
-          <div className="flex items-start gap-3 bg-white/80 rounded-lg p-3 border border-green-200">
-            <Users className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" />
-            <div className="flex-1">
-              <div className="text-sm font-medium text-gray-700 mb-1">Ações com ONGs ou coletivos</div>
-              {escola.acoes_ongs.trim().toLowerCase() === 'não' ? (
-                <div className="text-sm text-gray-400 flex items-center gap-1">
-                  <X className="w-4 h-4 text-gray-400" />
-                  Não
-                </div>
-              ) : (
-                <div className="text-sm text-gray-800 leading-relaxed">{escola.acoes_ongs}</div>
-              )}
-            </div>
-          </div>
-        )}
-        
-        {escola.desejos_comunidade && escola.desejos_comunidade.trim() && (
-          <div className="flex items-start gap-3 bg-white/80 rounded-lg p-3 border border-green-200">
-            <Heart className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
-            <div className="flex-1">
-              <div className="text-sm font-medium text-gray-700 mb-1">Desejos da comunidade para a escola</div>
-              <div className="text-sm text-gray-800 leading-relaxed">{escola.desejos_comunidade}</div>
-            </div>
-          </div>
-        )}
-        
-        {escola.parcerias_municipio && escola.parcerias_municipio.trim() && (
-          <div className="flex items-start gap-3 bg-white/80 rounded-lg p-3 border border-green-200">
-            <Target className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-            <div className="flex-1">
-              <div className="text-sm font-medium text-gray-700 mb-1">Parcerias com o município</div>
-              {escola.parcerias_municipio.trim().toLowerCase() === 'não' ? (
-                <div className="text-sm text-gray-400 flex items-center gap-1">
-                  <X className="w-4 h-4 text-gray-400" />
-                  Não
-                </div>
-              ) : (
-                <div className="text-sm text-gray-800 leading-relaxed">{escola.parcerias_municipio}</div>
-              )}
-            </div>
-          </div>
-        )}
+      <div className="space-y-2">
+        {availableProjects.map((project) => (
+          <ProjectCard
+            key={project.field}
+            icon={project.icon}
+            label={project.label}
+            value={escola[project.field]}
+          />
+        ))}
       </div>
     </InfoSection>
   );
 });
 
-export default ProjetosParcerias; 
+export default ProjetosParcerias;
