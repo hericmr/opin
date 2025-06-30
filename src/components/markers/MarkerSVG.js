@@ -3,5 +3,5 @@ const MarkerSVG = () => {
   // Implementação futura
   return null;
 };
-
+ 
 export default MarkerSVG; 

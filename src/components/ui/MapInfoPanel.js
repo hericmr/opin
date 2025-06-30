@@ -3,5 +3,5 @@ const MapInfoPanel = () => {
   // Implementação futura
   return null;
 };
-
+ 
 export default MapInfoPanel; 

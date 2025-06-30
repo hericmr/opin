@@ -3,5 +3,5 @@ const MarkerTooltip = () => {
   // Implementação futura
   return null;
 };
-
+ 
 export default MarkerTooltip; 
