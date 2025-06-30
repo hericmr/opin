@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { isMobile, MobileInteractionManager } from '../../utils/mobileUtils';
+import { useCallback, useEffect } from 'react';
+import { isMobile } from '../../utils/mobileUtils';
 
 /**
  * Hook para gerenciar interações com marcadores
@@ -9,35 +9,13 @@ import { isMobile, MobileInteractionManager } from '../../utils/mobileUtils';
  * @param {boolean} options.isMobileDevice - Se é dispositivo mobile
  */
 export const useMarkerInteractions = ({ onPainelOpen, map, isMobileDevice }) => {
-  const [lastClickedFeature, setLastClickedFeature] = useState(null);
-  const [clickTimeout, setClickTimeout] = useState(null);
-
-  // Instância do gerenciador de interações mobile
-  const mobileInteractionManager = useMemo(() => new MobileInteractionManager(), []);
-
-  // Função para gerenciar cliques
-  const handleFeatureClick = useCallback((feature, schoolData) => {
-    mobileInteractionManager.handleClick(
-      feature,
-      () => {
-        // Primeiro clique: mostrar tooltip
-        // (se necessário, implementar tooltip)
-      },
-      () => {
-        // Segundo clique: abrir painel
-        onPainelOpen?.(schoolData);
-      },
-      isMobileDevice
-    );
-  }, [onPainelOpen, isMobileDevice, mobileInteractionManager]);
-
   // Função para lidar com clique em marcador individual
   const handleMarkerClick = useCallback((feature, event) => {
     const schoolData = feature.get('schoolData');
     if (schoolData) {
-      handleFeatureClick(feature, schoolData);
+      onPainelOpen?.(schoolData);
     }
-  }, [handleFeatureClick]);
+  }, [onPainelOpen]);
 
   // Função para lidar com clique em cluster
   const handleClusterClick = useCallback((feature, event) => {
@@ -46,7 +24,7 @@ export const useMarkerInteractions = ({ onPainelOpen, map, isMobileDevice }) => 
       // Cluster com apenas um marcador
       const schoolData = features[0].get('schoolData');
       if (schoolData) {
-        handleMobileClick(feature, schoolData, event);
+        onPainelOpen?.(schoolData);
       }
     } else {
       // Cluster com múltiplos marcadores, fazer zoom inteligente
@@ -69,7 +47,7 @@ export const useMarkerInteractions = ({ onPainelOpen, map, isMobileDevice }) => 
         maxZoom: targetZoom
       });
     }
-  }, [handleMobileClick, map]);
+  }, [onPainelOpen, map]);
 
   // Adicionar event listeners para cliques nos marcadores e clusters
   useEffect(() => {
@@ -97,19 +75,9 @@ export const useMarkerInteractions = ({ onPainelOpen, map, isMobileDevice }) => 
     };
   }, [map, handleMarkerClick, handleClusterClick]);
 
-  // Cleanup de timeouts
-  useEffect(() => {
-    return () => {
-      if (clickTimeout) {
-        clearTimeout(clickTimeout);
-      }
-    };
-  }, [clickTimeout]);
-
   return {
     handleMarkerClick,
-    handleClusterClick,
-    handleMobileClick
+    handleClusterClick
   };
 };
 
