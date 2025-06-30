@@ -73,8 +73,8 @@ const WelcomeModal = () => {
           {/* Header com padrão decorativo */}
           <div className="relative bg-gradient-to-r from-green-900 to-green-800 p-6">
             {/* Elementos decorativos sutis */}
-            <div className="absolute top-2 right-2 w-8 h-8 border-2 border-green-700/30 rounded-full"></div>
-            <div className="absolute bottom-2 left-4 w-4 h-4 border border-green-700/20 rounded-full"></div>
+            <div className="absolute top-2 right-5 w-8 h-8 border-2 border-green-700/30 rounded-full"></div>
+            <div className="absolute bottom-2 left-5 w-4 h-4 border border-green-700/20 rounded-full"></div>
             
             <div className="flex justify-between items-start">
               <div className="flex-1">
