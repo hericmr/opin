@@ -19,6 +19,7 @@ import 'ol/ol.css';
 import { MAP_CONFIG } from '../utils/mapConfig';
 import { isMobile } from '../utils/mobileUtils';
 import MapWrapper from './map/MapWrapper';
+import { findNearbyPairs } from '../utils/markers/proximityUtils';
 
 // Componentes GeoJSON
 // import OpenLayersTerrasIndigenas from './OpenLayersTerrasIndigenas';
@@ -30,35 +31,6 @@ register(proj4);
 
 // Constante para definir a proximidade entre marcadores (em graus) - mesma do Leaflet
 const PROXIMITY_THRESHOLD = 0.00005;
-
-// Função para encontrar pares de marcadores próximos (adaptada do Leaflet)
-const findNearbyPairs = (pontos) => {
-  const pairs = [];
-  const used = new Set();
-
-  for (let i = 0; i < pontos.length; i++) {
-    if (used.has(i)) continue;
-
-    for (let j = i + 1; j < pontos.length; j++) {
-      if (used.has(j)) continue;
-
-      const p1 = pontos[i];
-      const p2 = pontos[j];
-
-      const latDiff = Math.abs(parseFloat(p1.latitude) - parseFloat(p2.latitude));
-      const lngDiff = Math.abs(parseFloat(p1.longitude) - parseFloat(p2.longitude));
-
-      if (latDiff < PROXIMITY_THRESHOLD && lngDiff < PROXIMITY_THRESHOLD) {
-        pairs.push([i, j]);
-        used.add(i);
-        used.add(j);
-        break;
-      }
-    }
-  }
-
-  return pairs;
-};
 
 // Função para criar SVG base do marcador (gota invertida com bolinha branca)
 const createMarkerSVG = (color, size = 24, options = {}) => {

@@ -4,12 +4,12 @@
 export const PROXIMITY_THRESHOLD = 0.00005;
 
 /**
- * Função para encontrar pares de marcadores próximos
- * @param {Array} pontos - Array de pontos com latitude e longitude
- * @param {number} threshold - Limiar de proximidade (padrão: PROXIMITY_THRESHOLD)
- * @returns {Array} Array de pares de índices próximos
+ * Encontra pares de pontos próximos com base em um threshold de proximidade.
+ * @param {Array} pontos - Array de objetos com latitude e longitude.
+ * @param {number} [threshold=0.00005] - Threshold de proximidade em graus.
+ * @returns {Array<Array<number>>} - Array de pares de índices próximos.
  */
-export const findNearbyPairs = (pontos, threshold = PROXIMITY_THRESHOLD) => {
+export function findNearbyPairs(pontos, threshold = 0.00005) {
   const pairs = [];
   const used = new Set();
 
@@ -35,7 +35,7 @@ export const findNearbyPairs = (pontos, threshold = PROXIMITY_THRESHOLD) => {
   }
 
   return pairs;
-};
+}
 
 /**
  * Função para calcular distância entre dois pontos
