@@ -109,7 +109,8 @@ Antes ou durante a refatoração incremental, resolver todos os avisos do ESLint
 - [x] Planejamento criado
 - [x] `MapWrapper` criado
 - [x] Integrar `MapWrapper` ao componente principal (com forwardRef)
-- [x] Corrigir todos os erros/warnings de lint
+- [x] atualize o planejamento e versione
+
 - [x] Extrair função utilitária `findNearbyPairs`
 - [x] Extrair função de estilo `terrasIndigenasStyle` (com retorno Style do OL)
 - [x] Extrair função de estilo `estadoSPStyle`

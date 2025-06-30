@@ -5,6 +5,7 @@
  * @returns {ol.style.Style|null} Estilo do marcador ou null.
  */
 import { Style, Icon, Text, Fill, Stroke } from 'ol/style';
+import { createMarkerSVG } from './svgGenerator';
 
 export function createMarkerStyle(feature, showNomesEscolas = false) {
   try {
@@ -15,10 +16,15 @@ export function createMarkerStyle(feature, showNomesEscolas = false) {
     const borderColor = '#1E40AF';
     const isNearbyPair = feature.get('isNearbyPair');
 
-    // Função utilitária para gerar SVG (pode ser importada depois)
-    const svg = feature.get('svg') || '';
-    const svgUrl = feature.get('svgUrl') || '';
-    // Se não houver SVG pronto, pode-se gerar aqui (ajustar depois)
+    // Gerar SVG dinamicamente
+    const svg = createMarkerSVG(baseColor, 24, {
+      borderColor: borderColor,
+      showShadow: true,
+      showGradient: true,
+      showGlow: false,
+      isNearbyPair: isNearbyPair
+    });
+    const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 
     const style = new Style({
       image: new Icon({
@@ -84,10 +90,15 @@ export function createClusterStyle(feature, createMarkerStyle) {
     const scale = Math.min(1.0 + (size * 0.015), 1.8);
     const finalSize = Math.round(baseSize * scale);
 
-    // Função utilitária para gerar SVG (pode ser importada depois)
-    const svg = feature.get('svg') || '';
-    const svgUrl = feature.get('svgUrl') || '';
-    // Se não houver SVG pronto, pode-se gerar aqui (ajustar depois)
+    // Gerar SVG dinamicamente
+    const svg = createMarkerSVG(baseColor, finalSize, {
+      borderColor: baseColor,
+      showShadow: true,
+      showGradient: true,
+      showGlow: size > 20,
+      isNearbyPair: false
+    });
+    const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 
     let fontSize = '12px';
     let fontWeight = 'bold';
