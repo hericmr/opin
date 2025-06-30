@@ -1,6 +1,5 @@
 // Utilitários mobile
  
 export function isTouchDevice() {
-  // Implementação futura
-  return false;
+  return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
 } 
