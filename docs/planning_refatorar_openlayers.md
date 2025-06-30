@@ -66,6 +66,14 @@ export default MapWrapper;
 
 ---
 
+#### Etapa concluída: Extração de função de estilo
+- **Função `estadoSPStyle` extraída para `src/utils/markers/featureStyles.js`**
+- Motivo: função pura de estilo, sem dependências de React ou estado, fácil de testar e reutilizar em outros componentes de camada ou hooks.
+- O componente principal agora importa de `utils/markers/featureStyles.js`.
+- Teste manual realizado após a mudança.
+
+---
+
 ### 4. **Correção de Erros e Warnings de Lint**
 Antes ou durante a refatoração incremental, resolver todos os avisos do ESLint para garantir código limpo e sustentável. Exemplos de problemas a serem corrigidos:
 - Imports não utilizados (`no-unused-vars`)
@@ -102,6 +110,7 @@ Antes ou durante a refatoração incremental, resolver todos os avisos do ESLint
 - [x] Corrigir todos os erros/warnings de lint
 - [x] Extrair função utilitária `findNearbyPairs`
 - [x] Extrair função de estilo `terrasIndigenasStyle` (com retorno Style do OL)
+- [x] Extrair função de estilo `estadoSPStyle`
 - [ ] Extrair hook de inicialização do mapa
 - [ ] Extrair hook de eventos do mapa
 - [ ] Extrair camada de cluster

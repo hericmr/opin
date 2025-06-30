@@ -19,4 +19,20 @@ export function terrasIndigenasStyle(feature) {
       lineDash: [3, 3]
     })
   });
+}
+
+/**
+ * Função de estilo para features do Estado de SP.
+ * @returns {ol.style.Style} Objeto de estilo do OpenLayers para a feature.
+ */
+export function estadoSPStyle() {
+  return new Style({
+    fill: new Fill({
+      color: 'rgba(0, 0, 0, 0.3)'
+    }),
+    stroke: new Stroke({
+      color: '#000000',
+      width: 2
+    })
+  });
 } 

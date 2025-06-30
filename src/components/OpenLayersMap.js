@@ -20,7 +20,7 @@ import { MAP_CONFIG } from '../utils/mapConfig';
 import { isMobile } from '../utils/mobileUtils';
 import MapWrapper from './map/MapWrapper';
 import { findNearbyPairs } from '../utils/markers/proximityUtils';
-import { terrasIndigenasStyle } from '../utils/markers/featureStyles';
+import { terrasIndigenasStyle, estadoSPStyle } from '../utils/markers/featureStyles';
 
 // Componentes GeoJSON
 // import OpenLayersTerrasIndigenas from './OpenLayersTerrasIndigenas';
@@ -759,15 +759,7 @@ const OpenLayersMap = ({
           source: new VectorSource({
             features: features
           }),
-          style: new Style({
-            fill: new Fill({
-              color: 'rgba(0, 0, 0, 0.3)'
-            }),
-            stroke: new Stroke({
-              color: '#000000',
-              width: 2
-            })
-          }),
+          style: estadoSPStyle,
           zIndex: 5,
           interactive: false
         });
