@@ -68,6 +68,12 @@ Refatorar o arquivo `OpenLayers.js` (ou equivalente), que está extenso, crític
 - O componente principal agora importa de `utils/markers/handlers.js`.
 - Teste manual realizado após a mudança.
 
+#### Etapa concluída: Extração de funções de estilo de cluster/marcador
+- **Funções `createMarkerStyle` e `createClusterStyle` extraídas para `src/utils/markers/markerStyles.js`**
+- Motivo: funções autocontidas, facilmente testáveis e reutilizáveis em outros componentes ou hooks.
+- O componente principal agora importa de `utils/markers/markerStyles.js`.
+- Teste manual realizado após a mudança.
+
 ---
 
 ### 4. **Correção de Erros e Warnings de Lint**
@@ -108,7 +114,7 @@ Antes ou durante a refatoração incremental, resolver todos os avisos do ESLint
 - [x] Extrair função de estilo `terrasIndigenasStyle` (com retorno Style do OL)
 - [x] Extrair função de estilo `estadoSPStyle`
 - [x] Extrair handlers simples (`handleMarkerClick`, `handleGeoJSONClick`)
+- [x] Extrair funções de estilo de cluster/marcador (`createMarkerStyle`, `createClusterStyle`)
 - [ ] Extrair utilitário `createMarkerSVG`
-- [ ] Extrair funções de estilo de cluster/marcador (`createMarkerStyle`, `createClusterStyle`)
 - [ ] Extrair hooks customizados (`useInitializeMap`, `useClusterLayer`, `useMapEvents`)
 - [ ] Revisão final e limpeza 
