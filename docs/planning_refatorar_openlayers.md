@@ -49,6 +49,14 @@ export default MapWrapper;
 
 ---
 
+#### Etapa concluída: Extração de função utilitária
+- **Função `findNearbyPairs` extraída para `src/utils/markers/proximityUtils.js`**
+- Motivo: função pura, sem dependências de React ou estado, fácil de testar e reutilizar em outros componentes ou hooks.
+- O componente principal agora importa de `utils/markers/proximityUtils.js`.
+- Teste manual realizado após a mudança.
+
+---
+
 ### 4. **Correção de Erros e Warnings de Lint**
 Antes ou durante a refatoração incremental, resolver todos os avisos do ESLint para garantir código limpo e sustentável. Exemplos de problemas a serem corrigidos:
 - Imports não utilizados (`no-unused-vars`)
@@ -82,10 +90,11 @@ Antes ou durante a refatoração incremental, resolver todos os avisos do ESLint
 - [x] Planejamento criado
 - [x] `MapWrapper` criado
 - [x] Integrar `MapWrapper` ao componente principal (com forwardRef)
+- [x] Corrigir todos os erros/warnings de lint
+- [x] Extrair função utilitária `findNearbyPairs`
 - [ ] Extrair hook de inicialização do mapa
 - [ ] Extrair hook de eventos do mapa
 - [ ] Extrair camada de cluster
 - [ ] Extrair overlay de marcadores
 - [ ] Extrair hook de fit/zoom
-- [x] Corrigir todos os erros/warnings de lint
 - [ ] Revisão final e limpeza 
