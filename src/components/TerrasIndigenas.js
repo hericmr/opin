@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useEffect, useRef } from 'react';
 import { GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import { isMobile } from '../utils/mobileUtils';
 
 const TerrasIndigenas = ({ data, onClick }) => {
   const map = useMap();
@@ -164,7 +165,8 @@ const TerrasIndigenas = ({ data, onClick }) => {
           };
 
           // Handle mobile two-click behavior
-          onSecondClick(feature);
+          showMobileTooltip(e, feature.properties.terrai_nom || 'Terra Indígena');
+          onClick?.(terraIndigenaInfo);
         }
       });
     },
