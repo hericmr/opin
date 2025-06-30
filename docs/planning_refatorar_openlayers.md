@@ -12,64 +12,60 @@ Refatorar o arquivo `OpenLayers.js` (ou equivalente), que está extenso, crític
 - Mapear blocos de lógica (ex: inicialização do mapa, eventos de zoom/click, clusters, overlays, camadas, etc.)
 - Listar os trechos de código que são candidatos a virarem componentes ou hooks reutilizáveis
 
-### 2. **Planejar Componentização Gradual**
-Criar um plano para isolar cada parte em um novo componente, **em ordem de menor risco para maior complexidade**.
+### 2. **Diagnóstico: O que pode ser extraído de forma segura**
 
-#### 💡 Sugestão de divisão inicial:
-1. `MapWrapper`: isolando apenas a renderização do `<div>` do mapa + a criação do objeto do mapa
-2. `useInitializeMap`: um hook que inicializa o mapa e suas camadas
-3. `useMapEvents`: lida com listeners (zoom, click, hover, etc.)
-4. `ClusterLayer`: camada de cluster isolada
-5. `SchoolMarkersOverlay`: renderiza os overlays de escolas com dados
-6. `useFitViewToMarkers`: hook para controlar o zoom/fit ao selecionar escolas ou clusters
+#### **Funções Utilitárias Puras**
+- `createMarkerSVG`: Função pura para gerar SVG de marcadores. Não depende de React nem do estado do componente. Pode ser movida para `src/utils/markers/svgGenerator.js`.
+- Outras funções auxiliares de cálculo (se existirem além das já extraídas).
 
-### 3. **Execução Incremental**
-Para cada etapa:
-- Extrair a responsabilidade para um novo componente/hook
-- Garantir que a funcionalidade não foi quebrada (testes manuais)
-- Refatorar chamadas no componente principal para usar o novo módulo
-- Documentar rapidamente cada extração
+#### **Funções de Estilo**
+- Funções de estilo de outros layers (além das já extraídas) podem ser movidas para `featureStyles.js`.
 
-#### Exemplo de Primeira Etapa
-- Criar `components/map/MapWrapper.jsx`:
-  - Apenas renderiza o `<div id="map">`
-  - ForwardRef para receber o container do mapa, se necessário
-  - **Observação:** Para integração correta com OpenLayers, o componente deve usar `React.forwardRef` e receber a ref do container.
+#### **Handlers Simples**
+- `handleMarkerClick`: Handler de clique em marcador, depende apenas de um callback e do dado do marcador. Pode ser extraído para um utilitário ou hook.
+- `handleGeoJSONClick`: Handler de clique em features GeoJSON, depende apenas do callback e do dado da feature. Pode ser extraído para um utilitário.
 
-```jsx
-// components/map/MapWrapper.jsx
-import React from 'react';
+#### **Funções de Estilo de Cluster/Marcador**
+- `createMarkerStyle` e `createClusterStyle`: Funções de estilo para marcadores e clusters. Podem ser extraídas para um utilitário ou hook customizado (`useMarkerStyles`).
 
-const MapWrapper = React.forwardRef((props, ref) => {
-  return <div id="map" className="w-full h-full" ref={ref} {...props} />;
-});
+#### **Hooks Customizados**
+- `useInitializeMap`: O bloco de inicialização do mapa (useEffect que cria o mapa e as camadas) pode ser extraído para um hook customizado.
+- `useClusterLayer`: O bloco de criação e atualização da camada de cluster pode ser extraído para um hook.
+- `useMapEvents`: Blocos de listeners de eventos (zoom, click, hover) podem ser extraídos para um hook.
 
-export default MapWrapper;
-```
+#### **Componentização de Camadas**
+- `BaseLayer` e `GeoJSONLayer` já são componentes autocontidos, mas se houver lógica repetida, pode ser extraída para hooks ou utilitários.
 
 ---
 
-#### Etapa concluída: Extração de função utilitária
-- **Função `findNearbyPairs` extraída para `src/utils/markers/proximityUtils.js`**
-- Motivo: função pura, sem dependências de React ou estado, fácil de testar e reutilizar em outros componentes ou hooks.
-- O componente principal agora importa de `utils/markers/proximityUtils.js`.
-- Teste manual realizado após a mudança.
+### 3. **Plano Incremental de Implementação**
+
+**Prioridades para extração segura:**
+1. **createMarkerSVG** (utilitário puro)
+2. **Handlers simples** (`handleMarkerClick`, `handleGeoJSONClick`)
+3. **Funções de estilo de cluster/marcador** (`createMarkerStyle`, `createClusterStyle`)
+4. **Blocos de useEffect autocontidos** (hooks customizados: `useInitializeMap`, `useClusterLayer`, `useMapEvents`)
+5. **Componentização de camadas, se houver lógica duplicada**
+
+**Racional:**
+- Começar por funções puras/utilitários reduz o risco de efeitos colaterais.
+- Handlers simples são facilmente testáveis e isoláveis.
+- Funções de estilo de cluster/marcador são autocontidas e podem ser migradas para hooks/utilitários.
+- Hooks customizados permitem modularizar efeitos colaterais e lógica de ciclo de vida.
+- Componentização de camadas só é necessária se houver duplicidade ou lógica complexa repetida.
+
+**Para cada etapa:**
+- Extrair a função/bloco para utilitário ou hook.
+- Ajustar os imports/usos no componente principal.
+- Testar manualmente.
+- Documentar no planejamento.
 
 ---
 
-#### Etapa concluída: Extração de função de estilo
-- **Função `terrasIndigenasStyle` extraída para `src/utils/markers/featureStyles.js`**
-- Motivo: função pura de estilo, sem dependências de React ou estado, fácil de testar e reutilizar em outros componentes de camada ou hooks.
-- O componente principal agora importa de `utils/markers/featureStyles.js`.
-- **Correção:** A função foi ajustada para retornar um objeto `Style` do OpenLayers, garantindo compatibilidade e funcionamento correto.
-- Teste manual realizado após a mudança.
-
----
-
-#### Etapa concluída: Extração de função de estilo
-- **Função `estadoSPStyle` extraída para `src/utils/markers/featureStyles.js`**
-- Motivo: função pura de estilo, sem dependências de React ou estado, fácil de testar e reutilizar em outros componentes de camada ou hooks.
-- O componente principal agora importa de `utils/markers/featureStyles.js`.
+#### Etapa concluída: Extração de handlers simples
+- **Funções `handleMarkerClick` e `handleGeoJSONClick` extraídas para `src/utils/markers/handlers.js`**
+- Motivo: funções puras, facilmente testáveis e reutilizáveis em outros componentes ou hooks.
+- O componente principal agora importa de `utils/markers/handlers.js`.
 - Teste manual realizado após a mudança.
 
 ---
@@ -111,9 +107,8 @@ Antes ou durante a refatoração incremental, resolver todos os avisos do ESLint
 - [x] Extrair função utilitária `findNearbyPairs`
 - [x] Extrair função de estilo `terrasIndigenasStyle` (com retorno Style do OL)
 - [x] Extrair função de estilo `estadoSPStyle`
-- [ ] Extrair hook de inicialização do mapa
-- [ ] Extrair hook de eventos do mapa
-- [ ] Extrair camada de cluster
-- [ ] Extrair overlay de marcadores
-- [ ] Extrair hook de fit/zoom
+- [x] Extrair handlers simples (`handleMarkerClick`, `handleGeoJSONClick`)
+- [ ] Extrair utilitário `createMarkerSVG`
+- [ ] Extrair funções de estilo de cluster/marcador (`createMarkerStyle`, `createClusterStyle`)
+- [ ] Extrair hooks customizados (`useInitializeMap`, `useClusterLayer`, `useMapEvents`)
 - [ ] Revisão final e limpeza 
