@@ -1,3 +1,69 @@
+# 📋 PLANEJAMENTO DE REESTRUTURAÇÃO E REENGENHARIA DO PROJETO
+
+## 1. Diagnóstico Inicial
+- Mapeamento da estrutura atual do projeto
+- Identificação de arquivos grandes e monolíticos
+- Listagem de dependências e possíveis duplicidades
+- Levantamento de código morto, duplicado ou obsoleto
+- Levantamento de code smells e problemas de arquitetura
+
+## 2. Nova Arquitetura Modular
+- Estrutura baseada em domínio/feature:
+  - `src/features/` (funcionalidades principais)
+  - `src/entities/` (modelos de domínio: escola, usuário, documento)
+  - `src/shared/` (componentes, hooks, utils, serviços compartilhados)
+  - `src/widgets/` (UI widgets reutilizáveis)
+  - `src/core/` (configurações, tipos, constantes globais)
+- Separação clara entre UI (presentational) e lógica (container)
+- Padronização de nomes (kebab-case para arquivos, PascalCase para componentes)
+
+## 3. Refatoração e Limpeza
+- Quebra de arquivos grandes em módulos menores
+- Remoção de arquivos obsoletos e backups (`OpenLayersMap.js.backup`, `EditLocationWrapper.js`)
+- Remoção de imports e dependências não utilizados
+- Eliminação de duplicidade entre bibliotecas de mapas (padronizar em OpenLayers ou Leaflet)
+- Extração de strings hardcoded para arquivos de internacionalização (i18n)
+
+## 4. Padronização e Qualidade
+- Criação de configuração rigorosa de ESLint e Prettier
+- Padronização de estilos de código
+- Documentação de decisões arquiteturais no README
+
+## 5. Testes
+- Criação de testes unitários e de integração para componentes refatorados
+- Mock de dependências externas
+- Execução de testes automatizados (Jest, React Testing Library)
+
+## 6. Otimização e Performance
+- Code splitting com React.lazy e Suspense
+- Tree shaking e revisão de dependências
+- Uso de memoização (React.memo, useMemo, useCallback) onde necessário
+
+## 7. Garantia de Qualidade
+- Debug e correção de warnings/erros
+- Validação cross-browser e responsividade
+- Commits atômicos e mensagens semânticas
+- Build final leve e funcional
+
+---
+
+## 📅 Cronograma Sugerido
+1. Diagnóstico e planejamento detalhado
+2. Criação da nova estrutura de pastas
+3. Refatoração modular dos principais componentes
+4. Remoção de código morto e dependências
+5. Padronização e linting
+6. Implementação de testes
+7. Otimização e QA final
+8. Documentação e entrega
+
+---
+
+## 📝 Observações
+- Todas as mudanças devem ser documentadas no README e no próprio planning.md
+- O build deve estar sempre passando após cada etapa crítica
+- Priorizar clareza, modularidade e testabilidade
+
 # Planejamento de Atualizações do Site
 
 ## I. Identificação da Escola
