@@ -47,10 +47,11 @@
     "test": "react-scripts test",
     "test:watch": "react-scripts test --watch",
     "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "optimize-images": "node scripts/optimize-images.js"
   },
-  "homepage": "https://hericmr.github.io/escolasindigenas",
+  "homepage": "https://hericmr.github.io/escolasindigenas/",
   "eslintConfig": {
     "extends": [
       "react-app",

@@ -3,5 +3,5 @@ const useNearbyPairs = () => {
   // Implementação futura
   return null;
 };
-
+ 
 export default useNearbyPairs; 

@@ -3,5 +3,5 @@ const EstadoSPLayer = () => {
   // Implementação futura
   return null;
 };
-
+ 
 export default EstadoSPLayer; 

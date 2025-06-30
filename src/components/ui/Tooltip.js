@@ -3,5 +3,5 @@ const Tooltip = () => {
   // Implementação futura
   return null;
 };
-
+ 
 export default Tooltip; 
