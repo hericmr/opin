@@ -4,12 +4,14 @@ import { Image as ImageIcon, User, BookOpen, MapPin, Users, Settings, FileText, 
 import ImageUploadSection from './ImageUploadSection';
 import ProfessorImageUploadSection from './ProfessorImageUploadSection';
 import VideoSection from './VideoSection';
+import HistoriaProfessorManager from '../AdminPanel/HistoriaProfessorManager';
 
 const EditEscolaPanel = ({ escola, onClose, onSave }) => {
   const [nomeEscola, setNomeEscola] = useState(escola?.Escola || '');
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('dados-basicos');
+  console.log('render painel', activeTab);
 
   // Configuração das abas
   const tabs = [
@@ -54,10 +56,17 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
       label: 'Configurações', 
       icon: Settings,
       description: 'Configurações avançadas da escola'
-    }
+    },
+    { 
+      id: 'historia-professores', 
+      label: 'História dos Professores', 
+      icon: BookOpen,
+      description: 'Gerencie as histórias dos professores desta escola'
+    },
   ];
 
   const handleSubmit = async (e) => {
+    console.log('submit painel');
     e.preventDefault();
     if (!nomeEscola.trim()) {
       setError('O nome da escola é obrigatório.');
@@ -246,7 +255,18 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
                 placeholder="Nome da gestão atual"
               />
             </div>
-            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Nome do Professor Principal
+              </label>
+              <input
+                type="text"
+                className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                value={escola?.nome_professor || ''}
+                onChange={e => onSave({ ...escola, nome_professor: e.target.value })}
+                placeholder="Nome do professor principal"
+              />
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -307,6 +327,13 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
           </div>
         );
 
+      case 'historia-professores':
+        return (
+          <div className="space-y-4">
+            <HistoriaProfessorManager escolaId={escola?.id} escolaNome={escola?.Escola} />
+          </div>
+        );
+
       default:
         return null;
     }
@@ -315,6 +342,7 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
   // Detectar se é mobile
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
+  console.log('activeTab', activeTab);
   return (
     <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 ${isMobile ? 'p-0' : ''}`}
       style={{
@@ -382,39 +410,45 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
 
         {/* Content */}
         <div className={`flex-1 overflow-y-auto ${isMobile ? 'p-3' : 'p-6'}`} style={isMobile ? { fontSize: '1rem' } : {}}>
-        <form onSubmit={handleSubmit}>
-          {/* Conteúdo da aba ativa */}
-          <div className="min-h-[300px] md:min-h-[400px]" id={`tabpanel-${activeTab}`} role="tabpanel" aria-labelledby={`tab-${activeTab}`}> 
-            {renderTabContent()}
-          </div>
+          {/* ABA HISTÓRIA DOS PROFESSORES: RENDERIZA FORA DO <form> GLOBAL! */}
+          {activeTab === 'historia-professores' ? (
+            // Renderiza fora do <form> para evitar forms aninhados
+            renderTabContent()
+          ) : (
+            <form onSubmit={handleSubmit}>
+              {/* Conteúdo da aba ativa */}
+              <div className="min-h-[300px] md:min-h-[400px]" id={`tabpanel-${activeTab}`} role="tabpanel" aria-labelledby={`tab-${activeTab}`}> 
+                {renderTabContent()}
+              </div>
 
-          {/* Mensagens de erro */}
-          {error && (
-            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-700 text-sm">{error}</p>
-            </div>
+              {/* Mensagens de erro */}
+              {error && (
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-700 text-sm">{error}</p>
+                </div>
+              )}
+
+              {/* Botões de ação */}
+              <div className={`flex gap-3 mt-6 pt-6 border-t border-gray-200 ${isMobile ? 'flex-col' : ''}`}
+                style={isMobile ? { gap: 8 } : {}}>
+                <button
+                  type="submit"
+                  className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${isMobile ? 'w-full text-base' : ''}`}
+                  disabled={isSaving}
+                >
+                  {isSaving ? 'Salvando...' : 'Salvar Alterações'}
+                </button>
+                <button
+                  type="button"
+                  className={`px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors ${isMobile ? 'w-full text-base' : ''}`}
+                  onClick={onClose}
+                  disabled={isSaving}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
           )}
-
-          {/* Botões de ação */}
-          <div className={`flex gap-3 mt-6 pt-6 border-t border-gray-200 ${isMobile ? 'flex-col' : ''}`}
-            style={isMobile ? { gap: 8 } : {}}>
-            <button
-              type="submit"
-              className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${isMobile ? 'w-full text-base' : ''}`}
-              disabled={isSaving}
-            >
-              {isSaving ? 'Salvando...' : 'Salvar Alterações'}
-            </button>
-            <button
-              type="button"
-              className={`px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors ${isMobile ? 'w-full text-base' : ''}`}
-              onClick={onClose}
-              disabled={isSaving}
-            >
-              Cancelar
-            </button>
-          </div>
-        </form>
         </div>
       </div>
     </div>

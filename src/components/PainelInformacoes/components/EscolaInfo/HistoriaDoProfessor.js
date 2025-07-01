@@ -135,7 +135,7 @@ const HistoriaDoProfessor = memo(({ escola }) => {
               aria-hidden="true"
             />
             <h2 className="text-xl sm:text-2xl font-bold text-black m-0">
-              História dos Professores
+              História dos Professores{currentHistoria.nome_professor ? ` — ${currentHistoria.nome_professor}` : ''}
             </h2>
           </div>
           
@@ -151,9 +151,9 @@ const HistoriaDoProfessor = memo(({ escola }) => {
 
       {/* Conteúdo da história atual */}
       <section className="text-base sm:text-lg leading-relaxed text-neutral-800">
-        {currentHistoria.titulo && (
+        {currentHistoria.nome_professor && (
           <h3 className="text-lg sm:text-xl font-semibold text-green-800 mb-4">
-            {currentHistoria.titulo}
+            {currentHistoria.nome_professor}
           </h3>
         )}
         

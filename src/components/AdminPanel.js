@@ -5,6 +5,7 @@ import VideoSection from './EditEscolaPanel/VideoSection';
 import DocumentViewer from './PainelInformacoes/components/DocumentViewer';
 import { useRefresh } from '../contexts/RefreshContext';
 import { Menu } from 'lucide-react';
+import HistoriaProfessorManager from './AdminPanel/HistoriaProfessorManager';
 
 const AdminPanel = () => {
   const { triggerRefresh } = useRefresh();
@@ -42,6 +43,7 @@ const AdminPanel = () => {
     { id: 'redes-sociais', label: 'Redes Sociais' },
     { id: 'video', label: 'Vídeo' },
     { id: 'historias', label: 'Histórias' },
+    { id: 'historia-professores', label: 'História dos Professores' },
     { id: 'coordenadas', label: 'Coordenadas' },
     { id: 'imagens-escola', label: 'Imagens da Escola' },
     { id: 'imagens-professores', label: 'Imagens dos Professores' },
@@ -267,7 +269,6 @@ const AdminPanel = () => {
         
         // Histórias
         'historia_da_escola': editingLocation['historia_da_escola'],
-        'historia_do_prof': editingLocation['historia_do_prof'],
         
         // Coordenadas
         'latitude': editingLocation['latitude'],
@@ -350,7 +351,6 @@ const AdminPanel = () => {
       'Escola utiliza redes sociais?': escola['Escola utiliza redes sociais?'],
       'Links das redes sociais': escola['Links das redes sociais'],
       'historia_da_escola': escola['historia_da_escola'],
-      'historia_do_prof': escola['historia_do_prof'],
       'latitude': escola['latitude'],
       'longitude': escola['longitude'],
       'links': escola['links'],
@@ -930,14 +930,6 @@ const AdminPanel = () => {
                         onChange={e => setEditingLocation({ ...editingLocation, 'historia_da_escola': e.target.value })}
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">História do Professor</label>
-                      <textarea
-                        className="w-full border rounded px-3 py-2 h-32 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
-                        value={editingLocation['historia_do_prof'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'historia_do_prof': e.target.value })}
-                      />
-                    </div>
                   </div>
                 )}
 
@@ -1225,6 +1217,11 @@ const AdminPanel = () => {
                 </button>
               </div>
             </form>
+
+            {/* ABA HISTÓRIA DOS PROFESSORES: RENDERIZA FORA DO FORM GLOBAL! */}
+            {editingLocation.activeTab === 'historia-professores' && (
+              <HistoriaProfessorManager escolaId={editingLocation.id} escolaNome={editingLocation.Escola} />
+            )}
 
             {/* Feedback de erro */}
             {saveError && (
