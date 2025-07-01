@@ -257,7 +257,6 @@ const AppContent = () => {
           usa_redes_sociais: e["Escola utiliza redes sociais?"],
           links_redes_sociais: e["Links das redes sociais"],
           historia_da_escola: e["historia_da_escola"],
-          historia_do_prof: e["historia_do_prof"],
           
           // Coordenadas
           latitude: latitude,

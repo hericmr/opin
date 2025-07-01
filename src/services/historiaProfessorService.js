@@ -134,7 +134,7 @@ export const createHistoriaProfessor = async (historiaData) => {
       .from('historias_professor')
       .insert([{
         escola_id: historiaData.escola_id,
-        titulo: historiaData.titulo || null,
+        nome_professor: historiaData.nome_professor || null,
         historia: historiaData.historia,
         ordem: historiaData.ordem || 1,
         ativo: historiaData.ativo !== false
@@ -165,7 +165,7 @@ export const updateHistoriaProfessor = async (historiaId, historiaData) => {
     const { data, error } = await supabase
       .from('historias_professor')
       .update({
-        titulo: historiaData.titulo,
+        nome_professor: historiaData.nome_professor,
         historia: historiaData.historia,
         ordem: historiaData.ordem,
         ativo: historiaData.ativo,
@@ -194,17 +194,6 @@ export const updateHistoriaProfessor = async (historiaId, historiaData) => {
  */
 export const deleteHistoriaProfessor = async (historiaId) => {
   try {
-    // Primeiro, buscar a história para obter a URL da imagem
-    const { data: historia, error: fetchError } = await supabase
-      .from('historias_professor')
-      .select('imagem_url')
-      .eq('id', historiaId)
-      .single();
-
-    if (fetchError) {
-      throw fetchError;
-    }
-
     // Deletar a história
     const { error: deleteError } = await supabase
       .from('historias_professor')
@@ -214,18 +203,6 @@ export const deleteHistoriaProfessor = async (historiaId) => {
     if (deleteError) {
       throw deleteError;
     }
-
-    // Se havia uma imagem, deletar do storage
-    if (historia.imagem_url) {
-      const { error: storageError } = await supabase.storage
-        .from(HISTORIA_PROFESSOR_CONFIG.BUCKET_NAME)
-        .remove([historia.imagem_url]);
-
-      if (storageError) {
-        console.warn('Erro ao deletar imagem do storage:', storageError);
-      }
-    }
-
   } catch (error) {
     console.error('Erro ao deletar história do professor:', error);
     throw error;
@@ -279,7 +256,6 @@ export const uploadHistoriaProfessorImage = async (file, escolaId, historiaId, d
     const { data: historia, error: updateError } = await supabase
       .from('historias_professor')
       .update({
-        imagem_url: filePath,
         descricao_imagem: descricao.trim() || null,
         updated_at: new Date().toISOString()
       })
@@ -297,8 +273,6 @@ export const uploadHistoriaProfessorImage = async (file, escolaId, historiaId, d
 
     return {
       id: historia.id,
-      imagem_url: filePath,
-      imagem_public_url: publicUrl,
       descricao_imagem: historia.descricao_imagem
     };
 
@@ -334,7 +308,6 @@ export const deleteHistoriaProfessorImage = async (historiaId) => {
     const { error: updateError } = await supabase
       .from('historias_professor')
       .update({
-        imagem_url: null,
         descricao_imagem: null,
         updated_at: new Date().toISOString()
       })

@@ -22,6 +22,7 @@ import {
 } from '../../services/historiaProfessorService';
 
 const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
+  console.log('render historia manager', { escolaId, escolaNome });
   const [historias, setHistorias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -32,7 +33,7 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
 
   // Form states
   const [formData, setFormData] = useState({
-    titulo: '',
+    nome_professor: '',
     historia: '',
     ordem: 1,
     ativo: true
@@ -61,7 +62,7 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
   // Reset form
   const resetForm = () => {
     setFormData({
-      titulo: '',
+      nome_professor: '',
       historia: '',
       ordem: 1,
       ativo: true
@@ -72,35 +73,50 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
 
   // Handle form submit
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    console.log('🔍 SUBMIT CHAMADO - ID:', editingHistoria?.id);
+    console.log('📝 Evento recebido:', e);
+    console.log('📝 Evento type:', e.type);
+    console.log('📝 Evento target:', e.target);
     
+    e.preventDefault();
+    console.log('✅ preventDefault executado');
+    
+    console.log('submit historia', editingHistoria);
+    if (!formData.nome_professor.trim()) {
+      setError('O nome do professor é obrigatório.');
+      return;
+    }
     if (!formData.historia.trim()) {
       setError('A história é obrigatória');
       return;
     }
-
+    // Conversão de tipos e preparação do payload
+    const payload = {
+      escola_id: Number(escolaId),
+      nome_professor: formData.nome_professor.trim(),
+      historia: formData.historia.trim(),
+      ordem: Number(formData.ordem) || 1,
+      ativo: Boolean(formData.ativo),
+    };
+    if (editingHistoria) {
+      console.log('Payload enviado para updateHistoriaProfessor:', payload);
+    }
+    console.log('Payload enviado para createHistoriaProfessor:', payload);
     try {
       setError('');
       setSuccess('');
-
       if (editingHistoria) {
-        await updateHistoriaProfessor(editingHistoria.id, {
-          ...formData,
-          escola_id: escolaId
-        });
+        await updateHistoriaProfessor(editingHistoria.id, payload);
         setSuccess('História atualizada com sucesso!');
       } else {
-        await createHistoriaProfessor({
-          ...formData,
-          escola_id: escolaId
-        });
+        await createHistoriaProfessor(payload);
         setSuccess('História criada com sucesso!');
       }
-
       resetForm();
       carregarHistorias();
     } catch (err) {
       setError(err.message);
+      console.log('ERRO AO CRIAR/EDITAR HISTÓRIA:', err);
     }
   };
 
@@ -148,9 +164,10 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
 
   // Handle edit
   const handleEdit = (historia) => {
+    console.log('Entrou em handleEdit:', historia);
     setEditingHistoria(historia);
     setFormData({
-      titulo: historia.titulo || '',
+      nome_professor: historia.nome_professor || '',
       historia: historia.historia,
       ordem: historia.ordem,
       ativo: historia.ativo
@@ -234,9 +251,96 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
         </div>
       )}
 
+      {/* Lista de Histórias */}
+      <div className="space-y-4">
+        {historias.length === 0 ? (
+          <div className="text-center py-8 bg-gray-50 rounded-lg">
+            <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-500">Nenhuma história do professor cadastrada.</p>
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Criar primeira história
+            </button>
+          </div>
+        ) : (
+          historias.map((historia, index) => {
+            console.log('Renderizando história:', historia);
+            return (
+              <div
+                key={historia.id}
+                className={`p-6 bg-white rounded-lg border ${
+                  !historia.ativo ? 'opacity-60' : ''
+                }`}
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                        #{historia.ordem}
+                      </span>
+                      {historia.nome_professor && (
+                        <h4 className="font-medium text-gray-900">{historia.nome_professor}</h4>
+                      )}
+                      {!historia.ativo && (
+                        <span className="flex items-center gap-1 text-orange-600 text-sm">
+                          <EyeOff className="w-4 h-4" />
+                          Inativa
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-gray-700 line-clamp-3">
+                      {historia.historia}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 ml-4">
+                    {/* Reorder buttons */}
+                    <button
+                      onClick={() => handleReorder(historia.id, 'up')}
+                      disabled={index === 0}
+                      className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30"
+                      title="Mover para cima"
+                    >
+                      <ArrowUp className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleReorder(historia.id, 'down')}
+                      disabled={index === historias.length - 1}
+                      className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30"
+                      title="Mover para baixo"
+                    >
+                      <ArrowDown className="w-4 h-4" />
+                    </button>
+                    {/* Action buttons */}
+                    <button
+                      onClick={() => { console.log('CLICOU NO BOTÃO EDITAR', historia); handleEdit(historia); }}
+                      className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg"
+                      title="Editar"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(historia.id)}
+                      className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg"
+                      title="Excluir"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
       {/* Add/Edit Form */}
       {showAddForm && (
         <div className="p-6 bg-gray-50 rounded-lg border">
+          {editingHistoria
+            ? console.log('Abrindo formulário de edição:', editingHistoria)
+            : console.log('Abrindo formulário de criação')}
           <div className="flex items-center justify-between mb-4">
             <h4 className="text-lg font-medium text-gray-900">
               {editingHistoria ? 'Editar História' : 'Nova História'}
@@ -253,14 +357,15 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Título (opcional)
+                  Nome do Professor *
                 </label>
                 <input
                   type="text"
-                  value={formData.titulo}
-                  onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
+                  value={formData.nome_professor}
+                  onChange={(e) => setFormData({ ...formData, nome_professor: e.target.value })}
                   className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                  placeholder="Título da história"
+                  placeholder="Nome do professor"
+                  required
                 />
               </div>
               
@@ -323,139 +428,6 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
           </form>
         </div>
       )}
-
-      {/* Lista de Histórias */}
-      <div className="space-y-4">
-        {historias.length === 0 ? (
-          <div className="text-center py-8 bg-gray-50 rounded-lg">
-            <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500">Nenhuma história do professor cadastrada.</p>
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-            >
-              Criar primeira história
-            </button>
-          </div>
-        ) : (
-          historias.map((historia, index) => (
-            <div
-              key={historia.id}
-              className={`p-6 bg-white rounded-lg border ${
-                !historia.ativo ? 'opacity-60' : ''
-              }`}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                      #{historia.ordem}
-                    </span>
-                    {historia.titulo && (
-                      <h4 className="font-medium text-gray-900">{historia.titulo}</h4>
-                    )}
-                    {!historia.ativo && (
-                      <span className="flex items-center gap-1 text-orange-600 text-sm">
-                        <EyeOff className="w-4 h-4" />
-                        Inativa
-                      </span>
-                    )}
-                  </div>
-                  
-                  <p className="text-gray-700 line-clamp-3">
-                    {historia.historia}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 ml-4">
-                  {/* Reorder buttons */}
-                  <button
-                    onClick={() => handleReorder(historia.id, 'up')}
-                    disabled={index === 0}
-                    className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30"
-                    title="Mover para cima"
-                  >
-                    <ArrowUp className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleReorder(historia.id, 'down')}
-                    disabled={index === historias.length - 1}
-                    className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30"
-                    title="Mover para baixo"
-                  >
-                    <ArrowDown className="w-4 h-4" />
-                  </button>
-
-                  {/* Action buttons */}
-                  <button
-                    onClick={() => handleEdit(historia)}
-                    className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg"
-                    title="Editar"
-                  >
-                    <Edit3 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(historia.id)}
-                    className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg"
-                    title="Excluir"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Image section */}
-              <div className="border-t pt-4">
-                {historia.imagem_public_url ? (
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={historia.imagem_public_url}
-                      alt={historia.descricao_imagem || 'Imagem da história'}
-                      className="w-20 h-20 object-cover rounded-lg border"
-                    />
-                    <div className="flex-1">
-                      {historia.descricao_imagem && (
-                        <p className="text-sm text-gray-600">{historia.descricao_imagem}</p>
-                      )}
-                      <button
-                        onClick={() => handleImageDelete(historia.id)}
-                        className="text-sm text-red-600 hover:text-red-700"
-                      >
-                        Remover imagem
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-4">
-                    <div className="w-20 h-20 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
-                      <Upload className="w-6 h-6 text-gray-400" />
-                    </div>
-                    <div>
-                      <label className="cursor-pointer">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            const file = e.target.files[0];
-                            if (file) {
-                              handleImageUpload(historia.id, file);
-                            }
-                          }}
-                          className="hidden"
-                          disabled={uploadingImage === historia.id}
-                        />
-                        <span className="text-sm text-green-600 hover:text-green-700 cursor-pointer">
-                          {uploadingImage === historia.id ? 'Carregando...' : 'Adicionar imagem'}
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))
-        )}
-      </div>
     </div>
   );
 };

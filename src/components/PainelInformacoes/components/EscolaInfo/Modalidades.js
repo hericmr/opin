@@ -67,9 +67,9 @@ const Modalidades = memo(({ escola }) => {
           ))}
         </div>
       </InfoSection>
-
-      <InfoSection
-        title="Materiais Pedagógicos"
+      
+      <InfoSection 
+        title="Materiais Pedagógicos" 
         icon={BookOpen}
         description="Diferenciados e não diferenciados, produzidos dentro e fora da comunidade."
       >
