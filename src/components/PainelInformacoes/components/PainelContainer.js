@@ -15,10 +15,16 @@ const PainelContainer = ({
 
   if (!painelInfo) return null;
 
+  // Determinar altura da navbar baseada no tamanho da tela
+  const isMobileLandscape = isMobile && window.innerWidth > window.innerHeight;
+  const navbarHeight = isMobileLandscape ? 48 : isMobile ? 56 : 64;
+  const topPosition = isMobileLandscape ? 'top-12' : isMobile ? 'top-14' : 'top-16';
+  const heightCalc = isMobileLandscape ? 'calc(100vh - 3rem)' : isMobile ? 'calc(100vh - 3.5rem)' : 'calc(100vh - 4rem)';
+
   const baseClasses = `
     fixed
     ${isMobile 
-      ? 'inset-0 top-16 w-full h-[calc(100vh-4rem)]' 
+      ? `inset-x-0 ${topPosition} w-full ${heightCalc}` 
       : 'top-16 bottom-0 right-0 w-full sm:w-3/4 lg:w-[49%] h-auto'
     }
     rounded-t-xl shadow-xl z-[9999] transform transition-all duration-500 ease-in-out
@@ -41,8 +47,8 @@ const PainelContainer = ({
       aria-modal="true"
       className={`${baseClasses} ${visibilityClasses}${isMobile ? ' painel-informacoes-mobile' : ''}`}
       style={{
-        height: isMobile ? 'calc(100vh - 4rem)' : painelDimensions.height,
-        maxHeight: isMobile ? 'calc(100vh - 4rem)' : painelDimensions.maxHeight,
+        height: isMobile ? heightCalc : painelDimensions.height,
+        maxHeight: isMobile ? heightCalc : painelDimensions.maxHeight,
         width: isMobile ? '100%' : painelDimensions.width,
         display: "flex",
         flexDirection: "column",
