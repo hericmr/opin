@@ -120,7 +120,7 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
               aria-hidden="true"
             />
             <h2 className="text-xl sm:text-2xl font-bold text-black m-0">
-              História dos Professores{currentHistoria.nome_professor ? ` — ${currentHistoria.nome_professor}` : ''}
+              História dos Professores
             </h2>
           </div>
           {hasMultipleHistorias && (

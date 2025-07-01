@@ -4,55 +4,235 @@ Um portal informativo interativo que mapeia e apresenta informações detalhadas
 
 ---
 
-## 🆕 Novidades Recentes
+## 🎯 Guia do Administrador
 
-### Sistema Integrado de Vídeos
-O painel de administração agora conta com um **sistema integrado de gerenciamento de vídeos** que permite:
+### Painel de Administração
 
-- **Vídeo Principal**: Campo para o vídeo principal da escola com título editável
-- **Vídeos Adicionais**: Seção para adicionar múltiplos vídeos por escola
-- **Pré-visualização Automática**: Visualização em tempo real dos vídeos (YouTube, Vimeo, etc.)
-- **Títulos Simplificados**: Campo de input simples para títulos dos vídeos
-- **Gerenciamento Completo**: Adicionar, editar, remover e visualizar vídeos
+O painel de administração permite editar todas as informações das escolas indígenas através de abas organizadas:
 
-**Como usar:**
-1. Acesse o painel de administração e selecione uma escola para editar
-2. Clique na aba **Vídeo**
-3. Adicione o vídeo principal no campo "URL do Vídeo"
-4. Digite o título do vídeo no campo "Título do Vídeo"
-5. Use o botão "Adicionar Outro Vídeo" para incluir vídeos adicionais
-6. Veja a pré-visualização automática de todos os vídeos
+#### Como Acessar
+1. Acesse `/admin` na aplicação
+2. Selecione uma escola na lista lateral
+3. Use as abas para navegar entre as seções
 
-### Sistema Melhorado de Legendas de Imagens
-O sistema de gerenciamento de imagens foi aprimorado com **campos de input direto** para legendas:
+#### Abas Disponíveis
 
-- **Campos Diretos**: Input de legenda diretamente abaixo de cada imagem
-- **Salvamento Automático**: Salva ao pressionar Enter ou sair do campo
-- **Feedback Visual**: Atualização imediata da interface
-- **Interface Intuitiva**: Design limpo e fácil de usar
-- **Suporte Completo**: Funciona tanto para imagens da escola quanto dos professores
+**📋 Dados Básicos**
+- Nome da escola, município, endereço completo
+- Terra Indígena (TI), diretoria de ensino
+- Ano de criação, parcerias com município
 
-**Como usar:**
-1. Acesse o painel de administração e selecione uma escola
-2. Vá para a aba **Imagens da Escola** ou **Imagens dos Professores**
-3. Cada imagem exibida terá um campo de input logo abaixo
-4. Digite a legenda desejada no campo
-5. Pressione Enter ou clique no ícone de salvar
-6. A legenda será salva automaticamente
+**👥 Povos**
+- Povos indígenas atendidos
+- Línguas faladas na comunidade
 
-### Aba de Vídeo no Painel de Edição
+**🎓 Modalidades**
+- Modalidade de ensino/turnos
+- Número de alunos
+- Turnos de funcionamento
 
-O painel de administração agora conta com uma **aba exclusiva para inserção de vídeo**. Nela, é possível adicionar um link de vídeo (YouTube, Vimeo, etc.) relacionado à escola indígena, com pré-visualização automática do conteúdo.
+**🏗️ Infraestrutura**
+- Espaço escolar e estrutura
+- Acesso à água, coleta de lixo
+- Internet, equipamentos tecnológicos
+- Modo de acesso à escola
 
-**Como usar:**
-1. Acesse o painel de administração e selecione uma escola para editar.
-2. Clique na aba **Vídeo**.
-3. Cole o link do vídeo desejado no campo indicado.
-4. Veja a pré-visualização do vídeo diretamente no painel.
+**👨‍🏫 Gestores**
+- Gestão/nome do diretor
+- Quantidade de professores (indígenas/não indígenas)
+- Formação dos professores
+- Formação continuada oferecida
 
-> **Obs:** O campo de vídeo foi removido da aba "Redes Sociais" e agora está centralizado na nova aba "Vídeo".
+**📚 Material Pedagógico**
+- PPP próprio da escola
+- PPP elaborado com a comunidade
+
+**🤝 Projetos e Parcerias**
+- Projetos em andamento
+- Parcerias com universidades
+- Ações com ONGs ou coletivos
+- Desejos da comunidade
+
+**📱 Redes Sociais**
+- Uso de redes sociais pela escola
+- Links das redes sociais
+
+**🎥 Vídeo**
+- Link para vídeos da escola
+- Pré-visualização automática
+
+**📖 Histórias**
+- História da escola
+
+**👨‍🏫 História dos Professores** ⭐ **NOVO**
+- Sistema para múltiplos professores registrarem suas histórias
+- Cada professor pode ter sua história individual
+- Ordenação personalizável das histórias
+
+**📍 Coordenadas**
+- Latitude e longitude da escola
+
+**🖼️ Imagens da Escola**
+- Upload e gerenciamento de imagens
+- Legendas editáveis para cada imagem
+
+**👨‍🏫 Imagens dos Professores**
+- Upload e gerenciamento de fotos dos professores
+- Legendas editáveis para cada foto
+
+**📄 Documentos**
+- Adicionar, editar e remover documentos
+- Links para PDFs (Google Drive recomendado)
 
 ---
+
+## 🗄️ Estrutura das Tabelas
+
+### Tabela Principal: `escolas_completa`
+Armazena todos os dados básicos das escolas:
+
+```sql
+-- Campos principais
+id (int, primary key)
+Escola (text) -- Nome da escola
+Município (text)
+Endereço (text)
+Terra Indigena (TI) (text)
+Povos indigenas (text)
+Linguas faladas (text)
+Modalidade de Ensino/turnos de funcionamento (text)
+Numero de alunos (text)
+Espaço escolar e estrutura (text)
+Gestão/Nome (text)
+Quantidade de professores indígenas (text)
+Quantidade de professores não indígenas (text)
+historia_da_escola (text)
+latitude (numeric)
+longitude (numeric)
+link_para_videos (text)
+-- ... outros campos
+```
+
+### Nova Tabela: `historias_professor` ⭐
+Permite que múltiplos professores registrem suas histórias:
+
+```sql
+id (int, primary key)
+escola_id (int, foreign key) -- Referência à escola
+nome_professor (text, NOT NULL) -- Nome do professor
+historia (text, NOT NULL) -- História do professor
+ordem (int, default 1) -- Ordem de exibição
+ativo (boolean, default true) -- Se a história está ativa
+created_at (timestamp)
+updated_at (timestamp)
+```
+
+**Como usar:**
+1. Acesse a aba "História dos Professores"
+2. Clique em "Nova História" para adicionar um professor
+3. Preencha nome e história do professor
+4. Use os botões de seta para reordenar as histórias
+5. Clique em "Editar" para modificar uma história existente
+
+### Tabela: `documentos_escola`
+Armazena documentos relacionados às escolas:
+
+```sql
+id (int, primary key)
+escola_id (int, foreign key)
+titulo (text, NOT NULL)
+autoria (text)
+tipo (text)
+link_pdf (text, NOT NULL)
+created_at (timestamp)
+```
+
+### Tabelas de Imagens
+- `escola_images`: Imagens da escola com legendas
+- `professor_images`: Imagens dos professores com legendas
+
+---
+
+## 🛠️ Funcionalidades Especiais
+
+### Sistema de Vídeos
+- Suporte a YouTube, Vimeo e outros
+- Pré-visualização automática
+- Títulos editáveis
+
+### Gerenciamento de Imagens
+- Upload direto via interface
+- Legendas editáveis em tempo real
+- Organização por escola
+
+### Histórias dos Professores
+- Sistema independente para cada professor
+- Ordenação personalizável
+- Ativação/desativação de histórias
+- Formulário dedicado fora do form principal
+
+---
+
+## 🔧 Comandos Úteis
+
+### Desenvolvimento
+```bash
+npm install    # Instalar dependências
+npm start      # Iniciar servidor de desenvolvimento
+npm run build  # Build para produção
+```
+
+### Supabase (Permissões)
+```sql
+-- Liberar permissões para histórias dos professores
+GRANT ALL ON TABLE historias_professor TO authenticated;
+GRANT ALL ON TABLE historias_professor TO anon;
+
+-- Verificar estrutura da tabela
+SELECT column_name, data_type, is_nullable 
+FROM information_schema.columns 
+WHERE table_name = 'historias_professor';
+```
+
+---
+
+## 📝 Notas Importantes
+
+### Formulários
+- **História dos Professores**: Formulário independente (não afeta outros dados)
+- **Outras abas**: Todas dentro do form principal da escola
+- **Salvamento**: Cada aba salva independentemente
+
+### Dados Obrigatórios
+- Nome da escola (Dados Básicos)
+- Nome do professor (História dos Professores)
+- História do professor (História dos Professores)
+- Título e link do documento (Documentos)
+
+### Boas Práticas
+- Use links do Google Drive para documentos (permissão pública)
+- Mantenha histórias dos professores organizadas por ordem
+- Verifique coordenadas antes de salvar
+- Teste links de vídeo antes de salvar
+
+---
+
+## 🆘 Solução de Problemas
+
+### Formulário não salva
+- Verifique se todos os campos obrigatórios estão preenchidos
+- Confirme se não há erros no console do navegador
+- Verifique permissões no Supabase
+
+### Imagens não carregam
+- Verifique se o arquivo não excede 5MB
+- Confirme formato (JPG, PNG, GIF)
+- Verifique conexão com internet
+
+### Histórias dos professores não atualizam
+- O formulário é independente - não afeta outros dados
+- Verifique logs no console do navegador
+- Confirme se o professor está ativo na lista
 
 ## Tecnologias
 
@@ -300,68 +480,6 @@ O projeto utiliza TailwindCSS com configurações personalizadas:
 - **Progress Bar**: Indicador visual de progresso do upload
 - **Limites**: Controle de quantidade máxima de imagens
 - **Responsividade**: Interface adaptável a diferentes dispositivos
-
-## Estrutura dos arquivos CSV utilizados no Supabase
-
-Os arquivos CSV importados/exportados para o Supabase devem seguir a estrutura abaixo para a tabela principal de escolas indígenas (`escolas_completa`). Cada coluna representa um campo da tabela. Certifique-se de que o cabeçalho do CSV corresponda exatamente aos nomes das colunas listadas.
-
-### Estrutura da tabela: escolas_completa (Supabase)
-
-| Coluna                                      | Tipo     | Obrigatório | Observação |
-|---------------------------------------------|----------|-------------|------------|
-| id                                          | integer  | Sim         | Chave primária, auto-incremento |
-| Escola                                      | text     | Não         | Nome da escola |
-| Município                                   | text     | Não         | |
-| Endereço                                    | text     | Não         | Endereço completo (gerado automaticamente) |
-| logradouro                                  | text     | Não         | Nome da rua, avenida, etc. |
-| numero                                      | text     | Não         | Número do endereço |
-| complemento                                 | text     | Não         | Complemento do endereço |
-| bairro                                      | text     | Não         | Nome do bairro |
-| cep                                         | text     | Não         | CEP do endereço |
-| estado                                      | text     | Não         | Estado (padrão: SP) |
-| Terra Indigena (TI)                         | text     | Não         | |
-| Escola Estadual ou Municipal                | text     | Não         | |
-| Parcerias com o município                   | text     | Não         | |
-| Diretoria de Ensino                         | text     | Não         | |
-| Povos indigenas                             | text     | Não         | |
-| Linguas faladas                             | text     | Não         | |
-| Ano de criação da escola                    | text     | Não         | |
-| Modalidade de Ensino/turnos de funcionamento| text     | Não         | |
-| Numero de alunos                            | text     | Não         | |
-| Espaço escolar e estrutura                  | text     | Não         | |
-| Cozinha/Merenda escolar/diferenciada        | text     | Não         | |
-| Acesso à água                               | text     | Não         | |
-| Tem coleta de lixo?                         | text     | Não         | |
-| Acesso à internet                           | text     | Não         | |
-| Equipamentos Tecnológicos                   | text     | Não         | |
-| Modo de acesso à escola                     | text     | Não         | |
-| Gestão/Nome                                 | text     | Não         | |
-| Outros funcionários                         | text     | Não         | |
-| Quantidade de professores indígenas         | text     | Não         | |
-| Quantidade de professores não indígenas     | text     | Não         | |
-| Professores falam a língua indígena?        | text     | Não         | |
-| Formação dos professores                    | text     | Não         | |
-| Formação continuada oferecida               | text     | Não         | |
-| A escola possui PPP próprio?                | text     | Não         | |
-| PPP elaborado com a comunidade?             | text     | Não         | |
-| Disciplinas bilíngues?                      | text     | Não         | |
-| Material pedagógico não indígena            | text     | Não         | |
-| Material pedagógico indígena                | text     | Não         | |
-| Práticas pedagógicas indígenas              | text     | Não         | |
-| Formas de avaliação                         | text     | Não         | |
-| Projetos em andamento                       | text     | Não         | |
-| Parcerias com universidades?                | text     | Não         | |
-| Ações com ONGs ou coletivos?                | text     | Não         | |
-| Desejos da comunidade para a escola         | text     | Não         | |
-| Escola utiliza redes sociais?               | text     | Não         | |
-| Links das redes sociais                     | text     | Não         | |
-| historia_da_escola                          | text     | Não         | |
-| Latitude                                    | numeric  | Não         | |
-| Longitude                                   | numeric  | Não         | |
-| link_para_videos                            | text     | Não         | |
-| historia_do_prof                            | text     | Não         | |
-
-> Observação: Apenas o campo 'id' é obrigatório (not null). Todos os outros campos podem ser nulos. Para uso no frontend, trate todos os campos como string, exceto 'id', 'Latitude' e 'Longitude', que devem ser tratados como números.
 
 # Tutorial: Como Preencher as Tabelas no Supabase para o Mapa Leaflet
 
