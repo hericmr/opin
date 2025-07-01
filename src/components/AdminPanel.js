@@ -6,6 +6,7 @@ import DocumentViewer from './PainelInformacoes/components/DocumentViewer';
 import { useRefresh } from '../contexts/RefreshContext';
 import { Menu } from 'lucide-react';
 import HistoriaProfessorManager from './AdminPanel/HistoriaProfessorManager';
+import VideoManager from './AdminPanel/VideoManager';
 
 const AdminPanel = () => {
   const { triggerRefresh } = useRefresh();
@@ -891,31 +892,8 @@ const AdminPanel = () => {
 
                 {/* Aba: Vídeo */}
                 {editingLocation.activeTab === 'video' && (
-                  <div className="grid grid-cols-1 gap-4 md:gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Link para Vídeos</label>
-                      <input
-                        type="url"
-                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
-                        value={editingLocation['link_para_videos'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'link_para_videos': e.target.value })}
-                        placeholder="https://www.youtube.com/watch?v=..."
-                      />
-                    </div>
-                    {editingLocation['link_para_videos'] && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Preview do Vídeo</label>
-                        <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
-                          <iframe
-                            src={getVideoEmbedUrl(editingLocation['link_para_videos'])}
-                            className="w-full h-full"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                          />
-                        </div>
-                      </div>
-                    )}
+                  <div className="text-center py-8 text-gray-500">
+                    <p>Use o gerenciador de vídeos acima para adicionar e editar vídeos.</p>
                   </div>
                 )}
 
@@ -1221,6 +1199,11 @@ const AdminPanel = () => {
             {/* ABA HISTÓRIA DOS PROFESSORES: RENDERIZA FORA DO FORM GLOBAL! */}
             {editingLocation.activeTab === 'historia-professores' && (
               <HistoriaProfessorManager escolaId={editingLocation.id} escolaNome={editingLocation.Escola} />
+            )}
+
+            {/* ABA VÍDEO: RENDERIZA FORA DO FORM GLOBAL! */}
+            {editingLocation.activeTab === 'video' && (
+              <VideoManager escolaId={editingLocation.id} />
             )}
 
             {/* Feedback de erro */}

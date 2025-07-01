@@ -1,132 +1,55 @@
-# Planning.md - Resolver Problema de Update do Formulário de História dos Professores
+# Planning.md - Gerenciamento de Múltiplos Vídeos por Escola
 
-## Problema Atual
-- ✅ Formulário carrega dados corretamente do Supabase
-- ❌ **NÃO SALVA** após edição - volta para tela inicial sem atualizar
-- ❌ Logs somem após submit (painel desmonta)
-- ❌ Campo `nome_professor` continua como "Desconhecido"
+## Objetivo
+Permitir que cada escola tenha múltiplos vídeos cadastrados, com título e URL, editáveis pelo painel de administração, de forma semelhante à aba "História dos Professores".
 
-## Checklist de Diagnóstico e Correção
+---
 
-### 🔍 1. VERIFICAR SE O SUBMIT ESTÁ SENDO CHAMADO
-- [x] Adicionar log no início do `handleSubmit`:
-```javascript
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  console.log('🔍 SUBMIT CHAMADO - ID:', editingHistoria?.id);
-  // ... resto do código
-};
-```
-- [x] Clicar no botão "Atualizar" e verificar se o log aparece
-- [x] Se **NÃO aparecer**: problema no botão/form
-- [] Se **aparecer**: problema no update/Supabase
+## 1. Estrutura da Tabela de Vídeos
+- [ ] Confirmar/ajustar tabela `titulos_videos` (ou `videos_escola`):
+  - `id` (int, primary key)
+  - `escola_id` (int, foreign key)
+  - `titulo` (text, NOT NULL)
+  - `url` (text, NOT NULL)
+  - `ordem` (int, default 1)
+  - `ativo` (boolean, default true)
+  - `created_at`, `updated_at` (timestamp)
 
-### 🔍 2. VERIFICAR SE O BOTÃO ESTÁ DENTRO DO FORM CORRETO
-- [x] Inspecionar HTML no navegador
-- [x] Confirmar que o botão `<button type="submit">` está dentro do `<form onSubmit={handleSubmit}>`
-- [x] Se **NÃO estiver**: mover botão para dentro do form
-- [x] Se **estiver**: problema no handler
+---
 
-### 🔍 3. VERIFICAR SE O FORM NÃO ESTÁ ANINHADO
-- [x] Confirmar que o form de história **NÃO** está dentro do form do painel
-- [x] Verificar se a aba "História dos Professores" renderiza fora do `<form>` global
-- [x] Se **estiver aninhado**: separar os forms
+## 2. Service de Vídeos (Supabase)
+- [ ] Criar/atualizar `src/services/videoService.js` com funções:
+  - `getVideosEscola(escolaId)`
+  - `createVideoEscola(data)`
+  - `updateVideoEscola(id, data)`
+  - `deleteVideoEscola(id)`
 
-### 🔍 3.5 INVESTIGAR FORM QUE ESTÁ CAUSANDO RECARREGAMENTO
-- [x] Verificar se há outro form sendo submetido quando clica em "Atualizar"
-- [x] Inspecionar HTML para encontrar forms ocultos ou duplicados
-- [x] Verificar se há form global do AdminPanel interferindo
-- [x] **PROBLEMA ENCONTRADO**: HistoriaProfessorManager estava dentro do form global do AdminPanel
-- [x] **CORREÇÃO APLICADA**: Movido HistoriaProfessorManager para fora do form global
+---
 
-### 🔍 4. VERIFICAR SE O UPDATE ATINGE O SUPABASE
-- [ ] Adicionar log antes do update:
-```javascript
-console.log('📤 ENVIANDO PARA SUPABASE:', { id: editingHistoria.id, data: formData });
-```
-- [ ] Adicionar log após o update:
-```javascript
-const { data, error } = await updateHistoriaProfessor(editingHistoria.id, formData);
-console.log('📥 RESPOSTA SUPABASE:', { data, error });
-```
-- [ ] Se **NÃO aparecer "ENVIANDO"**: problema no handler
-- [ ] Se **aparecer "ENVIANDO" mas não "RESPOSTA"**: problema de await
-- [ ] Se **aparecer "RESPOSTA" com erro**: problema no Supabase
+## 3. Componente de Gerenciamento de Vídeos
+- [ ] Criar `VideoManager.js` (ou `VideoSectionManager.js`) no painel admin:
+  - [ ] Listar todos os vídeos da escola
+  - [ ] Adicionar novo vídeo (título + URL)
+  - [ ] Editar vídeo existente
+  - [ ] Remover vídeo
+  - [ ] Reordenar vídeos (opcional)
 
-### 🔍 5. VERIFICAR PERMISSÕES NO SUPABASE
-- [ ] Executar no SQL Editor do Supabase:
-```sql
-UPDATE historias_professor 
-SET nome_professor = 'Teste SQL' 
-WHERE id = 2;
-```
-- [ ] Se **der erro de permissão**: executar:
-```sql
-GRANT ALL ON TABLE historias_professor TO authenticated;
-GRANT ALL ON TABLE historias_professor TO anon;
-```
-- [ ] Se **funcionar**: problema no frontend
+---
 
-### 🔍 6. VERIFICAR SE O PAINEL FECHA PREMATURAMENTE
-- [ ] Adicionar log após o update:
-```javascript
-console.log('✅ UPDATE CONCLUÍDO - FECHANDO PAINEL?');
-```
-- [ ] Se **não aparecer**: painel fechou antes do update
-- [ ] Se **aparecer**: problema na atualização do estado
+## 4. Integração no Painel de Edição/Admin
+- [ ] Substituir campo único de vídeo pelo novo componente de gerenciamento
+- [ ] Garantir que cada escola pode ter múltiplos vídeos
 
-### 🔍 7. VERIFICAR SE O ESTADO É ATUALIZADO APÓS O UPDATE
-- [ ] Adicionar log após carregar histórias:
-```javascript
-console.log('🔄 HISTÓRIAS RECARREGADAS:', historias);
-```
-- [ ] Se **não aparecer**: `carregarHistorias()` não está sendo chamado
-- [ ] Se **aparecer mas dados antigos**: problema no refetch
+---
 
-## Comandos de Teste Rápido
+## 5. Renderização no PainelInformacoes
+- [ ] Alterar para buscar e exibir todos os vídeos da escola
+- [ ] Exibir todos os vídeos cadastrados (com título e player)
 
-### Teste 1: Verificar se o update funciona via console
-```javascript
-// Cole no console do navegador
-const testUpdate = async () => {
-  const { data, error } = await supabase
-    .from('historias_professor')
-    .update({ nome_professor: 'Teste Console' })
-    .eq('id', 2)
-    .select();
-  
-  console.log('Resultado:', { data, error });
-};
-testUpdate();
-```
+---
 
-### Teste 2: Verificar autenticação
-```javascript
-// Cole no console do navegador
-const { data: { user } } = await supabase.auth.getUser();
-console.log('Usuário autenticado:', !!user);
-```
-
-## Ações Imediatas
-
-### ✅ JÁ FEITO
-- [x] Separar form de história do form global do painel
-- [x] Garantir que `event.preventDefault()` está sendo chamado
-- [x] Verificar que não há forms aninhados
-
-### 🔄 PRÓXIMOS PASSOS
-1. **Adicionar logs** no `handleSubmit` do `HistoriaProfessorManager.js`
-2. **Testar submit** e verificar qual log aparece
-3. **Executar comandos SQL** para liberar permissões
-4. **Testar update direto** via console
-5. **Corrigir problema específico** identificado
-
-## Resultado Esperado
-- ✅ Log "SUBMIT CHAMADO" aparece ao clicar "Atualizar"
-- ✅ Log "ENVIANDO PARA SUPABASE" aparece
-- ✅ Log "RESPOSTA SUPABASE" aparece sem erro
-- ✅ Campo `nome_professor` é atualizado no banco
-- ✅ Painel não fecha inesperadamente
-
-## Próximo Passo
-**Execute o checklist na ordem e me informe qual etapa falha.** Assim identificamos exatamente onde está o problema e aplicamos a correção específica. 
+## 6. Checklist Final
+- [ ] CRUD de vídeos funcionando no admin
+- [ ] Vários vídeos aparecem no PainelInformacoes
+- [ ] Permissões Supabase OK
+- [ ] Documentar no README.md 
