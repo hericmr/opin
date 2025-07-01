@@ -26,16 +26,15 @@ export const usePainelDimensions = (isMobile, isMaximized) => {
 
   // Calcular dimensões base
   const dimensions = useMemo(() => {
-    const navbarHeight = isMobile ? 62 : 0;
+    // Determinar altura da navbar baseada na orientação
+    const isMobileLandscape = isMobile && windowWidth > windowHeight;
+    const navbarHeight = isMobileLandscape ? 48 : isMobile ? 56 : 0;
     const baseHeight = `calc(${isMobile ? "100vh" : "100vh"} - ${navbarHeight}px)`;
     const baseMaxHeight = isMobile ? "96vh" : "92vh";
 
     // Determinar se está em modo desktop
     const isDesktop = windowWidth >= breakpoints.md;
     
-    // Determinar se está em mobile na horizontal (landscape)
-    const isMobileLandscape = isMobile && windowWidth > windowHeight;
-
     // Determinar se deve usar grid
     const shouldUseGrid = isDesktop && isMaximized;
 
