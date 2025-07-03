@@ -112,16 +112,6 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
           />
         </>
       )}
-      
-      {/* Informações adicionais */}
-      <div className="absolute top-20 left-4 z-30 bg-white bg-opacity-95 rounded-lg shadow-lg p-3">
-        <div className="text-sm font-semibold text-gray-800">
-          Escolas Indígenas: {totalEscolas}
-        </div>
-        <div className="text-xs text-gray-600">
-          Mapa otimizado sem gaps
-        </div>
-      </div>
     </div>
   );
 };
