@@ -48,7 +48,6 @@ const OpenLayersMap = ({
   return (
     <MapContainer ref={mapContainer} className={className}>
       {/* Informações do mapa */}
-      <MapInfo mapInfo={mapInfo} />
     </MapContainer>
   );
 };
