@@ -6,7 +6,6 @@ import {
   Users,
   Heart,
   X,
-  Check, // ✅ novo ícone adicionado
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
 
@@ -14,19 +13,20 @@ const ProjectCard = ({ icon: Icon, label, value }) => {
   const isNegative = value?.trim().toLowerCase() === 'não';
 
   return (
-    <div className="flex items-start gap-3 bg-white/80 rounded-lg p-2 border border-green-200">
-      <Icon className="w-5 h-5 text-gray-600 mt-0.5 flex-shrink-0" />
-      <div className="flex-1">
-        <div className="text-sm font-medium text-gray-700 mb-1">{label}</div>
+    <div className="flex items-start gap-4 bg-white/90 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+      <div className="mt-1">
+        <Icon className="w-5 h-5 text-green-600 flex-shrink-0" />
+      </div>
+      <div className="flex-1 space-y-1">
+        <div className="text-sm font-semibold text-gray-800">{label}</div>
         {isNegative ? (
           <div className="text-sm text-gray-400 flex items-center gap-1">
             <X className="w-4 h-4 text-gray-400" />
             Não
           </div>
         ) : (
-          <div className="text-sm text-gray-800 leading-relaxed flex items-start gap-1">
-            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-            <span>{value}</span>
+          <div className="text-sm text-gray-700 leading-relaxed">
+            {value}
           </div>
         )}
       </div>
@@ -73,7 +73,7 @@ const ProjetosParcerias = memo(({ escola }) => {
 
   return (
     <InfoSection title="Projetos e Parcerias" icon={Target}>
-      <div className="space-y-2">
+      <div className="grid grid-cols-1 gap-3">
         {availableProjects.map((project) => (
           <ProjectCard
             key={project.field}

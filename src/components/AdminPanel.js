@@ -7,6 +7,7 @@ import { useRefresh } from '../contexts/RefreshContext';
 import { Menu } from 'lucide-react';
 import HistoriaProfessorManager from './AdminPanel/HistoriaProfessorManager';
 import VideoManager from './AdminPanel/VideoManager';
+import { EditEscolaPanel } from './EditEscolaPanel';
 
 const AdminPanel = () => {
   const { triggerRefresh } = useRefresh();
@@ -370,6 +371,65 @@ const AdminPanel = () => {
     setEditingLocation(escolaOriginal);
   };
 
+  // Remover showNewEscolaPanel e EditEscolaPanel modal
+  // Adicionar função para criar novo objeto de escola vazio
+  const criarNovaEscolaVazia = () => ({
+    Escola: '',
+    'Município': '',
+    'Endereço': '',
+    'Terra Indigena (TI)': '',
+    'Parcerias com o município': '',
+    'Diretoria de Ensino': '',
+    'Ano de criação da escola': '',
+    'Povos indigenas': '',
+    'Linguas faladas': '',
+    'Modalidade de Ensino/turnos de funcionamento': '',
+    'Numero de alunos': '',
+    'turnos_funcionamento': '',
+    'Espaço escolar e estrutura': '',
+    'Acesso à água': '',
+    'Tem coleta de lixo?': '',
+    'Acesso à internet': '',
+    'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': '',
+    'Modo de acesso à escola': '',
+    'Gestão/Nome': '',
+    'Outros funcionários': '',
+    'Quantidade de professores indígenas': '',
+    'Quantidade de professores não indígenas': '',
+    'Professores falam a língua indígena?': '',
+    'Formação dos professores': '',
+    'Formação continuada oferecida': '',
+    'A escola possui PPP próprio?': '',
+    'PPP elaborado com a comunidade?': '',
+    'Projetos em andamento': '',
+    'Parcerias com universidades?': '',
+    'Ações com ONGs ou coletivos?': '',
+    'Desejos da comunidade para a escola': '',
+    'Escola utiliza redes sociais?': '',
+    'Links das redes sociais': '',
+    'historia_da_escola': '',
+    'latitude': '',
+    'longitude': '',
+    'links': '',
+    'link_para_videos': '',
+    'logradouro': '',
+    'numero': '',
+    'complemento': '',
+    'bairro': '',
+    'cep': '',
+    'estado': 'SP',
+    'nome_professor': '',
+    'professores_indigenas': '',
+    'professores_nao_indigenas': '',
+    'professores_falam_lingua_indigena': '',
+    'formacao_professores': '',
+    'visitas_supervisores_formacao': '',
+    'outros_funcionarios': '',
+    'gestao': '',
+    'merenda_diferenciada': '',
+    activeTab: 'dados-basicos'
+  });
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Botão de menu para mobile */}
@@ -462,13 +522,20 @@ const AdminPanel = () => {
                 <option value="todos">Todos</option>
               </select>
             </div>
+            {/* Botão Nova Escola */}
+            <button
+              onClick={() => setEditingLocation(criarNovaEscolaVazia())}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors"
+            >
+              + Nova Escola
+            </button>
           </div>
         </div>
         {/* Painel de Edição */}
-        {editingLocation && typeof editingLocation === 'object' && editingLocation.id && editingLocation.Escola && (
+        {editingLocation && typeof editingLocation === 'object' && (editingLocation.Escola !== undefined) && (
           <div className="bg-white rounded-lg shadow-lg p-6 max-h-[calc(100vh-200px)] overflow-hidden flex flex-col">
             <div className="flex justify-between items-center mb-4 flex-shrink-0">
-              <h2 className="text-lg font-semibold">Editar Escola</h2>
+              <h2 className="text-lg font-semibold">{editingLocation.id ? 'Editar Escola' : 'Nova Escola'}</h2>
               <button
                 onClick={() => setEditingLocation(null)}
                 className="text-gray-500 hover:text-gray-700"

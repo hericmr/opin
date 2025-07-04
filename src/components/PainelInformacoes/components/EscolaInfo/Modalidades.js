@@ -101,7 +101,7 @@ const Modalidades = memo(({ escola }) => {
     <>
       <InfoSection title="Modalidades" icon={Sparkles}>
         <div
-          className={`grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 ${modalidadeItems.length === 1 ? 'justify-items-center' : ''}`}
+          className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mt-1"
         >
           {modalidadeItems.map((item, idx) => (
             <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} />
@@ -114,7 +114,7 @@ const Modalidades = memo(({ escola }) => {
         icon={BookOpen}
         description="Diferenciados e não diferenciados, produzidos dentro e fora da comunidade."
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mt-1">
           {materiaisItems.map((item, idx) => (
             <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} />
           ))}

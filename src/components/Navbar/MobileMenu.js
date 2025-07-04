@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { MapPin, BookOpen, Search, Home, Leaf, Shield, LayoutGrid, Users, Map } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import LazyImage from '../LazyImage';
-import AddLocationButton from '../AddLocationButton';
 
 const MobileMenu = ({ 
   mobileMenuOpen, 
@@ -176,7 +175,6 @@ const MobileMenu = ({
                 
                 <div className="flex flex-col space-y-3">
                   <div className="w-full">
-                    <AddLocationButton />
                   </div>
                   <button
                     onClick={() => onNavigation('/admin')}
