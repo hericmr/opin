@@ -6,6 +6,7 @@ import { MAP_CONFIG } from '../utils/mapConfig';
 const MapSelector = ({ 
   dataPoints, 
   onPainelOpen, 
+  painelAberto = false,
   className = "h-screen w-full"
 }) => {
   // Carregar dados GeoJSON
@@ -70,6 +71,13 @@ const MapSelector = ({
       }
     });
   }, [terrasIndigenasData, estadoSPData, terrasLoading, estadoLoading, terrasError, estadoError]);
+
+  useEffect(() => {
+    if (!painelAberto && isMobile) {
+      console.log('MapSelector: Painel fechado em mobile, reativando marcadores');
+      setShowMarcadores(true);
+    }
+  }, [painelAberto, isMobile]);
 
   // Componente para o cabeçalho do menu
   const CabecalhoMenu = ({ onMinimize, isMobile, isMinimized }) => (
