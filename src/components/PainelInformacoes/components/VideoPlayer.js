@@ -113,14 +113,14 @@ const VideoPlayer = ({ videoUrl, title = "Vídeo", escolaId }) => {
       
       {/* Informações adicionais do título personalizado */}
       {tituloPersonalizado && (
-        <div className="mb-4 p-4 bg-green-50 rounded-lg border border-green-200">
+        <div className="mb-4 p-4 bg-green-100 rounded-lg">
           {tituloPersonalizado.descricao && (
-            <p className="text-green-800 mb-2">{tituloPersonalizado.descricao}</p>
+            <p className="text-gray-700 mb-2">{tituloPersonalizado.descricao}</p>
           )}
           
-          <div className="flex items-center gap-4 text-sm text-green-700">
+          <div className="flex items-center gap-4 text-sm text-gray-600">
             {tituloPersonalizado.categoria && (
-              <span className="capitalize bg-green-200 px-2 py-1 rounded">
+              <span className="capitalize bg-green-200 text-green-800 px-2 py-1 rounded">
                 {tituloPersonalizado.categoria}
               </span>
             )}
@@ -136,7 +136,7 @@ const VideoPlayer = ({ videoUrl, title = "Vídeo", escolaId }) => {
         </div>
       )}
       
-      <div className="rounded-lg overflow-hidden shadow-lg border border-green-300 bg-white">
+      <div className="rounded-lg overflow-hidden shadow-lg bg-white">
         <div className="relative pb-[56.25%] h-0">
           <iframe
             className="absolute top-0 left-0 w-full h-full"

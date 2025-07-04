@@ -13,7 +13,7 @@ import {
 import InfoSection from '../InfoSection';
 
 const MiniCard = ({ icon: Icon, label, value, description }) => (
-  <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2 text-sm">
+  <div className="flex items-start gap-2 rounded-lg p-2 text-sm">
     <Icon className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
     <div className="flex-1">
       <div className="text-xs text-gray-500">{label}</div>
@@ -100,7 +100,7 @@ const GestaoProfessores = memo(({ escola }) => {
 
   return (
     <InfoSection title="Gestores" icon={UsersRound}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 [&>*]:bg-green-100">
         <MiniCard
           icon={UserCheck}
           label="Professores Indígenas"
@@ -126,7 +126,7 @@ const GestaoProfessores = memo(({ escola }) => {
         )}
       </div>
 
-      <div className="space-y-2 mt-4">
+      <div className="space-y-2 mt-4 [&>*]:bg-green-100">
         <MiniCard
           icon={User}
           label="Gestão/Nome"

@@ -11,7 +11,7 @@ import InfoSection from '../InfoSection';
 import BooleanValue from '../BooleanValue';
 
 const MiniCard = ({ icon: Icon, label, value }) => (
-  <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2 text-sm">
+  <div className="flex items-start gap-2 rounded-lg p-2 text-sm">
     <Icon className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
     <div className="flex-1">
       <div className="text-gray-500">{label}</div>
@@ -58,7 +58,7 @@ const Infraestrutura = memo(({ escola }) => {
           {escola.espaco_escolar}
         </div>
       )}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mt-3">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mt-3 [&>*]:bg-green-100">
         {items.map((item, idx) => (
           <MiniCard
             key={idx}

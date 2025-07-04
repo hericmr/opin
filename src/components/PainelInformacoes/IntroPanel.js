@@ -4,7 +4,7 @@ import PainelDescricao from '../PainelDescricao';
 const IntroPanel = memo(({ painelInfo }) => (
   <div className="space-y-6">
     <div className="prose prose-lg lg:prose-xl max-w-none">
-      <div className="bg-white rounded-lg p-6">
+      <div className="bg-green-100 rounded-lg p-6">
         <PainelDescricao descricao={painelInfo.descricao_detalhada} />
       </div>
     </div>

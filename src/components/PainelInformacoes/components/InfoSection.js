@@ -56,7 +56,7 @@ const InfoCard = memo(({ label, value, icon: Icon, type = 'text', className = ''
   };
 
   return (
-    <div className={`bg-white rounded-lg p-4 border border-green-200 hover:border-green-300 transition-all duration-200 ${className}`}>
+    <div className={`rounded-lg p-4 transition-all duration-200 ${className}`}>
       <div className="flex items-center gap-2 mb-2">
         {Icon && <Icon className="w-4 h-4 text-green-600" />}
         <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
@@ -78,7 +78,7 @@ const InfoGrid = memo(({ children, columns = 'auto-fit', gap = 4, className = ''
   };
 
   return (
-    <div className={`grid ${gridClasses[columns]} gap-${gap} ${className}`}>
+    <div className={`grid ${gridClasses[columns]} gap-${gap} ${className} [&>*]:bg-green-100`}>
       {children}
     </div>
   );
@@ -89,11 +89,11 @@ const InfoTable = memo(({ data, className = '' }) => {
   if (!data || data.length === 0) return null;
 
   return (
-    <div className={`bg-white rounded-lg border border-green-200 overflow-hidden ${className}`}>
+    <div className={`bg-green-100 rounded-lg overflow-hidden ${className}`}>
       <table className="w-full">
         <tbody>
           {data.map((row, index) => (
-            <tr key={index} className={index % 2 === 0 ? 'bg-green-50' : 'bg-white'}>
+            <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-green-50'}>
               <td className="px-4 py-3 text-sm font-medium text-gray-700 border-r border-green-200">
                 {row.label}
               </td>
@@ -113,9 +113,9 @@ const InfoStats = memo(({ stats, className = '' }) => {
   if (!stats || stats.length === 0) return null;
 
   return (
-    <div className={`grid grid-cols-2 sm:grid-cols-4 gap-4 ${className}`}>
+    <div className={`grid grid-cols-2 sm:grid-cols-4 gap-4 ${className} [&>*]:bg-green-100`}>
       {stats.map((stat, index) => (
-        <div key={index} className="text-center bg-white rounded-lg p-4 border border-green-200">
+        <div key={index} className="text-center rounded-lg p-4">
           <div className="flex justify-center mb-2">
             {stat.icon && <stat.icon className="w-6 h-6 text-green-600" />}
           </div>
@@ -174,8 +174,8 @@ const InfoSection = memo(({
   return (
     <section 
       className={`
-        bg-green-50 border-l-4 border-green-700 rounded-2xl p-5 
-        shadow-md hover:shadow-lg transition-all duration-200
+        bg-white rounded-2xl p-5 
+        shadow-sm hover:shadow-md transition-all duration-200
         ${className}
       `}
     >
@@ -183,22 +183,21 @@ const InfoSection = memo(({
         onClick={() => setIsCollapsed(!isCollapsed)}
         className="
           w-full flex items-center justify-between 
-          text-base font-semibold border-b border-green-100 
-          pb-2 mb-4 text-green-900 hover:text-green-800 
-          transition-colors focus:outline-none focus:ring-2 
-          focus:ring-green-500 focus:ring-offset-2 rounded-lg
+          text-base font-semibold
+          mb-4 text-gray-900 hover:text-gray-800 
+          transition-colors focus:outline-none
         "
         aria-expanded={!isCollapsed}
         aria-controls={`${title}-content`}
       >
         <div className="flex items-center gap-2">
-          {Icon && <Icon className="w-4 h-4 text-green-800" />}
+          {Icon && <Icon className="w-4 h-4 text-green-600" />}
           <span className="tracking-wide">{title}</span>
         </div>
         {isCollapsed ? (
-          <ChevronDown className="w-5 h-5 text-green-700" />
+          <ChevronDown className="w-5 h-5 text-gray-600" />
         ) : (
-          <ChevronUp className="w-5 h-5 text-green-700" />
+          <ChevronUp className="w-5 h-5 text-gray-600" />
         )}
       </button>
       
@@ -210,8 +209,8 @@ const InfoSection = memo(({
           aria-labelledby={`${title}-button`}
         >
           {description && (
-            <div className="bg-white rounded-lg p-4 border border-green-200">
-              <p className="text-green-950 text-sm leading-relaxed">
+            <div className="bg-green-100 rounded-lg p-4">
+              <p className="text-gray-700 text-sm leading-relaxed">
                 {description}
               </p>
             </div>
