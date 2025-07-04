@@ -56,12 +56,15 @@ export const useMapLayers = (map, terrasIndigenasData, estadoSPData, showTerrasI
             features: features
           }),
           style: createTerrasIndigenasStyle,
-          zIndex: 10
+          zIndex: 20,
+          interactive: true,
+          name: 'terras-indigenas'
         });
 
         // Adicionar interatividade
         terrasIndigenasLayer.getSource().getFeatures().forEach(feature => {
           const properties = feature.getProperties();
+          console.log('useMapLayers: Processando feature terra indígena:', properties.terrai_nom);
           feature.set('terraIndigenaInfo', {
             titulo: properties.terrai_nom,
             tipo: 'terra_indigena',
@@ -134,20 +137,41 @@ export const useMapLayers = (map, terrasIndigenasData, estadoSPData, showTerrasI
     if (!map) return;
 
     const handleClick = (event) => {
-      const feature = map.forEachFeatureAtPixel(event.pixel, (feature) => feature);
+      console.log('useMapLayers: Evento de clique detectado:', event.type, 'pixel:', event.pixel);
+      
+      // Tentar detectar features em diferentes camadas
+      let feature = null;
+      let layer = null;
+      
+      map.forEachFeatureAtPixel(event.pixel, (f, l) => {
+        if (f && !feature) {
+          feature = f;
+          layer = l;
+          console.log('useMapLayers: Feature encontrada na camada:', l.get('name') || 'sem nome');
+        }
+      });
+      
       if (feature) {
         const terraIndigenaInfo = feature.get('terraIndigenaInfo');
         if (terraIndigenaInfo && onPainelOpen) {
+          console.log('useMapLayers: Terra indígena clicada:', terraIndigenaInfo.titulo);
           onPainelOpen(terraIndigenaInfo);
+        } else {
+          console.log('useMapLayers: Feature encontrada mas sem terraIndigenaInfo ou onPainelOpen');
         }
+      } else {
+        console.log('useMapLayers: Nenhuma feature encontrada no pixel clicado');
       }
     };
 
+    // Adicionar listeners para clique e toque
     map.on('click', handleClick);
+    map.on('singleclick', handleClick); // OpenLayers specific
 
     return () => {
       if (map) {
         map.un('click', handleClick);
+        map.un('singleclick', handleClick);
       }
     };
   }, [map, onPainelOpen]);
