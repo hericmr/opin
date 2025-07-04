@@ -184,7 +184,7 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input
                       type="text"
-                      placeholder={isMobile ? "Buscar..." : "Buscar escolas indígenas, terras indígenas, professores..."}
+                      placeholder={isMobile ? "Buscar..." : "Buscar escolas, povos, línguas, projetos, infraestrutura..."}
                       value={localSearchTerm}
                       onChange={handleInputChange}
                       onKeyDown={handleKeyDown}
@@ -286,7 +286,7 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
                     <Search className="w-8 h-8 mx-auto text-gray-300 mb-2" />
                     <p className="text-sm">Digite para buscar</p>
                     <p className="text-xs mt-1">
-                      {isMobile ? "Escolas, terras indígenas..." : "Escolas, terras indígenas, professores..."}
+                      {isMobile ? "Escolas, povos, línguas..." : "Escolas, povos, línguas, projetos, infraestrutura..."}
                     </p>
                   </div>
                 )}

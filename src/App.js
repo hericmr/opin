@@ -5,7 +5,6 @@ import { SearchProvider } from "./contexts/SearchContext";
 import { RefreshProvider } from "./contexts/RefreshContext";
 import Navbar from "./components/Navbar";
 import PainelInformacoes from "./components/PainelInformacoes";
-import AddLocationButton from "./components/AddLocationButton";
 import Papa from 'papaparse';
 import { useShare } from './components/hooks/useShare';
 import './App.css';
@@ -419,7 +418,6 @@ const AppContent = () => {
                   } 
                   onPainelOpen={handlePainelOpenFunction}
                 />
-                <AddLocationButton onLocationAdded={handleLocationAdded} />
               </main>
             } 
           />

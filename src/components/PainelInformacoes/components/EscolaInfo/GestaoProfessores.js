@@ -98,68 +98,54 @@ const GestaoProfessores = memo(({ escola }) => {
   const formacao = formatarFormacaoProfessores(escola.formacao_professores);
   const continuada = formatarFormacaoContinuada(escola.formacao_continuada);
 
-  const infoCards = [
-    {
-      icon: User,
-      label: 'Gestão/Nome',
-      value: escola.gestao,
-    },
-    {
-      icon: UserCheck,
-      label: 'Professores Indígenas',
-      value: escola.professores_indigenas,
-    },
-    {
-      icon: UserMinus,
-      label: 'Professores Não Indígenas',
-      value: escola.professores_nao_indigenas,
-    },
-    {
-      icon: UsersRound,
-      label: 'Outros Funcionários',
-      value: escola.outros_funcionarios,
-    },
-    {
-      icon: MessageCircle,
-      label: 'Professores que falam língua indígena',
-      value: renderBooleanStatus(escola.professores_falam_lingua),
-    },
-  ];
-
   return (
     <InfoSection title="Gestores" icon={UsersRound}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-1">
-        {infoCards.map((item, idx) => (
-          <MiniCard
-            key={idx}
-            icon={item.icon}
-            label={item.label}
-            value={item.value}
-          />
-        ))}
-      </div>
-
-      {formacao?.status && (
-        <div className="mt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
+        <MiniCard
+          icon={UserCheck}
+          label="Professores Indígenas"
+          value={escola.professores_indigenas}
+        />
+        <MiniCard
+          icon={UserMinus}
+          label="Professores Não Indígenas"
+          value={escola.professores_nao_indigenas}
+        />
+        <MiniCard
+          icon={MessageCircle}
+          label="Professores que falam língua indígena"
+          value={renderBooleanStatus(escola.professores_falam_lingua)}
+        />
+        {formacao?.status && (
           <MiniCard
             icon={Star}
             label="Formação dos Professores"
             value={renderBooleanStatus(formacao.status)}
             description={formacao.descricao}
           />
-        </div>
-      )}
+        )}
+      </div>
 
-      {continuada?.status && (
-        <div className="mt-4">
+      <div className="space-y-2 mt-4">
+        <MiniCard
+          icon={User}
+          label="Gestão/Nome"
+          value={escola.gestao}
+        />
+        <MiniCard
+          icon={UsersRound}
+          label="Outros Funcionários"
+          value={escola.outros_funcionarios}
+        />
+        {continuada?.status && (
           <MiniCard
             icon={NotebookPen}
             label="Visitas de Supervisores e Formação Continuada"
             value={renderBooleanStatus(continuada.status)}
             description={continuada.descricao}
           />
-        </div>
-      )}
+        )}
+      </div>
     </InfoSection>
   );
 });
