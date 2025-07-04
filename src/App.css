@@ -56,3 +56,15 @@
 .ol-zoom-in, .ol-zoom-out {
   margin-bottom: 6px;
 }
+
+/* Cor cinza escuro para os ícones dos botões de zoom do OpenLayers */
+.ol-zoom-in, .ol-zoom-out {
+  color: #222 !important;
+  fill: #222 !important;
+}
+
+/* Se o botão for SVG, garantir que o path também fique escuro */
+.ol-zoom-in svg, .ol-zoom-out svg {
+  color: #222 !important;
+  fill: #222 !important;
+}
