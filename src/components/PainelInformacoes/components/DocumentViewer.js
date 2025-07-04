@@ -126,11 +126,11 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
             key={doc.id}
             className={`
               flex flex-col justify-between h-full max-w-xs mx-auto
-              rounded-2xl border-2 transition-all duration-200 cursor-pointer
+              rounded-2xl transition-all duration-200 cursor-pointer
               shadow-sm hover:shadow-lg
               ${selectedDoc?.id === doc.id
-                ? 'bg-green-100 border-green-400 scale-[1.03]'
-                : 'bg-white border-gray-200 hover:border-green-300'
+                ? 'bg-green-100 scale-[1.03]'
+                : 'bg-white hover:bg-green-50'
               }
             `}
             onClick={() => {
@@ -145,7 +145,7 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
                 <p className="text-sm text-gray-600 mb-2 line-clamp-1">Por: {doc.autoria}</p>
               )}
               {doc.tipo && (
-                <span className="inline-block px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                <span className="inline-block px-2 py-1 text-xs font-medium bg-green-200 text-green-800 rounded-full">
                   {doc.tipo}
                 </span>
               )}
@@ -167,16 +167,16 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
             }}
             className={`w-full text-left p-3 rounded-lg transition-colors duration-200 ${
               selectedDoc?.id === doc.id
-                ? 'bg-green-100 border-green-300'
-                : 'hover:bg-green-50 border-transparent'
-            } border-2`}
+                ? 'bg-green-100'
+                : 'hover:bg-green-50'
+            }`}
           >
             <h4 className="font-medium text-green-800">{doc.titulo}</h4>
             {doc.autoria && (
               <p className="text-sm text-gray-600">Por: {doc.autoria}</p>
             )}
             {doc.tipo && (
-              <span className="inline-block mt-1 px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+              <span className="inline-block mt-1 px-2 py-1 text-xs font-medium bg-green-200 text-green-800 rounded-full">
                 {doc.tipo}
               </span>
             )}
@@ -192,7 +192,7 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
     const isGoogleDriveLink = selectedDoc.link_pdf.includes('drive.google.com/file/d/');
 
     return (
-      <div className="rounded-lg overflow-hidden shadow-lg border border-green-300 bg-white">
+      <div className="rounded-lg overflow-hidden shadow-lg bg-white">
         {isGoogleDriveLink ? (
           <>
             {!useGoogleDocsViewer ? (
@@ -221,7 +221,7 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
               />
             )}
             {iframeError && (
-              <div className="p-6 text-center text-gray-600 bg-gray-50">
+              <div className="p-6 text-center text-gray-600 bg-green-100">
                 <p className="mb-3 text-lg">Não foi possível carregar o documento diretamente.</p>
                 <a
                   href={selectedDoc.link_pdf}

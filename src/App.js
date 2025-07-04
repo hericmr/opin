@@ -469,6 +469,32 @@ const AppContent = () => {
   );
 };
 
+function AppRoutes() {
+  const location = useLocation();
+  
+  // Verificar se há parâmetro 'panel' na URL (Slugify)
+  const urlParams = new URLSearchParams(location.search);
+  const hasPanelParam = urlParams.get('panel');
+  
+  // Slugs/paths para os quais NÃO deve mostrar o modal
+  const slugsSemModal = [
+    "/slug-exemplo", // adicione outros slugs aqui
+  ];
+  
+  // Esconde o modal se:
+  // 1. Há um parâmetro 'panel' na URL (Slugify)
+  // 2. Algum slug da lista for prefixo do path
+  const hideWelcomeModal = hasPanelParam || slugsSemModal.some(slug => location.pathname.startsWith(slug));
+
+  return (
+    <>
+      <SkipLink targetId="main-content" />
+      {!hideWelcomeModal && <WelcomeModal />}
+      <AppContent />
+    </>
+  );
+}
+
 const App = () => {
   return (
     <ToastProvider>
@@ -476,9 +502,7 @@ const App = () => {
         <RefreshProvider>
           <Router basename="/escolasindigenas">
             <ErrorBoundary>
-              <SkipLink targetId="main-content" />
-              <WelcomeModal />
-              <AppContent />
+              <AppRoutes />
             </ErrorBoundary>
           </Router>
         </RefreshProvider>

@@ -27,7 +27,6 @@ const HistoriaEscola = memo(({ escola, refreshKey = 0 }) => {
         rounded-2xl
         px-4 sm:px-6 md:px-8 py-6
         shadow-lg
-        border border-green-200/50
       `}
     >
       <header className="mb-6 sm:mb-8">
