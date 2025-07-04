@@ -11,7 +11,12 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('dados-basicos');
-  console.log('render painel', activeTab);
+  
+  // Detectar modo de criação vs. edição
+  const isCreating = !escola?.id;
+  const isEditing = !!escola?.id;
+  
+  console.log('render painel', activeTab, 'modo:', isCreating ? 'criação' : 'edição');
 
   // Configuração das abas
   const tabs = [
@@ -362,7 +367,7 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
       {/* Header */}
         <div className={`flex items-center justify-between ${isMobile ? 'p-4' : 'p-6'} border-b`}>
             <h2 className={`text-xl font-semibold text-gray-900 ${isMobile ? 'text-lg' : ''}`}>
-              Editar Escola: {escola?.Escola || 'Nova Escola'}
+              {isCreating ? 'Nova Escola' : `Editar Escola: ${escola?.Escola || ''}`}
             </h2>
           <button
             onClick={onClose}
@@ -436,7 +441,7 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
                   className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${isMobile ? 'w-full text-base' : ''}`}
                   disabled={isSaving}
                 >
-                  {isSaving ? 'Salvando...' : 'Salvar Alterações'}
+                  {isSaving ? 'Salvando...' : (isCreating ? 'Criar Escola' : 'Salvar Alterações')}
                 </button>
                 <button
                   type="button"
