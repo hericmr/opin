@@ -73,11 +73,23 @@ const MapSelector = ({
   }, [terrasIndigenasData, estadoSPData, terrasLoading, estadoLoading, terrasError, estadoError]);
 
   useEffect(() => {
+    console.log('MapSelector: useEffect painelAberto mudou:', {
+      painelAberto,
+      isMobile,
+      showMarcadores,
+      shouldReactivate: !painelAberto && isMobile
+    });
+    
     if (!painelAberto && isMobile) {
       console.log('MapSelector: Painel fechado em mobile, reativando marcadores');
       setShowMarcadores(true);
     }
   }, [painelAberto, isMobile]);
+
+  // Log para monitorar mudanças no showMarcadores
+  useEffect(() => {
+    console.log('MapSelector: showMarcadores mudou para:', showMarcadores);
+  }, [showMarcadores]);
 
   // Componente para o cabeçalho do menu
   const CabecalhoMenu = ({ onMinimize, isMobile, isMinimized }) => (
