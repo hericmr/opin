@@ -1,9 +1,9 @@
 {
   "files": {
-    "main.css": "/escolasindigenas/static/css/main.7658df7b.css",
-    "main.js": "/escolasindigenas/static/js/main.0f202241.js",
+    "main.css": "/escolasindigenas/static/css/main.b79e274b.css",
+    "main.js": "/escolasindigenas/static/js/main.38a3f257.js",
     "static/css/151.5f0b07e9.chunk.css": "/escolasindigenas/static/css/151.5f0b07e9.chunk.css",
-    "static/js/151.bddf6199.chunk.js": "/escolasindigenas/static/js/151.bddf6199.chunk.js",
+    "static/js/151.ef75d870.chunk.js": "/escolasindigenas/static/js/151.ef75d870.chunk.js",
     "static/js/302.becb65c0.chunk.js": "/escolasindigenas/static/js/302.becb65c0.chunk.js",
     "static/js/109.ead56d5d.chunk.js": "/escolasindigenas/static/js/109.ead56d5d.chunk.js",
     "static/js/17.bce113c4.chunk.js": "/escolasindigenas/static/js/17.bce113c4.chunk.js",
@@ -17,10 +17,10 @@
     "static/js/885.09f144db.chunk.js": "/escolasindigenas/static/js/885.09f144db.chunk.js",
     "static/js/45.a4577ea8.chunk.js": "/escolasindigenas/static/js/45.a4577ea8.chunk.js",
     "index.html": "/escolasindigenas/index.html",
-    "main.7658df7b.css.map": "/escolasindigenas/static/css/main.7658df7b.css.map",
-    "main.0f202241.js.map": "/escolasindigenas/static/js/main.0f202241.js.map",
+    "main.b79e274b.css.map": "/escolasindigenas/static/css/main.b79e274b.css.map",
+    "main.38a3f257.js.map": "/escolasindigenas/static/js/main.38a3f257.js.map",
     "151.5f0b07e9.chunk.css.map": "/escolasindigenas/static/css/151.5f0b07e9.chunk.css.map",
-    "151.bddf6199.chunk.js.map": "/escolasindigenas/static/js/151.bddf6199.chunk.js.map",
+    "151.ef75d870.chunk.js.map": "/escolasindigenas/static/js/151.ef75d870.chunk.js.map",
     "302.becb65c0.chunk.js.map": "/escolasindigenas/static/js/302.becb65c0.chunk.js.map",
     "109.ead56d5d.chunk.js.map": "/escolasindigenas/static/js/109.ead56d5d.chunk.js.map",
     "17.bce113c4.chunk.js.map": "/escolasindigenas/static/js/17.bce113c4.chunk.js.map",
@@ -35,7 +35,7 @@
     "45.a4577ea8.chunk.js.map": "/escolasindigenas/static/js/45.a4577ea8.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.7658df7b.css",
-    "static/js/main.0f202241.js"
+    "static/css/main.b79e274b.css",
+    "static/js/main.38a3f257.js"
   ]
 }
