@@ -94,6 +94,7 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
       <MapSelector
         dataPoints={escolasVisiveis}
         onPainelOpen={abrirPainel}
+        painelAberto={!!painelInfo}
         className="h-full w-full"
       />
 
