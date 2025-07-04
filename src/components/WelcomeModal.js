@@ -29,11 +29,11 @@ const WelcomeModal = () => {
     
     if (isHomePage) {
       // Verificar se o usuário já viu o modal antes
-      // const hasSeenWelcome = localStorage.getItem('hasSeenWelcomeModal');
+      const hasSeenWelcome = localStorage.getItem('hasSeenWelcomeModal');
       
-      // console.log('WelcomeModal - hasSeenWelcome:', hasSeenWelcome);
+      console.log('WelcomeModal - hasSeenWelcome:', hasSeenWelcome);
       
-      // if (!hasSeenWelcome) {
+      if (!hasSeenWelcome) {
         // Pequeno delay para garantir que a página carregou completamente
         const timer = setTimeout(() => {
           console.log('WelcomeModal - Abrindo modal');
@@ -41,7 +41,7 @@ const WelcomeModal = () => {
         }, 1000);
         
         return () => clearTimeout(timer);
-      // }
+      }
     } else {
       // Se não estamos na página inicial, fechar o modal
       console.log('WelcomeModal - Não é página inicial, fechando modal');

@@ -45,7 +45,7 @@ const ExpandableList = ({ items, maxVisible = 3 }) => {
 
 // MiniCard padronizado
 const MiniCard = ({ icon: Icon, label, value }) => (
-  <div className="flex items-start bg-white/80 rounded-lg p-2 text-sm">
+  <div className="flex items-start rounded-lg p-2 text-sm">
     <Icon className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
     <div className="flex-1">
       <div className="text-xs text-gray-500">{label}</div>
@@ -101,7 +101,7 @@ const Modalidades = memo(({ escola }) => {
     <>
       <InfoSection title="Modalidades" icon={Sparkles}>
         <div
-          className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mt-1"
+          className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mt-1 [&>*]:bg-green-100"
         >
           {modalidadeItems.map((item, idx) => (
             <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} />
@@ -114,7 +114,7 @@ const Modalidades = memo(({ escola }) => {
         icon={BookOpen}
         description="Diferenciados e não diferenciados, produzidos dentro e fora da comunidade."
       >
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mt-1">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mt-1 [&>*]:bg-green-100">
           {materiaisItems.map((item, idx) => (
             <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} />
           ))}

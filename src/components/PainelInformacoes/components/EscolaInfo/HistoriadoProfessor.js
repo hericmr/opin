@@ -105,7 +105,7 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
       className="
         mt-8 mb-12 max-w-4xl mx-auto
         px-4 sm:px-6 md:px-8 py-6
-        bg-white rounded-2xl shadow-lg border border-green-100/50
+        bg-white rounded-2xl shadow-lg
         prose prose-sm sm:prose-base md:prose-lg lg:prose-xl
         prose-headings:text-green-900 prose-p:text-black prose-p:leading-relaxed prose-p:text-justify
         prose-img:rounded-xl prose-img:shadow-lg
@@ -162,10 +162,10 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
 
       {/* Navegação entre histórias */}
       {hasMultipleHistorias && (
-        <div className="flex items-center justify-between mt-8 pt-6 border-t border-green-100">
+        <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
           <button
             onClick={prevHistoria}
-            className="flex items-center gap-2 px-4 py-2 text-green-700 hover:text-green-800 hover:bg-green-50 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-green-700 hover:text-green-800 hover:bg-gray-100 rounded-lg transition-colors"
             aria-label="História anterior"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -176,14 +176,14 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
               <button
                 key={index}
                 onClick={() => setCurrentHistoriaIndex(index)}
-                className={`w-3 h-3 rounded-full border-2 ${index === currentHistoriaIndex ? 'bg-green-600 border-green-600' : 'bg-white border-green-300'} transition-colors`}
+                className={`w-3 h-3 rounded-full border-2 ${index === currentHistoriaIndex ? 'bg-green-600 border-green-600' : 'bg-white border-gray-300'} transition-colors`}
                 aria-label={`Ir para história ${index + 1}`}
               />
             ))}
           </div>
           <button
             onClick={nextHistoria}
-            className="flex items-center gap-2 px-4 py-2 text-green-700 hover:text-green-800 hover:bg-green-50 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-green-700 hover:text-green-800 hover:bg-gray-100 rounded-lg transition-colors"
             aria-label="Próxima história"
           >
             <span className="hidden sm:inline">Próxima</span>

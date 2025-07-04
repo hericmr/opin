@@ -40,7 +40,7 @@ const CompactCard = ({ icon: Icon, label, value, type = 'text' }) => {
   };
 
   return (
-    <div className="bg-white/70 p-1  transition-all">
+    <div className="p-1 rounded-md transition-all">
       <div className="flex items-center gap-1.5 mb-1">
         <Icon className="w-4 h-4 text-gray-600" />
         <span className="text-xs text-gray-500 font-medium">{label}</span>
@@ -51,7 +51,7 @@ const CompactCard = ({ icon: Icon, label, value, type = 'text' }) => {
 };
 
 const InfoBlock = ({ icon: Icon, label, value }) => (
-  <div className="flex items-center gap-2 bg-white/70 p-1.5 rounded-md ring-1 ring-inset ring-gray-100 text-xs">
+  <div className="flex items-center gap-2 bg-green-100 p-1.5 rounded-md text-xs">
     <Icon className="w-4 h-4 text-green-600" />
     <span className="text-gray-700 font-medium">{label}:</span>
     <span className="font-semibold text-green-800">{capitalize(value)}</span>
@@ -63,7 +63,7 @@ const AddressDetails = ({ escola }) => {
   
   if (!hasDetailedAddress) {
     return (
-      <div className="mt-2 p-2 bg-white/80 rounded-md">
+      <div className="mt-2 p-2 bg-green-100 rounded-md">
         <p className="text-xs text-gray-700 leading-snug">
           {capitalize(escola.endereco)}
         </p>
@@ -82,7 +82,7 @@ const AddressDetails = ({ escola }) => {
     <div className="mt-2 space-y-1">
       {addressFields.map(({ field, label }) => 
         escola[field] && (
-          <div key={field} className="flex items-start gap-2 p-1.5 bg-white/80 rounded-md">
+          <div key={field} className="flex items-start gap-2 p-1.5 bg-green-100 rounded-md">
             <MapPin className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" />
             <div className="flex-1">
               <div className="text-xs font-medium text-gray-700 mb-0.5">{label}</div>
@@ -93,7 +93,7 @@ const AddressDetails = ({ escola }) => {
       )}
       
       {(escola.cep || escola.estado) && (
-        <div className="flex items-start gap-2 p-1.5 bg-white/80 rounded-md">
+        <div className="flex items-start gap-2 p-1.5 bg-green-100 rounded-md">
           <MapPin className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" />
           <div className="flex-1">
             <div className="text-xs font-medium text-gray-700 mb-0.5">Localização</div>
@@ -133,10 +133,10 @@ const SocialLinks = ({ links, expanded, onToggle }) => {
   if (socialLinks.length === 0) return null;
 
   return (
-    <div className="bg-white/70 rounded-md ring-1 ring-blue-100">
+    <div className="bg-green-100 rounded-md">
       <button
         onClick={() => onToggle('social')}
-        className="w-full flex justify-between items-center p-1.5 hover:bg-blue-50 text-xs"
+        className="w-full flex justify-between items-center p-1.5 hover:bg-green-200 text-xs"
         aria-expanded={expanded.social}
       >
         <span className="flex items-center gap-2 text-gray-700 font-medium">
@@ -151,7 +151,7 @@ const SocialLinks = ({ links, expanded, onToggle }) => {
       </button>
       
       {expanded.social && (
-        <div className="px-2 pb-2 border-t border-blue-100 bg-blue-50/30">
+        <div className="px-2 pb-2 border-t border-green-200 bg-white">
           <div className="mt-1 space-y-1">
             {socialLinks.map((link, index) => (
               <a
@@ -159,7 +159,7 @@ const SocialLinks = ({ links, expanded, onToggle }) => {
                 href={link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 p-1.5 bg-white/80 rounded-md hover:bg-blue-100/50 group text-xs"
+                className="flex items-center gap-1.5 p-1.5 bg-green-100 rounded-md hover:bg-green-200 group text-xs"
               >
                 <LinkIcon className="w-4 h-4 text-blue-600" />
                 <span className="truncate flex-1 text-gray-700">{link}</span>
@@ -204,7 +204,7 @@ const BasicInfo = memo(({ escola }) => {
   return (
     <InfoSection title="Localização" icon={MapPin}>
       {/* Cards informativos básicos */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mb-3">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mb-3 [&>*]:bg-green-100">
         {basicInfoCards.map((item, index) => (
           <CompactCard key={index} {...item} />
         ))}
@@ -222,10 +222,10 @@ const BasicInfo = memo(({ escola }) => {
 
         {/* Gaveta do endereço */}
         {escola.endereco && (
-          <div className="bg-white/70 rounded-md ring-1 ring-gray-100">
+          <div className="bg-green-100 rounded-md">
             <button
               onClick={() => toggle('endereco')}
-              className="w-full flex justify-between items-center p-1.5 hover:bg-gray-50 text-xs"
+              className="w-full flex justify-between items-center p-1.5 hover:bg-green-200 text-xs"
               aria-expanded={expanded.endereco}
             >
               <span className="flex items-center gap-2 text-gray-700 font-medium">
@@ -240,7 +240,7 @@ const BasicInfo = memo(({ escola }) => {
             </button>
             
             {expanded.endereco && (
-              <div className="px-2 pb-2 border-t border-gray-100">
+              <div className="px-2 pb-2 border-t border-green-200 bg-white">
                 <AddressDetails escola={escola} />
                 <MapButton escola={escola} />
               </div>

@@ -13,7 +13,7 @@ const ProjectCard = ({ icon: Icon, label, value }) => {
   const isNegative = value?.trim().toLowerCase() === 'não';
 
   return (
-    <div className="flex items-start gap-4 bg-white/90 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="flex items-start gap-4 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
       <div className="mt-1">
         <Icon className="w-5 h-5 text-green-600 flex-shrink-0" />
       </div>
@@ -73,7 +73,7 @@ const ProjetosParcerias = memo(({ escola }) => {
 
   return (
     <InfoSection title="Projetos e Parcerias" icon={Target}>
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-1 gap-3 [&>*]:bg-green-100">
         {availableProjects.map((project) => (
           <ProjectCard
             key={project.field}
