@@ -150,7 +150,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
           className="text-blue-600 hover:text-blue-800"
           title="Tentar novamente"
         >
-          <RefreshCw className="w-4 h-4" />
+          <RefreshCw className="w-5 h-5" />
         </button>
       </div>
     );
@@ -165,7 +165,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
           className="text-blue-600 hover:text-blue-800"
           title="Tentar novamente"
         >
-          <RefreshCw className="w-4 h-4" />
+          <RefreshCw className="w-5 h-5" />
         </button>
       </div>
     );

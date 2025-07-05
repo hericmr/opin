@@ -25,12 +25,12 @@ const CompactCard = ({ icon: Icon, label, value, type = 'text' }) => {
       case 'boolean':
         return value ? (
           <span className="flex items-center gap-1 text-green-600 text-sm">
-            <Check className="w-4 h-4" />
+            <Check className="w-5 h-5" />
             Sim
           </span>
         ) : (
           <span className="flex items-center gap-1 text-red-500 text-sm">
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
             Não
           </span>
         );
@@ -42,7 +42,7 @@ const CompactCard = ({ icon: Icon, label, value, type = 'text' }) => {
   return (
     <div className="p-1 rounded-md transition-all">
       <div className="flex items-center gap-1.5 mb-1">
-        <Icon className="w-4 h-4 text-gray-600" />
+        <Icon className="w-5 h-5 text-gray-600" />
         <span className="text-xs text-gray-500 font-medium">{label}</span>
       </div>
       {renderValue()}
@@ -52,7 +52,7 @@ const CompactCard = ({ icon: Icon, label, value, type = 'text' }) => {
 
 const InfoBlock = ({ icon: Icon, label, value }) => (
   <div className="flex items-center gap-2 bg-green-100 p-1.5 rounded-md text-xs">
-    <Icon className="w-4 h-4 text-green-600" />
+    <Icon className="w-5 h-5 text-green-600" />
     <span className="text-gray-700 font-medium">{label}:</span>
     <span className="font-semibold text-green-800">{capitalize(value)}</span>
   </div>
@@ -83,7 +83,7 @@ const AddressDetails = ({ escola }) => {
       {addressFields.map(({ field, label }) => 
         escola[field] && (
           <div key={field} className="flex items-start gap-2 p-1.5 bg-green-100 rounded-md">
-            <MapPin className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" />
+            <MapPin className="w-5 h-5 text-gray-600 mt-0.5 flex-shrink-0" />
             <div className="flex-1">
               <div className="text-xs font-medium text-gray-700 mb-0.5">{label}</div>
               <div className="text-xs text-gray-800 leading-snug">{escola[field]}</div>
@@ -94,7 +94,7 @@ const AddressDetails = ({ escola }) => {
       
       {(escola.cep || escola.estado) && (
         <div className="flex items-start gap-2 p-1.5 bg-green-100 rounded-md">
-          <MapPin className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" />
+          <MapPin className="w-5 h-5 text-gray-600 mt-0.5 flex-shrink-0" />
           <div className="flex-1">
             <div className="text-xs font-medium text-gray-700 mb-0.5">Localização</div>
             <div className="text-xs text-gray-800 leading-snug">
@@ -121,7 +121,7 @@ const MapButton = ({ escola }) => {
       onClick={openMap}
       className="mt-2 w-full flex items-center justify-center gap-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors text-xs font-medium"
     >
-      <Navigation className="w-4 h-4" />
+      <Navigation className="w-5 h-5" />
       Ver no Google Maps
     </button>
   );
@@ -140,11 +140,11 @@ const SocialLinks = ({ links, expanded, onToggle }) => {
         aria-expanded={expanded.social}
       >
         <span className="flex items-center gap-2 text-gray-700 font-medium">
-          <Globe className="w-4 h-4 text-blue-600" />
+          <Globe className="w-5 h-5 text-blue-600" />
           Redes sociais ({socialLinks.length})
         </span>
         <ChevronRight
-          className={`w-4 h-4 text-gray-400 transition-transform ${
+          className={`w-5 h-5 text-gray-400 transition-transform ${
             expanded.social ? 'rotate-90' : ''
           }`}
         />
@@ -161,9 +161,9 @@ const SocialLinks = ({ links, expanded, onToggle }) => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 p-1.5 bg-green-100 rounded-md hover:bg-green-200 group text-xs"
               >
-                <LinkIcon className="w-4 h-4 text-blue-600" />
+                <LinkIcon className="w-5 h-5 text-blue-600" />
                 <span className="truncate flex-1 text-gray-700">{link}</span>
-                <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
+                <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-blue-600" />
               </a>
             ))}
           </div>
@@ -229,11 +229,11 @@ const BasicInfo = memo(({ escola }) => {
               aria-expanded={expanded.endereco}
             >
               <span className="flex items-center gap-2 text-gray-700 font-medium">
-                <Building className="w-4 h-4" />
+                <Building className="w-5 h-5" />
                 Endereço
               </span>
               <ChevronRight
-                className={`w-4 h-4 text-gray-400 transition-transform ${
+                className={`w-5 h-5 text-gray-400 transition-transform ${
                   expanded.endereco ? 'rotate-90' : ''
                 }`}
               />

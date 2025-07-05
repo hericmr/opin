@@ -108,11 +108,11 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
 
   const getIconForType = (type) => {
     switch (type) {
-      case 'school': return <MapPin className="w-4 h-4" />;
-      case 'land': return <BookOpen className="w-4 h-4" />;
-      case 'teacher': return <Users className="w-4 h-4" />;
-      case 'history': return <FileText className="w-4 h-4" />;
-      default: return <MapPin className="w-4 h-4" />;
+      case 'school': return <MapPin className="w-5 h-5" />;
+      case 'land': return <BookOpen className="w-5 h-5" />;
+      case 'teacher': return <Users className="w-5 h-5" />;
+      case 'history': return <FileText className="w-5 h-5" />;
+      default: return <MapPin className="w-5 h-5" />;
     }
   };
 
@@ -151,7 +151,7 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
                    ${isMobileLandscape ? 'p-1.5' : ''}`}
         aria-label="Buscar"
       >
-        <Search className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
+        <Search className={isMobileLandscape ? "w-5 h-5" : "w-6 h-6"} />
       </button>
 
       {/* Modal de busca */}
@@ -181,7 +181,7 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
               <div className="p-3 sm:p-4 border-b border-gray-100">
                 <form onSubmit={handleSearch} className="flex items-center gap-2">
                   <div className="flex-1 relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <input
                       type="text"
                       placeholder={isMobile ? "Buscar..." : "Buscar escolas, povos, línguas, projetos, infraestrutura..."}
@@ -203,7 +203,7 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
                     }}
                     className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-5 h-5" />
                   </button>
                 </form>
               </div>
@@ -260,7 +260,7 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
                             </p>
                           </div>
                           {result.coordinates && (
-                            <Map className="w-4 h-4 text-gray-300 group-hover:text-green-600 transition-colors flex-shrink-0" />
+                            <Map className="w-5 h-5 text-gray-300 group-hover:text-green-600 transition-colors flex-shrink-0" />
                           )}
                         </button>
                       ))}

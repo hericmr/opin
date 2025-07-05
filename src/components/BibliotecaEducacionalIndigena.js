@@ -309,7 +309,7 @@ const BibliotecaEducacionalIndigena = ({ locations }) => {
                             <span className="text-xs text-gray-500">
                               {local.municipio}
                             </span>
-                            <ArrowRight className="w-4 h-4 text-green-600" />
+                            <ArrowRight className="w-5 h-5 text-green-600" />
                           </div>
                         </motion.div>
                       ))}
@@ -384,7 +384,7 @@ const BibliotecaEducacionalIndigena = ({ locations }) => {
                       <span className="text-gray-500">
                         {local.municipio}
                       </span>
-                      <ArrowRight className="w-4 h-4 text-green-600" />
+                      <ArrowRight className="w-5 h-5 text-green-600" />
                     </div>
                   </motion.div>
                 ))}

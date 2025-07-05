@@ -77,14 +77,14 @@ const renderBooleanStatus = (valor) => {
   if (normalizado === 'sim') {
     return (
       <div className="flex items-center gap-1 text-green-700">
-        <Check className="w-4 h-4" />
+        <Check className="w-5 h-5" />
         Sim
       </div>
     );
   } else if (normalizado === 'não' || normalizado === 'nao') {
     return (
       <div className="flex items-center gap-1 text-gray-500">
-        <X className="w-4 h-4" />
+        <X className="w-5 h-5" />
         Não
       </div>
     );
