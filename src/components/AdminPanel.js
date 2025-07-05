@@ -242,6 +242,10 @@ const AdminPanel = () => {
         'Acesso à internet': editingLocation['Acesso à internet'],
         'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': editingLocation['Equipamentos Tecnológicos (Computadores, tablets e impressoras)'],
         'Modo de acesso à escola': editingLocation['Modo de acesso à escola'],
+        'Cozinha': editingLocation.cozinha,
+        'Merenda Escolar': editingLocation.merenda_escolar,
+        'Merenda Diferenciada': editingLocation.diferenciada,
+        'Merenda Diferenciada (Detalhes)': editingLocation.merenda_diferenciada,
         
         // Gestores
         'Gestão/Nome': editingLocation['Gestão/Nome'],
@@ -427,6 +431,9 @@ const AdminPanel = () => {
     'outros_funcionarios': '',
     'gestao': '',
     'merenda_diferenciada': '',
+    cozinha: '',
+    merenda_escolar: '',
+    diferenciada: '',
     activeTab: 'dados-basicos'
   });
 
@@ -802,6 +809,45 @@ const AdminPanel = () => {
                         className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
                         value={editingLocation['Modo de acesso à escola'] || ''}
                         onChange={e => setEditingLocation({ ...editingLocation, 'Modo de acesso à escola': e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Cozinha</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
+                        value={editingLocation.cozinha || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, cozinha: e.target.value })}
+                        placeholder="Ex: Sim, Não, Em construção..."
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Merenda Escolar</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
+                        value={editingLocation.merenda_escolar || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, merenda_escolar: e.target.value })}
+                        placeholder="Ex: Sim, Não, Parcial..."
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Merenda Diferenciada</label>
+                      <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
+                        value={editingLocation.diferenciada || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, diferenciada: e.target.value })}
+                        placeholder="Ex: Sim, Não, Específica..."
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2 text-base">Merenda Diferenciada (Detalhes)</label>
+                      <textarea
+                        className="w-full border rounded px-3 py-2 h-24 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 min-h-[44px] text-base"
+                        value={editingLocation.merenda_diferenciada || ''}
+                        onChange={e => setEditingLocation({ ...editingLocation, merenda_diferenciada: e.target.value })}
+                        placeholder="Descreva a situação do fornecimento de merenda (ex: se a escola recebe, se há interrupções, etc.)"
                       />
                     </div>
                   </div>
