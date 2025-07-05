@@ -2,6 +2,8 @@
 
 Documentação detalhada da estrutura de dados para criação de dashboard com Python.
 
+**🌐 Projeto OPIN:** https://hericmr.github.io/escolasindigenas/
+
 ---
 
 ## 🗄️ Estrutura do Banco de Dados Supabase
