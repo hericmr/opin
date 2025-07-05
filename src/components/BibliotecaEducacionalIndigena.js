@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ReactComponent as OncaIcon } from '../../public/onça.svg';
+import { ReactComponent as OncaIcon } from '../../src/assets/onca.svg';
 import { Search, BookOpen, MapPin, Users, Home, Heart, Star, Filter, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
