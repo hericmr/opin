@@ -6,6 +6,29 @@ Documentação detalhada da estrutura de dados para criação de dashboard com P
 
 ---
 
+## 🔐 Configuração do Projeto Supabase
+
+### Acesso ao Projeto
+Para acessar o projeto Supabase do OPIN, entre em contato com a equipe de desenvolvimento para obter as credenciais de acesso.
+
+### Variáveis de Ambiente Necessárias
+Crie um arquivo `.env` no seu projeto Python com as seguintes variáveis:
+
+```env
+SUPABASE_URL=sua_url_do_supabase
+SUPABASE_ANON_KEY=sua_chave_anonima_do_supabase
+```
+
+### Como Obter as Credenciais
+1. Acesse o [Supabase Dashboard](https://app.supabase.com/)
+2. Entre em contato com o administrador do projeto OPIN
+3. Solicite acesso ao projeto ou as credenciais necessárias
+4. Configure as variáveis de ambiente no seu arquivo `.env`
+
+**⚠️ Importante:** Nunca commite o arquivo `.env` no repositório. Ele deve estar no `.gitignore`.
+
+---
+
 ## 🗄️ Estrutura do Banco de Dados Supabase
 
 ### Tabela Principal: `escolas_completa`
