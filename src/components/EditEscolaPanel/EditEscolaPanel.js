@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Image as ImageIcon, User, BookOpen, MapPin, Users, Settings, FileText, Video } from 'lucide-react';
+import { Image as ImageIcon, User, BookOpen, MapPin, Users, Settings, FileText, Video, Home } from 'lucide-react';
 import ImageUploadSection from './ImageUploadSection';
 import ProfessorImageUploadSection from './ProfessorImageUploadSection';
 import VideoSection from './VideoSection';
@@ -49,6 +49,12 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
       label: 'Localização', 
       icon: MapPin,
       description: 'Coordenadas e endereço da escola'
+    },
+    { 
+      id: 'infraestrutura', 
+      label: 'Infraestrutura', 
+      icon: Home,
+      description: 'Informações sobre cozinha, merenda e infraestrutura'
     },
     { 
       id: 'gestao', 
@@ -245,6 +251,65 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
           </div>
         );
 
+      case 'infraestrutura':
+        return (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Cozinha
+                </label>
+                <input
+                  type="checkbox"
+                  className="mr-2 align-middle"
+                  checked={!!escola?.cozinha}
+                  onChange={e => onSave({ ...escola, cozinha: e.target.checked })}
+                  id="cozinha-checkbox"
+                />
+                <label htmlFor="cozinha-checkbox" className="text-sm text-gray-700 align-middle">Possui cozinha</label>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Merenda Escolar
+                </label>
+                <input
+                  type="checkbox"
+                  className="mr-2 align-middle"
+                  checked={!!escola?.merenda_escolar}
+                  onChange={e => onSave({ ...escola, merenda_escolar: e.target.checked })}
+                  id="merenda-escolar-checkbox"
+                />
+                <label htmlFor="merenda-escolar-checkbox" className="text-sm text-gray-700 align-middle">Recebe merenda escolar</label>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Merenda Diferenciada
+                </label>
+                <input
+                  type="checkbox"
+                  className="mr-2 align-middle"
+                  checked={!!escola?.diferenciada}
+                  onChange={e => onSave({ ...escola, diferenciada: e.target.checked })}
+                  id="diferenciada-checkbox"
+                />
+                <label htmlFor="diferenciada-checkbox" className="text-sm text-gray-700 align-middle">Recebe merenda diferenciada</label>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Merenda diferenciada (detalhes)
+              </label>
+              <textarea
+                className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                rows="3"
+                value={escola?.merenda_diferenciada || ''}
+                onChange={e => onSave({ ...escola, merenda_diferenciada: e.target.value })}
+                placeholder="Descreva a situação do fornecimento de merenda (ex: se a escola recebe, se há interrupções, etc.)"
+              />
+            </div>
+          </div>
+        );
+
       case 'gestao':
         return (
           <div className="space-y-4">
@@ -298,24 +363,6 @@ const EditEscolaPanel = ({ escola, onClose, onSave }) => {
                   placeholder="Quantidade ou nomes"
                 />
               </div>
-            </div>
-          </div>
-        );
-
-      case 'infraestrutura':
-        return (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Merenda diferenciada
-              </label>
-              <textarea
-                className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                rows="3"
-                value={escola?.merenda_diferenciada || ''}
-                onChange={e => onSave({ ...escola, merenda_diferenciada: e.target.value })}
-                placeholder="Descreva a situação do fornecimento de merenda (ex: se a escola recebe, se há interrupções, etc.)"
-              />
             </div>
           </div>
         );

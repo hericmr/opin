@@ -32,7 +32,10 @@ export const formatters = {
     "Coleta de Lixo": escola.coleta_lixo,
     "Acesso à Internet": escola.acesso_internet,
     "Equipamentos Tecnológicos": escola.equipamentos,
-    "Modo de Acesso à Escola": escola.modo_acesso
+    "Modo de Acesso à Escola": escola.modo_acesso,
+    "Cozinha": escola.cozinha,
+    "Merenda Escolar": escola.merenda_escolar,
+    "Merenda Diferenciada": escola.diferenciada
   }),
 
   gestaoEProfessores: (escola) => ({

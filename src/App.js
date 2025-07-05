@@ -195,6 +195,23 @@ const AppContent = () => {
           return null;
         }
 
+        // Processamento do campo composto de cozinha/merenda escolar/diferenciada
+        // Prioriza os campos separados do Supabase
+        let cozinha = e.Cozinha ?? null;
+        let merenda_escolar = e.Merenda_escolar ?? null;
+        let diferenciada = e.diferenciada ?? null;
+        // Se não vierem separados, tenta processar o campo composto do CSV
+        if ((cozinha === null || merenda_escolar === null || diferenciada === null) && e["Cozinha/Merenda escolar/diferenciada"]) {
+          const partes = e["Cozinha/Merenda escolar/diferenciada"].split("/");
+          cozinha = cozinha ?? partes[0]?.trim();
+          merenda_escolar = merenda_escolar ?? partes[1]?.trim();
+          diferenciada = diferenciada ?? partes[2]?.trim();
+          // Converter para booleano se for Sim/Não, senão manter string
+          cozinha = cozinha?.toLowerCase().startsWith("sim") ? true : cozinha?.toLowerCase().startsWith("não") ? false : cozinha;
+          merenda_escolar = merenda_escolar?.toLowerCase().startsWith("sim") ? true : merenda_escolar?.toLowerCase().startsWith("não") ? false : merenda_escolar;
+          diferenciada = diferenciada?.toLowerCase().startsWith("sim") ? true : diferenciada?.toLowerCase().startsWith("não") ? false : diferenciada;
+        }
+
         const ponto = {
           // Informações básicas
           titulo: e.Escola,
@@ -230,6 +247,9 @@ const AppContent = () => {
           acesso_internet: e["Acesso à internet"],
           equipamentos: e["Equipamentos Tecnológicos (Computadores, tablets e impressoras)"],
           modo_acesso: e["Modo de acesso à escola"],
+          cozinha: cozinha,
+          merenda_escolar: merenda_escolar,
+          diferenciada: diferenciada,
           
           // Gestão e professores
           gestao: e["Gestão/Nome"],

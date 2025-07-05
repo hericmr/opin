@@ -6,6 +6,9 @@ import {
   Wifi,
   Monitor,
   MapPin,
+  Utensils,
+  Apple,
+  ChefHat,
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import BooleanValue from '../BooleanValue';
@@ -48,6 +51,21 @@ const Infraestrutura = memo(({ escola }) => {
       icon: MapPin,
       label: 'Modo de Acesso à Escola',
       value: escola.modo_acesso,
+    },
+    {
+      icon: Utensils,
+      label: 'Cozinha',
+      value: <BooleanValue value={escola.cozinha} />,
+    },
+    {
+      icon: Apple,
+      label: 'Merenda Escolar',
+      value: <BooleanValue value={escola.merenda_escolar} />,
+    },
+    {
+      icon: ChefHat,
+      label: 'Merenda Diferenciada',
+      value: <BooleanValue value={escola.diferenciada} />,
     },
   ];
 
