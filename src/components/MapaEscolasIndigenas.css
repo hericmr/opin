@@ -97,11 +97,13 @@
 .markers-only-map {
   background: transparent !important;
   pointer-events: none !important;
+  touch-action: manipulation !important;
 }
 
 .markers-only-map .leaflet-pane {
   background: transparent !important;
   pointer-events: none !important;
+  touch-action: manipulation !important;
 }
 
 .markers-only-map .leaflet-control-container {
@@ -114,23 +116,28 @@
 
 /* Permitir apenas interações com marcadores */
 .markers-only-map .leaflet-marker-icon {
-  z-index: 1000 !important;
+  z-index: 9999 !important;
   pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
 
 .markers-only-map .leaflet-marker-shadow {
-  z-index: 999 !important;
+  z-index: 9998 !important;
   pointer-events: auto !important;
+  touch-action: manipulation !important;
 }
 
 .markers-only-map .leaflet-tooltip {
-  z-index: 1001 !important;
+  z-index: 10000 !important;
   pointer-events: auto !important;
+  touch-action: manipulation !important;
 }
 
 .markers-only-map .leaflet-popup {
-  z-index: 1002 !important;
+  z-index: 10001 !important;
   pointer-events: auto !important;
+  touch-action: manipulation !important;
 }
 
 /* Garantir que o canvas do Leaflet não bloqueie interações */
@@ -141,6 +148,9 @@
 /* Permitir interações apenas com clusters */
 .markers-only-map .marker-cluster {
   pointer-events: auto !important;
+  z-index: 9999 !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
 
 /* Estilos para os clusters de marcadores com estética indígena */
@@ -343,4 +353,29 @@
 /* Garantir que o canvas do mapa seja interativo */
 .ol-viewport canvas {
   pointer-events: auto !important;
+}
+
+/* CSS específico para mobile */
+@media (max-width: 768px) {
+  .markers-only-map .leaflet-marker-icon {
+    z-index: 99999 !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    cursor: pointer !important;
+  }
+  
+  .markers-only-map .marker-cluster {
+    z-index: 99999 !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    cursor: pointer !important;
+  }
+  
+  .markers-only-map .leaflet-tooltip {
+    z-index: 100000 !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+  }
 }

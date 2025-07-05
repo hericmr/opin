@@ -17,15 +17,13 @@ const PainelContainer = ({
 
   // Determinar altura da navbar baseada no tamanho da tela
   const isMobileLandscape = isMobile && window.innerWidth > window.innerHeight;
-  const navbarHeight = isMobileLandscape ? 48 : isMobile ? 56 : 64;
-  const topPosition = isMobileLandscape ? 'top-12' : isMobile ? 'top-14' : 'top-16';
-  const heightCalc = isMobileLandscape ? 'calc(100vh - 3rem)' : isMobile ? 'calc(100vh - 3.5rem)' : 'calc(100vh - 4rem)';
+  const navbarHeight = isMobileLandscape ? 48 : isMobile ? 56 : 72;
 
   const baseClasses = `
     fixed
     ${isMobile 
-      ? `inset-x-0 ${topPosition} w-full ${heightCalc}` 
-      : 'top-16 bottom-0 right-0 w-full sm:w-3/4 lg:w-[49%] h-auto'
+      ? `inset-x-0 top-0 w-full h-full` 
+      : 'top-30 bottom-0 right-0 w-full sm:w-3/4 lg:w-[49%] h-auto'
     }
     rounded-t-xl shadow-xl z-[9999] transform transition-all duration-500 ease-in-out
     bg-white border-t-4 border-white
@@ -47,9 +45,10 @@ const PainelContainer = ({
       aria-modal="true"
       className={`${baseClasses} ${visibilityClasses}${isMobile ? ' painel-informacoes-mobile' : ''}`}
       style={{
-        height: isMobile ? heightCalc : painelDimensions.height,
-        maxHeight: isMobile ? heightCalc : painelDimensions.maxHeight,
+        height: painelDimensions.height,
+        maxHeight: painelDimensions.maxHeight,
         width: isMobile ? '100%' : painelDimensions.width,
+        top: isMobile ? `${navbarHeight}px` : undefined,
         display: "flex",
         flexDirection: "column",
         ...(isMobile && {
