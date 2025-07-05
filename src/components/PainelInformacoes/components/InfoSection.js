@@ -57,7 +57,7 @@ const InfoCard = memo(({ label, value, icon: Icon, type = 'text', className = ''
   return (
     <div className={`rounded-lg p-4 transition-all duration-200 ${className}`}>
       <div className="flex items-center gap-2 mb-2">
-        {Icon && <Icon className="w-4 h-4 text-green-600" />}
+        {Icon && <Icon className="w-5 h-5 text-green-600" />}
         <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
           {label}
         </span>
@@ -190,7 +190,7 @@ const InfoSection = memo(({
         aria-controls={`${title}-content`}
       >
         <div className="flex items-center gap-2">
-          {Icon && <Icon className="w-4 h-4 text-green-600" />}
+          {Icon && <Icon className="w-5 h-5 text-green-600" />}
           <span className="tracking-wide">{title}</span>
         </div>
       </button>

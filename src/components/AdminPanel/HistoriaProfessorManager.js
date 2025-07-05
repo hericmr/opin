@@ -233,7 +233,7 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
           onClick={() => setShowAddForm(true)}
           className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-5 h-5" />
           Nova História
         </button>
       </div>
@@ -285,7 +285,7 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
                       )}
                       {!historia.ativo && (
                         <span className="flex items-center gap-1 text-orange-600 text-sm">
-                          <EyeOff className="w-4 h-4" />
+                          <EyeOff className="w-5 h-5" />
                           Inativa
                         </span>
                       )}
@@ -302,7 +302,7 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
                       className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30"
                       title="Mover para cima"
                     >
-                      <ArrowUp className="w-4 h-4" />
+                      <ArrowUp className="w-5 h-5" />
                     </button>
                     <button
                       onClick={() => handleReorder(historia.id, 'down')}
@@ -310,7 +310,7 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
                       className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30"
                       title="Mover para baixo"
                     >
-                      <ArrowDown className="w-4 h-4" />
+                      <ArrowDown className="w-5 h-5" />
                     </button>
                     {/* Action buttons */}
                     <button
@@ -318,14 +318,14 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
                       className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg"
                       title="Editar"
                     >
-                      <Edit3 className="w-4 h-4" />
+                      <Edit3 className="w-5 h-5" />
                     </button>
                     <button
                       onClick={() => handleDelete(historia.id)}
                       className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg"
                       title="Excluir"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
                 </div>
@@ -414,7 +414,7 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
                 type="submit"
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
               >
-                <Save className="w-4 h-4" />
+                <Save className="w-5 h-5" />
                 {editingHistoria ? 'Atualizar' : 'Criar'}
               </button>
               <button

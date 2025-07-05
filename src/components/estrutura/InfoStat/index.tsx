@@ -3,7 +3,15 @@ import { Check, X } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import './styles.css';
-import type { InfoStatProps } from './types';
+
+interface InfoStatProps {
+  icon: React.ComponentType<{ className?: string; size?: number; 'aria-hidden'?: boolean }>;
+  label: string;
+  value: string | number | boolean;
+  variant?: 'default' | 'highlight' | 'success' | 'warning' | 'error';
+  className?: string;
+  description?: string;
+}
 
 /**
  * Componente InfoStat - Exibe uma informação estatística com ícone
@@ -56,9 +64,9 @@ const InfoStat: React.FC<InfoStatProps> = ({
       return (
         <>
           {value ? (
-            <Check className="w-4 h-4" aria-hidden="true" />
+            <Check className="w-5 h-5" aria-hidden="true" />
           ) : (
-            <X className="w-4 h-4" aria-hidden="true" />
+            <X className="w-5 h-5" aria-hidden="true" />
           )}
           <span>{value ? 'Sim' : 'Não'}</span>
         </>
@@ -78,7 +86,7 @@ const InfoStat: React.FC<InfoStatProps> = ({
         <Icon 
           className={iconClasses}
           size={24}
-          aria-hidden="true"
+          aria-hidden={true}
         />
         <div className="info-stat__text">
           <span 

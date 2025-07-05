@@ -24,7 +24,7 @@ const PainelLinks = ({ links }) => {
               {link.texto}
             </span>
             <ExternalLink 
-              className="w-4 h-4 text-gray-400 group-hover:text-green-600 transition-colors duration-200" 
+              className="w-5 h-5 text-gray-400 group-hover:text-green-600 transition-colors duration-200" 
               aria-hidden="true"
             />
             <span className="sr-only">Abrir em nova aba</span>
