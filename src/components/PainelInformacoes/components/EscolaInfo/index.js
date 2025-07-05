@@ -11,16 +11,47 @@ import ProjetosParcerias from './ProjetosParcerias';
 import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
 import HistoriadoProfessor from './HistoriadoProfessor';
 
+// CSS para layout Masonry otimizado
+const masonryStyles = `
+  .masonry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    grid-auto-rows: minmax(200px, auto);
+    align-items: start;
+  }
+  
+  .masonry-grid > * {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  
+  @media (min-width: 768px) {
+    .masonry-grid {
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .masonry-grid {
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    }
+  }
+`;
+
 // Componente wrapper para o grid
 const GridLayoutWrapper = memo(({ children, shouldUseGrid }) => {
   const containerClasses = shouldUseGrid
-    ? 'grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6'
+    ? 'masonry-grid'
     : 'space-y-4';
 
   return (
-    <div className={`${containerClasses} transition-all duration-300 ease-in-out`}>
-      {children}
-    </div>
+    <>
+      <style>{masonryStyles}</style>
+      <div className={`${containerClasses} transition-all duration-300 ease-in-out`}>
+        {children}
+      </div>
+    </>
   );
 });
 
