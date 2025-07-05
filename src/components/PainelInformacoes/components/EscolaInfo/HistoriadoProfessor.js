@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState, useCallback } from 'react';
-import { BookOpen, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { getHistoriasProfessor } from '../../../../services/historiaProfessorService';
 import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
 
@@ -115,10 +115,14 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
       <header className="mb-6 sm:mb-8">
         <div className="flex items-center justify-between mb-3 sm:mb-4">
           <div className="flex items-center gap-3">
-            <BookOpen
-              className="w-6 h-6 sm:w-8 sm:h-8 text-green-700"
-              aria-hidden="true"
-            />
+            <span className="bg-green-300 rounded-full flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12">
+              <img 
+                src={process.env.PUBLIC_URL + '/onça.svg'} 
+                alt="Ícone de onça" 
+                className="w-6 h-6 sm:w-8 sm:h-8" 
+                aria-hidden="true"
+              />
+            </span>
             <h2 className="text-xl sm:text-2xl font-bold text-black m-0">
               História dos Professores
             </h2>
