@@ -14,12 +14,16 @@ import HistoriadoProfessor from './HistoriadoProfessor';
 // Componente wrapper para o grid
 const GridLayoutWrapper = memo(({ children, shouldUseGrid }) => {
   const containerClasses = shouldUseGrid
-    ? 'grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6'
+    ? 'masonry-grid'
     : 'space-y-4';
 
   return (
     <div className={`${containerClasses} transition-all duration-300 ease-in-out`}>
-      {children}
+      {React.Children.map(children, (child, index) => (
+        <div key={index} className={shouldUseGrid ? 'masonry-item' : ''}>
+          {child}
+        </div>
+      ))}
     </div>
   );
 });
