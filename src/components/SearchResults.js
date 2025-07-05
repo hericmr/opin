@@ -96,7 +96,7 @@ const SearchResults = ({ dataPoints }) => {
             onClick={() => navigate('/')}
             className="flex items-center gap-2 text-green-600 hover:text-green-700 transition-colors mb-4"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-5 h-5" />
             Voltar ao mapa
           </button>
           

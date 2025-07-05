@@ -13,7 +13,7 @@ const MapLink = memo(({ latitude, longitude, label = 'Ver no mapa' }) => {
       rel="noopener noreferrer"
       className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline"
     >
-      <MapPin className="w-4 h-4" />
+      <MapPin className="w-5 h-5" />
       {label}
     </a>
   );

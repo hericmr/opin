@@ -482,7 +482,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                       className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
                       title="Excluir imagem"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-5 h-5" />
                     </button>
                     </div>
                   </div>
@@ -544,7 +544,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       type="button"
                     >
-                      <Save className="w-4 h-4" /> Salvar Legenda
+                      <Save className="w-5 h-5" /> Salvar Legenda
                     </button>
                   </div>
                 </div>

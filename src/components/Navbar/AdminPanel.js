@@ -14,7 +14,7 @@ const AdminPanel = ({ isAdmin, onAdminClick, isMobileLandscape }) => {
         aria-label="Acesso administrativo"
         title="Acesso administrativo"
       >
-        <Leaf className="w-5 h-5 text-white/70 group-hover:text-white transition-colors duration-200" />
+        <Leaf className="w-6 h-6 text-white/70 group-hover:text-white transition-colors duration-200" />
       </button>
     );
   }
@@ -28,7 +28,7 @@ const AdminPanel = ({ isAdmin, onAdminClick, isMobileLandscape }) => {
                focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95"
       aria-label="Painel administrativo"
     >
-      <Shield className="w-4 h-4" />
+      <Shield className="w-5 h-5" />
       <span className="hidden xl:inline">Administração</span>
     </button>
   );

@@ -27,7 +27,7 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isMobileLandsca
         className={getButtonStyle(isActive('/'))}
         title="Voltar ao mapa das escolas indígenas"
       >
-        <Home className="w-4 h-4" />
+        <Home className="w-5 h-5" />
         <span className="hidden xl:inline">
           {isActive('/') ? 'Mapa Ativo' : 'Mapa das Escolas'}
         </span>
@@ -42,7 +42,7 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isMobileLandsca
         className={getButtonStyle(isActive('/conteudo'))}
         title="Ver todo o conteúdo educacional"
       >
-        <BookOpen className="w-4 h-4" />
+        <BookOpen className="w-5 h-5" />
         <span className="hidden xl:inline">
           {isActive('/conteudo') ? 'Conteúdo Ativo' : 'Conteúdo Educacional'}
         </span>
@@ -58,7 +58,7 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isMobileLandsca
           className={getButtonStyle(true)}
           title="Resultados da busca"
         >
-          <Search className="w-4 h-4" />
+          <Search className="w-5 h-5" />
           <span className="hidden xl:inline">
             Resultados da Busca
           </span>

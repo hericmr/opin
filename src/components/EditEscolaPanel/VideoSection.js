@@ -254,7 +254,7 @@ const VideoSection = ({ escolaId, videoUrl, onVideoUrlChange, onTitulosUpdate })
             onClick={() => setShowAddVideo(true)}
             className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-5 h-5" />
             Adicionar Outro Vídeo
           </button>
         </div>
@@ -282,7 +282,7 @@ const VideoSection = ({ escolaId, videoUrl, onVideoUrlChange, onTitulosUpdate })
                     className="ml-3 p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                     title="Remover vídeo"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
                 
@@ -378,7 +378,7 @@ const VideoSection = ({ escolaId, videoUrl, onVideoUrlChange, onTitulosUpdate })
                   type="submit"
                   className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                 >
-                  <Save className="w-4 h-4" />
+                  <Save className="w-5 h-5" />
                   Adicionar Vídeo
                 </button>
                 <button

@@ -153,7 +153,7 @@ const MobileMenu = ({
                                : 'py-4 text-base'
                            }`}
                 >
-                  <Leaf className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
+                  <Leaf className={isMobileLandscape ? "w-5 h-5" : "w-6 h-6"} />
                   <span>Acesso Administrativo</span>
                 </button>
               </div>
@@ -168,7 +168,7 @@ const MobileMenu = ({
                                 isMobileLandscape ? 'py-2 text-sm' : 'py-3 text-base'
                               }`}>
                   <span className="flex items-center justify-center gap-2">
-                    <Shield className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
+                    <Shield className={isMobileLandscape ? "w-5 h-5" : "w-6 h-6"} />
                     <span>Acesso de Administrador Ativo</span>
                   </span>
                 </div>
@@ -186,7 +186,7 @@ const MobileMenu = ({
                                  : 'py-4 text-base'
                              }`}
                   >
-                    <LayoutGrid className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
+                    <LayoutGrid className={isMobileLandscape ? "w-5 h-5" : "w-6 h-6"} />
                     <span>Gerenciar Conteúdo</span>
                   </button>
                 </div>
