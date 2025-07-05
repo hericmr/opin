@@ -117,8 +117,8 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
           <div className="flex items-center gap-3">
             <span className="bg-green-300 rounded-full flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12">
               <img 
-                src={process.env.PUBLIC_URL + '/onça.svg'} 
-                alt="Ícone de onça" 
+                src={process.env.PUBLIC_URL + '/passaro.svg'} 
+                alt="Ícone de pássaro" 
                 className="w-8 h-8 sm:w-12 sm:h-12" 
                 aria-hidden="true"
               />
