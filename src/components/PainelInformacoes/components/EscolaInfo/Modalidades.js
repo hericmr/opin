@@ -106,11 +106,7 @@ const Modalidades = memo(({ escola }) => {
       <InfoSection title="Modalidades" icon={Sparkles}>
         {/* Modalidade de Ensino em linha inteira */}
         <div className="mb-4 bg-green-100 rounded-lg p-2">
-          <MiniCard 
-            icon={modalidadeEnsinoCard.icon} 
-            label={modalidadeEnsinoCard.label} 
-            value={modalidadeEnsinoCard.value} 
-          />
+          <ExpandableList items={modalidadeList} maxVisible={3} />
         </div>
         
         {/* Grid com os outros cards */}
