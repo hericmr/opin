@@ -115,9 +115,6 @@ const MobileMenu = ({
                     alt="Logo UNIFESP"
                     className="h-8 w-auto"
                   />
-                  <span className={`tracking-wide font-[Caveat] text-amber-200 text-center leading-tight ${isMobileLandscape ? 'text-xs' : 'text-xs'}`}>
-                    Licenciatura<br />Intercultural Indígena
-                  </span>
                 </a>
                 
                 <a 
@@ -128,11 +125,16 @@ const MobileMenu = ({
                   aria-label="Visitar site do LINDI"
                 >
                   <LazyImage
-                    src={`${process.env.PUBLIC_URL}/lindi.webp`}
+                    src={`${process.env.PUBLIC_URL}/lindi.svg`}
                     alt="LINDI - Licenciatura Intercultural Indígena"
                     className="h-8 w-auto"
                   />
                 </a>
+              </div>
+              <div className="text-center -mt-2">
+                <span className={`tracking-wide font-[Caveat] text-amber-200 text-center leading-tight ${isMobileLandscape ? 'text-xs' : 'text-xs'}`}>
+                  Licenciatura Intercultural Indígena
+                </span>
               </div>
             </div>
             
