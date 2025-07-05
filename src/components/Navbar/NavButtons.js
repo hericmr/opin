@@ -12,7 +12,7 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isMobileLandsca
     px-3 xl:px-4 py-2 text-sm font-medium text-white 
     ${active 
       ? 'bg-amber-600/80 border-amber-400/60' 
-      : 'bg-green-800/60 hover:bg-amber-700/60'
+      : 'bg-[#215A36]/60 hover:bg-amber-700/60'
     }
     transition-all duration-200 rounded-lg hover:shadow-md active:scale-95
     focus:outline-none focus:ring-2 focus:ring-amber-400 flex items-center gap-2

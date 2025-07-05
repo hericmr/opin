@@ -24,7 +24,7 @@ const AdminPanel = ({ isAdmin, onAdminClick, isMobileLandscape }) => {
     <button
       onClick={() => navigate('/admin')}
       className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white 
-               bg-green-800/60 hover:bg-amber-700/60 rounded-lg transition-all duration-200
+               bg-[#215A36]/60 hover:bg-amber-700/60 rounded-lg transition-all duration-200
                focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95"
       aria-label="Painel administrativo"
     >
