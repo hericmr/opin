@@ -11,30 +11,46 @@ import ProjetosParcerias from './ProjetosParcerias';
 import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
 import HistoriadoProfessor from './HistoriadoProfessor';
 
-// CSS para layout Masonry otimizado
+// CSS para layout Masonry real usando CSS columns
 const masonryStyles = `
   .masonry-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    grid-auto-rows: minmax(200px, auto);
-    align-items: start;
+    column-count: 1;
+    column-gap: 1.5rem;
+    column-fill: balance;
   }
   
   .masonry-grid > * {
+    display: block;
     break-inside: avoid;
     page-break-inside: avoid;
+    margin-bottom: 1.5rem;
   }
   
-  @media (min-width: 768px) {
+  /* Mobile: 1 coluna */
+  @media (max-width: 767px) {
     .masonry-grid {
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      column-count: 1;
     }
   }
   
+  /* Tablet: 2 colunas */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .masonry-grid {
+      column-count: 2;
+    }
+  }
+  
+  /* Desktop: 3 colunas */
   @media (min-width: 1024px) {
     .masonry-grid {
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      column-count: 3;
+    }
+  }
+  
+  /* Desktop grande: 4 colunas */
+  @media (min-width: 1440px) {
+    .masonry-grid {
+      column-count: 4;
     }
   }
 `;
