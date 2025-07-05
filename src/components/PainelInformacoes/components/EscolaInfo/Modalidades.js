@@ -15,30 +15,18 @@ function parseModalidadeEnsino(text) {
 
 // Componente de lista expansível
 const ExpandableList = ({ items, maxVisible = 3 }) => {
-  const [expanded, setExpanded] = useState(false);
   if (!items || items.length === 0) return null;
-  const visibleItems = expanded ? items : items.slice(0, maxVisible);
-  const hasMore = items.length > maxVisible;
 
   return (
     <div className="-mt-1">
       <ul className="list-none text-gray-800 text-xs pl-0 ml-0">
-        {visibleItems.map((item, idx) => (
+        {items.map((item, idx) => (
           <li key={idx} className="leading-tight m-0 p-0 pl-0 ml-0 flex items-start">
             <span className="mr-1 text-green-700 select-none" style={{minWidth: '1em', display: 'inline-block'}}>•</span>
             <span>{item}</span>
           </li>
         ))}
       </ul>
-      {hasMore && (
-        <button
-          type="button"
-          className="mt-0.5 text-xs text-green-700 hover:underline focus:outline-none"
-          onClick={() => setExpanded(e => !e)}
-        >
-          {expanded ? 'Ver menos' : 'Ver mais'}
-        </button>
-      )}
     </div>
   );
 };
