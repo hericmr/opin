@@ -102,7 +102,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#215A36] text-white shadow-lg">
       {/* Header Principal - Estilo UNIFESP */}
       <div className="container mx-auto">
-        <div className="flex items-center justify-between py-2 px-4">
+        <div className="flex items-center justify-between py-1 md:py-2 px-4">
           
           {/* Logo UNIFESP - Lado esquerdo */}
           <div className="flex items-center space-x-4">
@@ -141,7 +141,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                 onClick={() => navigate('/')}
                 className="text-left hover:opacity-80 transition-opacity"
               >
-                <h1 className="font-['Cinzel'] text-white md:text-lg text-base">
+                <h1 className="font-['Cinzel'] text-white md:text-lg text-sm">
                   OPIN - Observatório dos Professores Indígenas
                 </h1>
                 <p className="text-xs text-white/80">
