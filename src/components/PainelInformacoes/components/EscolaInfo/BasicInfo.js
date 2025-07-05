@@ -202,68 +202,69 @@ const BasicInfo = memo(({ escola }) => {
   ].filter(item => item.value);
 
   return (
-    <InfoSection title="Localização" icon={MapPin}>
-      {/* Cards informativos básicos */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mb-3 [&>*]:bg-green-100">
-        {basicInfoCards.map((item, index) => (
-          <CompactCard key={index} {...item} />
-        ))}
-      </div>
+    <>
+      {/* Povos Indígenas em destaque antes de tudo */}
+      {escola.povos_indigenas && (
+        <div className="mb-4">
+          <div className="text-lg sm:text-xl font-bold text-green-800">
+            Povos Indígenas: <span className="font-semibold text-black">{escola.povos_indigenas}</span>
+          </div>
+        </div>
+      )}
+      <InfoSection title="Localização" icon={MapPin}>
+        {/* Cards informativos básicos */}
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mb-3 [&>*]:bg-green-100">
+          {basicInfoCards.map((item, index) => (
+            <CompactCard key={index} {...item} />
+          ))}
+        </div>
 
-      <div className="space-y-1.5">
-        {/* Diretoria de ensino */}
-        {escola.diretoria_ensino && (
-          <InfoBlock 
-            icon={Building} 
-            label="Diretoria de ensino" 
-            value={escola.diretoria_ensino} 
+        <div className="space-y-1.5">
+          {/* Diretoria de ensino */}
+          {escola.diretoria_ensino && (
+            <InfoBlock 
+              icon={Building} 
+              label="Diretoria de ensino" 
+              value={escola.diretoria_ensino} 
+            />
+          )}
+
+          {/* Gaveta do endereço */}
+          {escola.endereco && (
+            <div className="bg-green-100 rounded-md">
+              <button
+                onClick={() => toggle('endereco')}
+                className="w-full flex justify-between items-center p-1.5 hover:bg-green-200 text-xs"
+                aria-expanded={expanded.endereco}
+              >
+                <span className="flex items-center gap-2 text-gray-700 font-medium">
+                  <Building className="w-5 h-5" />
+                  Endereço
+                </span>
+                <ChevronRight
+                  className={`w-5 h-5 text-gray-400 transition-transform ${
+                    expanded.endereco ? 'rotate-90' : ''
+                  }`}
+                />
+              </button>
+              {expanded.endereco && (
+                <div className="px-2 pb-2 border-t border-green-200 bg-white">
+                  <AddressDetails escola={escola} />
+                  <MapButton escola={escola} />
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Redes sociais */}
+          <SocialLinks 
+            links={escola.links_redes_sociais}
+            expanded={expanded}
+            onToggle={toggle}
           />
-        )}
-
-        {/* Gaveta do endereço */}
-        {escola.endereco && (
-          <div className="bg-green-100 rounded-md">
-            <button
-              onClick={() => toggle('endereco')}
-              className="w-full flex justify-between items-center p-1.5 hover:bg-green-200 text-xs"
-              aria-expanded={expanded.endereco}
-            >
-              <span className="flex items-center gap-2 text-gray-700 font-medium">
-                <Building className="w-5 h-5" />
-                Endereço
-              </span>
-              <ChevronRight
-                className={`w-5 h-5 text-gray-400 transition-transform ${
-                  expanded.endereco ? 'rotate-90' : ''
-                }`}
-              />
-            </button>
-            
-            {expanded.endereco && (
-              <div className="px-2 pb-2 border-t border-green-200 bg-white">
-                <AddressDetails escola={escola} />
-                <MapButton escola={escola} />
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Povos Indígenas */}
-        {escola.povos_indigenas && (
-          <div className="bg-green-100 rounded-md p-2 flex items-center gap-2">
-            <span className="text-xs text-gray-700 font-medium">Povos Indígenas:</span>
-            <span className="text-xs text-gray-800">{escola.povos_indigenas}</span>
-          </div>
-        )}
-
-        {/* Redes sociais */}
-        <SocialLinks 
-          links={escola.links_redes_sociais}
-          expanded={expanded}
-          onToggle={toggle}
-        />
-      </div>
-    </InfoSection>
+        </div>
+      </InfoSection>
+    </>
   );
 });
 
