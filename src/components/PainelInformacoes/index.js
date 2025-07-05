@@ -81,7 +81,11 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
         onToggleMaximize={toggleMaximize}
       >
         {renderContent()}
-        <ShareSection copiarLink={copiarLink} compartilhar={compartilhar} />
+        <ShareSection 
+          copiarLink={copiarLink} 
+          compartilhar={compartilhar} 
+          painelInfo={painelInfo}
+        />
       </PainelContainer>
     </div>
   );
