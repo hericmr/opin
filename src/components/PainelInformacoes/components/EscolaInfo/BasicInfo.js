@@ -248,6 +248,14 @@ const BasicInfo = memo(({ escola }) => {
           </div>
         )}
 
+        {/* Povos Indígenas */}
+        {escola.povos_indigenas && (
+          <div className="bg-green-100 rounded-md p-2 flex items-center gap-2">
+            <span className="text-xs text-gray-700 font-medium">Povos Indígenas:</span>
+            <span className="text-xs text-gray-800">{escola.povos_indigenas}</span>
+          </div>
+        )}
+
         {/* Redes sociais */}
         <SocialLinks 
           links={escola.links_redes_sociais}
