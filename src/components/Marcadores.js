@@ -414,7 +414,24 @@ const MarcadoresInternos = ({ dataPoints, visibility, onClick, mapView }) => {
       });
 
       // Adiciona eventos de interação
-      marker.on('click', () => onClick?.(ponto));
+      marker.on('click', (e) => {
+        // Previne propagação do evento
+        if (e.originalEvent) {
+          e.originalEvent.stopPropagation();
+        }
+        console.log('Marcador clicado:', ponto.titulo);
+        onClick?.(ponto);
+      });
+      
+      // Adiciona evento de touch para mobile
+      if (isMobile) {
+        marker.on('touchend', (e) => {
+          e.originalEvent.stopPropagation();
+          e.originalEvent.preventDefault();
+          console.log('Marcador tocado (mobile):', ponto.titulo);
+          onClick?.(ponto);
+        });
+      }
 
       // Verifica se este marcador faz parte de um par próximo
       const pairIndex = nearbyPairs.findIndex(pair => pair.includes(index));
