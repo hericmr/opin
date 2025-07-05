@@ -60,12 +60,16 @@ const Modalidades = memo(({ escola }) => {
   // Cards principais de Modalidades
   const turnosValue = escola.turnos_funcionamento || escola['turnos_funcionamento'] || '';
   const modalidadeList = parseModalidadeEnsino(escola.modalidade_ensino);
-  const modalidadeItems = [
-    {
-      icon: Sparkles,
-      label: 'Modalidade de Ensino',
-      value: <ExpandableList items={modalidadeList} maxVisible={3} />,
-    },
+  
+  // Card de Modalidade de Ensino (separado para ocupar linha inteira)
+  const modalidadeEnsinoCard = {
+    icon: Sparkles,
+    label: 'Modalidade de Ensino',
+    value: <ExpandableList items={modalidadeList} maxVisible={3} />,
+  };
+
+  // Outros cards para o grid
+  const gridItems = [
     turnosValue && {
       icon: Clock,
       label: 'Turnos de Funcionamento',
@@ -100,10 +104,20 @@ const Modalidades = memo(({ escola }) => {
   return (
     <>
       <InfoSection title="Modalidades" icon={Sparkles}>
+        {/* Modalidade de Ensino em linha inteira */}
+        <div className="mb-4">
+          <MiniCard 
+            icon={modalidadeEnsinoCard.icon} 
+            label={modalidadeEnsinoCard.label} 
+            value={modalidadeEnsinoCard.value} 
+          />
+        </div>
+        
+        {/* Grid com os outros cards */}
         <div
           className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mt-1 [&>*]:bg-green-100"
         >
-          {modalidadeItems.map((item, idx) => (
+          {gridItems.map((item, idx) => (
             <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} />
           ))}
         </div>
