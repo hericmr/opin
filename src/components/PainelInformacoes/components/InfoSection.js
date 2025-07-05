@@ -1,5 +1,4 @@
 import React, { memo, useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
 
 // Componente InfoCard para informações individuais
 const InfoCard = memo(({ label, value, icon: Icon, type = 'text', className = '' }) => {
@@ -113,7 +112,7 @@ const InfoStats = memo(({ stats, className = '' }) => {
   if (!stats || stats.length === 0) return null;
 
   return (
-    <div className={`grid grid-cols-2 sm:grid-cols-4 gap-4 ${className} [&>*]:bg-green-100`}>
+    <div className={`grid grid-cols-2 sm:grid-cols-4 gap-4 ${className} [&>*]:border-b [&>*]:border-gray-200 [&>*]:pb-2 [&>*]:mb-2`}>
       {stats.map((stat, index) => (
         <div key={index} className="text-center rounded-lg p-4">
           <div className="flex justify-center mb-2">
@@ -194,11 +193,6 @@ const InfoSection = memo(({
           {Icon && <Icon className="w-4 h-4 text-green-600" />}
           <span className="tracking-wide">{title}</span>
         </div>
-        {isCollapsed ? (
-          <ChevronDown className="w-5 h-5 text-gray-600" />
-        ) : (
-          <ChevronUp className="w-5 h-5 text-gray-600" />
-        )}
       </button>
       
       {!isCollapsed && (
