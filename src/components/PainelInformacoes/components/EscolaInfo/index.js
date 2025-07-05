@@ -33,24 +33,10 @@ const masonryStyles = `
     }
   }
   
-  /* Tablet: 2 colunas */
-  @media (min-width: 768px) and (max-width: 1023px) {
+  /* Tablet e Desktop: 2 colunas */
+  @media (min-width: 768px) {
     .masonry-grid {
       column-count: 2;
-    }
-  }
-  
-  /* Desktop: 3 colunas */
-  @media (min-width: 1024px) {
-    .masonry-grid {
-      column-count: 3;
-    }
-  }
-  
-  /* Desktop grande: 4 colunas */
-  @media (min-width: 1440px) {
-    .masonry-grid {
-      column-count: 4;
     }
   }
 `;
