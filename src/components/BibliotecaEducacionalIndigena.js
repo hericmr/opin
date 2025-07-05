@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { ReactComponent as OncaIcon } from '../../src/assets/onca.svg';
 import { Search, BookOpen, MapPin, Users, Home, Heart, Star, Filter, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -8,7 +7,7 @@ const CATEGORIAS_EDUCACAO_INDIGENA = {
     cor: 'green-700', 
     bgCor: 'bg-green-50', 
     borderCor: 'border-green-200', 
-    icone: OncaIcon, 
+    icone: 'onca',
     label: 'Línguas Indígenas',
     descricao: 'Ensino e preservação das línguas indígenas'
   },
@@ -268,7 +267,18 @@ const BibliotecaEducacionalIndigena = ({ locations }) => {
                     className={`${info.bgCor} rounded-xl shadow-lg p-6 border ${info.borderCor}`}
                   >
                     <div className="flex items-center mb-6 pb-4 border-b border-gray-200">
-                      <IconComponent className={`w-8 h-8 text-${info.cor} mr-3`} />
+                      {IconComponent === 'onca' ? (
+                        <span className="bg-green-300 rounded-full flex items-center justify-center w-16 h-16 sm:w-28 sm:h-28">
+                          <img 
+                            src={process.env.PUBLIC_URL + '/onça.svg'} 
+                            alt="Ícone de onça" 
+                            className="w-8 h-8 sm:w-16 sm:h-16" 
+                            aria-hidden="true"
+                          />
+                        </span>
+                      ) : (
+                        <IconComponent className={`w-8 h-8 text-${info.cor} mr-3`} />
+                      )}
                       <div className="flex-1">
                         <h2 className={`text-2xl font-bold text-${info.cor}`}>
                           {info.label}
