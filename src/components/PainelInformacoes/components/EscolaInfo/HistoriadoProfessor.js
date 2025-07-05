@@ -115,12 +115,23 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
       <header className="mb-6 sm:mb-8">
         <div className="flex items-center justify-between mb-3 sm:mb-4">
           <div className="flex items-center gap-3">
-            <img 
-              src={process.env.PUBLIC_URL + '/passaro.svg'} 
-              alt="Ícone de pássaro" 
-              className="w-8 h-8 sm:w-12 sm:h-12" 
-              aria-hidden="true"
-            />
+            <span className="bg-green-300 rounded-full flex items-center justify-center w-16 h-16 sm:w-28 sm:h-28">
+              <img 
+                src={`${process.env.PUBLIC_URL}/passaro.svg`} 
+                alt="Ícone de pássaro" 
+                className="w-12 h-12 sm:w-24 sm:h-24" 
+                style={{ 
+                  filter: 'none', 
+                  borderRadius: '0', 
+                  boxShadow: 'none', 
+                  margin: '0',
+                  padding: '0',
+                  border: 'none',
+                  outline: 'none'
+                }}
+                aria-hidden="true"
+              />
+            </span>
             <h2 className="text-xl sm:text-2xl font-bold text-black m-0">
               História dos Professores
             </h2>
