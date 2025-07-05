@@ -174,7 +174,7 @@ const InfoSection = memo(({
     <section 
       className={`
         bg-white rounded-2xl p-5 
-        shadow-sm hover:shadow-md transition-all duration-200
+        shadow-sm transition-all duration-200
         ${className}
       `}
     >
