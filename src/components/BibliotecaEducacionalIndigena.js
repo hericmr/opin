@@ -270,7 +270,7 @@ const BibliotecaEducacionalIndigena = ({ locations }) => {
                       {IconComponent === 'onca' ? (
                         <span className="bg-green-300 rounded-full flex items-center justify-center w-16 h-16 sm:w-28 sm:h-28">
                           <img 
-                            src={process.env.PUBLIC_URL + '/onça.svg'} 
+                            src={`${process.env.PUBLIC_URL}/onca.svg`} 
                             alt="Ícone de onça" 
                             className="w-8 h-8 sm:w-16 sm:h-16" 
                             aria-hidden="true"

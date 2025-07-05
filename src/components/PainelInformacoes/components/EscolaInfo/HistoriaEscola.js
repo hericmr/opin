@@ -33,7 +33,7 @@ const HistoriaEscola = memo(({ escola, refreshKey = 0 }) => {
         <div className="flex items-center gap-3 mb-3 sm:mb-4">
           <span className="bg-green-300 rounded-full flex items-center justify-center w-16 h-16 sm:w-28 sm:h-28">
             <img 
-              src={process.env.PUBLIC_URL + '/onça.svg'} 
+              src={`${process.env.PUBLIC_URL}/onca.svg`} 
               alt="Ícone de onça" 
               className="w-32 h-32 sm:w-36 sm:h-36" 
               style={{ filter: 'none', borderRadius: '0', boxShadow: 'none', marginTop: '80px' }}
