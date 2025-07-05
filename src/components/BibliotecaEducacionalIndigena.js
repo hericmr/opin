@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { ReactComponent as OncaIcon } from '../../public/onça.svg';
 import { Search, BookOpen, MapPin, Users, Home, Heart, Star, Filter, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -7,7 +8,7 @@ const CATEGORIAS_EDUCACAO_INDIGENA = {
     cor: 'green-700', 
     bgCor: 'bg-green-50', 
     borderCor: 'border-green-200', 
-    icone: BookOpen, 
+    icone: OncaIcon, 
     label: 'Línguas Indígenas',
     descricao: 'Ensino e preservação das línguas indígenas'
   },
