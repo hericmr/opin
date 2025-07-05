@@ -4,11 +4,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import useSearch from '../../hooks/useSearch';
 
 const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataPoints }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  const [localSearchTerm, setLocalSearchTerm] = useState(''); // Termo local para busca em tempo real
+  const [localSearchTerm, setLocalSearchTerm] = useState('');
   const searchRef = useRef(null);
+  const inputRef = useRef(null);
   
   const { searchResults, isSearching, performSearch, getSearchSuggestions } = useSearch(dataPoints);
 
@@ -16,15 +17,22 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setIsOpen(false);
-        setLocalSearchTerm(''); // Limpar busca local ao fechar
-        setSearchTerm(''); // Limpar searchTerm ao fechar
+        setIsExpanded(false);
+        setLocalSearchTerm('');
+        setSearchTerm('');
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Focar no input quando expandir
+  useEffect(() => {
+    if (isExpanded && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isExpanded]);
 
   // Buscar dados quando o termo local mudar (busca em tempo real)
   useEffect(() => {
@@ -51,40 +59,36 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
     e.preventDefault();
     const termToSearch = localSearchTerm.trim();
     if (termToSearch) {
-      // Usar onSearch para busca simples (quando o usuário pressiona Enter)
       onSearch(termToSearch);
-      setIsOpen(false);
-      setLocalSearchTerm(''); // Limpar busca local
-      setSearchTerm(''); // Limpar searchTerm
+      setIsExpanded(false);
+      setLocalSearchTerm('');
+      setSearchTerm('');
     }
   };
 
   const handleResultClick = (result) => {
-    // Usar a função onResultClick se disponível, senão usar onSearch como fallback
     if (onResultClick) {
       onResultClick(result);
     } else {
-      // Fallback para compatibilidade
       if (result.coordinates) {
         onSearch(result.title, result.coordinates);
       } else {
         onSearch(result.title);
       }
     }
-    setIsOpen(false);
-    setLocalSearchTerm(''); // Limpar busca local
-    setSearchTerm(''); // Limpar searchTerm
+    setIsExpanded(false);
+    setLocalSearchTerm('');
+    setSearchTerm('');
   };
 
   const handleSuggestionClick = (suggestion) => {
     setLocalSearchTerm(suggestion);
-    setSearchTerm(''); // Limpar searchTerm para evitar conflitos
-    // Não executar busca imediatamente, deixar o usuário decidir
+    setSearchTerm('');
   };
 
   const handleInputChange = (e) => {
     const value = e.target.value;
-    setSearchTerm(''); // Limpar searchTerm para evitar conflitos
+    setSearchTerm('');
     setLocalSearchTerm(value);
   };
 
@@ -93,26 +97,25 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
       e.preventDefault();
       const termToSearch = localSearchTerm.trim();
       if (termToSearch) {
-        // Usar onSearch para busca simples (quando o usuário pressiona Enter)
         onSearch(termToSearch);
-        setIsOpen(false);
+        setIsExpanded(false);
         setLocalSearchTerm('');
-        setSearchTerm(''); // Limpar searchTerm
+        setSearchTerm('');
       }
     } else if (e.key === 'Escape') {
-      setIsOpen(false);
+      setIsExpanded(false);
       setLocalSearchTerm('');
-      setSearchTerm(''); // Limpar searchTerm
+      setSearchTerm('');
     }
   };
 
   const getIconForType = (type) => {
     switch (type) {
-      case 'school': return <MapPin className="w-5 h-5" />;
-      case 'land': return <BookOpen className="w-5 h-5" />;
-      case 'teacher': return <Users className="w-5 h-5" />;
-      case 'history': return <FileText className="w-5 h-5" />;
-      default: return <MapPin className="w-5 h-5" />;
+      case 'school': return <MapPin className="w-4 h-4" />;
+      case 'land': return <BookOpen className="w-4 h-4" />;
+      case 'teacher': return <Users className="w-4 h-4" />;
+      case 'history': return <FileText className="w-4 h-4" />;
+      default: return <MapPin className="w-4 h-4" />;
     }
   };
 
@@ -138,161 +141,129 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
 
   return (
     <div ref={searchRef} className="relative">
-      {/* Botão de busca */}
-      <button
-        onClick={() => {
-          setIsOpen(!isOpen);
-          if (!isOpen) {
-            setSearchTerm(''); // Limpar searchTerm ao abrir
-          }
-        }}
-        className={`p-2 rounded-full hover:bg-amber-800/50 transition-all duration-200 
-                   focus:outline-none focus:ring-2 focus:ring-amber-400 active:scale-95
-                   ${isMobileLandscape ? 'p-1.5' : ''}`}
-        aria-label="Buscar"
-      >
-        <Search className={isMobileLandscape ? "w-5 h-5" : "w-6 h-6"} />
-      </button>
-
-      {/* Modal de busca */}
       <AnimatePresence>
-        {isOpen && (
-          <>
-            {isMobile && <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/60 z-40"
-              onClick={() => setIsOpen(false)}
-            />}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: isMobile ? -20 : -10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: isMobile ? -20 : -10 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className={`bg-white rounded-lg shadow-xl border border-gray-200 z-50
-                        ${isMobile 
-                          ? 'fixed top-16 left-4 right-4'
-                          : 'absolute top-full mt-2 right-0 w-96'
-                        }`}
-            >
-              {/* Header da busca */}
-              <div className="p-3 sm:p-4 border-b border-gray-100">
-                <form onSubmit={handleSearch} className="flex items-center gap-2">
-                  <div className="flex-1 relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                      type="text"
-                      placeholder={isMobile ? "Buscar..." : "Buscar escolas, povos, línguas, projetos, infraestrutura..."}
-                      value={localSearchTerm}
-                      onChange={handleInputChange}
-                      onKeyDown={handleKeyDown}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg 
-                               focus:ring-2 focus:ring-green-500 focus:border-green-500
-                               text-sm text-black"
-                      autoFocus
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsOpen(false);
-                      setLocalSearchTerm('');
-                      setSearchTerm(''); // Limpar searchTerm ao fechar
-                    }}
-                    className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </form>
+        {!isExpanded ? (
+          // Botão de busca (estado fechado)
+          <motion.button
+            initial={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            onClick={() => setIsExpanded(true)}
+            className={`p-2 rounded hover:bg-[#215A36] transition-colors 
+                     focus:outline-none focus:ring-2 focus:ring-amber-400
+                     ${isMobileLandscape ? 'p-1.5' : ''}`}
+            aria-label="Buscar"
+          >
+            <Search className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
+          </motion.button>
+        ) : (
+          // Campo de busca expandido (estado aberto)
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, width: 0 }}
+            animate={{ opacity: 1, scale: 1, width: "auto" }}
+            exit={{ opacity: 0, scale: 0.8, width: 0 }}
+            transition={{ 
+              duration: 0.3, 
+              ease: "easeInOut",
+              opacity: { duration: 0.2 },
+              scale: { duration: 0.3 }
+            }}
+            className="flex items-center bg-white rounded-lg shadow-lg overflow-hidden"
+          >
+            <form onSubmit={handleSearch} className="flex items-center">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="Buscar escolas, povos, línguas..."
+                  value={localSearchTerm}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  className="w-64 pl-10 pr-12 py-2 border-0 rounded-l-lg 
+                           focus:outline-none focus:ring-2 focus:ring-[#215A36]
+                           text-sm text-black"
+                />
               </div>
+              <motion.button
+                type="button"
+                onClick={() => {
+                  setIsExpanded(false);
+                  setLocalSearchTerm('');
+                  setSearchTerm('');
+                }}
+                className="px-3 py-2 text-gray-400 hover:text-gray-600 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <X className="w-4 h-4" />
+              </motion.button>
+            </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-              {/* Resultados da busca */}
-              <div className={`overflow-y-auto ${isMobile ? 'max-h-[70vh]' : 'max-h-64'}`}>
-                {isSearching ? (
-                  <div className="p-4 text-center text-gray-500">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-500 mx-auto"></div>
-                    <p className="mt-2 text-sm">Buscando...</p>
-                  </div>
-                ) : searchResults.length > 0 ? (
-                  <div className="p-2">
-                    {/* Sugestões rápidas */}
-                    {suggestions.length > 0 && (
-                      <div className="mb-3">
-                        <p className="text-xs text-gray-500 mb-2 px-2">Sugestões:</p>
-                        <div className="flex flex-wrap gap-1 px-2">
-                          {suggestions.slice(0, isMobile ? 3 : 5).map((suggestion, index) => (
-                            <button
-                              key={index}
-                              onClick={() => handleSuggestionClick(suggestion)}
-                              className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 
-                                       rounded-full transition-colors"
-                            >
-                              {suggestion}
-                            </button>
-                          ))}
-                        </div>
+      {/* Resultados da busca */}
+      <AnimatePresence>
+        {isExpanded && searchResults.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            transition={{ 
+              duration: 0.25, 
+              ease: "easeOut",
+              delay: 0.1
+            }}
+            className="absolute top-full mt-2 right-0 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50"
+          >
+            <div className="p-2 max-h-64 overflow-y-auto">
+              {isSearching ? (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="p-4 text-center text-gray-500"
+                >
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#215A36] mx-auto"></div>
+                  <p className="mt-2 text-xs">Buscando...</p>
+                </motion.div>
+              ) : (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="space-y-1"
+                >
+                  {searchResults.slice(0, 8).map((result, index) => (
+                    <motion.button
+                      key={result.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 + index * 0.05 }}
+                      onClick={() => handleResultClick(result)}
+                      className="w-full p-2 text-left hover:bg-gray-50 rounded transition-colors
+                               flex items-center gap-2 group"
+                      whileHover={{ x: 5 }}
+                    >
+                      <div className="text-gray-400 group-hover:text-[#215A36] transition-colors flex-shrink-0">
+                        {getIconForType(result.type)}
                       </div>
-                    )}
-                    
-                    {/* Resultados */}
-                    <div className="space-y-1">
-                      {searchResults.slice(0, 10).map((result) => (
-                        <button
-                          key={result.id}
-                          onClick={() => handleResultClick(result)}
-                          className="w-full p-2 sm:p-3 text-left hover:bg-gray-50 rounded-lg transition-colors
-                                   flex items-center gap-2 sm:gap-3 group"
-                        >
-                          <div className="text-gray-400 group-hover:text-green-600 transition-colors flex-shrink-0">
-                            {getIconForType(result.type)}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-gray-900 text-sm sm:text-base truncate">
-                              {highlightText(result.title, localSearchTerm)}
-                            </p>
-                            <p className="text-xs text-gray-500 truncate">
-                              {result.subtitle}
-                            </p>
-                            <p className={`text-xs ${getCategoryColor(result.category)}`}>
-                              {result.matches.join(', ')}
-                            </p>
-                          </div>
-                          {result.coordinates && (
-                            <Map className="w-5 h-5 text-gray-300 group-hover:text-green-600 transition-colors flex-shrink-0" />
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                    
-                    {searchResults.length > 10 && (
-                      <div className="p-2 text-center text-xs text-gray-500 border-t">
-                        +{searchResults.length - 10} resultados encontrados
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-900 text-sm truncate">
+                          {highlightText(result.title, localSearchTerm)}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {result.subtitle}
+                        </p>
                       </div>
-                    )}
-                  </div>
-                ) : localSearchTerm.length >= 2 ? (
-                  <div className="p-4 text-center text-gray-500">
-                    <p className="text-sm">Nenhum resultado encontrado</p>
-                    <p className="text-xs mt-1">Tente outros termos de busca</p>
-                  </div>
-                ) : localSearchTerm.length > 0 ? (
-                  <div className="p-4 text-center text-gray-500">
-                    <p className="text-sm">Digite pelo menos 2 caracteres</p>
-                  </div>
-                ) : (
-                  <div className="p-4 text-center text-gray-500">
-                    <Search className="w-8 h-8 mx-auto text-gray-300 mb-2" />
-                    <p className="text-sm">Digite para buscar</p>
-                    <p className="text-xs mt-1">
-                      {isMobile ? "Escolas, povos, línguas..." : "Escolas, povos, línguas, projetos, infraestrutura..."}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </>
+                      {result.coordinates && (
+                        <Map className="w-4 h-4 text-gray-300 group-hover:text-[#215A36] transition-colors flex-shrink-0" />
+                      )}
+                    </motion.button>
+                  ))}
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
