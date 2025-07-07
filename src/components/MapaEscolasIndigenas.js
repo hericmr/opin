@@ -37,6 +37,7 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
   }, [panel, dataPoints]);
 
   const [painelInfo, setPainelInfo] = useState(initialPanel);
+  const [initialPanelOpened, setInitialPanelOpened] = useState(!!initialPanel);
   
   // Memoize escolasVisiveis para evitar recálculos desnecessários
   const escolasVisiveis = useMemo(() => 
@@ -46,13 +47,14 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
   
   const totalEscolas = useMemo(() => escolasVisiveis.length, [escolasVisiveis]);
 
-  // Abrir painel automaticamente quando initialPanel for encontrado
+  // Abrir painel automaticamente quando initialPanel for encontrado (apenas uma vez)
   useEffect(() => {
-    if (initialPanel && !painelInfo) {
+    if (initialPanel && !painelInfo && !initialPanelOpened) {
       console.log('MapaEscolasIndigenas: Abrindo painel automaticamente para:', initialPanel.titulo);
       setPainelInfo(initialPanel);
+      setInitialPanelOpened(true);
     }
-  }, [initialPanel, painelInfo]);
+  }, [initialPanel, painelInfo, initialPanelOpened]);
 
   // Adicionar useEffect para monitorar mudanças no painelInfo
   useEffect(() => {
