@@ -61,11 +61,7 @@ const AppContent = () => {
             element={
               <main id="main-content" className="flex-grow">
                 <MapaEscolasIndigenas 
-                  dataPoints={
-                    new URLSearchParams(location.search).get('panel')
-                      ? dataPoints
-                      : dataPoints.filter(point => point.pontuacao >= 0)
-                  } 
+                  dataPoints={dataPoints}
                   onPainelOpen={handlePainelOpenFunction}
                 />
               </main>
