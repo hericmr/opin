@@ -472,36 +472,36 @@ const AdminPanel = () => {
             </button>
           )}
           <h2 className="text-xl font-bold tracking-wide text-green-700 uppercase mb-6 sticky top-0 bg-white pb-2">Escolas</h2>
-          {/* Busca no menu lateral */}
+        {/* Busca no menu lateral */}
           <div className="mb-4 sticky top-24 mt-8 bg-gray-900 pb-2">
-            <input
-              type="text"
-              placeholder="Buscar escola..."
+          <input
+            type="text"
+            placeholder="Buscar escola..."
               className="w-full px-3 py-2 border border-gray-700 rounded text-sm bg-gray-800 text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <ul className="space-y-1">
-            {escolas
-              .filter(escola => 
-                escola.Escola?.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              .map(escola => (
-              <li key={escola.id}>
-                <button
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <ul className="space-y-1">
+          {escolas
+            .filter(escola => 
+              escola.Escola?.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map(escola => (
+            <li key={escola.id}>
+              <button
                   className={`block w-full text-left px-2 py-1 rounded hover:bg-green-900 text-sm text-gray-800 ${editingLocation?.id === escola.id ? 'bg-green-200 font-bold' : ''}`}
                   onClick={() => {
                     openEditModal(escola);
                     if (isMobile) setSidebarOpen(false);
                   }}
-                >
-                  {escola.Escola}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </aside>
+              >
+                {escola.Escola}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </aside>
       )}
       {/* Conteúdo principal */}
       <main className="flex-1 p-6 overflow-y-auto h-screen bg-gray-950">
