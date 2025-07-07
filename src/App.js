@@ -1,19 +1,14 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import { supabase } from './supabaseClient';
 import { SearchProvider } from "./contexts/SearchContext";
 import { RefreshProvider } from "./contexts/RefreshContext";
 import Navbar from "./components/Navbar";
-import PainelInformacoes from "./components/PainelInformacoes";
-import Papa from 'papaparse';
-import { useShare } from './components/hooks/useShare';
 import './App.css';
 import ErrorBoundary from './components/ErrorBoundary';
 
 // Novos componentes de melhoria
 import ToastProvider from './components/Toast';
 import { SkipLink } from './components/Accessibility';
-import { MapaSkeleton } from './components/LoadingStates';
 import WelcomeModal from './components/WelcomeModal';
 import LoadingScreen from './components/LoadingScreen';
 import { useEscolasData } from './hooks/useEscolasData';
@@ -35,13 +30,6 @@ const AppContent = () => {
 
   const handlePainelOpenFunction = (openPainelFn) => {
     setOpenPainelFunction(() => openPainelFn);
-  };
-
-  // Adicionar função para buscar location pelo ID
-  const getLocationById = (id) => {
-    if (!dataPoints) return {};
-    const location = dataPoints.find(point => point.id === parseInt(id));
-    return location || {};
   };
 
   if (loading) {

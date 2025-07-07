@@ -571,48 +571,57 @@ const OpenLayersMap = ({
       if (feature) {
         const terraIndigenaInfo = feature.get('terraIndigenaInfo');
         if (terraIndigenaInfo) {
-          // Verificar se é o mesmo feature clicado anteriormente
-          if (lastClickedFeature === feature) {
-            clickCount++;
-          } else {
-            // Novo feature, resetar contador
-            lastClickedFeature = feature;
-            clickCount = 1;
-          }
-
-          // Limpar timeout anterior
-          if (clickTimeout) {
-            clearTimeout(clickTimeout);
-          }
-
-          // Configurar timeout para resetar o contador
-          clickTimeout = setTimeout(() => {
-            clickCount = 0;
-            lastClickedFeature = null;
-          }, 500); // 500ms para detectar clique duplo
-
-          if (clickCount === 1) {
-            // Primeiro clique: fazer zoom
-            const geometry = feature.getGeometry();
-            if (geometry) {
-              const extent = geometry.getExtent();
-              map.current.getView().fit(extent, {
-                duration: 800,
-                padding: [50, 50, 50, 50],
-                maxZoom: 15
-              });
-            }
-          } else if (clickCount === 2) {
-            // Segundo clique: abrir painel de informações
+          // Verificar se é mobile
+          if (isMobile()) {
+            // No mobile: clique único abre o painel diretamente
             if (onPainelOpen) {
               onPainelOpen(terraIndigenaInfo);
             }
-            // Resetar contador após abrir o painel
-            clickCount = 0;
-            lastClickedFeature = null;
+          } else {
+            // No desktop: manter comportamento de clique duplo
+            // Verificar se é o mesmo feature clicado anteriormente
+            if (lastClickedFeature === feature) {
+              clickCount++;
+            } else {
+              // Novo feature, resetar contador
+              lastClickedFeature = feature;
+              clickCount = 1;
+            }
+
+            // Limpar timeout anterior
             if (clickTimeout) {
               clearTimeout(clickTimeout);
-              clickTimeout = null;
+            }
+
+            // Configurar timeout para resetar o contador
+            clickTimeout = setTimeout(() => {
+              clickCount = 0;
+              lastClickedFeature = null;
+            }, 500); // 500ms para detectar clique duplo
+
+            if (clickCount === 1) {
+              // Primeiro clique: fazer zoom
+              const geometry = feature.getGeometry();
+              if (geometry) {
+                const extent = geometry.getExtent();
+                map.current.getView().fit(extent, {
+                  duration: 800,
+                  padding: [50, 50, 50, 50],
+                  maxZoom: 15
+                });
+              }
+            } else if (clickCount === 2) {
+              // Segundo clique: abrir painel de informações
+              if (onPainelOpen) {
+                onPainelOpen(terraIndigenaInfo);
+              }
+              // Resetar contador após abrir o painel
+              clickCount = 0;
+              lastClickedFeature = null;
+              if (clickTimeout) {
+                clearTimeout(clickTimeout);
+                clickTimeout = null;
+              }
             }
           }
         }
