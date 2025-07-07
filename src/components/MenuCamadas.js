@@ -14,12 +14,12 @@ const CAMADAS = {
 };
 
 const CabecalhoMenu = memo(({ onMinimize, isMobile, isMinimized }) => (
-  <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100 bg-white">
-    <h3 className="text-sm font-medium text-gray-800">Camadas do Mapa</h3>
+  <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gradient-to-r from-green-600 to-green-700 rounded-t-lg">
+    <h3 className="text-sm font-semibold text-white tracking-wide uppercase">Camadas do Mapa</h3>
     <div className="flex items-center gap-2">
       <button
         onClick={onMinimize}
-        className="text-gray-500 hover:text-gray-700 transition-colors p-1"
+        className="text-white hover:text-green-200 transition-colors p-1 rounded-md hover:bg-green-600"
         aria-label={isMinimized ? "Expandir" : "Minimizar"}
         type="button"
       >
@@ -34,30 +34,32 @@ CabecalhoMenu.displayName = 'CabecalhoMenu';
 const BotaoCamada = memo(({ camada, ativo, onClick, total }) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
-      ativo ? 'bg-gray-50' : 'hover:bg-gray-50'
+    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+      ativo 
+        ? 'bg-green-100 border border-green-300 shadow-sm' 
+        : 'hover:bg-gray-50 border border-transparent hover:border-gray-200'
     }`}
     type="button"
   >
     {camada.id === 'terrasIndigenas' ? (
       <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: camada.cor }} />
-          <span className="text-xs text-gray-600">Regularizadas</span>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: camada.cor }} />
+          <span className="text-xs font-medium text-gray-700">Regularizadas</span>
         </div>
-        <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: camada.corSecundaria }} />
-          <span className="text-xs text-gray-600">{camada.labelSecundaria}</span>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: camada.corSecundaria }} />
+          <span className="text-xs font-medium text-gray-700">{camada.labelSecundaria}</span>
         </div>
       </div>
     ) : (
-      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: camada.cor }} />
+      <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: camada.cor }} />
     )}
-    <span className="text-sm text-gray-800">{camada.label}</span>
+    <span className="text-sm font-medium text-gray-800 flex-1 text-left">{camada.label}</span>
     {total !== undefined && (
-      <span className="text-xs text-gray-500 ml-1">({total})</span>
+      <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">({total})</span>
     )}
-    <div className="ml-auto w-2 h-2 rounded-full" style={{ backgroundColor: ativo ? camada.cor : '#e5e7eb' }} />
+    <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: ativo ? camada.cor : '#e5e7eb' }} />
   </button>
 ));
 
@@ -94,14 +96,14 @@ const MenuCamadas = ({ estados, acoes, totalEscolas }) => {
   if (isMobile) {
     return (
       <div className="fixed bottom-0 left-0 right-0 z-20">
-        <div className="bg-white border-t border-gray-100 shadow-lg">
+        <div className="bg-white border-t-2 border-green-600 shadow-2xl rounded-t-xl">
           <CabecalhoMenu
             onMinimize={handleMinimize}
             isMobile={true}
             isMinimized={isMinimized}
           />
           {!isMinimized && (
-            <div className="p-2 flex flex-col gap-1 max-h-60 overflow-y-auto">
+            <div className="p-4 flex flex-col gap-2 max-h-60 overflow-y-auto">
               <BotaoCamada 
                 camada={CAMADAS.ESTADO_SP} 
                 ativo={estados.estadoSP} 
@@ -127,14 +129,14 @@ const MenuCamadas = ({ estados, acoes, totalEscolas }) => {
 
   // Menu desktop fixo no topo direito
   return (
-    <div className="fixed top-24 right-4 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
+    <div className="fixed top-24 right-4 w-72 bg-white border-2 border-green-600 rounded-xl shadow-2xl z-20 overflow-hidden">
       <CabecalhoMenu 
         onMinimize={handleMinimize}
         isMobile={false}
         isMinimized={isMinimized}
       />
       {!isMinimized && (
-        <div className="p-2 flex flex-col gap-1 max-h-96 overflow-y-auto">
+        <div className="p-4 flex flex-col gap-2 max-h-96 overflow-y-auto">
           <BotaoCamada 
             camada={CAMADAS.ESTADO_SP} 
             ativo={estados.estadoSP} 

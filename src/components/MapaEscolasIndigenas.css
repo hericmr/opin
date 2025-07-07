@@ -271,6 +271,28 @@
   border-color: rgba(255, 255, 255, 0.95) transparent transparent transparent;
 }
 
+/* Tooltip para escolas (azul) */
+.ol-tooltip[data-type="school"] {
+  background: rgba(59, 130, 246, 0.95) !important;
+  color: white !important;
+  border: 1px solid rgba(37, 99, 235, 0.8) !important;
+}
+
+.ol-tooltip[data-type="school"]::after {
+  border-color: rgba(59, 130, 246, 0.95) transparent transparent transparent !important;
+}
+
+/* Tooltip para terras indígenas (vermelho) */
+.ol-tooltip[data-type="terra_indigena"] {
+  background: rgba(220, 20, 60, 0.95) !important;
+  color: white !important;
+  border: 1px solid rgba(185, 28, 28, 0.8) !important;
+}
+
+.ol-tooltip[data-type="terra_indigena"]::after {
+  border-color: rgba(220, 20, 60, 0.95) transparent transparent transparent !important;
+}
+
 /* Estilos para clusters do OpenLayers */
 .ol-cluster {
   transition: all 0.3s ease;

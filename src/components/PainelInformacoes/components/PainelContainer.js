@@ -48,7 +48,7 @@ const PainelContainer = ({
         height: painelDimensions.height,
         maxHeight: painelDimensions.maxHeight,
         width: isMobile ? '100%' : painelDimensions.width,
-        top: isMobile ? `${navbarHeight}px` : undefined,
+        top: isMobile ? `${navbarHeight}px` : 72,
         display: "flex",
         flexDirection: "column",
         ...(isMobile && {
