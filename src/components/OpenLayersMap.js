@@ -561,6 +561,115 @@ const OpenLayersMap = ({
   useEffect(() => {
     if (!map.current) return;
 
+    // Variáveis para controlar o sistema de clique duplo
+    let clickTimeout = null;
+    let lastClickedFeature = null;
+    let clickCount = 0;
+
+    const handleClick = (event) => {
+      const feature = map.current.forEachFeatureAtPixel(event.pixel, (feature) => feature);
+      if (feature) {
+        const terraIndigenaInfo = feature.get('terraIndigenaInfo');
+        if (terraIndigenaInfo) {
+          // Verificar se é o mesmo feature clicado anteriormente
+          if (lastClickedFeature === feature) {
+            clickCount++;
+          } else {
+            // Novo feature, resetar contador
+            lastClickedFeature = feature;
+            clickCount = 1;
+          }
+
+          // Limpar timeout anterior
+          if (clickTimeout) {
+            clearTimeout(clickTimeout);
+          }
+
+          // Configurar timeout para resetar o contador
+          clickTimeout = setTimeout(() => {
+            clickCount = 0;
+            lastClickedFeature = null;
+          }, 500); // 500ms para detectar clique duplo
+
+          if (clickCount === 1) {
+            // Primeiro clique: fazer zoom
+            const geometry = feature.getGeometry();
+            if (geometry) {
+              const extent = geometry.getExtent();
+              map.current.getView().fit(extent, {
+                duration: 800,
+                padding: [50, 50, 50, 50],
+                maxZoom: 15
+              });
+            }
+          } else if (clickCount === 2) {
+            // Segundo clique: abrir painel de informações
+            if (onPainelOpen) {
+              onPainelOpen(terraIndigenaInfo);
+            }
+            // Resetar contador após abrir o painel
+            clickCount = 0;
+            lastClickedFeature = null;
+            if (clickTimeout) {
+              clearTimeout(clickTimeout);
+              clickTimeout = null;
+            }
+          }
+        }
+      }
+    };
+
+    map.current.on('click', handleClick);
+
+    return () => {
+      if (map.current) {
+        map.current.un('click', handleClick);
+      }
+      // Limpar timeout ao desmontar
+      if (clickTimeout) {
+        clearTimeout(clickTimeout);
+      }
+    };
+  }, [onPainelOpen]);
+
+  // Recriar ClusterSource quando showNomesEscolas mudar
+  useEffect(() => {
+    if (!map.current || !vectorSource.current) return;
+    
+    // Remover camada antiga
+    if (vectorLayer.current) {
+      map.current.removeLayer(vectorLayer.current);
+    }
+
+    // Criar novo ClusterSource com distância apropriada
+    clusterSource.current = new ClusterSource({
+      distance: showNomesEscolas ? 15 : 10,
+      source: vectorSource.current,
+      geometryFunction: (feature) => {
+        const geometry = feature.getGeometry();
+        if (geometry.getType() === 'Point') {
+          return geometry;
+        }
+        return null;
+      }
+    });
+
+    // Criar nova camada
+    vectorLayer.current = new VectorLayer({
+      source: clusterSource.current,
+      style: (feature) => createClusterStyle(feature, (f) => createMarkerStyle(f, showNomesEscolas)),
+      zIndex: 15
+    });
+
+    // Adicionar nova camada ao mapa
+    map.current.addLayer(vectorLayer.current);
+
+  }, [showNomesEscolas, createClusterStyle]);
+
+  // Gerenciar camadas GeoJSON
+  useEffect(() => {
+    if (!map.current) return;
+
     // Remover camadas existentes primeiro
     if (terrasIndigenasLayerRef.current) {
       map.current.removeLayer(terrasIndigenasLayerRef.current);
@@ -664,38 +773,6 @@ const OpenLayersMap = ({
       }
     }
   }, [showTerrasIndigenas, showEstadoSP, terrasIndigenasData, estadoSPData]);
-
-  // Adicionar event listeners para camadas GeoJSON
-  useEffect(() => {
-    if (!map.current) return;
-
-    const handleClick = (event) => {
-      const feature = map.current.forEachFeatureAtPixel(event.pixel, (feature) => feature);
-      if (feature) {
-        const terraIndigenaInfo = feature.get('terraIndigenaInfo');
-        if (terraIndigenaInfo) {
-          // Fazer zoom para a terra indígena clicada
-          const geometry = feature.getGeometry();
-          if (geometry) {
-            const extent = geometry.getExtent();
-            map.current.getView().fit(extent, {
-              duration: 800,
-              padding: [50, 50, 50, 50],
-              maxZoom: 15
-            });
-          }
-        }
-      }
-    };
-
-    map.current.on('click', handleClick);
-
-    return () => {
-      if (map.current) {
-        map.current.un('click', handleClick);
-      }
-    };
-  }, []);
 
   return (
     <MapWrapper ref={mapContainer}>
