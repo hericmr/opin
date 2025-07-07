@@ -1,281 +1,326 @@
-# Planejamento: Inserção de Nova Escola no Painel de Edição
+# Planning: Correção de Variáveis Não Utilizadas e Warnings ESLint
 
-## Objetivo
-Permitir que o painel de edição crie uma nova linha na tabela `escolas_completa` ao inserir uma nova escola, e não apenas edite escolas existentes.
+## 📋 Objetivo
+Remover todos os warnings de ESLint relacionados a variáveis não utilizadas e dependências desnecessárias nos useEffect hooks.
 
-## Checklist de Etapas
-
-- [x] 1. Detectar modo de criação vs. edição no painel de edição
-- [x] 2. Adaptar o botão/fluxo para "Nova Escola" no AdminPanel (ou onde for aberto o painel)
-- [x] 3. Implementar lógica de `insert` no Supabase quando não houver `id` na escola
-- [x] 4. Garantir que todos os campos obrigatórios sejam enviados no insert
-- [ ] 5. Atualizar a lista local de escolas após inserção
-- [ ] 6. Exibir feedback de sucesso/erro ao usuário
-- [ ] 7. Testar fluxo completo de criação de nova escola
-
-## Observações
-- O fluxo de edição existente deve continuar funcionando normalmente para escolas já existentes.
-- O fluxo de criação deve ser claro para o usuário (ex: título "Nova Escola").
-- O painel deve ser reutilizável para ambos os casos (edição e criação).
-
-# Plano de Implementação: React-Share para Botão de Compartilhamento
-
-## 📋 Análise da Situação Atual
-
-### Componentes Envolvidos:
-1. **ShareButton.js** - Botão simples atual ✅ **REFATORADO**
-2. **ShareSection.js** - Seção que contém o botão ✅ **ATUALIZADO**
-3. **useShare.js** - Hook com lógica de compartilhamento ✅ **MANTIDO**
-4. **PainelInformacoes/index.js** - Componente principal que usa o compartilhamento ✅ **ATUALIZADO**
-
-### Funcionalidade Atual:
-- Botão simples "Compartilhar" 
-- Copia link para clipboard
-- Fallback para Twitter se `navigator.share` não estiver disponível
-- Design básico com Tailwind CSS
-
-## 🎯 Objetivos da Melhoria
-
-### Funcional:
-- ✅ Múltiplas opções de compartilhamento (WhatsApp, Facebook, Twitter, LinkedIn, etc.)
-- ✅ Botões visuais atrativos com ícones das redes sociais
-- ✅ Melhor UX com feedback visual
-- ✅ Suporte a diferentes dispositivos e plataformas
-
-### Visual:
-- ✅ Design moderno e atrativo
-- ✅ Ícones coloridos das redes sociais
-- ✅ Animações suaves
-- ✅ Layout responsivo
-
-## 📦 Dependências a Instalar
-
-```bash
-npm install react-share
-```
-✅ **INSTALADO**
-
-## 🔧 Implementação
-
-### Fase 1: Instalação e Configuração ✅
-1. ✅ Instalar `react-share`
-2. ✅ Verificar compatibilidade com React 18
-3. ✅ Testar em ambiente de desenvolvimento
-
-### Fase 2: Refatoração dos Componentes ✅
-
-#### 2.1 Atualizar ShareButton.js ✅
-- ✅ Substituir botão simples por componentes do react-share
-- ✅ Manter funcionalidade de copiar link
-- ✅ Adicionar botões para redes sociais principais
-- ✅ Implementar tooltips informativos
-- ✅ Adicionar feedback visual de sucesso
-
-#### 2.2 Atualizar ShareSection.js ✅
-- ✅ Ajustar layout para acomodar múltiplos botões
-- ✅ Implementar design responsivo
-- ✅ Adicionar título e descrição da seção
-- ✅ Passar props necessárias para o ShareButton
-
-#### 2.3 Atualizar useShare.js ✅
-- ✅ Manter lógica existente para compatibilidade
-- ✅ Adicionar funções auxiliares para react-share
-- ✅ Otimizar geração de URLs
-
-### Fase 3: Design e UX ✅
-
-#### 3.1 Layout dos Botões ✅
-```
-[📋 Copiar] [📱 WhatsApp] [📘 Facebook] [🐦 Twitter] [💼 LinkedIn]
-```
-
-#### 3.2 Estados Visuais ✅
-- ✅ Hover effects
-- ✅ Loading states
-- ✅ Success/error feedback
-- ✅ Responsive design
-
-#### 3.3 Acessibilidade ✅
-- ✅ ARIA labels apropriados
-- ✅ Keyboard navigation
-- ✅ Screen reader support
-- ✅ Tooltips informativos
-
-## 🎨 Design System ✅
-
-### Cores:
-- **WhatsApp**: #25D366 ✅
-- **Facebook**: #1877F2 ✅
-- **Twitter**: #1DA1F2 ✅
-- **LinkedIn**: #0A66C2 ✅
-- **Copiar**: #10B981 (verde atual) ✅
-
-### Componentes:
-- ✅ Botões circulares com ícones
-- ✅ Tooltips informativos
-- ✅ Feedback visual de sucesso
-- ✅ Layout flexível e responsivo
-
-## 📱 Responsividade ✅
-
-### Mobile (< 768px):
-- ✅ Botões em linha única
-- ✅ Ícones maiores para touch
-- ✅ Espaçamento otimizado
-
-### Tablet (768px - 1024px):
-- ✅ Layout em grid 2x3
-- ✅ Botões médios
-
-### Desktop (> 1024px):
-- ✅ Layout horizontal
-- ✅ Botões com texto + ícone
-- ✅ Hover effects completos
-
-## 🔄 Fluxo de Implementação ✅
-
-### Passo 1: Instalação ✅
-```bash
-npm install react-share
-```
-
-### Passo 2: Criar novo componente ShareButton ✅
-- ✅ Importar componentes do react-share
-- ✅ Implementar design responsivo
-- ✅ Manter funcionalidade de copiar link
-- ✅ Adicionar tooltips e feedback visual
-
-### Passo 3: Atualizar ShareSection ✅
-- ✅ Ajustar layout para novos botões
-- ✅ Implementar animações
-- ✅ Testar responsividade
-- ✅ Adicionar título e descrição
-
-### Passo 4: Testes ✅
-- ✅ Testar em diferentes dispositivos
-- ✅ Verificar acessibilidade
-- ✅ Validar funcionalidade de compartilhamento
-- ✅ Servidor rodando sem erros
-
-### Passo 5: Deploy ✅
-- ✅ Build de produção
-- ✅ Teste em ambiente real
-- ✅ Monitoramento de performance
-
-## 🧪 Testes Necessários ✅
-
-### Funcional:
-- ✅ Compartilhamento no WhatsApp
-- ✅ Compartilhamento no Facebook
-- ✅ Compartilhamento no Twitter
-- ✅ Compartilhamento no LinkedIn
-- ✅ Copiar link para clipboard
-- ✅ Fallback para navegadores sem suporte
-
-### Visual:
-- ✅ Design responsivo
-- ✅ Animações suaves
-- ✅ Estados de hover/focus
-- ✅ Feedback visual
-
-### Acessibilidade:
-- ✅ Navegação por teclado
-- ✅ Screen readers
-- ✅ Contraste de cores
-- ✅ ARIA labels
-
-## 📊 Métricas de Sucesso ✅
-
-### UX:
-- ✅ Aumento no engajamento de compartilhamento
-- ✅ Melhoria na experiência do usuário
-- ✅ Redução de abandono na seção de compartilhamento
-
-### Técnico:
-- ✅ Performance mantida ou melhorada
-- ✅ Compatibilidade cross-browser
-- ✅ Acessibilidade WCAG 2.1 AA
-
-## 🚀 Próximos Passos ✅
-
-1. ✅ **Aprovação do plano**
-2. ✅ **Instalação do react-share**
-3. ✅ **Implementação do novo ShareButton**
-4. ✅ **Atualização do ShareSection**
-5. ✅ **Testes e refinamentos**
-6. ✅ **Deploy e monitoramento**
+## 🎯 Prioridade: ALTA
+- Melhorar a qualidade do código
+- Eliminar warnings do build
+- Otimizar performance removendo código morto
 
 ---
 
-## 🎉 **IMPLEMENTAÇÃO CONCLUÍDA** ✅
+## 📁 Arquivos para Correção
 
-**Estimativa de Tempo**: 2-3 horas
-**Tempo Real**: ~1.5 horas
-**Complexidade**: Média
-**Impacto**: Alto (melhoria significativa na UX)
+### 1. **src/App.js** - 7 warnings
+**Problemas:**
+- `useEffect` importado mas não usado
+- `supabase` importado mas não usado
+- `PainelInformacoes` importado mas não usado
+- `Papa` importado mas não usado
+- `useShare` importado mas não usado
+- `MapaSkeleton` importado mas não usado
+- `getLocationById` definido mas não usado
 
-### 📈 **Melhorias Implementadas:**
+**Ações:**
+- [ ] Remover imports não utilizados
+- [ ] Remover função `getLocationById` se não for necessária
+- [ ] Verificar se algum desses imports será usado no futuro
 
-1. **Design Moderno**: Botões circulares com cores das redes sociais
-2. **Múltiplas Opções**: WhatsApp, Facebook, Twitter, LinkedIn
-3. **Feedback Visual**: Tooltips e estados de sucesso
-4. **Responsividade**: Layout adaptativo para mobile/desktop
-5. **Acessibilidade**: ARIA labels e navegação por teclado
-6. **UX Aprimorada**: Animações suaves e hover effects
+### 2. **src/components/OpenLayersMap.js** - 15 warnings
+**Problemas:**
+- Imports não utilizados: `Style`, `Fill`, `Stroke`, `Text`, `Icon`
+- Imports não utilizados: `handleMarkerClick`, `handleGeoJSONClick`
+- Variáveis não utilizadas: `PROXIMITY_THRESHOLD`, `createMarkerSVG`, `mapInfo`, `usedIndices`
+- Dependências desnecessárias em useEffect: `createClusterStyle` (4 ocorrências)
+- Variáveis não utilizadas: `geometry` (2 ocorrências)
 
-### 🔧 **Componentes Modificados:**
-- `src/components/ShareButton.js` - Refatorado completamente
-- `src/components/PainelInformacoes/ShareSection.js` - Atualizado
-- `src/components/PainelInformacoes/index.js` - Props atualizadas
+**Ações:**
+- [ ] Remover imports não utilizados do OpenLayers
+- [ ] Remover imports de handlers não utilizados
+- [ ] Remover variáveis não utilizadas ou adicionar `// eslint-disable-next-line`
+- [ ] Corrigir dependências dos useEffect removendo `createClusterStyle`
+- [ ] Remover variáveis `geometry` não utilizadas
 
-### 🎯 **Resultado Final:**
-O botão de compartilhamento agora oferece uma experiência muito mais rica e atrativa, com múltiplas opções de compartilhamento e design moderno que incentiva o engajamento dos usuários. 
+### 3. **src/components/AdminPanel.js** - 4 warnings
+**Problemas:**
+- Imports não utilizados: `VideoSection`, `DocumentViewer`
+- Chave duplicada: `'Linguas faladas'`
+- Função não utilizada: `getVideoEmbedUrl`
 
-## Plano de Refatoração para `src/App.js` (Robustez, Velocidade, Modularidade, Expansividade)
+**Ações:**
+- [ ] Remover imports não utilizados
+- [ ] Corrigir chave duplicada no objeto
+- [ ] Remover função `getVideoEmbedUrl` ou adicionar `// eslint-disable-next-line`
 
-### 1. Diagnóstico Atual
-- O App.js concentra lógica de dados, roteamento, carregamento e UI.
-- Componentes e hooks estão misturados, dificultando manutenção e testes.
-- Funções grandes e acopladas (ex: fetchDataPoints, formatData).
-- LoadingScreen está embutido, dificultando customização e reuso.
+### 4. **src/components/AdminPanel/HistoriaProfessorManager.js** - 6 warnings
+**Problemas:**
+- Imports não utilizados: `Upload`, `Eye`
+- Variáveis não utilizadas: `uploadingImage`, `handleImageUpload`, `handleImageDelete`
+- Dependência faltando em useEffect: `carregarHistorias`
 
-### 2. Objetivos da Refatoração
-- **Robustez:** Melhor tratamento de erros, separação de responsabilidades, testes facilitados.
-- **Velocidade:** Lazy loading, Suspense, otimização de renderizações e fetch.
-- **Modularidade:** Separar lógica de dados, UI, roteamento e estados em arquivos/componentes/hooks próprios.
-- **Expansividade:** Facilitar adição de novas rotas, providers, telas e integrações.
+**Ações:**
+- [ ] Remover imports não utilizados
+- [ ] Remover variáveis não utilizadas ou implementar funcionalidade
+- [ ] Adicionar `carregarHistorias` ao array de dependências do useEffect
 
-### 3. Passos do Refactor
+### 5. **src/components/AdminPanel/VideoManager.js** - 1 warning
+**Problemas:**
+- Dependência faltando em useEffect: `carregarVideos`
 
-#### 3.1. Modularização
-- Extrair LoadingScreen para `src/components/LoadingScreen.js`.
-- Extrair lógica de fetch/format para um custom hook: `useEscolasData`.
-- Separar ErrorScreen para `src/components/ErrorScreen.js` (se não existir).
-- Criar pasta `src/app/` para hooks e providers globais, se necessário.
+**Ações:**
+- [ ] Adicionar `carregarVideos` ao array de dependências do useEffect
 
-#### 3.2. Otimização de Performance
-- Garantir Suspense/Lazy para todas rotas pesadas.
-- Suspense fallback global com LoadingScreen.
-- Evitar renders desnecessários com React.memo/useMemo/useCallback.
+### 6. **src/components/BibliotecaEducacionalIndigena.js** - 4 warnings
+**Problemas:**
+- Import não utilizado: `BookOpen`
+- Variáveis não utilizadas: `filtroAtivo`, `setFiltroAtivo`
+- Caractere de escape desnecessário: `\-`
 
-#### 3.3. Robustez e Testabilidade
-- Melhorar tratamento de erros (try/catch, boundaries, mensagens).
-- Adicionar prop-types ou TypeScript (futuro).
-- Garantir que hooks não dependam de variáveis globais.
+**Ações:**
+- [ ] Remover import não utilizado
+- [ ] Remover variáveis não utilizadas ou implementar filtro
+- [ ] Corrigir caractere de escape desnecessário
 
-#### 3.4. Expansividade
-- Centralizar definição de rotas em um array/objeto.
-- Permitir fácil adição de providers/contextos.
-- Documentar pontos de extensão no código.
+### 7. **src/components/EditEscolaPanel/ImageUploadSection.js** - 6 warnings
+**Problemas:**
+- Import não utilizado: `Edit3`
+- Variáveis não utilizadas: `editingImage`, `setEditingImage`, `editingDescription`, `setEditingDescription`
+- Função não utilizada: `handleDescriptionChange`
 
-### 4. Execução (Resumo das Ações)
-1. Criar `src/components/LoadingScreen.js` e mover o componente.
-2. Criar `src/hooks/useEscolasData.js` com fetch/format e loading/error state.
-3. Refatorar AppContent para usar o hook e componentes externos.
-4. Garantir Suspense global e fallback.
-5. Documentar pontos de extensão e modularização.
+**Ações:**
+- [ ] Remover import não utilizado
+- [ ] Remover variáveis não utilizadas ou implementar edição inline
+- [ ] Remover função não utilizada
 
-### 5. Pós-refatoração
-- Testar fluxo de carregamento, erro e dados.
-- Validar performance e modularidade.
-- Atualizar README se necessário. 
+### 8. **src/components/EditEscolaPanel/ProfessorImageUploadSection.js** - 8 warnings
+**Problemas:**
+- Import não utilizado: `Edit3`
+- Variáveis não utilizadas: `editingImage`, `setEditingImage`, `editingDescription`, `setEditingDescription`, `setGenero`, `setTitulo`
+- Função não utilizada: `handleDescriptionChange`
+
+**Ações:**
+- [ ] Remover import não utilizado
+- [ ] Remover variáveis não utilizadas ou implementar funcionalidade
+- [ ] Remover função não utilizada
+
+### 9. **src/components/EditEscolaPanel/VideoSection.js** - 6 warnings
+**Problemas:**
+- Imports não utilizados: `Edit3`, `Clock`, `Tag`, `Play`
+- Função não utilizada: `getTituloByVideoUrl`
+- Variável não utilizada: `loading`
+
+**Ações:**
+- [ ] Remover imports não utilizados
+- [ ] Remover função não utilizada
+- [ ] Remover variável não utilizada
+
+### 10. **src/components/MapSelector.js** - 1 warning
+**Problemas:**
+- Dependência faltando em useEffect: `showMarcadores`
+
+**Ações:**
+- [ ] Adicionar `showMarcadores` ao array de dependências do useEffect
+
+### 11. **src/components/MapaEscolasIndigenas.js** - 1 warning
+**Problemas:**
+- Variável não utilizada: `totalEscolas`
+
+**Ações:**
+- [ ] Remover variável não utilizada ou usar em algum lugar
+
+### 12. **src/components/Marcadores.js** - 1 warning
+**Problemas:**
+- Variável não utilizada: `usedIndices`
+
+**Ações:**
+- [ ] Remover variável não utilizada
+
+### 13. **src/components/Navbar/MobileMenu.js** - 9 warnings
+**Problemas:**
+- Imports não utilizados: `MapPin`, `BookOpen`, `Search`, `Home`, `Users`, `Map`
+- Import não utilizado: `LazyImage`
+- Variável não utilizada: `navigate`
+
+**Ações:**
+- [ ] Remover imports não utilizados
+- [ ] Remover variável não utilizada
+
+### 14. **src/components/Navbar/NavButtons.js** - 4 warnings
+**Problemas:**
+- Imports não utilizados: `MapPin`, `BookOpen`, `Home`
+- Variável não utilizada: `isActive`
+
+**Ações:**
+- [ ] Remover imports não utilizados
+- [ ] Remover variável não utilizada
+
+### 15. **src/components/Navbar/SearchBar.js** - 4 warnings
+**Problemas:**
+- Variáveis não utilizadas: `searchTerm`, `suggestions`
+- Funções não utilizadas: `handleSuggestionClick`, `getCategoryColor`
+
+**Ações:**
+- [ ] Remover variáveis não utilizadas ou implementar funcionalidade
+- [ ] Remover funções não utilizadas
+
+### 16. **src/components/Navbar/index.js** - 2 warnings
+**Problemas:**
+- Imports não utilizados: `NavLogo`, `DesktopNav`
+
+**Ações:**
+- [ ] Remover imports não utilizados
+
+### 17. **src/components/PainelInformacoes/components/DocumentViewer.js** - 2 warnings
+**Problemas:**
+- Atributo `aria-pressed` não suportado pelo role `tab`
+
+**Ações:**
+- [ ] Remover atributo `aria-pressed` ou alterar role
+
+### 18. **src/components/PainelInformacoes/components/EscolaInfo/BasicInfo.js** - 1 warning
+**Problemas:**
+- Import não utilizado: `Users`
+
+**Ações:**
+- [ ] Remover import não utilizado
+
+### 19. **src/components/PainelInformacoes/components/EscolaInfo/GestaoProfessores.js** - 1 warning
+**Problemas:**
+- Função não utilizada: `formatarNomeProfessor`
+
+**Ações:**
+- [ ] Remover função não utilizada
+
+### 20. **src/components/PainelInformacoes/components/EscolaInfo/Modalidades.js** - 2 warnings
+**Problemas:**
+- Import não utilizado: `useState`
+- Variável não utilizada: `modalidadeEnsinoCard`
+
+**Ações:**
+- [ ] Remover import não utilizado
+- [ ] Remover variável não utilizada
+
+### 21. **src/components/PainelInformacoes/components/EscolaInfo/index.js** - 1 warning
+**Problemas:**
+- Import não utilizado: `ImagemHistoriadoProfessor`
+
+**Ações:**
+- [ ] Remover import não utilizado
+
+### 22. **src/components/PainelInformacoes/components/ImagensdasEscolas.js** - 1 warning
+**Problemas:**
+- Dependência faltando em useEffect: `limparCacheERecarregar`
+
+**Ações:**
+- [ ] Adicionar `limparCacheERecarregar` ao array de dependências
+
+### 23. **src/components/PainelInformacoes/components/VideoPlayer.js** - 1 warning
+**Problemas:**
+- Variável não utilizada: `loading`
+
+**Ações:**
+- [ ] Remover variável não utilizada
+
+### 24. **src/components/PainelInformacoes/index.js** - 1 warning
+**Problemas:**
+- Import não utilizado: `useAudio`
+
+**Ações:**
+- [ ] Remover import não utilizado
+
+### 25. **src/components/TerrasIndigenas.js** - 3 warnings
+**Problemas:**
+- Import não utilizado: `L`
+- Variável não utilizada: `layer`
+- Dependência faltando em useCallback: `hoverStyle`
+
+**Ações:**
+- [ ] Remover import não utilizado
+- [ ] Remover variável não utilizada
+- [ ] Adicionar `hoverStyle` ao array de dependências do useCallback
+
+### 26. **src/components/hooks/useClickOutside.js** - 2 warnings
+**Problemas:**
+- Mistura inesperada de `&&` e `||` (2 ocorrências)
+
+**Ações:**
+- [ ] Adicionar parênteses para esclarecer a ordem das operações
+
+### 27. **src/components/hooks/useDocumentosEscola.js** - 2 warnings
+**Problemas:**
+- Variável não utilizada: `rlsData`
+- Dependências faltando em useEffect: `documentos.length`, `error`, `isLoading`
+
+**Ações:**
+- [ ] Remover variável não utilizada
+- [ ] Adicionar dependências faltantes ao array do useEffect
+
+### 28. **src/components/hooks/usePainelDimensions.js** - 1 warning
+**Problemas:**
+- Dependência faltando em useMemo: `breakpoints`
+
+**Ações:**
+- [ ] Adicionar `breakpoints` ao array de dependências do useMemo
+
+### 29. **src/components/hooks/usePainelVisibility.js** - 1 warning
+**Problemas:**
+- Dependências faltando em useEffect: `isMobile`, `isVisible`
+
+**Ações:**
+- [ ] Adicionar dependências faltantes ao array do useEffect
+
+### 30. **src/services/historiaProfessorService.js** - 1 warning
+**Problemas:**
+- Variável não utilizada: `publicUrl`
+
+**Ações:**
+- [ ] Remover variável não utilizada
+
+---
+
+## 🚀 Estratégia de Implementação
+
+### Fase 1: Limpeza Rápida (1-2 horas)
+- [ ] Remover todos os imports não utilizados
+- [ ] Remover variáveis não utilizadas simples
+- [ ] Remover funções não utilizadas
+
+### Fase 2: Correção de Dependências (1 hora)
+- [ ] Corrigir arrays de dependências dos useEffect
+- [ ] Corrigir arrays de dependências dos useCallback
+- [ ] Corrigir arrays de dependências dos useMemo
+
+### Fase 3: Correções Específicas (1 hora)
+- [ ] Corrigir chave duplicada no AdminPanel
+- [ ] Corrigir atributos aria no DocumentViewer
+- [ ] Corrigir operadores lógicos no useClickOutside
+
+### Fase 4: Teste e Validação (30 min)
+- [ ] Executar build para verificar se warnings foram removidos
+- [ ] Testar funcionalidades principais
+- [ ] Verificar se não quebrou nada
+
+---
+
+## 📊 Métricas de Sucesso
+- [ ] Reduzir warnings de ESLint de ~80 para 0
+- [ ] Manter todas as funcionalidades funcionando
+- [ ] Melhorar a qualidade do código
+- [ ] Otimizar o tamanho do bundle
+
+---
+
+## ⚠️ Observações Importantes
+1. **Não remover código que pode ser usado no futuro** - adicionar `// eslint-disable-next-line` se necessário
+2. **Testar cada mudança** para garantir que não quebra funcionalidades
+3. **Fazer commits pequenos** para facilitar rollback se necessário
+4. **Documentar mudanças** importantes no código
+
+---
+
+## 🎯 Resultado Esperado
+- Build limpo sem warnings
+- Código mais limpo e otimizado
+- Melhor performance
+- Facilidade de manutenção
