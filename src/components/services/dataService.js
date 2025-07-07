@@ -15,33 +15,20 @@ const App = () => {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        console.log("Inicializando aplicativo...");
-        let dataPoints = await fetchDataPoints();
-        if (dataPoints.length === 0) {
-          console.warn("Nenhum dado encontrado na tabela 'locations'.");
-        }
-        dataPoints = formatData(dataPoints);
-        setDataPoints(dataPoints);
-        console.log("Dados definidos no estado do App.");
+        let data = await fetchDataPoints();
+        data = formatData(data);
+        setDataPoints(data);
       } catch (err) {
-        console.error("Erro ao buscar ou formatar dados:", err);
         setError(err.message);
       } finally {
         setLoading(false);
-        console.log("Processo de inicialização finalizado.");
       }
     };
-
     initializeApp();
   }, []);
 
-  if (loading) {
-    return <LoadingScreen />;
-  }
-
-  if (error) {
-    return <ErrorScreen error={error} />;
-  }
+  if (loading) return <LoadingScreen />;
+  if (error) return <ErrorScreen error={error} />;
 
   return (
     <div className="min-h-screen flex flex-col">

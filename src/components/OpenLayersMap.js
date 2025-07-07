@@ -314,30 +314,51 @@ const OpenLayersMap = ({
             // Cluster com apenas um marcador, mostrar tooltip
             const schoolData = features[0].get('schoolData');
             if (schoolData) {
-              tooltipElement = createTooltipElement(event, schoolData);
+              tooltipElement = createTooltipElement(event, schoolData, 'school');
             }
           } else {
             // Cluster com múltiplos marcadores, mostrar tooltip do cluster
             tooltipElement = createClusterTooltipElement(event, features.length);
           }
         } else {
-          // Marcador individual
+          // Verificar se é um marcador de escola ou terra indígena
           const schoolData = feature.get('schoolData');
+          const terraIndigenaInfo = feature.get('terraIndigenaInfo');
+          
           if (schoolData) {
-            tooltipElement = createTooltipElement(event, schoolData);
+            // Marcador de escola - tooltip azul
+            tooltipElement = createTooltipElement(event, schoolData, 'school');
+          } else if (terraIndigenaInfo) {
+            // Terra indígena - tooltip vermelho
+            tooltipElement = createTooltipElement(event, terraIndigenaInfo, 'terra_indigena');
           }
         }
       }
     });
 
     // Função para criar tooltip de marcador individual
-    const createTooltipElement = (event, schoolData) => {
+    const createTooltipElement = (event, data, type) => {
       const element = document.createElement('div');
       element.className = 'ol-tooltip';
-      element.textContent = createTooltipHTML(schoolData);
+      element.setAttribute('data-type', type);
+      
+      // Determinar o conteúdo e estilo baseado no tipo
+      let content, backgroundColor, borderColor;
+      
+      if (type === 'school') {
+        content = createTooltipHTML(data);
+        backgroundColor = 'rgba(59, 130, 246, 0.95)'; // Azul para escolas
+        borderColor = 'rgba(37, 99, 235, 0.8)';
+      } else if (type === 'terra_indigena') {
+        content = `Terra Indígena ${data.titulo || 'Indígena'}`;
+        backgroundColor = 'rgba(220, 20, 60, 0.95)'; // Vermelho para terras indígenas
+        borderColor = 'rgba(185, 28, 28, 0.8)';
+      }
+      
+      element.textContent = content;
       element.style.position = 'absolute';
-      element.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-      element.style.color = '#374151';
+      element.style.backgroundColor = backgroundColor;
+      element.style.color = 'white';
       element.style.padding = '8px 12px';
       element.style.borderRadius = '8px';
       element.style.fontSize = '13px';
@@ -349,17 +370,17 @@ const OpenLayersMap = ({
       element.style.textOverflow = 'ellipsis';
       element.style.zIndex = '1000';
       element.style.pointerEvents = 'none';
-      element.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-      element.style.border = '1px solid rgba(0, 0, 0, 0.1)';
+      element.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.25)';
+      element.style.border = `1px solid ${borderColor}`;
       element.style.backdropFilter = 'blur(4px)';
       
       const coordinate = event.coordinate;
       const pixel = map.current.getPixelFromCoordinate(coordinate);
       
-      // Centralizar o tooltip horizontalmente com o marcador
+      // Centralizar o tooltip horizontalmente com o elemento
       const elementWidth = 200; // Largura estimada do tooltip
       const offsetX = -elementWidth / 2; // Centralizar horizontalmente
-      const offsetY = -40; // Posicionar acima do marcador
+      const offsetY = -40; // Posicionar acima do elemento
       
       element.style.left = (pixel[0] + offsetX) + 'px';
       element.style.top = (pixel[1] + offsetY) + 'px';
@@ -652,8 +673,17 @@ const OpenLayersMap = ({
       const feature = map.current.forEachFeatureAtPixel(event.pixel, (feature) => feature);
       if (feature) {
         const terraIndigenaInfo = feature.get('terraIndigenaInfo');
-        if (terraIndigenaInfo && onPainelOpen) {
-          onPainelOpen(terraIndigenaInfo);
+        if (terraIndigenaInfo) {
+          // Fazer zoom para a terra indígena clicada
+          const geometry = feature.getGeometry();
+          if (geometry) {
+            const extent = geometry.getExtent();
+            map.current.getView().fit(extent, {
+              duration: 800,
+              padding: [50, 50, 50, 50],
+              maxZoom: 15
+            });
+          }
         }
       }
     };
@@ -665,7 +695,7 @@ const OpenLayersMap = ({
         map.current.un('click', handleClick);
       }
     };
-  }, [onPainelOpen]);
+  }, []);
 
   return (
     <MapWrapper ref={mapContainer}>

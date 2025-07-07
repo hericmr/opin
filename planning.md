@@ -230,3 +230,52 @@ npm install react-share
 
 ### 🎯 **Resultado Final:**
 O botão de compartilhamento agora oferece uma experiência muito mais rica e atrativa, com múltiplas opções de compartilhamento e design moderno que incentiva o engajamento dos usuários. 
+
+## Plano de Refatoração para `src/App.js` (Robustez, Velocidade, Modularidade, Expansividade)
+
+### 1. Diagnóstico Atual
+- O App.js concentra lógica de dados, roteamento, carregamento e UI.
+- Componentes e hooks estão misturados, dificultando manutenção e testes.
+- Funções grandes e acopladas (ex: fetchDataPoints, formatData).
+- LoadingScreen está embutido, dificultando customização e reuso.
+
+### 2. Objetivos da Refatoração
+- **Robustez:** Melhor tratamento de erros, separação de responsabilidades, testes facilitados.
+- **Velocidade:** Lazy loading, Suspense, otimização de renderizações e fetch.
+- **Modularidade:** Separar lógica de dados, UI, roteamento e estados em arquivos/componentes/hooks próprios.
+- **Expansividade:** Facilitar adição de novas rotas, providers, telas e integrações.
+
+### 3. Passos do Refactor
+
+#### 3.1. Modularização
+- Extrair LoadingScreen para `src/components/LoadingScreen.js`.
+- Extrair lógica de fetch/format para um custom hook: `useEscolasData`.
+- Separar ErrorScreen para `src/components/ErrorScreen.js` (se não existir).
+- Criar pasta `src/app/` para hooks e providers globais, se necessário.
+
+#### 3.2. Otimização de Performance
+- Garantir Suspense/Lazy para todas rotas pesadas.
+- Suspense fallback global com LoadingScreen.
+- Evitar renders desnecessários com React.memo/useMemo/useCallback.
+
+#### 3.3. Robustez e Testabilidade
+- Melhorar tratamento de erros (try/catch, boundaries, mensagens).
+- Adicionar prop-types ou TypeScript (futuro).
+- Garantir que hooks não dependam de variáveis globais.
+
+#### 3.4. Expansividade
+- Centralizar definição de rotas em um array/objeto.
+- Permitir fácil adição de providers/contextos.
+- Documentar pontos de extensão no código.
+
+### 4. Execução (Resumo das Ações)
+1. Criar `src/components/LoadingScreen.js` e mover o componente.
+2. Criar `src/hooks/useEscolasData.js` com fetch/format e loading/error state.
+3. Refatorar AppContent para usar o hook e componentes externos.
+4. Garantir Suspense global e fallback.
+5. Documentar pontos de extensão e modularização.
+
+### 5. Pós-refatoração
+- Testar fluxo de carregamento, erro e dados.
+- Validar performance e modularidade.
+- Atualizar README se necessário. 
