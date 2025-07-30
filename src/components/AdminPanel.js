@@ -28,9 +28,90 @@ const AdminPanel = () => {
     link_pdf: ''
   });
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedModalidades, setSelectedModalidades] = useState([]);
+  const [outroModalidade, setOutroModalidade] = useState('');
 
   // Detectar se é mobile
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+
+  // Lista de modalidades de ensino organizadas por categoria
+  const modalidadesOptions = [
+    // 1. Educação Infantil
+    'Educação Infantil',
+    'Educação Infantil (Idade 0 a 6 anos)',
+    'Educação Infantil (Pré-escola I e II) – 1 sala multisseriada',
+    'Educação Infantil (Pré-escola I) – 1 sala regular',
+    'Educação Infantil + Ensino Fundamental – multisseriado',
+    'Educação Infantil + Ensino Fundamental – regular e multisseriado',
+    
+    // 2. Educação Infantil + Ensino Fundamental
+    'Educação Infantil + Ensino Fundamental',
+    'Educação Infantil + Ensino Fundamental (Anos Iniciais e Anos Finais)',
+    'Educação Infantil + Ensino Fundamental (Anos Iniciais multisseriado + Anos Finais multisseriado)',
+    'Educação Infantil + Ensino Fundamental (1º ao 9º ano) – Salas multisseriadas',
+    'Educação Infantil + Ensino Fundamental (Pré I + 1º ao 4º ano) – 1 sala multisseriada',
+    'Educação Infantil + Ensino Fundamental com EJA – Multisseriado',
+    
+    // 3. Ensino Fundamental - Anos Iniciais
+    'Ensino Fundamental Anos Iniciais (1º ao 3º)',
+    'Ensino Fundamental Anos Iniciais (1º ao 5º ano) – 1 sala multisseriada',
+    'Ensino Fundamental Anos Iniciais (4º e 5º ano) – 1 sala multisseriada',
+    'Ensino Fundamental Anos Iniciais – EJA (1º ao 5º ano) – multisseriado',
+    
+    // 3. Ensino Fundamental - Anos Finais
+    'Ensino Fundamental Anos Finais (6º ao 9º ano) – 1 sala multisseriada',
+    'Ensino Fundamental Anos Finais – EJA (6º ao 9º ano) – multisseriado',
+    
+    // 3. Ensino Fundamental - Ambos
+    'Ensino Fundamental (Anos Iniciais e Finais) – regular e multisseriado',
+    'Ensino Fundamental – Atendimento temporário em escola não indígena',
+    
+    // 4. Ensino Médio
+    'Ensino Médio (1º ao 3º ano) – regular',
+    'Ensino Médio (1º ao 3º ano) – multisseriado',
+    'Ensino Médio – EJA (1º ao 3º ano) – multisseriado',
+    'Ensino Médio – Não há atendimento'
+  ];
+
+  // Funções para gerenciar modalidades
+  const handleModalidadeChange = (modalidade) => {
+    setSelectedModalidades(prev => {
+      if (prev.includes(modalidade)) {
+        return prev.filter(m => m !== modalidade);
+      } else {
+        return [...prev, modalidade];
+      }
+    });
+  };
+
+  const handleOutroModalidadeChange = (value) => {
+    setOutroModalidade(value);
+    // Adicionar ou remover "Outro" das seleções
+    setSelectedModalidades(prev => {
+      const hasOutro = prev.some(m => m.startsWith('Outro:'));
+      if (value.trim()) {
+        if (hasOutro) {
+          return prev.map(m => m.startsWith('Outro:') ? `Outro: ${value}` : m);
+        } else {
+          return [...prev, `Outro: ${value}`];
+        }
+      } else {
+        return prev.filter(m => !m.startsWith('Outro:'));
+      }
+    });
+  };
+
+
+
+  // Função para salvar modalidades no editingLocation
+  const saveModalidades = () => {
+    const modalidadesText = selectedModalidades.join('; ');
+    
+    setEditingLocation(prev => ({
+      ...prev,
+      'Modalidade de Ensino/turnos de funcionamento': modalidadesText
+    }));
+  };
 
   // Configuração das abas
   const tabs = [
@@ -317,8 +398,40 @@ const AdminPanel = () => {
     }
   };
 
+  // Função para carregar modalidades existentes
+  const loadExistingModalidades = (modalidadesText) => {
+    if (!modalidadesText) {
+      setSelectedModalidades([]);
+      setOutroModalidade('');
+      return;
+    }
+
+    const parts = modalidadesText.split(';').map(part => part.trim());
+    const modalidades = [];
+    let outro = '';
+
+    parts.forEach(part => {
+      if (part.startsWith('Outro:')) {
+        outro = part.replace('Outro:', '').trim();
+        modalidades.push(part);
+      } else if (modalidadesOptions.includes(part)) {
+        modalidades.push(part);
+      } else if (part) {
+        // Se não está na lista padrão, tratar como "outro"
+        outro = part;
+        modalidades.push(`Outro: ${part}`);
+      }
+    });
+
+    setSelectedModalidades(modalidades);
+    setOutroModalidade(outro);
+  };
+
   // Abrir edição inline
   const openEditModal = (escola) => {
+    // Carregar modalidades existentes
+    loadExistingModalidades(escola['Modalidade de Ensino/turnos de funcionamento']);
+    
     // Garantir que apenas os campos originais do banco sejam usados
     const escolaOriginal = {
       id: escola.id,
@@ -376,65 +489,71 @@ const AdminPanel = () => {
 
   // Remover showNewEscolaPanel e EditEscolaPanel modal
   // Adicionar função para criar novo objeto de escola vazio
-  const criarNovaEscolaVazia = () => ({
-    Escola: '',
-    'Município': '',
-    'Endereço': '',
-    'Terra Indigena (TI)': '',
-    'Parcerias com o município': '',
-    'Diretoria de Ensino': '',
-    'Ano de criação da escola': '',
-    'Povos indigenas': '',
-    'Linguas faladas': '',
-    'Modalidade de Ensino/turnos de funcionamento': '',
-    'Numero de alunos': '',
-    'turnos_funcionamento': '',
-    'Espaço escolar e estrutura': '',
-    'Acesso à água': '',
-    'Tem coleta de lixo?': '',
-    'Acesso à internet': '',
-    'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': '',
-    'Modo de acesso à escola': '',
-    'Gestão/Nome': '',
-    'Outros funcionários': '',
-    'Quantidade de professores indígenas': '',
-    'Quantidade de professores não indígenas': '',
-    'Professores falam a língua indígena?': '',
-    'Formação dos professores': '',
-    'Formação continuada oferecida': '',
-    'A escola possui PPP próprio?': '',
-    'PPP elaborado com a comunidade?': '',
-    'Projetos em andamento': '',
-    'Parcerias com universidades?': '',
-    'Ações com ONGs ou coletivos?': '',
-    'Desejos da comunidade para a escola': '',
-    'Escola utiliza redes sociais?': '',
-    'Links das redes sociais': '',
-    'historia_da_escola': '',
-    'latitude': '',
-    'longitude': '',
-    'links': '',
-    'link_para_videos': '',
-    'logradouro': '',
-    'numero': '',
-    'complemento': '',
-    'bairro': '',
-    'cep': '',
-    'estado': 'SP',
-    'nome_professor': '',
-    'professores_indigenas': '',
-    'professores_nao_indigenas': '',
-    'professores_falam_lingua_indigena': '',
-    'formacao_professores': '',
-    'visitas_supervisores_formacao': '',
-    'outros_funcionarios': '',
-    'gestao': '',
-    'merenda_diferenciada': '',
-    cozinha: '',
-    merenda_escolar: '',
-    diferenciada: '',
-    activeTab: 'dados-basicos'
-  });
+  const criarNovaEscolaVazia = () => {
+    // Limpar modalidades
+    setSelectedModalidades([]);
+    setOutroModalidade('');
+    
+    return {
+      Escola: '',
+      'Município': '',
+      'Endereço': '',
+      'Terra Indigena (TI)': '',
+      'Parcerias com o município': '',
+      'Diretoria de Ensino': '',
+      'Ano de criação da escola': '',
+      'Povos indigenas': '',
+      'Linguas faladas': '',
+      'Modalidade de Ensino/turnos de funcionamento': '',
+      'Numero de alunos': '',
+      'turnos_funcionamento': '',
+      'Espaço escolar e estrutura': '',
+      'Acesso à água': '',
+      'Tem coleta de lixo?': '',
+      'Acesso à internet': '',
+      'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': '',
+      'Modo de acesso à escola': '',
+      'Gestão/Nome': '',
+      'Outros funcionários': '',
+      'Quantidade de professores indígenas': '',
+      'Quantidade de professores não indígenas': '',
+      'Professores falam a língua indígena?': '',
+      'Formação dos professores': '',
+      'Formação continuada oferecida': '',
+      'A escola possui PPP próprio?': '',
+      'PPP elaborado com a comunidade?': '',
+      'Projetos em andamento': '',
+      'Parcerias com universidades?': '',
+      'Ações com ONGs ou coletivos?': '',
+      'Desejos da comunidade para a escola': '',
+      'Escola utiliza redes sociais?': '',
+      'Links das redes sociais': '',
+      'historia_da_escola': '',
+      'latitude': '',
+      'longitude': '',
+      'links': '',
+      'link_para_videos': '',
+      'logradouro': '',
+      'numero': '',
+      'complemento': '',
+      'bairro': '',
+      'cep': '',
+      'estado': 'SP',
+      'nome_professor': '',
+      'professores_indigenas': '',
+      'professores_nao_indigenas': '',
+      'professores_falam_lingua_indigena': '',
+      'formacao_professores': '',
+      'visitas_supervisores_formacao': '',
+      'outros_funcionarios': '',
+      'gestao': '',
+      'merenda_diferenciada': '',
+      cozinha: '',
+      merenda_escolar: '',
+      diferenciada: '',
+      activeTab: 'dados-basicos'
+    };
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-950">
@@ -451,7 +570,7 @@ const AdminPanel = () => {
       {/* Menu lateral */}
       {(!isMobile || sidebarOpen) && (
         <aside
-          className={`bg-white border-r border-gray-200 rounded-r-2xl shadow-lg p-4 overflow-y-auto h-screen sticky top-0 z-40 transition-transform duration-300 ${
+          className={`bg-gray-900 border-r border-gray-700 rounded-r-2xl shadow-lg p-4 overflow-y-auto h-screen sticky top-0 z-40 transition-transform duration-300 ${
             isMobile ? 'fixed left-0 top-0 w-64 max-w-[80vw] shadow-2xl' : 'w-64'
           }`}
           style={{
@@ -471,7 +590,7 @@ const AdminPanel = () => {
               </svg>
             </button>
           )}
-          <h2 className="text-xl font-bold tracking-wide text-green-700 uppercase mb-6 sticky top-0 bg-white pb-2">Escolas</h2>
+          <h2 className="text-xl font-bold tracking-wide text-green-400 uppercase mb-6 sticky top-0 bg-gray-900 pb-2">Escolas</h2>
         {/* Busca no menu lateral */}
           <div className="mb-4 sticky top-24 mt-8 bg-gray-900 pb-2">
           <input
@@ -490,7 +609,7 @@ const AdminPanel = () => {
             .map(escola => (
             <li key={escola.id}>
               <button
-                  className={`block w-full text-left px-2 py-1 rounded hover:bg-green-900 text-sm text-gray-800 ${editingLocation?.id === escola.id ? 'bg-green-200 font-bold' : ''}`}
+                  className={`block w-full text-left px-2 py-1 rounded hover:bg-green-800 text-sm text-gray-200 ${editingLocation?.id === escola.id ? 'bg-green-700 font-bold text-white' : ''}`}
                   onClick={() => {
                     openEditModal(escola);
                     if (isMobile) setSidebarOpen(false);
@@ -723,16 +842,122 @@ const AdminPanel = () => {
 
                 {/* Aba: Modalidades */}
                 {editingLocation.activeTab === 'modalidades' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-200 mb-2 text-base">Modalidade de Ensino/Turnos</label>
-                      <input
-                        type="text"
-                        className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-gray-100 placeholder-gray-400 min-h-[44px] text-base"
-                        value={editingLocation['Modalidade de Ensino/turnos de funcionamento'] || ''}
-                        onChange={e => setEditingLocation({ ...editingLocation, 'Modalidade de Ensino/turnos de funcionamento': e.target.value })}
-                      />
+                  <div className="space-y-6">
+                    {/* Modalidades de Ensino e Turnos */}
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-200 mb-4 text-base">
+                        Modalidades de Ensino
+                      </label>
+                      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 max-h-96 overflow-y-auto">
+                        <div className="space-y-4">
+                          {/* 1. Educação Infantil */}
+                          <div>
+                            <h4 className="text-sm font-semibold text-green-400 mb-2 border-b border-gray-600 pb-1">
+                              1. Educação Infantil
+                            </h4>
+                            <div className="space-y-2 ml-2">
+                              {modalidadesOptions.slice(0, 6).map((modalidade, index) => (
+                                <label key={index} className="flex items-start space-x-3 cursor-pointer hover:bg-gray-700 p-2 rounded transition-colors">
+                                  <input
+                                    type="checkbox"
+                                    className="mt-1 h-4 w-4 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500 focus:ring-2"
+                                    checked={selectedModalidades.includes(modalidade)}
+                                    onChange={() => handleModalidadeChange(modalidade)}
+                                  />
+                                  <span className="text-sm text-gray-200 leading-relaxed">{modalidade}</span>
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* 2. Educação Infantil + Ensino Fundamental */}
+                          <div>
+                            <h4 className="text-sm font-semibold text-green-400 mb-2 border-b border-gray-600 pb-1">
+                              2. Educação Infantil + Ensino Fundamental
+                            </h4>
+                            <div className="space-y-2 ml-2">
+                              {modalidadesOptions.slice(6, 13).map((modalidade, index) => (
+                                <label key={index + 6} className="flex items-start space-x-3 cursor-pointer hover:bg-gray-700 p-2 rounded transition-colors">
+                                  <input
+                                    type="checkbox"
+                                    className="mt-1 h-4 w-4 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500 focus:ring-2"
+                                    checked={selectedModalidades.includes(modalidade)}
+                                    onChange={() => handleModalidadeChange(modalidade)}
+                                  />
+                                  <span className="text-sm text-gray-200 leading-relaxed">{modalidade}</span>
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* 3. Ensino Fundamental */}
+                          <div>
+                            <h4 className="text-sm font-semibold text-green-400 mb-2 border-b border-gray-600 pb-1">
+                              3. Ensino Fundamental
+                            </h4>
+                            <div className="space-y-2 ml-2">
+                              {modalidadesOptions.slice(13, 22).map((modalidade, index) => (
+                                <label key={index + 13} className="flex items-start space-x-3 cursor-pointer hover:bg-gray-700 p-2 rounded transition-colors">
+                                  <input
+                                    type="checkbox"
+                                    className="mt-1 h-4 w-4 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500 focus:ring-2"
+                                    checked={selectedModalidades.includes(modalidade)}
+                                    onChange={() => handleModalidadeChange(modalidade)}
+                                  />
+                                  <span className="text-sm text-gray-200 leading-relaxed">{modalidade}</span>
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* 4. Ensino Médio */}
+                          <div>
+                            <h4 className="text-sm font-semibold text-green-400 mb-2 border-b border-gray-600 pb-1">
+                              4. Ensino Médio
+                            </h4>
+                            <div className="space-y-2 ml-2">
+                              {modalidadesOptions.slice(22, 26).map((modalidade, index) => (
+                                <label key={index + 22} className="flex items-start space-x-3 cursor-pointer hover:bg-gray-700 p-2 rounded transition-colors">
+                                  <input
+                                    type="checkbox"
+                                    className="mt-1 h-4 w-4 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500 focus:ring-2"
+                                    checked={selectedModalidades.includes(modalidade)}
+                                    onChange={() => handleModalidadeChange(modalidade)}
+                                  />
+                                  <span className="text-sm text-gray-200 leading-relaxed">{modalidade}</span>
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          {/* Opção "Outro" */}
+                          <div className="border-t border-gray-600 pt-3 mt-3">
+                            <label className="flex items-start space-x-3 cursor-pointer hover:bg-gray-700 p-2 rounded transition-colors">
+                              <input
+                                type="checkbox"
+                                className="mt-1 h-4 w-4 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500 focus:ring-2"
+                                checked={selectedModalidades.some(m => m.startsWith('Outro:'))}
+                                onChange={() => handleOutroModalidadeChange(outroModalidade)}
+                              />
+                              <div className="flex-1">
+                                <span className="text-sm text-gray-200">Outro (especificar):</span>
+                                <input
+                                  type="text"
+                                  className="mt-1 w-full px-3 py-2 border border-gray-600 rounded text-sm bg-gray-700 text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                  placeholder="Digite a modalidade específica..."
+                                  value={outroModalidade}
+                                  onChange={(e) => handleOutroModalidadeChange(e.target.value)}
+                                />
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+
+
+
+                    {/* Número de Alunos */}
                     <div>
                       <label className="block text-sm font-medium text-gray-200 mb-2 text-base">Número de Alunos</label>
                       <input
@@ -742,6 +967,8 @@ const AdminPanel = () => {
                         onChange={e => setEditingLocation({ ...editingLocation, 'Numero de alunos': e.target.value })}
                       />
                     </div>
+
+                    {/* Turnos de Funcionamento */}
                     <div>
                       <label className="block text-sm font-medium text-gray-200 mb-2 text-base">Turnos de Funcionamento</label>
                       <input
@@ -752,6 +979,29 @@ const AdminPanel = () => {
                         placeholder="Ex: Diurno, Noturno, Vespertino, etc."
                       />
                     </div>
+
+                    {/* Botão para salvar modalidades */}
+                    <div className="md:col-span-2">
+                      <button
+                        type="button"
+                        onClick={saveModalidades}
+                        className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-400 transition-colors"
+                      >
+                        Salvar Modalidades Selecionadas
+                      </button>
+                    </div>
+
+                    {/* Preview do texto final */}
+                    {selectedModalidades.length > 0 && (
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-200 mb-2 text-base">
+                          Preview do Texto Final
+                        </label>
+                        <div className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-gray-200 text-sm min-h-[60px]">
+                          {selectedModalidades.join('; ') || 'Nenhuma modalidade selecionada'}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
