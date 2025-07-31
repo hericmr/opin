@@ -18,8 +18,8 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
     quantidade: dataPoints.length,
     exemplo: dataPoints[0] ? {
       titulo: dataPoints[0].titulo,
-      latitude: dataPoints[0].latitude,
-      longitude: dataPoints[0].longitude,
+      latitude: dataPoints[0].Latitude,
+      longitude: dataPoints[0].Longitude,
       tipo: dataPoints[0].tipo
     } : 'Nenhum ponto'
   } : 'Nenhum dataPoint');

@@ -10,8 +10,8 @@ const Localizacao = memo(({ escola }) => {
     <InfoSection title="Localização" icon={Compass}>
       <div className="flex justify-center py-2">
         <MapLink 
-          latitude={escola.latitude} 
-          longitude={escola.longitude}
+          latitude={escola.Latitude} 
+          longitude={escola.Longitude}
           label="Abrir localização no mapa"
         />
       </div>

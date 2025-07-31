@@ -77,8 +77,8 @@ export const formatters = {
   }),
 
   localizacao: (escola) => ({
-    "Latitude": escola.latitude,
-    "Longitude": escola.longitude
+    "Latitude": escola.Latitude,
+    "Longitude": escola.Longitude
   })
 };
 

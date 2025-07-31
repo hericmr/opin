@@ -104,8 +104,8 @@ const CoordenadasTab = ({ editingLocation, setEditingLocation }) => {
     map.on('click', handleMapClick);
 
     // Atualizar mapa com coordenadas iniciais
-    const lat = editingLocation['latitude'];
-    const lng = editingLocation['longitude'];
+    const lat = editingLocation['Latitude'];
+    const lng = editingLocation['Longitude'];
     if (lat && lng) {
       updateMap(lat, lng);
     }
@@ -119,10 +119,10 @@ const CoordenadasTab = ({ editingLocation, setEditingLocation }) => {
 
   // Atualizar mapa quando coordenadas mudam
   useEffect(() => {
-    const lat = editingLocation['latitude'];
-    const lng = editingLocation['longitude'];
+    const lat = editingLocation['Latitude'];
+    const lng = editingLocation['Longitude'];
     updateMap(lat, lng);
-  }, [editingLocation['latitude'], editingLocation['longitude']]);
+  }, [editingLocation['Latitude'], editingLocation['Longitude']]);
 
   return (
     <div className="space-y-6">
@@ -137,8 +137,8 @@ const CoordenadasTab = ({ editingLocation, setEditingLocation }) => {
             type="number"
             step="any"
             className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-gray-100 placeholder-gray-400 text-base"
-            value={editingLocation['latitude'] || ''}
-            onChange={e => setEditingLocation({ ...editingLocation, 'latitude': e.target.value })}
+            value={editingLocation['Latitude'] || ''}
+            onChange={e => setEditingLocation({ ...editingLocation, 'Latitude': e.target.value })}
             placeholder="Ex: -23.5489"
           />
           <p className="text-xs text-gray-400 mt-1">
@@ -155,8 +155,8 @@ const CoordenadasTab = ({ editingLocation, setEditingLocation }) => {
             type="number"
             step="any"
             className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-gray-100 placeholder-gray-400 text-base"
-            value={editingLocation['longitude'] || ''}
-            onChange={e => setEditingLocation({ ...editingLocation, 'longitude': e.target.value })}
+            value={editingLocation['Longitude'] || ''}
+            onChange={e => setEditingLocation({ ...editingLocation, 'Longitude': e.target.value })}
             placeholder="Ex: -46.6388"
           />
           <p className="text-xs text-gray-400 mt-1">
