@@ -5,7 +5,7 @@ const ESCOLA_IMAGE_CONFIG = {
   BUCKET_NAME: 'imagens-das-escolas',
   MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
   ALLOWED_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'],
-  MAX_IMAGES_PER_SCHOOL: 10,
+  MAX_IMAGES_PER_SCHOOL: Infinity, // Sem limite
   MIN_DIMENSIONS: { width: 200, height: 200 }
 };
 
@@ -14,7 +14,7 @@ const PROFESSOR_IMAGE_CONFIG = {
   BUCKET_NAME: 'imagens-professores', // Usando bucket existente
   MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
   ALLOWED_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'],
-  MAX_IMAGES_PER_SCHOOL: 5,
+  MAX_IMAGES_PER_SCHOOL: Infinity, // Sem limite
   MIN_DIMENSIONS: { width: 200, height: 200 }
 };
 
