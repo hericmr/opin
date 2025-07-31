@@ -108,12 +108,12 @@ const AddressDetails = ({ escola }) => {
 };
 
 const MapButton = ({ escola }) => {
-  const hasCoordinates = escola.latitude && escola.longitude;
+  const hasCoordinates = escola.Latitude && escola.Longitude;
   
   if (!hasCoordinates) return null;
 
   const openMap = () => {
-    window.open(`https://www.google.com/maps?q=${escola.latitude},${escola.longitude}`, '_blank');
+    window.open(`https://www.google.com/maps?q=${escola.Latitude},${escola.Longitude}`, '_blank');
   };
 
   return (
