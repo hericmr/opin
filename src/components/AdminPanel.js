@@ -495,63 +495,63 @@ const AdminPanel = () => {
     setOutroModalidade('');
     
     return {
-      Escola: '',
-      'Município': '',
-      'Endereço': '',
-      'Terra Indigena (TI)': '',
-      'Parcerias com o município': '',
-      'Diretoria de Ensino': '',
-      'Ano de criação da escola': '',
-      'Povos indigenas': '',
-      'Linguas faladas': '',
-      'Modalidade de Ensino/turnos de funcionamento': '',
-      'Numero de alunos': '',
-      'turnos_funcionamento': '',
-      'Espaço escolar e estrutura': '',
-      'Acesso à água': '',
-      'Tem coleta de lixo?': '',
-      'Acesso à internet': '',
-      'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': '',
-      'Modo de acesso à escola': '',
-      'Gestão/Nome': '',
-      'Outros funcionários': '',
-      'Quantidade de professores indígenas': '',
-      'Quantidade de professores não indígenas': '',
-      'Professores falam a língua indígena?': '',
-      'Formação dos professores': '',
-      'Formação continuada oferecida': '',
-      'A escola possui PPP próprio?': '',
-      'PPP elaborado com a comunidade?': '',
-      'Projetos em andamento': '',
-      'Parcerias com universidades?': '',
-      'Ações com ONGs ou coletivos?': '',
-      'Desejos da comunidade para a escola': '',
-      'Escola utiliza redes sociais?': '',
-      'Links das redes sociais': '',
-      'historia_da_escola': '',
-      'latitude': '',
-      'longitude': '',
-      'links': '',
-      'link_para_videos': '',
-      'logradouro': '',
-      'numero': '',
-      'complemento': '',
-      'bairro': '',
-      'cep': '',
-      'estado': 'SP',
-      'nome_professor': '',
-      'professores_indigenas': '',
-      'professores_nao_indigenas': '',
-      'professores_falam_lingua_indigena': '',
-      'formacao_professores': '',
-      'visitas_supervisores_formacao': '',
-      'outros_funcionarios': '',
-      'gestao': '',
-      'merenda_diferenciada': '',
-      cozinha: '',
-      merenda_escolar: '',
-      diferenciada: '',
-      activeTab: 'dados-basicos'
+    Escola: '',
+    'Município': '',
+    'Endereço': '',
+    'Terra Indigena (TI)': '',
+    'Parcerias com o município': '',
+    'Diretoria de Ensino': '',
+    'Ano de criação da escola': '',
+    'Povos indigenas': '',
+    'Linguas faladas': '',
+    'Modalidade de Ensino/turnos de funcionamento': '',
+    'Numero de alunos': '',
+    'turnos_funcionamento': '',
+    'Espaço escolar e estrutura': '',
+    'Acesso à água': '',
+    'Tem coleta de lixo?': '',
+    'Acesso à internet': '',
+    'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': '',
+    'Modo de acesso à escola': '',
+    'Gestão/Nome': '',
+    'Outros funcionários': '',
+    'Quantidade de professores indígenas': '',
+    'Quantidade de professores não indígenas': '',
+    'Professores falam a língua indígena?': '',
+    'Formação dos professores': '',
+    'Formação continuada oferecida': '',
+    'A escola possui PPP próprio?': '',
+    'PPP elaborado com a comunidade?': '',
+    'Projetos em andamento': '',
+    'Parcerias com universidades?': '',
+    'Ações com ONGs ou coletivos?': '',
+    'Desejos da comunidade para a escola': '',
+    'Escola utiliza redes sociais?': '',
+    'Links das redes sociais': '',
+    'historia_da_escola': '',
+    'latitude': '',
+    'longitude': '',
+    'links': '',
+    'link_para_videos': '',
+    'logradouro': '',
+    'numero': '',
+    'complemento': '',
+    'bairro': '',
+    'cep': '',
+    'estado': 'SP',
+    'nome_professor': '',
+    'professores_indigenas': '',
+    'professores_nao_indigenas': '',
+    'professores_falam_lingua_indigena': '',
+    'formacao_professores': '',
+    'visitas_supervisores_formacao': '',
+    'outros_funcionarios': '',
+    'gestao': '',
+    'merenda_diferenciada': '',
+    cozinha: '',
+    merenda_escolar: '',
+    diferenciada: '',
+    activeTab: 'dados-basicos'
     };
   };
 
@@ -851,7 +851,7 @@ const AdminPanel = () => {
                       <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 max-h-96 overflow-y-auto">
                         <div className="space-y-4">
                           {/* 1. Educação Infantil */}
-                          <div>
+                    <div>
                             <h4 className="text-sm font-semibold text-green-400 mb-2 border-b border-gray-600 pb-1">
                               1. Educação Infantil
                             </h4>
@@ -941,14 +941,14 @@ const AdminPanel = () => {
                               />
                               <div className="flex-1">
                                 <span className="text-sm text-gray-200">Outro (especificar):</span>
-                                <input
-                                  type="text"
+                      <input
+                        type="text"
                                   className="mt-1 w-full px-3 py-2 border border-gray-600 rounded text-sm bg-gray-700 text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500"
                                   placeholder="Digite a modalidade específica..."
                                   value={outroModalidade}
                                   onChange={(e) => handleOutroModalidadeChange(e.target.value)}
-                                />
-                              </div>
+                      />
+                    </div>
                             </label>
                           </div>
                         </div>
