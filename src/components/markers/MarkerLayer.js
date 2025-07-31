@@ -24,7 +24,7 @@ const MarkerLayer = ({ schools, onPainelOpen }) => {
     // Adicionar novos marcadores
     schools.forEach(school => {
       const feature = new Feature({
-        geometry: new Point([school.longitude, school.latitude]),
+        geometry: new Point([school.Longitude, school.Latitude]),
         schoolData: school
       });
 
