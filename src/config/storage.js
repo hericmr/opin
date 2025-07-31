@@ -9,7 +9,7 @@ export const FILE_RESTRICTIONS = {
   PDF: {
     MAX_SIZE: 10 * 1024 * 1024, // 10MB
     ALLOWED_TYPES: ['application/pdf'],
-    MAX_FILES: 5,
+    MAX_FILES: Infinity, // Sem limite
   },
   IMAGE: {
     MAX_SIZE: 5 * 1024 * 1024, // 5MB

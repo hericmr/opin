@@ -5,8 +5,7 @@ import {
   uploadProfessorImage, 
   getEscolaImages, 
   deleteImage, 
-  updateImageDescription,
-  checkImageLimit 
+  updateImageDescription
 } from '../../services/escolaImageService';
 import { 
   getLegendaByImageUrl, 
@@ -28,7 +27,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   const [success, setSuccess] = useState('');
   const [existingImages, setExistingImages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [imageLimit, setImageLimit] = useState({ current: 0, limit: 5, canUpload: true });
+
   const [editingImage, setEditingImage] = useState(null);
   const [editingDescription, setEditingDescription] = useState('');
   const [genero, setGenero] = useState('professor');
@@ -43,9 +42,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       const images = await getEscolaImages(escolaId, 'imagens-professores');
       setExistingImages(images);
       
-      // Verificar limite
-      const limit = await checkImageLimit(escolaId, 'imagens-professores');
-      setImageLimit(limit);
+
     } catch (err) {
       console.error('Erro ao buscar imagens dos professores:', err);
       setError('Erro ao carregar imagens dos professores');
@@ -109,19 +106,6 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     const files = Array.from(event.target.files);
     if (files.length === 0) return;
 
-    // Verificar se ainda pode fazer upload
-    if (!imageLimit.canUpload) {
-      setError(`Limite de ${imageLimit.limit} imagens dos professores atingido. Remova algumas imagens antes de adicionar novas.`);
-      return;
-    }
-
-    // Verificar se não excederá o limite
-    const totalImages = existingImages.length + selectedFiles.length + files.length;
-    if (totalImages > imageLimit.limit) {
-      setError(`Você pode adicionar no máximo ${imageLimit.limit - existingImages.length - selectedFiles.length} imagens dos professores.`);
-      return;
-    }
-
     // Validar arquivos
     const validFiles = files.filter(file => {
       const isValidType = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'].includes(file.type);
@@ -150,26 +134,13 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     
     if (files.length === 0) return;
 
-    // Verificar se ainda pode fazer upload
-    if (!imageLimit.canUpload) {
-      setError(`Limite de ${imageLimit.limit} imagens dos professores atingido. Remova algumas imagens antes de adicionar novas.`);
-      return;
-    }
-
-    // Verificar se não excederá o limite
-    const totalImages = existingImages.length + selectedFiles.length + files.length;
-    if (totalImages > imageLimit.limit) {
-      setError(`Você pode adicionar no máximo ${imageLimit.limit - existingImages.length - selectedFiles.length} imagens dos professores.`);
-      return;
-    }
-
     // Filtrar apenas imagens
     const imageFiles = files.filter(file => file.type.startsWith('image/'));
     if (imageFiles.length > 0) {
       setSelectedFiles(prev => [...prev, ...imageFiles]);
       setError('');
     }
-  }, [imageLimit, existingImages.length, selectedFiles.length]);
+  }, []);
 
   const handleDragOver = useCallback((event) => {
     event.preventDefault();
@@ -215,9 +186,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       setUploadProgress(0);
       setSuccess(`${uploadedImages.length} imagem(ns) do(s) professor(es) carregada(s) com sucesso!`);
 
-      // Atualizar limite
-      const newLimit = await checkImageLimit(escolaId, 'imagens-professores');
-      setImageLimit(newLimit);
+
 
       // Notificar componente pai
       if (onImagesUpdate) {
@@ -243,9 +212,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       // Atualizar lista
       setExistingImages(prev => prev.filter(img => img.id !== imageId));
       
-      // Atualizar limite
-      const newLimit = await checkImageLimit(escolaId, 'imagens-professores');
-      setImageLimit(newLimit);
+
 
       setSuccess('Imagem do professor excluída com sucesso!');
 
@@ -386,7 +353,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
           <h3 className="text-lg font-semibold text-gray-900">Imagens dos Professores</h3>
         </div>
         <div className="text-sm text-gray-500">
-          {imageLimit.current}/{imageLimit.limit} imagens
+          {existingImages.length} imagens
         </div>
       </div>
 
@@ -406,8 +373,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       )}
 
       {/* Área de Upload */}
-      {imageLimit.canUpload && (
-        <div className="space-y-4">
+      <div className="space-y-4">
           {/* Drag & Drop */}
           <div
             className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${

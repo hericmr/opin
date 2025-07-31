@@ -14,12 +14,6 @@ const PDFUploadSection = ({ onUploadComplete, onRemove, existingUrls = [] }) => 
     const files = Array.from(event.target.files);
     if (files.length === 0) return;
 
-    // Validate number of files
-    if (selectedFiles.length + files.length > FILE_RESTRICTIONS.PDF.MAX_FILES) {
-      setError(`Máximo de ${FILE_RESTRICTIONS.PDF.MAX_FILES} arquivos permitidos`);
-      return;
-    }
-
     // Validate each file
     const validFiles = files.filter(file => {
       const isValidType = FILE_RESTRICTIONS.PDF.ALLOWED_TYPES.includes(file.type);
@@ -71,7 +65,7 @@ const PDFUploadSection = ({ onUploadComplete, onRemove, existingUrls = [] }) => 
         <label className="block font-medium text-gray-800">
           Documentos PDF
           <span className="text-sm text-gray-500 ml-2">
-            (Máx. {FILE_RESTRICTIONS.PDF.MAX_FILES} arquivos, {FILE_RESTRICTIONS.PDF.MAX_SIZE / (1024 * 1024)}MB cada)
+            (Máx. {FILE_RESTRICTIONS.PDF.MAX_SIZE / (1024 * 1024)}MB cada arquivo)
           </span>
         </label>
         {error && (
@@ -91,7 +85,7 @@ const PDFUploadSection = ({ onUploadComplete, onRemove, existingUrls = [] }) => 
             multiple
             onChange={handleFileSelect}
             className="hidden"
-            disabled={isUploading || selectedFiles.length >= FILE_RESTRICTIONS.PDF.MAX_FILES}
+            disabled={isUploading}
           />
           <div className={`flex items-center justify-center gap-2 border-2 border-dashed rounded-lg p-4 
             ${isUploading ? 'border-gray-300 bg-gray-50' : 'border-blue-300 hover:border-blue-400 bg-blue-50'}`}>
