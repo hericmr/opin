@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, BookOpen, MapPin, Users, Home, Heart, Star, Filter, ArrowRight } from 'lucide-react';
+import { Search, BookOpen, MapPin, Users, Home, Heart, Star, Filter, ArrowRight, ChevronRight, Grid, List, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const CATEGORIAS_EDUCACAO_INDIGENA = {
@@ -73,6 +73,8 @@ const BibliotecaEducacionalIndigena = ({ locations }) => {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('todos');
   const [termoBusca, setTermoBusca] = useState('');
   const [filtroAtivo, setFiltroAtivo] = useState(false);
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' ou 'list'
+  const [showQuickNav, setShowQuickNav] = useState(false);
 
   // Agrupa os locais por categoria educacional indígena
   const locaisPorCategoria = useMemo(() => {
@@ -153,8 +155,49 @@ const BibliotecaEducacionalIndigena = ({ locations }) => {
     (!termoBusca || local.titulo?.toLowerCase().includes(termoBusca.toLowerCase()))
   );
 
+  // Breadcrumbs para navegação
+  const breadcrumbs = [
+    { label: 'Início', path: '/', active: false },
+    { label: 'Biblioteca Educacional', path: '/conteudo', active: true }
+  ];
+
+  if (categoriaSelecionada !== 'todos') {
+    breadcrumbs.push({
+      label: CATEGORIAS_EDUCACAO_INDIGENA[categoriaSelecionada]?.label || 'Categoria',
+      path: null,
+      active: true
+    });
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-amber-50 pt-16 sm:pt-20">
+      {/* Breadcrumbs de Navegação */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <nav className="flex items-center space-x-2 text-sm">
+            {breadcrumbs.map((crumb, index) => (
+              <div key={index} className="flex items-center">
+                {index > 0 && (
+                  <ChevronRight className="w-4 h-4 text-gray-400 mx-2" />
+                )}
+                {crumb.path ? (
+                  <button
+                    onClick={() => window.location.href = crumb.path}
+                    className="text-gray-600 hover:text-green-700 transition-colors"
+                  >
+                    {crumb.label}
+                  </button>
+                ) : (
+                  <span className={`font-medium ${crumb.active ? 'text-green-700' : 'text-gray-900'}`}>
+                    {crumb.label}
+                  </span>
+                )}
+              </div>
+            ))}
+          </nav>
+        </div>
+      </div>
+
       {/* Cabeçalho com design indígena */}
       <div className="bg-gradient-to-r from-green-800 to-green-700 text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -194,6 +237,121 @@ const BibliotecaEducacionalIndigena = ({ locations }) => {
           </div>
         </div>
       </div>
+
+      {/* Navegação por Abas */}
+      <div className="bg-white shadow-sm border-b sticky top-16 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-center justify-between gap-4 py-4">
+            {/* Abas de Categorias */}
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setCategoriaSelecionada('todos')}
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  categoriaSelecionada === 'todos'
+                    ? 'bg-green-600 text-white shadow-md'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                Todas as Categorias
+              </button>
+              {Object.entries(CATEGORIAS_EDUCACAO_INDIGENA).map(([key, value]) => (
+                <button
+                  key={key}
+                  onClick={() => setCategoriaSelecionada(key)}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                    categoriaSelecionada === key
+                      ? 'bg-green-600 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {value.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Controles de Visualização */}
+            <div className="flex items-center gap-3">
+              {/* Botão de Navegação Rápida */}
+              <button
+                onClick={() => setShowQuickNav(!showQuickNav)}
+                className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                title="Navegação Rápida"
+              >
+                <Grid className="w-5 h-5 text-gray-600" />
+              </button>
+
+              {/* Alternar Modo de Visualização */}
+              <div className="flex bg-gray-100 rounded-lg p-1">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`p-2 rounded-md transition-all duration-200 ${
+                    viewMode === 'grid' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-600'
+                  }`}
+                  title="Visualização em Grid"
+                >
+                  <Grid className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-2 rounded-md transition-all duration-200 ${
+                    viewMode === 'list' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-600'
+                  }`}
+                  title="Visualização em Lista"
+                >
+                  <List className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Navegação Rápida */}
+      <AnimatePresence>
+        {showQuickNav && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-white shadow-md border-b"
+          >
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Navegação Rápida</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {Object.entries(CATEGORIAS_EDUCACAO_INDIGENA).map(([key, value]) => {
+                  const locais = locaisPorCategoria[key] || [];
+                  const IconComponent = value.icone;
+                  
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => {
+                        setCategoriaSelecionada(key);
+                        setShowQuickNav(false);
+                      }}
+                      className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors text-left"
+                    >
+                      {IconComponent === 'onca' ? (
+                        <img 
+                          src={`${process.env.PUBLIC_URL}/onca.svg`} 
+                          alt="Ícone de onça" 
+                          className="w-6 h-6" 
+                        />
+                      ) : (
+                        <IconComponent className={`w-6 h-6 text-${value.cor}`} />
+                      )}
+                      <div>
+                        <div className="font-medium text-gray-900">{value.label}</div>
+                        <div className="text-sm text-gray-500">{locais.length} itens</div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Barra de busca e filtros */}
       <div className="bg-white shadow-sm border-b">
@@ -285,52 +443,67 @@ const BibliotecaEducacionalIndigena = ({ locations }) => {
                         </h2>
                         <p className="text-gray-600 mt-1">{info.descricao}</p>
                       </div>
-                      <span className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full">
-                        {locaisFiltrados.length} item{locaisFiltrados.length !== 1 ? 's' : ''}
-                      </span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full">
+                          {locaisFiltrados.length} item{locaisFiltrados.length !== 1 ? 's' : ''}
+                        </span>
+                        <button
+                          onClick={() => setCategoriaSelecionada(categoria)}
+                          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                        >
+                          Ver Todos
+                        </button>
+                      </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {locaisFiltrados.slice(0, 6).map((local) => (
+                    <div className={`grid gap-6 ${
+                      viewMode === 'grid' 
+                        ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' 
+                        : 'grid-cols-1'
+                    }`}>
+                      {locaisFiltrados.slice(0, viewMode === 'grid' ? 6 : 3).map((local) => (
                         <motion.div
                           key={local.id}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => abrirLocal(local)}
-                          className="bg-white rounded-lg shadow-md p-5 cursor-pointer 
-                                   hover:shadow-lg transition-all duration-200 border border-gray-100"
+                          className={`bg-white rounded-lg shadow-md p-5 cursor-pointer 
+                                   hover:shadow-lg transition-all duration-200 border border-gray-100
+                                   ${viewMode === 'list' ? 'flex items-center gap-4' : ''}`}
                         >
                           {local.imagens && local.imagens.length > 0 && (
-                            <div className="mb-4">
+                            <div className={`${viewMode === 'list' ? 'w-24 h-24 flex-shrink-0' : 'mb-4'}`}>
                               <img
                                 src={local.imagens[0]}
                                 alt={local.titulo}
-                                className="w-full h-40 object-cover rounded-lg shadow-sm"
+                                className={`${viewMode === 'list' ? 'w-24 h-24' : 'w-full h-40'} object-cover rounded-lg shadow-sm`}
                                 loading="lazy"
                               />
                             </div>
                           )}
-                          <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
-                            {local.titulo}
-                          </h3>
-                          <p className="text-gray-600 text-sm line-clamp-3 mb-3">
-                            {local.descricao_detalhada?.replace(/<[^>]*>/g, '').substring(0, 150)}...
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-500">
-                              {local.municipio}
-                            </span>
-                            <ArrowRight className="w-5 h-5 text-green-600" />
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
+                              {local.titulo}
+                            </h3>
+                            <p className="text-gray-600 text-sm line-clamp-3 mb-3">
+                              {local.descricao_detalhada?.replace(/<[^>]*>/g, '').substring(0, viewMode === 'list' ? 200 : 150)}...
+                            </p>
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-gray-500">
+                                {local.municipio}
+                              </span>
+                              <ArrowRight className="w-5 h-5 text-green-600" />
+                            </div>
                           </div>
                         </motion.div>
                       ))}
                     </div>
                     
-                    {locaisFiltrados.length > 6 && (
+                    {locaisFiltrados.length > (viewMode === 'grid' ? 6 : 3) && (
                       <div className="mt-6 text-center">
                         <button
                           onClick={() => setCategoriaSelecionada(categoria)}
-                          className="text-green-700 hover:text-green-800 font-medium"
+                          className="text-green-700 hover:text-green-800 font-medium px-6 py-2 border border-green-700 rounded-lg hover:bg-green-50 transition-colors"
                         >
                           Ver todos os {locaisFiltrados.length} itens →
                         </button>
@@ -352,9 +525,10 @@ const BibliotecaEducacionalIndigena = ({ locations }) => {
                 <div>
                   <button
                     onClick={() => setCategoriaSelecionada('todos')}
-                    className="text-green-700 hover:text-green-800 font-medium mb-2"
+                    className="flex items-center gap-2 text-green-700 hover:text-green-800 font-medium mb-2 px-4 py-2 rounded-lg hover:bg-green-50 transition-colors"
                   >
-                    ← Voltar para todas as categorias
+                    <ArrowLeft className="w-4 h-4" />
+                    Voltar para todas as categorias
                   </button>
                   <h2 className="text-3xl font-bold text-gray-900">
                     {CATEGORIAS_EDUCACAO_INDIGENA[categoriaSelecionada]?.label}
@@ -365,37 +539,44 @@ const BibliotecaEducacionalIndigena = ({ locations }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className={`grid gap-6 ${
+                viewMode === 'grid' 
+                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
+                  : 'grid-cols-1'
+              }`}>
                 {locaisFiltrados.map((local) => (
                   <motion.div
                     key={local.id}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => abrirLocal(local)}
-                    className="bg-white rounded-lg shadow-md p-5 cursor-pointer 
-                             hover:shadow-lg transition-all duration-200 border border-gray-100"
+                    className={`bg-white rounded-lg shadow-md p-5 cursor-pointer 
+                             hover:shadow-lg transition-all duration-200 border border-gray-100
+                             ${viewMode === 'list' ? 'flex items-center gap-4' : ''}`}
                   >
                     {local.imagens && local.imagens.length > 0 && (
-                      <div className="mb-4">
+                      <div className={`${viewMode === 'list' ? 'w-24 h-24 flex-shrink-0' : 'mb-4'}`}>
                         <img
                           src={local.imagens[0]}
                           alt={local.titulo}
-                          className="w-full h-48 object-cover rounded-lg shadow-sm"
+                          className={`${viewMode === 'list' ? 'w-24 h-24' : 'w-full h-48'} object-cover rounded-lg shadow-sm`}
                           loading="lazy"
                         />
                       </div>
                     )}
-                    <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
-                      {local.titulo}
-                    </h3>
-                    <p className="text-gray-600 text-sm line-clamp-3 mb-3">
-                      {local.descricao_detalhada?.replace(/<[^>]*>/g, '').substring(0, 120)}...
-                    </p>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">
-                        {local.municipio}
-                      </span>
-                      <ArrowRight className="w-5 h-5 text-green-600" />
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
+                        {local.titulo}
+                      </h3>
+                      <p className="text-gray-600 text-sm line-clamp-3 mb-3">
+                        {local.descricao_detalhada?.replace(/<[^>]*>/g, '').substring(0, viewMode === 'list' ? 200 : 120)}...
+                      </p>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-500">
+                          {local.municipio}
+                        </span>
+                        <ArrowRight className="w-5 h-5 text-green-600" />
+                      </div>
                     </div>
                   </motion.div>
                 ))}
