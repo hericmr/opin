@@ -3,7 +3,8 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import { fromLonLat } from 'ol/proj';
 import { defaults as defaultControls } from 'ol/control';
-import { defaults as defaultInteractions } from 'ol/interaction';
+// Remover import das interações padrão para evitar conflitos
+// import { defaults as defaultInteractions } from 'ol/interaction';
 
 /**
  * Hook para inicializar o mapa OpenLayers
@@ -36,10 +37,9 @@ export const useMapInitialization = ({
         enableRotation: false // Desabilitar rotação
       }),
       controls: defaultControls(),
-      interactions: defaultInteractions({
-        dragRotate: false, // Desabilitar rotação com arraste
-        pinchRotate: false // Desabilitar rotação com pinch (dois dedos)
-      })
+      // IMPORTANTE: Não usar interações padrão para evitar conflitos
+      // com nosso sistema de interações customizado
+      interactions: [] // Array vazio - sem interações padrão
     });
 
     // Cleanup
