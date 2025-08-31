@@ -133,7 +133,7 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
               />
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-black m-0">
-              História dos Professores
+              Depoimento dos Professores
             </h2>
           </div>
           {hasMultipleHistorias && (
