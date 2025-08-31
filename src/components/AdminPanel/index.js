@@ -17,6 +17,7 @@ import VideoTab from './tabs/VideoTab';
 import HistoriasTab from './tabs/HistoriasTab';
 import HistoriaProfessoresTab from './tabs/HistoriaProfessoresTab';
 import CoordenadasTab from './tabs/CoordenadasTab';
+import TabelasIntegraisTab from './tabs/TabelasIntegraisTab';
 
 // Imports condicionais para evitar problemas de hot reload
 let ImagensEscolaTab = null;
@@ -342,6 +343,9 @@ const AdminPanel = () => {
             setEditingLocation={setEditingLocation}
           />
         );
+      
+      case 'tabelas-integrais':
+        return <TabelasIntegraisTab />;
       
       case 'imagens-escola':
         if (!ImagensEscolaTab) {
