@@ -136,45 +136,16 @@ export const useMapLayers = (map, terrasIndigenasData, estadoSPData, showTerrasI
   useEffect(() => {
     if (!map) return;
 
-    const handleClick = (event) => {
-      console.log('useMapLayers: Evento de clique detectado:', event.type, 'pixel:', event.pixel);
-      
-      // Tentar detectar features em diferentes camadas
-      let feature = null;
-      let layer = null;
-      
-      map.forEachFeatureAtPixel(event.pixel, (f, l) => {
-        if (f && !feature) {
-          feature = f;
-          layer = l;
-          console.log('useMapLayers: Feature encontrada na camada:', l.get('name') || 'sem nome');
-        }
-      });
-      
-      if (feature) {
-        const terraIndigenaInfo = feature.get('terraIndigenaInfo');
-        if (terraIndigenaInfo && onPainelOpen) {
-          console.log('useMapLayers: Terra indígena clicada:', terraIndigenaInfo.titulo);
-          onPainelOpen(terraIndigenaInfo);
-        } else {
-          console.log('useMapLayers: Feature encontrada mas sem terraIndigenaInfo ou onPainelOpen');
-        }
-      } else {
-        console.log('useMapLayers: Nenhuma feature encontrada no pixel clicado');
-      }
-    };
-
-    // Adicionar listeners para clique e toque
-    map.on('click', handleClick);
-    map.on('singleclick', handleClick); // OpenLayers specific
+    // IMPORTANTE: Não adicionar event listeners de clique aqui
+    // O sistema de interações do OpenLayers já gerencia os cliques
+    // Adicionar event listeners aqui causa conflitos com o sistema de clique duplo no mobile
+    
+    console.log('useMapLayers: Event listeners de clique não adicionados para evitar conflitos');
 
     return () => {
-      if (map) {
-        map.un('click', handleClick);
-        map.un('singleclick', handleClick);
-      }
+      // Cleanup não necessário
     };
-  }, [map, onPainelOpen]);
+  }, [map]);
 
   return {
     terrasIndigenasLayer: terrasIndigenasLayerRef.current,
