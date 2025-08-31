@@ -9,14 +9,15 @@ import {
   WhatsappIcon,
   LinkedinIcon,
 } from "react-share";
+import { Share2, Link, Check, MessageCircle, Facebook, Twitter, Linkedin } from "lucide-react";
 
-// Componente Tooltip simples
+// Componente Tooltip melhorado
 const Tooltip = ({ children, text, position = "top" }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const positionClasses = {
-    top: "bottom-full left-1/2 transform -translate-x-1/2 mb-2",
-    bottom: "top-full left-1/2 transform -translate-x-1/2 mt-2",
+    top: "bottom-full left-1/2 transform -translate-x-1/2 mb-3",
+    bottom: "top-full left-1/2 transform -translate-x-1/2 mt-3",
   };
 
   return (
@@ -30,8 +31,9 @@ const Tooltip = ({ children, text, position = "top" }) => {
       {children}
       {isVisible && (
         <div className={`
-          absolute z-50 px-2 py-1 text-xs text-white bg-gray-900 rounded shadow-lg whitespace-nowrap
+          absolute z-50 px-3 py-2 text-sm text-white bg-gray-900 rounded-lg shadow-xl whitespace-nowrap
           ${positionClasses[position]}
+          animate-in fade-in-0 zoom-in-95 duration-200
         `}>
           {text}
           <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
@@ -43,12 +45,13 @@ const Tooltip = ({ children, text, position = "top" }) => {
 
 const ShareButton = ({ onClick, url, title, description = "" }) => {
   const [copied, setCopied] = useState(false);
+  const [showShareOptions, setShowShareOptions] = useState(false);
 
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), 3000);
     } catch (err) {
       // Fallback para navegadores mais antigos
       const input = document.createElement("input");
@@ -58,7 +61,7 @@ const ShareButton = ({ onClick, url, title, description = "" }) => {
       document.execCommand("copy");
       document.body.removeChild(input);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), 3000);
     }
   };
 
@@ -79,140 +82,116 @@ const ShareButton = ({ onClick, url, title, description = "" }) => {
   const shareText = shareTextOptions[randomIndex];
   const shareUrl = url || window.location.href;
 
+  const shareButtons = [
+    {
+      name: "WhatsApp",
+      icon: <MessageCircle className="w-5 h-5" />,
+      color: "bg-green-500 hover:bg-green-600",
+      component: WhatsappShareButton,
+      props: { url: shareUrl, title: shareText }
+    },
+    {
+      name: "Facebook",
+      icon: <Facebook className="w-5 h-5" />,
+      color: "bg-blue-600 hover:bg-blue-700",
+      component: FacebookShareButton,
+      props: { url: shareUrl, quote: shareText }
+    },
+    {
+      name: "Twitter",
+      icon: <Twitter className="w-5 h-5" />,
+      color: "bg-sky-500 hover:bg-sky-600",
+      component: TwitterShareButton,
+      props: { url: shareUrl, title: shareText }
+    },
+    {
+      name: "LinkedIn",
+      icon: <Linkedin className="w-5 h-5" />,
+      color: "bg-blue-700 hover:bg-blue-800",
+      component: LinkedinShareButton,
+      props: { url: shareUrl, title: title, summary: description }
+    }
+  ];
+
   return (
-    <div className="px-2 pb-2 border-t border-green-200 bg-white">
-      <div className="mt-2 space-y-1">
-        {/* Botão Copiar Link */}
-        <Tooltip text={copied ? "Link copiado!" : "Copiar link para clipboard"}>
-          <button
-            onClick={handleCopyLink}
-            className={`
-              w-full flex items-start gap-2 p-1.5 rounded-md transition-colors
-              focus:outline-none focus:ring-1 focus:ring-green-500
-              ${copied
-                ? 'bg-green-100'
-                : 'bg-green-100 hover:bg-green-200'
-              }
-            `}
-            aria-label="Copiar link para clipboard"
-          >
-            <svg 
-              className="w-5 h-5 text-gray-600 mt-0.5 flex-shrink-0" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
+    <div className="px-4 py-6 border-t border-green-200 bg-gradient-to-b from-white to-green-50">
+      <div className="max-w-md mx-auto">
+        {/* Título da seção */}
+        <div className="text-center mb-4">
+          <h3 className="text-lg font-semibold text-green-800 mb-2">
+            Compartilhe esta escola
+          </h3>
+        </div>
+
+        {/* Botão Copiar Link - Destaque */}
+        <div className="mb-4">
+          <Tooltip text={copied ? "Link copiado com sucesso!" : "Copiar link para clipboard"}>
+            <button
+              onClick={handleCopyLink}
+              className={`
+                w-full flex items-center justify-center gap-3 p-4 rounded-xl transition-all duration-300
+                focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2
+                transform hover:scale-105 active:scale-95
+                ${copied
+                  ? 'bg-green-100 border-2 border-green-300 text-green-800'
+                  : 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg hover:shadow-xl'
+                }
+              `}
+              aria-label="Copiar link para clipboard"
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" 
-              />
-            </svg>
-            <div className="flex-1">
-              <div className="text-xs font-medium text-gray-700">
-                {copied ? 'Link Copiado' : 'Copiar Link'}
-              </div>
-            </div>
-          </button>
-        </Tooltip>
+              {copied ? (
+                <Check className="w-6 h-6" />
+              ) : (
+                <Link className="w-6 h-6" />
+              )}
+              <span className="font-semibold">
+                {copied ? 'Link Copiado!' : 'Copiar Link'}
+              </span>
+            </button>
+          </Tooltip>
+        </div>
 
-        {/* Botão WhatsApp */}
-        <Tooltip text="Compartilhar no WhatsApp">
-          <WhatsappShareButton
-            url={shareUrl}
-            title={shareText}
-            className="w-full transition-colors focus:outline-none focus:ring-1 focus:ring-green-500 rounded-md"
-            aria-label="Compartilhar no WhatsApp"
-          >
-            <div className="flex items-start gap-2 p-1.5 bg-green-100 hover:bg-green-200 rounded-md">
-              <WhatsappIcon size={20} round={false} className="mt-0.5 flex-shrink-0" />
-              <div className="flex-1">
-                <div className="text-xs font-medium text-gray-700">WhatsApp</div>
-              </div>
-            </div>
-          </WhatsappShareButton>
-        </Tooltip>
-
-        {/* Botão Facebook */}
-        <Tooltip text="Compartilhar no Facebook">
-          <FacebookShareButton
-            url={shareUrl}
-            quote={shareText}
-            className="w-full transition-colors focus:outline-none focus:ring-1 focus:ring-green-500 rounded-md"
-            aria-label="Compartilhar no Facebook"
-          >
-            <div className="flex items-start gap-2 p-1.5 bg-green-100 hover:bg-green-200 rounded-md">
-              <FacebookIcon size={20} round={false} className="mt-0.5 flex-shrink-0" />
-              <div className="flex-1">
-                <div className="text-xs font-medium text-gray-700">Facebook</div>
-              </div>
-            </div>
-          </FacebookShareButton>
-        </Tooltip>
-
-        {/* Botão Twitter */}
-        <Tooltip text="Compartilhar no Twitter">
-          <TwitterShareButton
-            url={shareUrl}
-            title={shareText}
-            className="w-full transition-colors focus:outline-none focus:ring-1 focus:ring-green-500 rounded-md"
-            aria-label="Compartilhar no Twitter"
-          >
-            <div className="flex items-start gap-2 p-1.5 bg-green-100 hover:bg-green-200 rounded-md">
-              <TwitterIcon size={20} round={false} className="mt-0.5 flex-shrink-0" />
-              <div className="flex-1">
-                <div className="text-xs font-medium text-gray-700">Twitter</div>
-              </div>
-            </div>
-          </TwitterShareButton>
-        </Tooltip>
-
-        {/* Botão LinkedIn */}
-        <Tooltip text="Compartilhar no LinkedIn">
-          <LinkedinShareButton
-            url={shareUrl}
-            title={title}
-            summary={description}
-            className="w-full transition-colors focus:outline-none focus:ring-1 focus:ring-green-500 rounded-md"
-            aria-label="Compartilhar no LinkedIn"
-          >
-            <div className="flex items-start gap-2 p-1.5 bg-green-100 hover:bg-green-200 rounded-md">
-              <LinkedinIcon size={20} round={false} className="mt-0.5 flex-shrink-0" />
-              <div className="flex-1">
-                <div className="text-xs font-medium text-gray-700">LinkedIn</div>
-              </div>
-            </div>
-          </LinkedinShareButton>
-        </Tooltip>
+        {/* Botões de Redes Sociais */}
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          {shareButtons.map((button, index) => {
+            const ShareComponent = button.component;
+            return (
+              <Tooltip key={index} text={`Compartilhar no ${button.name}`}>
+                <ShareComponent
+                  {...button.props}
+                  className="w-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transform hover:scale-105 active:scale-95"
+                  aria-label={`Compartilhar no ${button.name}`}
+                >
+                  <div className={`
+                    w-full flex items-center justify-center gap-2 p-3 rounded-lg text-white font-medium
+                    ${button.color} shadow-md hover:shadow-lg
+                  `}>
+                    {button.icon}
+                    <span className="text-sm">{button.name}</span>
+                  </div>
+                </ShareComponent>
+              </Tooltip>
+            );
+          })}
+        </div>
 
         {/* Botão Compartilhar Nativo (fallback) */}
         {navigator.share && (
-          <Tooltip text="Compartilhar usando opções do sistema">
-            <button
-              onClick={onClick}
-              className="w-full flex items-start gap-2 p-1.5 bg-green-100 hover:bg-green-200 rounded-md transition-colors focus:outline-none focus:ring-1 focus:ring-green-500"
-              aria-label="Compartilhar usando opções do sistema"
-            >
-              <svg 
-                className="w-5 h-5 text-gray-600 mt-0.5 flex-shrink-0" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
+          <div className="text-center">
+            <Tooltip text="Compartilhar usando opções do sistema">
+              <button
+                onClick={onClick}
+                className="w-full flex items-center justify-center gap-2 p-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transform hover:scale-105 active:scale-95"
+                aria-label="Compartilhar usando opções do sistema"
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" 
-                />
-              </svg>
-              <div className="flex-1">
-                <div className="text-xs font-medium text-gray-700">Compartilhar</div>
-              </div>
-            </button>
-          </Tooltip>
+                <Share2 className="w-5 h-5" />
+                <span className="font-medium">Mais opções</span>
+              </button>
+            </Tooltip>
+          </div>
         )}
+
+
       </div>
     </div>
   );

@@ -92,10 +92,11 @@ const OpenLayersMarkers = ({
    * Handler para clique em marcador
    */
   const handleMarkerClick = useCallback((feature, event) => {
-    const markerData = feature.get('markerData');
-    if (markerData && onPainelOpen) {
-      console.log('[OpenLayersMarkers] Marcador clicado:', markerData.titulo);
-      onPainelOpen(markerData);
+    // Usar schoolData em vez de markerData para consistência com o sistema de interações
+    const schoolData = feature.get('schoolData');
+    if (schoolData && onPainelOpen) {
+      console.log('[OpenLayersMarkers] Marcador clicado:', schoolData.titulo);
+      onPainelOpen(schoolData);
     }
   }, [onPainelOpen]);
 
@@ -103,7 +104,9 @@ const OpenLayersMarkers = ({
    * Handler para hover em marcador
    */
   const handleMarkerHover = useCallback((feature, event) => {
-    if (isMobileDevice) return; // Desabilitar hover em mobile
+    // IMPORTANTE: Não desabilitar hover em mobile
+    // O sistema de interações precisa do hover para funcionar corretamente
+    // O hover é usado para mostrar tooltips e aplicar estilos visuais
     
     setHoveredMarker(feature);
     
@@ -117,7 +120,7 @@ const OpenLayersMarkers = ({
       });
       vectorLayerRef.current.changed();
     }
-  }, [isMobileDevice, showNomesEscolas]);
+  }, [showNomesEscolas]);
 
   /**
    * Handler para saída do hover
