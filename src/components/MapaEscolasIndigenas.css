@@ -1,403 +1,249 @@
-/* MapaSantos.css */
-
-/* Estilo para o painel de informações */
-.painel-info {
-    z-index: 30; /* Maior que o mapa */
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
-    width: 33%;
-    background: rgb(178, 238, 170);
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
-    overflow-y: auto;
-  }
-  
-  /* Contêiner principal */
-  .relative {
-    z-index: 0;
-  }
-  
-  /* Contêiner do mapa */
-  .leaflet-container {
-    z-index: 1;
-  }
-  
-  /* Fundo sólido para o mapa */
-  .map-container {
-    background: white;
-  }
-/* WebKit (Chrome, Safari) */
-::-webkit-scrollbar {
-  width: 8px; /* Largura da barra de rolagem */
-}
-
-::-webkit-scrollbar-track {
-  background: #e0f2f1; /* Cor do fundo da barra */
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #2e7d32; /* Cor do controle da barra */
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #1b5e20; /* Cor ao passar o mouse */
-}
-
-/* Customização dos botões de zoom */
-.leaflet-control-zoom {
-  border: none !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
-  border-radius: 999px !important; /* Faz o container ficar redondo */
+/* Estilos para o mapa OpenLayers */
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  /* Reposicionamento dos botões */
-  position: fixed !important;
-  top: 11% !important;
-  left: 1px !important;
-  transform: translateY(-50%) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 4px !important;
-  padding: 4px !important;
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(4px) !important;
 }
 
-.leaflet-control-zoom-in,
-.leaflet-control-zoom-out {
-  background-color: rgba(46, 125, 50, 0.9) !important; /* Verde semi-transparente */
-  color: white !important;
-  width: 40px !important;
-  height: 40px !important;
-  line-height: 40px !important;
-  font-size: 20px !important;
-  font-weight: bold !important;
-  border: none !important;
-  transition: all 0.2s ease !important;
-  border-radius: 999px !important; /* Faz os botões ficarem redondos */
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.leaflet-control-zoom-in:hover,
-.leaflet-control-zoom-out:hover {
-  background-color: rgba(27, 94, 32, 0.9) !important; /* Verde mais escuro no hover */
-  color: white !important;
-  transform: scale(1.05) !important; /* Pequena animação de escala no hover */
-}
-
-.leaflet-control-zoom-in {
-  border-bottom: none !important; /* Remove a borda entre os botões */
-}
-
-/* Estilos para o mapa Leaflet dos marcadores (sobreposto ao OpenLayers) */
-.markers-only-map {
-  background: transparent !important;
-  pointer-events: none !important;
-  touch-action: manipulation !important;
-}
-
-.markers-only-map .leaflet-pane {
-  background: transparent !important;
-  pointer-events: none !important;
-  touch-action: manipulation !important;
-}
-
-.markers-only-map .leaflet-control-container {
-  display: none !important;
-}
-
-.markers-only-map .leaflet-attribution-flag {
-  display: none !important;
-}
-
-/* Permitir apenas interações com marcadores */
-.markers-only-map .leaflet-marker-icon {
-  z-index: 9999 !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-tap-highlight-color: transparent !important;
-}
-
-.markers-only-map .leaflet-marker-shadow {
-  z-index: 9998 !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-}
-
-.markers-only-map .leaflet-tooltip {
-  z-index: 10000 !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-}
-
-.markers-only-map .leaflet-popup {
-  z-index: 10001 !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-}
-
-/* Garantir que o canvas do Leaflet não bloqueie interações */
-.markers-only-map .leaflet-pane canvas {
-  pointer-events: none !important;
-}
-
-/* Permitir interações apenas com clusters */
-.markers-only-map .marker-cluster {
-  pointer-events: auto !important;
-  z-index: 9999 !important;
-  touch-action: manipulation !important;
-  -webkit-tap-highlight-color: transparent !important;
-}
-
-/* Estilos para os clusters de marcadores com estética indígena */
-.marker-cluster {
-  background: transparent !important;
-  border: none !important;
-}
-
-.marker-cluster div {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-}
-
-.marker-cluster div:hover {
-  transform: scale(1.08) !important;
-  cursor: pointer !important;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2) !important;
-}
-
-/* Estilo para o efeito de aranha quando expandido */
-.marker-cluster-spider {
-  background-color: rgba(160, 82, 45, 0.15) !important; /* Terra com baixa opacidade */
-}
-
-.marker-cluster-spider-leg {
-  background-color: rgba(92, 64, 51, 0.3) !important; /* Contorno com baixa opacidade */
-}
-
-/* Estilos para diferentes tamanhos de clusters */
-.marker-cluster-small {
-  opacity: 0.9 !important;
-}
-
-.marker-cluster-medium {
-  opacity: 0.95 !important;
-}
-
-.marker-cluster-large {
-  opacity: 1 !important;
-}
-
-/* Estilos para os tooltips dos marcadores */
-.leaflet-tooltip {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-}
-
-.leaflet-tooltip-pane {
-  z-index: 1000 !important;
-}
-
-.custom-tooltip {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-}
-
-.custom-tooltip .leaflet-tooltip-content-wrapper {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-}
-
-.custom-tooltip .leaflet-tooltip-content {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Estilo do triângulo do tooltip */
-.leaflet-tooltip-top:before {
-  border-top-color: rgba(255, 255, 255, 0.95) !important;
-}
-
-.leaflet-tooltip-bottom:before {
-  border-bottom-color: rgba(255, 255, 255, 0.95) !important;
-}
-
-.leaflet-tooltip-left:before {
-  border-left-color: rgba(255, 255, 255, 0.95) !important;
-}
-
-.leaflet-tooltip-right:before {
-  border-right-color: rgba(255, 255, 255, 0.95) !important;
-}
-
-/* Estilos para tooltips do OpenLayers */
-.ol-tooltip {
+/* Estilos para controles de zoom personalizados */
+.custom-zoom-controls {
   position: absolute;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 8px 12px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  font-size: 13px;
-  font-weight: 500;
-  max-width: 250px;
+  top: 20px;
+  right: 20px;
   z-index: 1000;
-  pointer-events: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  backdrop-filter: blur(4px);
-  color: #374151;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.ol-tooltip::after {
+.zoom-button {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  color: #374151;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-button:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.zoom-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Estilos para controles de camadas */
+.layer-controls {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+}
+
+.layer-controls h3 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.layer-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.layer-option:hover {
+  background-color: #f3f4f6;
+}
+
+.layer-option input[type="checkbox"] {
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
+  accent-color: #3b82f6;
+}
+
+.layer-option label {
+  font-size: 13px;
+  color: #4b5563;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Estilos para tooltips personalizados */
+.custom-tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  pointer-events: none;
+  z-index: 1000;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.custom-tooltip::before {
   content: '';
   position: absolute;
   top: 100%;
   left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: rgba(255, 255, 255, 0.95) transparent transparent transparent;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.8);
 }
 
-/* Tooltip para escolas (azul) */
-.ol-tooltip[data-type="school"] {
-  background: rgba(59, 130, 246, 0.95) !important;
-  color: white !important;
-  border: 1px solid rgba(37, 99, 235, 0.8) !important;
+/* Estilos para marcadores especiais */
+.marker-nearby-pair {
+  animation: pulse 2s infinite;
 }
 
-.ol-tooltip[data-type="school"]::after {
-  border-color: rgba(59, 130, 246, 0.95) transparent transparent transparent !important;
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
-/* Tooltip para terras indígenas (vermelho) */
-.ol-tooltip[data-type="terra_indigena"] {
-  background: rgba(220, 20, 60, 0.95) !important;
-  color: white !important;
-  border: 1px solid rgba(185, 28, 28, 0.8) !important;
+.marker-selected {
+  animation: selection-glow 1.5s ease-in-out infinite alternate;
 }
 
-.ol-tooltip[data-type="terra_indigena"]::after {
-  border-color: rgba(220, 20, 60, 0.95) transparent transparent transparent !important;
+@keyframes selection-glow {
+  0% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+  }
 }
 
-/* Estilos para clusters do OpenLayers */
-.ol-cluster {
-  transition: all 0.3s ease;
+/* Estilos para clusters */
+.cluster-marker {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.ol-cluster:hover {
+.cluster-marker:hover {
   transform: scale(1.1);
-  filter: brightness(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Estilos para marcadores individuais */
-.ol-marker {
-  transition: all 0.2s ease;
-}
-
-.ol-marker:hover {
-  transform: scale(1.05);
-  filter: brightness(1.1);
-}
-
-/* Estilos para garantir visibilidade das camadas GeoJSON do OpenLayers */
-.ol-layer {
-  z-index: auto !important;
-}
-
-.ol-layer canvas {
-  z-index: auto !important;
-  pointer-events: auto !important;
-}
-
-/* Garantir que as camadas vetoriais sejam visíveis */
-.ol-layer.ol-layer-vector {
-  z-index: 10 !important;
-}
-
-/* Estilos específicos para camadas GeoJSON */
-.ol-layer[data-layer-type="terras-indigenas"] {
-  z-index: 10 !important;
-}
-
-.ol-layer[data-layer-type="estado-sp"] {
-  z-index: 5 !important;
-}
-
-/* Garantir que o mapa OpenLayers seja interativo */
-.ol-viewport {
-  cursor: grab !important;
-}
-
-.ol-viewport:active {
-  cursor: grabbing !important;
-}
-
-/* Garantir que o mapa responda a eventos de mouse */
-.ol-map {
-  pointer-events: auto !important;
-}
-
-/* Garantir que o container do mapa OpenLayers seja interativo */
-.ol-map-container {
-  pointer-events: auto !important;
-  cursor: grab !important;
-}
-
-.ol-map-container:active {
-  cursor: grabbing !important;
-}
-
-/* Garantir que os controles do OpenLayers sejam visíveis e interativos */
-.ol-control {
-  pointer-events: auto !important;
-  z-index: 1000 !important;
-}
-
-.ol-control button {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-}
-
-/* Garantir que o canvas do mapa seja interativo */
-.ol-viewport canvas {
-  pointer-events: auto !important;
-}
-
-/* CSS específico para mobile */
+/* Estilos responsivos */
 @media (max-width: 768px) {
-  .markers-only-map .leaflet-marker-icon {
-    z-index: 99999 !important;
-    pointer-events: auto !important;
-    touch-action: manipulation !important;
-    -webkit-tap-highlight-color: transparent !important;
-    cursor: pointer !important;
+  .layer-controls {
+    left: 10px;
+    right: 10px;
+    min-width: auto;
+    max-width: calc(100vw - 20px);
   }
   
-  .markers-only-map .marker-cluster {
-    z-index: 99999 !important;
-    pointer-events: auto !important;
-    touch-action: manipulation !important;
-    -webkit-tap-highlight-color: transparent !important;
-    cursor: pointer !important;
+  .custom-zoom-controls {
+    right: 10px;
+    top: 10px;
   }
   
-  .markers-only-map .leaflet-tooltip {
-    z-index: 100000 !important;
-    pointer-events: auto !important;
-    touch-action: manipulation !important;
+  .zoom-button {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
   }
+}
+
+/* Estilos para loading */
+.map-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.map-loading .spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos para mensagens de erro */
+.map-error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  z-index: 1000;
+  max-width: 300px;
+}
+
+.map-error .error-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.map-error .error-message {
+  font-size: 14px;
+  line-height: 1.4;
 }

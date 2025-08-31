@@ -178,7 +178,7 @@ GRANT ALL ON TABLE historias_professor TO anon;
 - **React 18** - Biblioteca principal
 - **TailwindCSS** - Framework CSS
 - **Lucide React** - Ícones
-- **Leaflet** - Mapas interativos
+- **OpenLayers** - Mapas interativos de alta performance
 - **Framer Motion** - Animações
 - **React Router** - Roteamento
 

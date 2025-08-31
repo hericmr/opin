@@ -38,7 +38,7 @@ export const useMarkerStyles = ({ showNomesEscolas }) => {
         image: new Icon({
           src: svgUrl,
           scale: isNearbyPair ? 1.1 : 1.0,
-          anchor: [0.5, 1],
+          anchor: [0.5, 0.5],
           anchorXUnits: 'fraction',
           anchorYUnits: 'fraction'
         })

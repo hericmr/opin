@@ -17,8 +17,6 @@ import { useEscolasData } from './hooks/useEscolasData';
 const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));
 const BibliotecaEducacionalIndigena = React.lazy(() => import("./components/BibliotecaEducacionalIndigena"));
 const AdminPanel = React.lazy(() => import("./components/AdminPanel"));
-const TerrasIndigenas = React.lazy(() => import("./components/TerrasIndigenas"));
-const Marcadores = React.lazy(() => import("./components/Marcadores"));
 const SearchResults = React.lazy(() => import("./components/SearchResults"));
 const TestLegendas = React.lazy(() => import("./components/TestLegendas"));
 
@@ -91,8 +89,6 @@ const AppContent = () => {
               </main>
             } 
           />
-          <Route path="/terras" element={<TerrasIndigenas />} />
-          <Route path="/marcadores" element={<Marcadores />} />
           <Route path="/test-legendas" element={<TestLegendas />} />
         </Routes>
       </Suspense>

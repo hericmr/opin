@@ -8,8 +8,11 @@ import XYZ from 'ol/source/XYZ';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import { Point } from 'ol/geom';
 import { Feature } from 'ol';
-import { Style, Fill, Stroke, Circle } from 'ol/style';
+import { Style, Fill, Stroke, Icon } from 'ol/style';
 import 'ol/ol.css';
+
+// Caminho para o marcador SVG
+const MARKER_SVG_PATH = `${process.env.PUBLIC_URL || ''}/map-marker.svg`;
 
 const CoordenadasTab = ({ editingLocation, setEditingLocation }) => {
   const mapRef = useRef(null);
@@ -45,15 +48,13 @@ const CoordenadasTab = ({ editingLocation, setEditingLocation }) => {
         });
 
         marker.setStyle(new Style({
-          image: new Circle({
-            radius: 8,
-            fill: new Fill({
-              color: '#fbbf24'
-            }),
-            stroke: new Stroke({
-              color: '#ffffff',
-              width: 2
-            })
+          image: new Icon({
+            src: MARKER_SVG_PATH,
+            scale: 0.6,
+            anchor: [0.5, 0.5],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            color: '#fbbf24'
           })
         }));
 
