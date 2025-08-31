@@ -50,7 +50,7 @@ export const useMarkerClustering = ({
     vectorLayer.current = new VectorLayer({
       source: clusterSource.current,
       style: createStyle,
-      zIndex: 15
+      zIndex: 100
     });
 
     // Adicionar camada ao mapa

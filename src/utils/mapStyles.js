@@ -102,7 +102,7 @@ export const createMarkerStyle = (feature) => {
     image: new Icon({
       src: svgUrl,
       scale: isNearbyPair ? 1.3 : 1.2, // Marcadores de pares próximos são ligeiramente maiores
-      anchor: [0.5, 1],
+      anchor: [0.5, 0.5],
       anchorXUnits: 'fraction',
       anchorYUnits: 'fraction'
     })
