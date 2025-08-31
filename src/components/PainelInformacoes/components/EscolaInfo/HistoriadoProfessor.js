@@ -2,6 +2,7 @@ import React, { memo, useEffect, useState, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { getHistoriasProfessor } from '../../../../services/historiaProfessorService';
 import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
+import './HistoriadoProfessor.css';
 
 const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
   const [historias, setHistorias] = useState([]);
@@ -152,7 +153,10 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
             {currentHistoria.nome_professor}
           </h3>
         )}
-        <div>{currentHistoria.historia}</div>
+        <div 
+          className="historia-professor-content"
+          dangerouslySetInnerHTML={{ __html: currentHistoria.historia }}
+        />
         {currentHistoria.imagem_public_url && (
           <figure className="my-6">
             <div className="relative">

@@ -1,0 +1,221 @@
+/* Estilos para o conteúdo rich text do HistoriadoProfessor */
+.historia-professor-content {
+  /* Estilos base para o conteúdo */
+  line-height: 1.6;
+  color: #374151;
+}
+
+/* Estilos para parágrafos */
+.historia-professor-content p {
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+/* Estilos para títulos */
+.historia-professor-content h1,
+.historia-professor-content h2,
+.historia-professor-content h3,
+.historia-professor-content h4,
+.historia-professor-content h5,
+.historia-professor-content h6 {
+  color: #166534;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.historia-professor-content h1 {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.historia-professor-content h2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.historia-professor-content h3 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+/* Estilos para texto em negrito e itálico */
+.historia-professor-content strong,
+.historia-professor-content b {
+  color: #166534;
+  font-weight: 700;
+}
+
+.historia-professor-content em,
+.historia-professor-content i {
+  color: #15803d;
+  font-style: italic;
+}
+
+/* Estilos para links */
+.historia-professor-content a {
+  color: #15803d;
+  text-decoration: none;
+  border-bottom: 2px solid #dcfce7;
+  transition: border-color 0.2s ease;
+}
+
+.historia-professor-content a:hover {
+  border-bottom-color: #16a34a;
+}
+
+/* Estilos para listas */
+.historia-professor-content ul,
+.historia-professor-content ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.historia-professor-content li {
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
+
+.historia-professor-content ul li {
+  list-style-type: disc;
+}
+
+.historia-professor-content ol li {
+  list-style-type: decimal;
+}
+
+/* Estilos para blockquotes */
+.historia-professor-content blockquote {
+  border-left: 4px solid #86efac;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: #4b5563;
+  background-color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.375rem;
+}
+
+/* Estilos para código inline */
+.historia-professor-content code {
+  background-color: #f3f4f6;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875em;
+  color: #dc2626;
+}
+
+/* Estilos para blocos de código */
+.historia-professor-content pre {
+  background-color: #1f2937;
+  color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.historia-professor-content pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+/* Estilos para tabelas */
+.historia-professor-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.historia-professor-content th,
+.historia-professor-content td {
+  border: 1px solid #d1d5db;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.historia-professor-content th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+}
+
+.historia-professor-content td {
+  color: #374151;
+}
+
+/* Estilos para imagens */
+.historia-professor-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para divisores horizontais */
+.historia-professor-content hr {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+  margin: 2rem 0;
+}
+
+/* Estilos para sublinhado */
+.historia-professor-content u {
+  text-decoration: underline;
+  text-decoration-color: #86efac;
+  text-decoration-thickness: 2px;
+}
+
+/* Estilos para texto riscado */
+.historia-professor-content s,
+.historia-professor-content del {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
+/* Estilos para texto pequeno */
+.historia-professor-content small {
+  font-size: 0.875em;
+  color: #6b7280;
+}
+
+/* Estilos para texto grande */
+.historia-professor-content big {
+  font-size: 1.125em;
+  color: #374151;
+}
+
+/* Estilos para marcações */
+.historia-professor-content mark {
+  background-color: #fef3c7;
+  color: #92400e;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+/* Responsividade para mobile */
+@media (max-width: 768px) {
+  .historia-professor-content {
+    font-size: 0.875rem;
+  }
+  
+  .historia-professor-content h1 {
+    font-size: 1.5rem;
+  }
+  
+  .historia-professor-content h2 {
+    font-size: 1.25rem;
+  }
+  
+  .historia-professor-content h3 {
+    font-size: 1.125rem;
+  }
+  
+  .historia-professor-content ul,
+  .historia-professor-content ol {
+    padding-left: 1rem;
+  }
+}
