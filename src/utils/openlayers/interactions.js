@@ -1,4 +1,5 @@
-import { isMobile } from '../mobileUtils';
+import { isMobile, hasTouchCapabilities, isTouchEvent } from '../mobileUtils';
+import { DragPan, MouseWheelZoom, PinchZoom } from 'ol/interaction';
 
 /**
  * Classe para gerenciar interações e eventos do OpenLayers
@@ -28,10 +29,20 @@ export class OpenLayersInteractions {
   }
 
   /**
-   * Verifica se é dispositivo mobile (dinâmico)
+   * Verifica se é dispositivo mobile (dinâmico e robusto)
    */
   isMobile() {
-    return window.innerWidth <= 768;
+    const mobile = isMobile();
+    const hasTouch = hasTouchCapabilities();
+    
+    console.log('[OpenLayersInteractions] Detecção de mobile:', {
+      mobile,
+      hasTouch,
+      windowWidth: window.innerWidth,
+      userAgent: navigator.userAgent
+    });
+    
+    return mobile || hasTouch;
   }
 
   /**
@@ -364,38 +375,112 @@ export class OpenLayersInteractions {
   createTooltipElement(content, event) {
     const element = document.createElement('div');
     element.className = 'ol-tooltip';
-    element.innerHTML = content;
     
     // Detectar se é terra indígena baseado no conteúdo
     const isTerraIndigena = content.includes('Terra Indígena');
     
-    // Estilos do tooltip - diferentes fundos, mesmo texto preto
-    const tooltipStyles = isTerraIndigena ? {
-      // Estilo para Terras Indígenas - fundo vermelho
-      backgroundColor: '#fef2f2' // Fundo vermelho claro (red-50)
-    } : {
-      // Estilo para Escolas - fundo verde
-      backgroundColor: '#bbf7d0' // Fundo verde (green-200)
-    };
-    
-    // Estilos base comuns - mais simples e harmoniosos
-    Object.assign(element.style, {
-      position: 'absolute',
-      padding: '6px 10px',
-      borderRadius: '6px',
-      fontSize: '12px',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-      fontWeight: '700', // Fonte negrito
-      color: '#000000', // Texto preto para ambos os tipos
-      pointerEvents: 'none',
-      zIndex: '1000',
-      maxWidth: '200px',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // Sombra sutil sem brilho
-      ...tooltipStyles
-    });
+    // Em mobile, tornar o nome clicável
+    if (this.isMobile()) {
+      // Criar tooltip clicável para mobile
+      const clickableContent = `<span class="tooltip-clickable">${content}</span>`;
+      element.innerHTML = clickableContent;
+      
+      // Configurar estilos para mobile
+      const tooltipStyles = isTerraIndigena ? {
+        backgroundColor: '#fef2f2', // Fundo vermelho claro
+        borderColor: 'rgba(239, 68, 68, 0.3)' // Borda vermelha
+      } : {
+        backgroundColor: '#bbf7d0', // Fundo verde
+        borderColor: 'rgba(34, 197, 94, 0.3)' // Borda verde
+      };
+      
+      Object.assign(element.style, {
+        position: 'absolute',
+        padding: '8px 12px',
+        borderRadius: '8px',
+        fontSize: '14px',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        fontWeight: '700',
+        color: '#000000',
+        pointerEvents: 'auto', // IMPORTANTE: Permitir eventos de clique no mobile
+        zIndex: '1000',
+        maxWidth: '250px',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        border: `2px solid ${tooltipStyles.borderColor}`,
+        cursor: 'default',
+        ...tooltipStyles
+      });
+      
+      // Configurar o span clicável
+      const clickableSpan = element.querySelector('.tooltip-clickable');
+      if (clickableSpan) {
+        Object.assign(clickableSpan.style, {
+          cursor: 'pointer',
+          textDecoration: 'underline',
+          textDecorationColor: '#3B82F6',
+          textDecorationThickness: '2px',
+          transition: 'all 0.2s ease',
+          display: 'inline-block',
+          padding: '2px 4px',
+          borderRadius: '4px',
+          fontWeight: '800'
+        });
+        
+        // Adicionar evento de clique para abrir o painel
+        clickableSpan.addEventListener('click', () => {
+          console.log('[OpenLayersInteractions] Nome clicado no tooltip mobile');
+          // Emitir evento para abrir o painel
+          const feature = this.map.forEachFeatureAtPixel(event.pixel, (feature) => feature);
+          if (feature) {
+            this.executeClickHandler(feature, event);
+          }
+        });
+        
+        // Adicionar efeitos de hover
+        clickableSpan.addEventListener('mouseenter', () => {
+          clickableSpan.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+          clickableSpan.style.textDecorationColor = '#1D4ED8';
+          clickableSpan.style.transform = 'scale(1.05)';
+        });
+        
+        clickableSpan.addEventListener('mouseleave', () => {
+          clickableSpan.style.backgroundColor = 'transparent';
+          clickableSpan.style.textDecorationColor = '#3B82F6';
+          clickableSpan.style.transform = 'scale(1)';
+        });
+      }
+    } else {
+      // Desktop: tooltip normal (não clicável)
+      element.innerHTML = content;
+      
+      // Estilos do tooltip para desktop
+      const tooltipStyles = isTerraIndigena ? {
+        backgroundColor: '#fef2f2' // Fundo vermelho claro
+      } : {
+        backgroundColor: '#bbf7d0' // Fundo verde
+      };
+      
+      Object.assign(element.style, {
+        position: 'absolute',
+        padding: '6px 10px',
+        borderRadius: '6px',
+        fontSize: '12px',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        fontWeight: '700',
+        color: '#000000',
+        pointerEvents: 'none',
+        zIndex: '1000',
+        maxWidth: '200px',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        ...tooltipStyles
+      });
+    }
 
     // Posicionar tooltip
     const coordinate = event.coordinate;

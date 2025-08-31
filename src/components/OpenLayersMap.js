@@ -5,7 +5,8 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import { defaults as defaultControls } from 'ol/control';
-import { defaults as defaultInteractions } from 'ol/interaction';
+// Remover import das interações padrão para evitar conflitos
+// import { defaults as defaultInteractions } from 'ol/interaction';
 import { register } from 'ol/proj/proj4';
 import proj4 from 'proj4';
 import 'ol/ol.css';
@@ -94,10 +95,11 @@ const OpenLayersMap = ({
         enableRotation: false // Desabilitar rotação
       }),
       controls: defaultControls(),
-      interactions: defaultInteractions({
-        dragRotate: false, // Desabilitar rotação com arraste
-        pinchRotate: false // Desabilitar rotação com pinch (dois dedos)
-      })
+      // Remover interações padrão para evitar conflitos
+      // interactions: defaultInteractions({
+      //   dragRotate: false, // Desabilitar rotação com arraste
+      //   pinchRotate: false // Desabilitar rotação com pinch (dois dedos)
+      // })
     });
 
     // Event listeners para mudanças de view

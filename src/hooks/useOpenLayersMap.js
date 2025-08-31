@@ -8,7 +8,8 @@ import ClusterSource from 'ol/source/Cluster';
 import XYZ from 'ol/source/XYZ';
 import { fromLonLat } from 'ol/proj';
 import { defaults as defaultControls } from 'ol/control';
-import { defaults as defaultInteractions } from 'ol/interaction';
+// Remover import das interações padrão para evitar conflitos
+// import { defaults as defaultInteractions } from 'ol/interaction';
 import { MAP_CONFIG } from '../utils/mapConfig';
 
 export const useOpenLayersMap = (mapContainer, center = MAP_CONFIG.center, zoom = MAP_CONFIG.zoom) => {
@@ -84,7 +85,8 @@ export const useOpenLayersMap = (mapContainer, center = MAP_CONFIG.center, zoom 
         minZoom: MAP_CONFIG.minZoom
       }),
       controls: defaultControls(),
-      interactions: defaultInteractions()
+      // Remover interações padrão para evitar conflitos
+      // interactions: defaultInteractions()
     });
 
     // Event listener para atualizar informações do mapa
