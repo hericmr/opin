@@ -586,7 +586,7 @@ export function createDefaultInteractions(map, options = {}) {
 /**
  * Função utilitária para configurar interações específicas para marcadores
  * @param {Object} map - Mapa OpenLayers
- * @param {Function} onMarkerClick - Handler para clique em marcador
+ * @param {Function} onMarkerClick - Handler para clique em marcador (opcional)
  * @param {Function} onMarkerHover - Handler para hover em marcador
  * @returns {OpenLayersInteractions} Instância de interações configurada
  */
@@ -610,7 +610,9 @@ export function createMarkerInteractions(map, onMarkerClick, onMarkerHover) {
     }
   });
 
+  // Configurar handler de clique se fornecido
   if (onMarkerClick) {
+    console.log('[createMarkerInteractions] Configurando handler de clique personalizado');
     interactions.on('click', onMarkerClick);
   }
 
