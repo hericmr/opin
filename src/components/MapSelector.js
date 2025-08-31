@@ -91,20 +91,31 @@ const MapSelector = ({
     console.log('MapSelector: showMarcadores mudou para:', showMarcadores);
   }, [showMarcadores]);
 
-  // Componente para o cabeçalho do menu
+    // Componente para o cabeçalho do menu
   const CabecalhoMenu = ({ onMinimize, isMobile, isMinimized }) => (
-    <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100 bg-white">
-      <h3 className="text-sm font-medium text-gray-800">Camadas do Mapa</h3>
+    <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-green-700 to-green-800 text-white">
       <div className="flex items-center gap-2">
-        <button
-          onClick={onMinimize}
-          className="text-gray-500 hover:text-gray-700 transition-colors p-1"
-          aria-label={isMinimized ? "Expandir" : "Minimizar"}
-          type="button"
-        >
-          {isMinimized ? "▾" : "▴"}
-        </button>
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m-6 3l6-3" />
+        </svg>
+        <h3 className="text-sm font-semibold tracking-wide">Camadas do Mapa</h3>
       </div>
+      <button
+        onClick={onMinimize}
+        className="text-green-100 hover:text-white hover:bg-green-600 transition-all duration-200 p-1.5 rounded-md"
+        aria-label={isMinimized ? "Expandir" : "Minimizar"}
+        type="button"
+      >
+        {isMinimized ? (
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        ) : (
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+          </svg>
+        )}
+      </button>
     </div>
   );
 
@@ -114,50 +125,95 @@ const MapSelector = ({
       type="button"
       onClick={onChange}
       disabled={disabled}
-      className={`w-full flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
-        checked ? 'bg-gray-50' : 'hover:bg-gray-50'
-      } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      className={`group w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+        checked 
+          ? 'bg-green-50 shadow-sm' 
+          : 'bg-white hover:bg-green-50/50'
+      } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
     >
-      {subItems ? (
-        // Para Terras Indígenas com subcategorias
-        <div className="flex flex-col gap-1">
-          {subItems.map((item, index) => (
-            <div key={index} className="flex items-center gap-1">
-              <div 
-                className="w-2 h-2 rounded-full" 
-                style={{ backgroundColor: item.color }}
-              />
-              <span className="text-xs text-gray-600">{item.label}</span>
-            </div>
-          ))}
+      {/* Indicador de cor principal */}
+      <div className="flex-shrink-0">
+        {subItems ? (
+          // Para Terras Indígenas com subcategorias
+          <div className="flex flex-col gap-1.5">
+            {subItems.map((item, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div 
+                  className="w-3 h-3 rounded-full shadow-sm" 
+                  style={{ backgroundColor: item.color }}
+                />
+                <span className="text-xs font-medium text-gray-700">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          // Para outras camadas
+          <div 
+            className={`w-4 h-4 rounded-full shadow-sm ${
+              checked ? 'ring-2 ring-green-200' : ''
+            }`}
+            style={{ backgroundColor: color }}
+          />
+        )}
+      </div>
+      
+      {/* Conteúdo principal */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <span className={`text-sm font-medium ${
+            checked ? 'text-green-900' : 'text-gray-800'
+          }`}>
+            {label}
+          </span>
+          
+          {total !== undefined && (
+            <span className={`text-xs px-2 py-0.5 rounded-full ${
+              checked 
+                ? 'bg-green-100 text-green-700' 
+                : 'bg-gray-100 text-gray-600'
+            }`}>
+              {total}
+            </span>
+          )}
         </div>
-      ) : (
-        // Para outras camadas
-        <div 
-          className="w-2 h-2 rounded-full" 
-          style={{ backgroundColor: color }}
-        />
-      )}
+        
+        {/* Status indicators */}
+        <div className="flex items-center gap-2 mt-1">
+          {loading && (
+            <div className="flex items-center gap-1 text-blue-600">
+              <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              <span className="text-xs">Carregando...</span>
+            </div>
+          )}
+          
+          {error && (
+            <div className="flex items-center gap-1 text-red-600">
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-xs">Erro</span>
+            </div>
+          )}
+        </div>
+      </div>
       
-      <span className="text-sm text-gray-800">{label}</span>
-      
-      {total !== undefined && (
-        <span className="text-xs text-gray-500 ml-1">({total})</span>
-      )}
-      
-      {loading && <span className="text-blue-500 ml-1">(carregando...)</span>}
-      {error && <span className="text-red-500 ml-1">(erro)</span>}
-      
-      {subItems ? (
-        // Indicador para Terras Indígenas
-        <div className="ml-auto w-2 h-2 rounded-full bg-gray-300" />
+      {/* Indicador de estado */}
+      <div className="flex-shrink-0">
+        {subItems ? (
+          // Indicador para Terras Indígenas
+                  <div className={`w-3 h-3 rounded-full transition-colors duration-200 ${
+          checked ? 'bg-green-600' : 'bg-gray-300'
+        }`} />
       ) : (
         // Indicador para outras camadas
-        <div 
-          className="ml-auto w-2 h-2 rounded-full" 
-          style={{ backgroundColor: color }}
-        />
-      )}
+        <div className={`w-3 h-3 rounded-full transition-colors duration-200 ${
+          checked ? 'bg-green-600' : 'bg-gray-300'
+        }`} />
+        )}
+      </div>
     </button>
   );
 
@@ -182,14 +238,14 @@ const MapSelector = ({
       {isMobile ? (
         // Menu mobile - fixo na parte inferior
         <div className="fixed bottom-0 left-0 right-0 z-20">
-          <div className="bg-white border-t border-gray-100 shadow-lg">
+          <div className="bg-white shadow-2xl rounded-t-2xl">
             <CabecalhoMenu
               onMinimize={handleMinimize}
               isMobile={true}
               isMinimized={isMinimized}
             />
             {!isMinimized && (
-              <div className="p-2 flex flex-col gap-1 max-h-60 overflow-y-auto">
+              <div className="p-4 flex flex-col gap-3 max-h-80 overflow-y-auto">
                 <BotaoCamada
                   id="estado-sp"
                   label="Estado de São Paulo"
@@ -225,14 +281,14 @@ const MapSelector = ({
         </div>
       ) : (
         // Menu desktop - fixo no topo direito
-        <div className="fixed top-24 right-4 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
+        <div className="fixed top-24 right-4 w-72 bg-white rounded-2xl shadow-2xl z-20 overflow-hidden">
           <CabecalhoMenu
             onMinimize={handleMinimize}
             isMobile={false}
             isMinimized={isMinimized}
           />
           {!isMinimized && (
-            <div className="p-2 flex flex-col gap-1 max-h-96 overflow-y-auto">
+            <div className="p-4 flex flex-col gap-3 max-h-96 overflow-y-auto">
               <BotaoCamada
                 id="estado-sp"
                 label="Estado de São Paulo"

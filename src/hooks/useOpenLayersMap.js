@@ -64,7 +64,7 @@ export const useOpenLayersMap = (mapContainer, center = MAP_CONFIG.center, zoom 
     // Criar camada vetorial para marcadores com clustering
     vectorLayer.current = new VectorLayer({
       source: clusterSource.current,
-      zIndex: 15
+      zIndex: 100
     });
 
     // Criar camada base

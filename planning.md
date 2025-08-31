@@ -1,326 +1,276 @@
-# Planning: Correção de Variáveis Não Utilizadas e Warnings ESLint
+# Planning: Migração Completa do Leaflet para OpenLayers
 
 ## 📋 Objetivo
-Remover todos os warnings de ESLint relacionados a variáveis não utilizadas e dependências desnecessárias nos useEffect hooks.
+Migrar completamente o projeto de Leaflet para OpenLayers, eliminando todas as dependências do Leaflet e criando uma arquitetura modular, expansível e de alta performance para mapas, marcadores e clusters.
 
 ## 🎯 Prioridade: ALTA
-- Melhorar a qualidade do código
-- Eliminar warnings do build
-- Otimizar performance removendo código morto
+- Melhorar a performance dos mapas
+- Eliminar dependências duplicadas (Leaflet + OpenLayers)
+- Criar arquitetura modular e expansível
+- Manter todas as funcionalidades existentes
+- Otimizar para mobile e desktop
 
 ---
 
-## 📁 Arquivos para Correção
+## 🔍 Análise da Situação Atual
 
-### 1. **src/App.js** - 7 warnings
-**Problemas:**
-- `useEffect` importado mas não usado
-- `supabase` importado mas não usado
-- `PainelInformacoes` importado mas não usado
-- `Papa` importado mas não usado
-- `useShare` importado mas não usado
-- `MapaSkeleton` importado mas não usado
-- `getLocationById` definido mas não usado
+### ✅ O que já está funcionando com OpenLayers:
+- `OpenLayersMap.js` - Componente principal do mapa
+- `MapSelector.js` - Seletor de camadas
+- `MapaEscolasIndigenas.js` - Componente wrapper principal
+- Configurações básicas em `mapConfig.js`
+- Hooks específicos para OpenLayers
 
-**Ações:**
-- [ ] Remover imports não utilizados
-- [ ] Remover função `getLocationById` se não for necessária
-- [ ] Verificar se algum desses imports será usado no futuro
+### ❌ O que ainda usa Leaflet:
+- `Marcadores.js` - Componente de marcadores com clustering
+- `TerrasIndigenas.js` - Camada GeoJSON de terras indígenas
+- `EstadoSP.js` - Camada GeoJSON do estado
+- `MapaBase.js` - Componente base do mapa
+- `MapClickHandler.js` - Handler de cliques
+- `CustomIcon.js` - Ícones customizados
 
-### 2. **src/components/OpenLayersMap.js** - 15 warnings
-**Problemas:**
-- Imports não utilizados: `Style`, `Fill`, `Stroke`, `Text`, `Icon`
-- Imports não utilizados: `handleMarkerClick`, `handleGeoJSONClick`
-- Variáveis não utilizadas: `PROXIMITY_THRESHOLD`, `createMarkerSVG`, `mapInfo`, `usedIndices`
-- Dependências desnecessárias em useEffect: `createClusterStyle` (4 ocorrências)
-- Variáveis não utilizadas: `geometry` (2 ocorrências)
-
-**Ações:**
-- [ ] Remover imports não utilizados do OpenLayers
-- [ ] Remover imports de handlers não utilizados
-- [ ] Remover variáveis não utilizadas ou adicionar `// eslint-disable-next-line`
-- [ ] Corrigir dependências dos useEffect removendo `createClusterStyle`
-- [ ] Remover variáveis `geometry` não utilizadas
-
-### 3. **src/components/AdminPanel.js** - 4 warnings
-**Problemas:**
-- Imports não utilizados: `VideoSection`, `DocumentViewer`
-- Chave duplicada: `'Linguas faladas'`
-- Função não utilizada: `getVideoEmbedUrl`
-
-**Ações:**
-- [ ] Remover imports não utilizados
-- [ ] Corrigir chave duplicada no objeto
-- [ ] Remover função `getVideoEmbedUrl` ou adicionar `// eslint-disable-next-line`
-
-### 4. **src/components/AdminPanel/HistoriaProfessorManager.js** - 6 warnings
-**Problemas:**
-- Imports não utilizados: `Upload`, `Eye`
-- Variáveis não utilizadas: `uploadingImage`, `handleImageUpload`, `handleImageDelete`
-- Dependência faltando em useEffect: `carregarHistorias`
-
-**Ações:**
-- [ ] Remover imports não utilizados
-- [ ] Remover variáveis não utilizadas ou implementar funcionalidade
-- [ ] Adicionar `carregarHistorias` ao array de dependências do useEffect
-
-### 5. **src/components/AdminPanel/VideoManager.js** - 1 warning
-**Problemas:**
-- Dependência faltando em useEffect: `carregarVideos`
-
-**Ações:**
-- [ ] Adicionar `carregarVideos` ao array de dependências do useEffect
-
-### 6. **src/components/BibliotecaEducacionalIndigena.js** - 4 warnings
-**Problemas:**
-- Import não utilizado: `BookOpen`
-- Variáveis não utilizadas: `filtroAtivo`, `setFiltroAtivo`
-- Caractere de escape desnecessário: `\-`
-
-**Ações:**
-- [ ] Remover import não utilizado
-- [ ] Remover variáveis não utilizadas ou implementar filtro
-- [ ] Corrigir caractere de escape desnecessário
-
-### 7. **src/components/EditEscolaPanel/ImageUploadSection.js** - 6 warnings
-**Problemas:**
-- Import não utilizado: `Edit3`
-- Variáveis não utilizadas: `editingImage`, `setEditingImage`, `editingDescription`, `setEditingDescription`
-- Função não utilizada: `handleDescriptionChange`
-
-**Ações:**
-- [ ] Remover import não utilizado
-- [ ] Remover variáveis não utilizadas ou implementar edição inline
-- [ ] Remover função não utilizada
-
-### 8. **src/components/EditEscolaPanel/ProfessorImageUploadSection.js** - 8 warnings
-**Problemas:**
-- Import não utilizado: `Edit3`
-- Variáveis não utilizadas: `editingImage`, `setEditingImage`, `editingDescription`, `setEditingDescription`, `setGenero`, `setTitulo`
-- Função não utilizada: `handleDescriptionChange`
-
-**Ações:**
-- [ ] Remover import não utilizado
-- [ ] Remover variáveis não utilizadas ou implementar funcionalidade
-- [ ] Remover função não utilizada
-
-### 9. **src/components/EditEscolaPanel/VideoSection.js** - 6 warnings
-**Problemas:**
-- Imports não utilizados: `Edit3`, `Clock`, `Tag`, `Play`
-- Função não utilizada: `getTituloByVideoUrl`
-- Variável não utilizada: `loading`
-
-**Ações:**
-- [ ] Remover imports não utilizados
-- [ ] Remover função não utilizada
-- [ ] Remover variável não utilizada
-
-### 10. **src/components/MapSelector.js** - 1 warning
-**Problemas:**
-- Dependência faltando em useEffect: `showMarcadores`
-
-**Ações:**
-- [ ] Adicionar `showMarcadores` ao array de dependências do useEffect
-
-### 11. **src/components/MapaEscolasIndigenas.js** - 1 warning
-**Problemas:**
-- Variável não utilizada: `totalEscolas`
-
-**Ações:**
-- [ ] Remover variável não utilizada ou usar em algum lugar
-
-### 12. **src/components/Marcadores.js** - 1 warning
-**Problemas:**
-- Variável não utilizada: `usedIndices`
-
-**Ações:**
-- [ ] Remover variável não utilizada
-
-### 13. **src/components/Navbar/MobileMenu.js** - 9 warnings
-**Problemas:**
-- Imports não utilizados: `MapPin`, `BookOpen`, `Search`, `Home`, `Users`, `Map`
-- Import não utilizado: `LazyImage`
-- Variável não utilizada: `navigate`
-
-**Ações:**
-- [ ] Remover imports não utilizados
-- [ ] Remover variável não utilizada
-
-### 14. **src/components/Navbar/NavButtons.js** - 4 warnings
-**Problemas:**
-- Imports não utilizados: `MapPin`, `BookOpen`, `Home`
-- Variável não utilizada: `isActive`
-
-**Ações:**
-- [ ] Remover imports não utilizados
-- [ ] Remover variável não utilizada
-
-### 15. **src/components/Navbar/SearchBar.js** - 4 warnings
-**Problemas:**
-- Variáveis não utilizadas: `searchTerm`, `suggestions`
-- Funções não utilizadas: `handleSuggestionClick`, `getCategoryColor`
-
-**Ações:**
-- [ ] Remover variáveis não utilizadas ou implementar funcionalidade
-- [ ] Remover funções não utilizadas
-
-### 16. **src/components/Navbar/index.js** - 2 warnings
-**Problemas:**
-- Imports não utilizados: `NavLogo`, `DesktopNav`
-
-**Ações:**
-- [ ] Remover imports não utilizados
-
-### 17. **src/components/PainelInformacoes/components/DocumentViewer.js** - 2 warnings
-**Problemas:**
-- Atributo `aria-pressed` não suportado pelo role `tab`
-
-**Ações:**
-- [ ] Remover atributo `aria-pressed` ou alterar role
-
-### 18. **src/components/PainelInformacoes/components/EscolaInfo/BasicInfo.js** - 1 warning
-**Problemas:**
-- Import não utilizado: `Users`
-
-**Ações:**
-- [ ] Remover import não utilizado
-
-### 19. **src/components/PainelInformacoes/components/EscolaInfo/GestaoProfessores.js** - 1 warning
-**Problemas:**
-- Função não utilizada: `formatarNomeProfessor`
-
-**Ações:**
-- [ ] Remover função não utilizada
-
-### 20. **src/components/PainelInformacoes/components/EscolaInfo/Modalidades.js** - 2 warnings
-**Problemas:**
-- Import não utilizado: `useState`
-- Variável não utilizada: `modalidadeEnsinoCard`
-
-**Ações:**
-- [ ] Remover import não utilizado
-- [ ] Remover variável não utilizada
-
-### 21. **src/components/PainelInformacoes/components/EscolaInfo/index.js** - 1 warning
-**Problemas:**
-- Import não utilizado: `ImagemHistoriadoProfessor`
-
-**Ações:**
-- [ ] Remover import não utilizado
-
-### 22. **src/components/PainelInformacoes/components/ImagensdasEscolas.js** - 1 warning
-**Problemas:**
-- Dependência faltando em useEffect: `limparCacheERecarregar`
-
-**Ações:**
-- [ ] Adicionar `limparCacheERecarregar` ao array de dependências
-
-### 23. **src/components/PainelInformacoes/components/VideoPlayer.js** - 1 warning
-**Problemas:**
-- Variável não utilizada: `loading`
-
-**Ações:**
-- [ ] Remover variável não utilizada
-
-### 24. **src/components/PainelInformacoes/index.js** - 1 warning
-**Problemas:**
-- Import não utilizado: `useAudio`
-
-**Ações:**
-- [ ] Remover import não utilizado
-
-### 25. **src/components/TerrasIndigenas.js** - 3 warnings
-**Problemas:**
-- Import não utilizado: `L`
-- Variável não utilizada: `layer`
-- Dependência faltando em useCallback: `hoverStyle`
-
-**Ações:**
-- [ ] Remover import não utilizado
-- [ ] Remover variável não utilizada
-- [ ] Adicionar `hoverStyle` ao array de dependências do useCallback
-
-### 26. **src/components/hooks/useClickOutside.js** - 2 warnings
-**Problemas:**
-- Mistura inesperada de `&&` e `||` (2 ocorrências)
-
-**Ações:**
-- [ ] Adicionar parênteses para esclarecer a ordem das operações
-
-### 27. **src/components/hooks/useDocumentosEscola.js** - 2 warnings
-**Problemas:**
-- Variável não utilizada: `rlsData`
-- Dependências faltando em useEffect: `documentos.length`, `error`, `isLoading`
-
-**Ações:**
-- [ ] Remover variável não utilizada
-- [ ] Adicionar dependências faltantes ao array do useEffect
-
-### 28. **src/components/hooks/usePainelDimensions.js** - 1 warning
-**Problemas:**
-- Dependência faltando em useMemo: `breakpoints`
-
-**Ações:**
-- [ ] Adicionar `breakpoints` ao array de dependências do useMemo
-
-### 29. **src/components/hooks/usePainelVisibility.js** - 1 warning
-**Problemas:**
-- Dependências faltando em useEffect: `isMobile`, `isVisible`
-
-**Ações:**
-- [ ] Adicionar dependências faltantes ao array do useEffect
-
-### 30. **src/services/historiaProfessorService.js** - 1 warning
-**Problemas:**
-- Variável não utilizada: `publicUrl`
-
-**Ações:**
-- [ ] Remover variável não utilizada
+### 📦 Dependências a serem removidas:
+- `leaflet` (^1.9.4)
+- `leaflet-gpx` (^2.2.0)
+- `leaflet.markercluster` (^1.5.3)
+- `react-leaflet` (^4.2.1)
 
 ---
 
-## 🚀 Estratégia de Implementação
+## 🚀 Estratégia de Migração
 
-### Fase 1: Limpeza Rápida (1-2 horas)
-- [ ] Remover todos os imports não utilizados
-- [ ] Remover variáveis não utilizadas simples
-- [ ] Remover funções não utilizadas
+### **FASE 1: Preparação e Estrutura (1-2 dias)**
 
-### Fase 2: Correção de Dependências (1 hora)
-- [ ] Corrigir arrays de dependências dos useEffect
-- [ ] Corrigir arrays de dependências dos useCallback
-- [ ] Corrigir arrays de dependências dos useMemo
+#### 1.1 Reorganização da Arquitetura
+- [ ] Criar estrutura de pastas para OpenLayers
+- [ ] Definir interfaces e tipos para marcadores e camadas
+- [ ] Criar sistema de plugins para OpenLayers
+- [ ] Estabelecer padrões de nomenclatura
 
-### Fase 3: Correções Específicas (1 hora)
-- [ ] Corrigir chave duplicada no AdminPanel
-- [ ] Corrigir atributos aria no DocumentViewer
-- [ ] Corrigir operadores lógicos no useClickOutside
+#### 1.2 Configuração Base
+- [ ] Atualizar `mapConfig.js` com configurações OpenLayers
+- [ ] Criar sistema de estilos centralizado
+- [ ] Configurar projeções e sistemas de coordenadas
+- [ ] Estabelecer sistema de eventos unificado
 
-### Fase 4: Teste e Validação (30 min)
-- [ ] Executar build para verificar se warnings foram removidos
-- [ ] Testar funcionalidades principais
-- [ ] Verificar se não quebrou nada
+### **FASE 2: Migração dos Marcadores (2-3 dias)**
+
+#### 2.1 Sistema de Marcadores Base
+- [ ] Criar `OpenLayersMarkers.js` para substituir `Marcadores.js`
+- [ ] Implementar clustering nativo do OpenLayers
+- [ ] Migrar sistema de ícones customizados
+- [ ] Implementar sistema de proximidade para pares próximos
+
+#### 2.2 Funcionalidades Avançadas
+- [ ] Migrar sistema de tooltips
+- [ ] Implementar interações touch para mobile
+- [ ] Migrar sistema de conectores entre marcadores
+- [ ] Implementar animações e transições
+
+### **FASE 3: Migração das Camadas GeoJSON (1-2 dias)**
+
+#### 3.1 Camada Terras Indígenas
+- [ ] Migrar `TerrasIndigenas.js` para OpenLayers
+- [ ] Implementar estilos dinâmicos baseados em propriedades
+- [ ] Migrar sistema de interações (hover, click, double-click)
+- [ ] Implementar tooltips responsivos
+
+#### 3.2 Camada Estado SP
+- [ ] Migrar `EstadoSP.js` para OpenLayers
+- [ ] Implementar estilos consistentes
+- [ ] Configurar como camada de fundo não-interativa
+
+### **FASE 4: Integração e Otimização (1-2 dias)**
+
+#### 4.1 Sistema de Eventos Unificado
+- [ ] Criar sistema de eventos centralizado
+- [ ] Implementar handlers unificados para cliques
+- [ ] Migrar sistema de painéis de informação
+- [ ] Implementar sincronização entre componentes
+
+#### 4.2 Performance e Otimização
+- [ ] Implementar lazy loading de camadas
+- [ ] Otimizar renderização de marcadores
+- [ ] Implementar sistema de cache inteligente
+- [ ] Otimizar para dispositivos móveis
+
+### **FASE 5: Limpeza e Testes (1 dia)**
+
+#### 5.1 Remoção de Dependências
+- [ ] Remover todas as dependências do Leaflet
+- [ ] Limpar imports não utilizados
+- [ ] Remover arquivos CSS do Leaflet
+- [ ] Atualizar `package.json`
+
+#### 5.2 Testes e Validação
+- [ ] Testar todas as funcionalidades
+- [ ] Validar performance
+- [ ] Testar responsividade
+- [ ] Verificar compatibilidade cross-browser
+
+---
+
+## 📁 Nova Estrutura de Arquivos
+
+```
+src/
+├── components/
+│   ├── OpenLayers/
+│   │   ├── OpenLayersMap.js          ✅ (já existe)
+│   │   ├── OpenLayersMarkers.js      🆕 (substituir Marcadores.js)
+│   │   ├── OpenLayersTerrasIndigenas.js 🆕 (substituir TerrasIndigenas.js)
+│   │   ├── OpenLayersEstadoSP.js     🆕 (substituir EstadoSP.js)
+│   │   └── OpenLayersLayers.js      🆕 (gerenciador de camadas)
+│   ├── MapSelector.js                ✅ (já existe)
+│   └── MapaEscolasIndigenas.js      ✅ (já existe)
+├── hooks/
+│   ├── useOpenLayersMap.js           ✅ (já existe)
+│   ├── useOpenLayersMarkers.js       🆕 (novo hook para marcadores)
+│   ├── useOpenLayersLayers.js        🆕 (novo hook para camadas)
+│   └── useOpenLayersEvents.js        🆕 (novo hook para eventos)
+├── utils/
+│   ├── openlayers/
+│   │   ├── markerStyles.js           🆕 (estilos de marcadores)
+│   │   ├── layerStyles.js            🆕 (estilos de camadas)
+│   │   ├── clustering.js             🆕 (lógica de clustering)
+│   │   └── interactions.js           🆕 (interações e eventos)
+│   ├── mapConfig.js                  ✅ (já existe, atualizar)
+│   └── mapStyles.js                  ✅ (já existe, atualizar)
+└── services/
+    └── openLayersService.js          🆕 (serviços OpenLayers)
+```
+
+---
+
+## 🔧 Implementação Técnica
+
+### **Sistema de Marcadores OpenLayers**
+```javascript
+// Estrutura proposta para OpenLayersMarkers.js
+class OpenLayersMarkers {
+  constructor(map, options) {
+    this.map = map;
+    this.options = options;
+    this.markers = new Map();
+    this.clusters = new Map();
+    this.vectorSource = new VectorSource();
+    this.clusterSource = new ClusterSource({
+      source: this.vectorSource,
+      distance: 30
+    });
+  }
+  
+  addMarker(data) { /* implementação */ }
+  removeMarker(id) { /* implementação */ }
+  updateMarker(id, data) { /* implementação */ }
+  clearMarkers() { /* implementação */ }
+}
+```
+
+### **Sistema de Camadas GeoJSON**
+```javascript
+// Estrutura proposta para OpenLayersLayers.js
+class OpenLayersLayers {
+  constructor(map) {
+    this.map = map;
+    this.layers = new Map();
+  }
+  
+  addGeoJSONLayer(id, data, style, options) { /* implementação */ }
+  removeLayer(id) { /* implementação */ }
+  updateLayerStyle(id, style) { /* implementação */ }
+  toggleLayerVisibility(id, visible) { /* implementação */ }
+}
+```
+
+### **Sistema de Eventos Unificado**
+```javascript
+// Estrutura proposta para useOpenLayersEvents.js
+const useOpenLayersEvents = (map, handlers) => {
+  const eventManager = useRef(new EventManager(map));
+  
+  useEffect(() => {
+    eventManager.current.setHandlers(handlers);
+    return () => eventManager.current.cleanup();
+  }, [handlers]);
+  
+  return eventManager.current;
+};
+```
 
 ---
 
 ## 📊 Métricas de Sucesso
-- [ ] Reduzir warnings de ESLint de ~80 para 0
-- [ ] Manter todas as funcionalidades funcionando
-- [ ] Melhorar a qualidade do código
-- [ ] Otimizar o tamanho do bundle
+
+### **Performance**
+- [ ] Redução de 30-50% no tempo de carregamento inicial
+- [ ] Melhoria de 40-60% na performance de renderização
+- [ ] Redução de 50-70% no uso de memória
+- [ ] Melhoria na responsividade em dispositivos móveis
+
+### **Qualidade do Código**
+- [ ] Eliminação de todas as dependências Leaflet
+- [ ] Código 100% OpenLayers
+- [ ] Arquitetura modular e expansível
+- [ ] Padrões consistentes de nomenclatura
+
+### **Funcionalidades**
+- [ ] Todas as funcionalidades existentes mantidas
+- [ ] Sistema de clustering otimizado
+- [ ] Interações touch aprimoradas para mobile
+- [ ] Sistema de eventos unificado e robusto
 
 ---
 
-## ⚠️ Observações Importantes
-1. **Não remover código que pode ser usado no futuro** - adicionar `// eslint-disable-next-line` se necessário
-2. **Testar cada mudança** para garantir que não quebra funcionalidades
-3. **Fazer commits pequenos** para facilitar rollback se necessário
-4. **Documentar mudanças** importantes no código
+## ⚠️ Riscos e Mitigações
+
+### **Riscos Identificados**
+1. **Perda de funcionalidades**: Algumas funcionalidades específicas do Leaflet podem não ter equivalente direto no OpenLayers
+2. **Incompatibilidade de APIs**: Diferenças na API podem causar problemas de migração
+3. **Performance inicial**: OpenLayers pode ter overhead inicial maior que Leaflet
+
+### **Estratégias de Mitigação**
+1. **Desenvolvimento incremental**: Migrar componente por componente, testando cada um
+2. **Testes extensivos**: Criar suite de testes para validar funcionalidades
+3. **Fallbacks**: Implementar fallbacks para funcionalidades críticas
+4. **Documentação**: Documentar todas as mudanças e APIs
+
+---
+
+## 🗓️ Cronograma Detalhado
+
+### **Semana 1: Fases 1-2**
+- **Dia 1-2**: Preparação e estrutura
+- **Dia 3-5**: Migração dos marcadores
+
+### **Semana 2: Fases 3-4**
+- **Dia 1-2**: Migração das camadas GeoJSON
+- **Dia 3-5**: Integração e otimização
+
+### **Semana 3: Fase 5**
+- **Dia 1**: Limpeza e testes
+- **Dia 2-3**: Testes finais e ajustes
+- **Dia 4-5**: Documentação e deploy
 
 ---
 
 ## 🎯 Resultado Esperado
-- Build limpo sem warnings
-- Código mais limpo e otimizado
-- Melhor performance
-- Facilidade de manutenção
+
+Ao final da migração, o projeto terá:
+
+1. **Arquitetura unificada** baseada exclusivamente em OpenLayers
+2. **Performance significativamente melhorada** em todos os dispositivos
+3. **Código mais limpo e modular** facilitando manutenção futura
+4. **Sistema expansível** para adicionar novas funcionalidades
+5. **Melhor experiência do usuário** com interações mais fluidas
+6. **Base sólida** para futuras melhorias e funcionalidades
+
+---
+
+## 📝 Notas de Implementação
+
+- **Priorizar funcionalidades críticas** durante a migração
+- **Manter compatibilidade** com dados existentes
+- **Testar extensivamente** em diferentes dispositivos e navegadores
+- **Documentar todas as mudanças** para facilitar manutenção futura
+- **Implementar sistema de logs** para debug e monitoramento

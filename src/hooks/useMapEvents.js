@@ -79,6 +79,9 @@ export const useMapEvents = (map, mapContainer, onPainelOpen) => {
   useEffect(() => {
     if (!map || !mapContainer) return;
 
+    // Desabilitar hover automático em mobile - deixar o sistema de interações gerenciar
+    if (window.innerWidth <= 768) return;
+
     const handlePointerMove = (event) => {
       if (tooltipElement.current) {
         tooltipElement.current.remove();
