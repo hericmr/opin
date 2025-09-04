@@ -19,6 +19,7 @@ import HistoriasTab from './tabs/HistoriasTab';
 import HistoriaProfessoresTab from './tabs/HistoriaProfessoresTab';
 import CoordenadasTab from './tabs/CoordenadasTab';
 import TabelasIntegraisTab from './tabs/TabelasIntegraisTab';
+import TabelaEditavelTab from './tabs/TabelaEditavelTab';
 
 // Imports condicionais para evitar problemas de hot reload
 let ImagensEscolaTab = null;
@@ -147,6 +148,15 @@ const AdminPanel = () => {
     };
     
     setEditingLocation(escolaOriginal);
+  };
+
+  // Função para abrir tabela editável
+  const abrirTabelaEditavel = () => {
+    setEditingLocation({
+      id: 'tabela-editavel',
+      Escola: 'Tabela Editável',
+      activeTab: 'tabela-editavel'
+    });
   };
 
   // Função para criar nova escola vazia
@@ -381,6 +391,57 @@ const AdminPanel = () => {
           />
         );
       
+      case 'tabela-editavel':
+        return <TabelaEditavelTab setEditingLocation={setEditingLocation} />;
+      
+      case 'historias-professor':
+        return <div className="text-center py-16">
+          <div className="max-w-md mx-auto">
+            <h3 className="text-xl font-semibold text-gray-200 mb-2">
+              Tabela de Histórias dos Professores
+            </h3>
+            <p className="text-gray-400 mb-8">
+              Funcionalidade em desenvolvimento...
+            </p>
+          </div>
+        </div>;
+      
+      case 'documentos-escola':
+        return <div className="text-center py-16">
+          <div className="max-w-md mx-auto">
+            <h3 className="text-xl font-semibold text-gray-200 mb-2">
+              Tabela de Documentos das Escolas
+            </h3>
+            <p className="text-gray-400 mb-8">
+              Funcionalidade em desenvolvimento...
+            </p>
+          </div>
+        </div>;
+      
+      case 'imagens-escola':
+        return <div className="text-center py-16">
+          <div className="max-w-md mx-auto">
+            <h3 className="text-xl font-semibold text-gray-200 mb-2">
+              Tabela de Imagens das Escolas
+            </h3>
+            <p className="text-gray-400 mb-8">
+              Funcionalidade em desenvolvimento...
+            </p>
+          </div>
+        </div>;
+      
+      case 'imagens-professores':
+        return <div className="text-center py-16">
+          <div className="max-w-md mx-auto">
+            <h3 className="text-xl font-semibold text-gray-200 mb-2">
+              Tabela de Imagens dos Professores
+            </h3>
+            <p className="text-gray-400 mb-8">
+              Funcionalidade em desenvolvimento...
+            </p>
+          </div>
+        </div>;
+      
 
       
       case 'imagens-escola':
@@ -465,8 +526,15 @@ const AdminPanel = () => {
           </div>
         )}
 
+        {/* Tabela Editável em Tela Cheia */}
+        {editingLocation && editingLocation.activeTab === 'tabela-editavel' && (
+          <div className="fixed inset-0 bg-gray-900 z-40 overflow-hidden" style={{ top: '72px' }}>
+            <TabelaEditavelTab setEditingLocation={setEditingLocation} />
+          </div>
+        )}
+
         {/* Painel de Edição */}
-        {editingLocation && typeof editingLocation === 'object' && (editingLocation.Escola !== undefined) && (
+        {editingLocation && typeof editingLocation === 'object' && (editingLocation.Escola !== undefined) && editingLocation.activeTab !== 'tabela-editavel' && (
           <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800/50 p-6 max-h-[calc(100vh-200px)] overflow-hidden flex flex-col">
             {/* Header do painel */}
             <div className="flex justify-between items-center mb-6 flex-shrink-0">
@@ -580,17 +648,17 @@ const AdminPanel = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-200 mb-2">
-                Selecione uma escola para editar
-              </h3>
-              <p className="text-gray-400 mb-8">
-                Escolha uma escola da lista lateral ou crie uma nova escola nessa parte inicial do painel de edição
-              </p>
+                             <h3 className="text-xl font-semibold text-gray-200 mb-2">
+                 Painel de Administração
+               </h3>
+               <p className="text-gray-400 mb-8">
+                 Escolha uma ação para gerenciar as escolas indígenas. Você pode criar novas escolas, editar dados em tabelas, fazer backup ou remover escolas.
+               </p>
               <div className="space-y-4">
-                <button
-                  onClick={handleNovaEscola}
-                  className="w-full px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
+                                 <button
+                   onClick={handleNovaEscola}
+                   className="w-full px-8 py-4 bg-gray-800 text-gray-100 rounded-xl hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border border-gray-600"
+                 >
                   <div className="flex items-center gap-3 justify-center">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -599,10 +667,10 @@ const AdminPanel = () => {
                   </div>
                 </button>
                 
-                <button
-                  onClick={() => setShowBackupModal(true)}
-                  className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
+                                 <button
+                   onClick={() => setShowBackupModal(true)}
+                   className="w-full px-8 py-4 bg-gray-800 text-gray-100 rounded-xl hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border border-gray-600"
+                 >
                   <div className="flex items-center gap-3 justify-center">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -611,17 +679,81 @@ const AdminPanel = () => {
                   </div>
                 </button>
 
-                <button
-                  onClick={() => setShowDeleteModal(true)}
-                  className="w-full px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
-                  <div className="flex items-center gap-3 justify-center">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    Remover Escola
-                  </div>
-                </button>
+                                 <button
+                   onClick={() => setShowDeleteModal(true)}
+                   className="w-full px-8 py-4 bg-gray-800 text-gray-100 rounded-xl hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border border-gray-600"
+                 >
+                   <div className="flex items-center gap-3 justify-center">
+                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                     </svg>
+                     Remover Escola
+                   </div>
+                 </button>
+
+                 <button
+                   onClick={abrirTabelaEditavel}
+                   className="w-full px-8 py-4 bg-gray-800 text-gray-100 rounded-xl hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border border-gray-600"
+                 >
+                   <div className="flex items-center gap-3 justify-center">
+                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                     </svg>
+                     Tabela de Escolas
+                   </div>
+                 </button>
+
+                 <button
+                   className="w-full px-8 py-4 bg-gray-700 text-gray-300 rounded-xl cursor-not-allowed opacity-50 transition-all duration-200"
+                   disabled
+                 >
+                   <div className="flex items-center gap-3 justify-center">
+                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                     </svg>
+                     Histórias dos Professores
+                     <span className="text-xs bg-gray-600 px-2 py-1 rounded">Em Construção</span>
+                   </div>
+                 </button>
+
+                 <button
+                   className="w-full px-8 py-4 bg-gray-700 text-gray-300 rounded-xl cursor-not-allowed opacity-50 transition-all duration-200"
+                   disabled
+                 >
+                   <div className="flex items-center gap-3 justify-center">
+                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                     </svg>
+                     Documentos das Escolas
+                     <span className="text-xs bg-gray-600 px-2 py-1 rounded">Em Construção</span>
+                   </div>
+                 </button>
+
+                 <button
+                   className="w-full px-8 py-4 bg-gray-700 text-gray-300 rounded-xl cursor-not-allowed opacity-50 transition-all duration-200"
+                   disabled
+                 >
+                   <div className="flex items-center gap-3 justify-center">
+                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                     </svg>
+                     Imagens das Escolas
+                     <span className="text-xs bg-gray-600 px-2 py-1 rounded">Em Construção</span>
+                   </div>
+                 </button>
+
+                 <button
+                   className="w-full px-8 py-4 bg-gray-700 text-gray-300 rounded-xl cursor-not-allowed opacity-50 transition-all duration-200"
+                   disabled
+                 >
+                   <div className="flex items-center gap-3 justify-center">
+                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                     </svg>
+                     Imagens dos Professores
+                     <span className="text-xs bg-gray-600 px-2 py-1 rounded">Em Construção</span>
+                   </div>
+                 </button>
               </div>
             </div>
           </div>

@@ -12,6 +12,7 @@ export const ADMIN_TABS = [
   { id: 'historias', label: 'Histórias' },
   { id: 'historia-professores', label: 'História dos Professores' },
   { id: 'coordenadas', label: 'Coordenadas' },
+  { id: 'tabela-editavel', label: 'Tabela Editável' },
   { id: 'imagens-escola', label: 'Imagens da Escola' },
   { id: 'imagens-professores', label: 'Imagens dos Professores' },
   { id: 'documentos', label: 'Documentos' }
