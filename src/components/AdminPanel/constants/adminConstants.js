@@ -14,8 +14,7 @@ export const ADMIN_TABS = [
   { id: 'coordenadas', label: 'Coordenadas' },
   { id: 'imagens-escola', label: 'Imagens da Escola' },
   { id: 'imagens-professores', label: 'Imagens dos Professores' },
-  { id: 'documentos', label: 'Documentos' },
-  { id: 'tabelas-integrais', label: 'Tabelas Integrais' }
+  { id: 'documentos', label: 'Documentos' }
 ];
 
 // Configurações de UI

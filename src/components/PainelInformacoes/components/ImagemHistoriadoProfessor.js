@@ -2,15 +2,39 @@ import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { supabase } from '../../../supabaseClient';
 import { getLegendaByImageUrl } from '../../../services/legendasService';
-import { X } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCw } from 'lucide-react';
 
 const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [imagemZoom, setImagemZoom] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const [imageOrientations, setImageOrientations] = useState({});
 
-  const fecharZoom = useCallback(() => setImagemZoom(null), []);
+  const fecharZoom = useCallback(() => {
+    setImagemZoom(null);
+    setCurrentImageIndex(0);
+    setZoomLevel(1);
+    setRotation(0);
+  }, []);
+
+  // Função para detectar orientação da imagem
+  const detectImageOrientation = useCallback((url) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const isVertical = img.height > img.width;
+        resolve(isVertical ? 'vertical' : 'horizontal');
+      };
+      img.onerror = () => {
+        resolve('horizontal'); // fallback
+      };
+      img.src = url;
+    });
+  }, []);
 
   // Fecha modal com tecla ESC
   useEffect(() => {
@@ -21,6 +45,44 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
     return () => window.removeEventListener('keydown', handleEsc);
   }, [fecharZoom]);
 
+  // Navegação com teclado
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!imagemZoom) return;
+      
+      switch (e.key) {
+        case 'ArrowLeft':
+          e.preventDefault();
+          prevImage();
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          nextImage();
+          break;
+        case 'Escape':
+          fecharZoom();
+          break;
+        case '+':
+        case '=':
+          e.preventDefault();
+          setZoomLevel(prev => Math.min(prev + 0.25, 3));
+          break;
+        case '-':
+          e.preventDefault();
+          setZoomLevel(prev => Math.max(prev - 0.25, 0.5));
+          break;
+        case 'r':
+        case 'R':
+          e.preventDefault();
+          setRotation(prev => (prev + 90) % 360);
+          break;
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [imagemZoom]);
+
   // Forçar recarga quando refreshKey mudar
   useEffect(() => {
     if (refreshKey > 0) {
@@ -28,6 +90,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
       setImagens([]);
       setLoading(true);
       setError(null);
+      setImageOrientations({});
     }
   }, [refreshKey]);
 
@@ -89,6 +152,13 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
               categoria: legenda?.categoria,
             };
           }));
+
+          // Detectar orientações das imagens
+          const orientations = {};
+          for (const img of imagensComUrl) {
+            orientations[img.id] = await detectImageOrientation(img.publicURL);
+          }
+          setImageOrientations(orientations);
           setImagens(imagensComUrl);
         } else {
           setImagens([]);
@@ -99,7 +169,39 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
         setError(`Erro inesperado: ${err.message}`);
         setLoading(false);
       });
-  }, [escola_id]);
+  }, [escola_id, detectImageOrientation]);
+
+  const openImage = useCallback((image, index) => {
+    setImagemZoom(image);
+    setCurrentImageIndex(index);
+    setZoomLevel(1);
+    setRotation(0);
+  }, []);
+
+  const nextImage = useCallback(() => {
+    if (imagens.length > 1) {
+      const nextIndex = (currentImageIndex + 1) % imagens.length;
+      setCurrentImageIndex(nextIndex);
+      setImagemZoom(imagens[nextIndex]);
+      setZoomLevel(1);
+      setRotation(0);
+    }
+  }, [imagens, currentImageIndex]);
+
+  const prevImage = useCallback(() => {
+    if (imagens.length > 1) {
+      const prevIndex = currentImageIndex === 0 ? imagens.length - 1 : currentImageIndex - 1;
+      setCurrentImageIndex(prevIndex);
+      setImagemZoom(imagens[prevIndex]);
+      setZoomLevel(1);
+      setRotation(0);
+    }
+  }, [imagens, currentImageIndex]);
+
+  const resetImage = useCallback(() => {
+    setZoomLevel(1);
+    setRotation(0);
+  }, []);
 
   if (loading) {
     return <div className="text-gray-500">Carregando imagens do professor...</div>;
@@ -116,11 +218,11 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
   return (
     <section className="my-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {imagens.map((img) => (
+        {imagens.map((img, index) => (
           <figure
             key={img.id}
             className="rounded-lg overflow-hidden border bg-white shadow-sm flex flex-col cursor-pointer transition hover:shadow-md"
-            onClick={() => img.publicURL && setImagemZoom(img)}
+            onClick={() => img.publicURL && openImage(img, index)}
           >
             <div className="w-full aspect-[4/3] bg-gray-100 flex items-center justify-center">
               <img
@@ -166,59 +268,142 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
         ))}
       </div>
 
-      {/* Modal de Zoom */}
+      {/* Modal de Zoom Melhorado */}
       {imagemZoom && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 cursor-zoom-out"
+          className="image-zoom-modal"
           onClick={fecharZoom}
         >
+          {/* Botão Fechar */}
           <button
             onClick={fecharZoom}
-            className="absolute top-4 right-4 text-white hover:text-red-400 transition"
+            className="image-zoom-close"
             aria-label="Fechar"
           >
-            <X size={32} />
+            <X size={24} />
           </button>
+
+          {/* Controles de Zoom */}
+          <div className="image-zoom-controls">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setZoomLevel(prev => Math.min(prev + 0.25, 3));
+              }}
+              className="image-zoom-control-button"
+              aria-label="Aumentar zoom"
+            >
+              <ZoomIn size={20} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setZoomLevel(prev => Math.max(prev - 0.25, 0.5));
+              }}
+              className="image-zoom-control-button"
+              aria-label="Diminuir zoom"
+            >
+              <ZoomOut size={20} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setRotation(prev => (prev + 90) % 360);
+              }}
+              className="image-zoom-control-button"
+              aria-label="Rotacionar"
+            >
+              <RotateCw size={20} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                resetImage();
+              }}
+              className="image-zoom-control-button text-xs px-3"
+              aria-label="Resetar"
+            >
+              Reset
+            </button>
+          </div>
+
+          {/* Navegação entre imagens */}
+          {imagens.length > 1 && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prevImage();
+                }}
+                className="image-zoom-navigation prev"
+                aria-label="Imagem anterior"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  nextImage();
+                }}
+                className="image-zoom-navigation next"
+                aria-label="Próxima imagem"
+              >
+                <ChevronRight size={24} />
+              </button>
+              
+              {/* Indicador de posição */}
+              <div className="image-zoom-counter">
+                {currentImageIndex + 1} de {imagens.length}
+              </div>
+            </>
+          )}
           
-          <div className="max-w-4xl max-h-full">
-          <img
-            src={imagemZoom.publicURL}
-              alt={imagemZoom.legenda}
-            className="max-w-full max-h-full rounded-lg shadow-2xl border-4 border-white"
+          {/* Container da imagem */}
+          <div 
+            className="image-zoom-container"
             onClick={(e) => e.stopPropagation()}
-          />
+          >
+            <img
+              src={imagemZoom.publicURL}
+              alt={imagemZoom.legenda}
+              className={`image-zoom-image ${imageOrientations[imagemZoom.id] || 'horizontal'}`}
+              style={{
+                transform: `scale(${zoomLevel}) rotate(${rotation}deg)`,
+                transition: 'transform 0.2s ease-in-out'
+              }}
+            />
+          </div>
             
-            {/* Legenda no modal */}
-            {imagemZoom.legenda && (
-              <div className="mt-4 bg-white rounded-lg p-4 shadow-lg">
-                <h3 className="font-semibold text-gray-900 mb-2">
-                  {imagemZoom.legenda}
-                </h3>
-                
-                {/* Informações adicionais */}
-                <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
-                  {imagemZoom.categoria && (
-                    <span className="capitalize bg-gray-100 px-2 py-1 rounded">
-                      {imagemZoom.categoria}
-                    </span>
-                  )}
-                  {imagemZoom.autor && (
-                    <span>Fotógrafo: {imagemZoom.autor}</span>
-                  )}
-                  {imagemZoom.dataFoto && (
-                    <span>Data: {new Date(imagemZoom.dataFoto).toLocaleDateString('pt-BR')}</span>
-                  )}
-                </div>
-                
-                {/* Descrição detalhada */}
-                {imagemZoom.descricaoDetalhada && (
-                  <p className="text-gray-700 leading-relaxed">
-                    {imagemZoom.descricaoDetalhada}
-                  </p>
+          {/* Legenda no modal */}
+          {imagemZoom.legenda && (
+            <div className="image-zoom-caption">
+              <h3 className="font-semibold text-gray-900 mb-1 text-sm">
+                {imagemZoom.legenda}
+              </h3>
+              
+              {/* Informações adicionais */}
+              <div className="flex items-center gap-3 text-xs text-gray-600 mb-1 flex-wrap">
+                {imagemZoom.categoria && (
+                  <span className="capitalize bg-gray-100 px-1.5 py-0.5 rounded text-xs">
+                    {imagemZoom.categoria}
+                  </span>
+                )}
+                {imagemZoom.autor && (
+                  <span>Fotógrafo: {imagemZoom.autor}</span>
+                )}
+                {imagemZoom.dataFoto && (
+                  <span>Data: {new Date(imagemZoom.dataFoto).toLocaleDateString('pt-BR')}</span>
                 )}
               </div>
-            )}
-          </div>
+              
+              {/* Descrição detalhada */}
+              {imagemZoom.descricaoDetalhada && (
+                <p className="text-gray-700 leading-tight text-xs">
+                  {imagemZoom.descricaoDetalhada}
+                </p>
+              )}
+            </div>
+          )}
         </div>
       )}
     </section>

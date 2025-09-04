@@ -52,6 +52,13 @@ export const addLegendaFoto = async (legenda) => {
     const legendaData = { ...legenda };
     console.log('Dados iniciais:', legendaData);
     
+    // Limpar campos vazios que podem causar problemas com o banco
+    Object.keys(legendaData).forEach(key => {
+      if (legendaData[key] === '' || legendaData[key] === null) {
+        delete legendaData[key];
+      }
+    });
+    
     // Verificar se a coluna tipo_foto existe antes de incluí-la
     try {
       console.log('Verificando se a coluna tipo_foto existe...');
@@ -109,9 +116,19 @@ export const updateLegendaFoto = async (id, updates) => {
     console.log('ID da legenda:', id);
     console.log('Dados para atualização:', updates);
     
+    // Limpar campos vazios que podem causar problemas com o banco
+    const cleanUpdates = { ...updates };
+    Object.keys(cleanUpdates).forEach(key => {
+      if (cleanUpdates[key] === '' || cleanUpdates[key] === null) {
+        delete cleanUpdates[key];
+      }
+    });
+    
+    console.log('Dados limpos para atualização:', cleanUpdates);
+    
     const { data, error } = await supabase
       .from('legendas_fotos')
-      .update(updates)
+      .update(cleanUpdates)
       .eq('id', id)
       .select()
       .single();

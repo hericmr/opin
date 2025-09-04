@@ -232,6 +232,28 @@ export const useEscolas = () => {
     }
   }, [updateEscolaInList, addEscolaToList]);
 
+  // Deletar escola do banco de dados
+  const deleteEscola = useCallback(async (escolaId) => {
+    try {
+      setError(null);
+      
+      const { error } = await supabase
+        .from('escolas_completa')
+        .delete()
+        .eq('id', escolaId);
+
+      if (error) throw error;
+      
+      // Remover da lista local
+      removeEscolaFromList(escolaId);
+      return { success: true };
+    } catch (err) {
+      console.error('Erro ao deletar escola:', err);
+      setError(err.message);
+      return { success: false, error: err.message };
+    }
+  }, [removeEscolaFromList]);
+
   // Carregar escolas na inicialização
   useEffect(() => {
     fetchEscolas();
@@ -253,6 +275,7 @@ export const useEscolas = () => {
     addEscolaToList,
     removeEscolaFromList,
     saveEscola,
+    deleteEscola,
     
     // Utilitários
     filteredEscolas: filteredEscolas(),

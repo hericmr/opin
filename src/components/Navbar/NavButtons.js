@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, BookOpen, Search, Home } from 'lucide-react';
+import { BookOpen, Search, Home } from 'lucide-react';
 
 const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isMobileLandscape }) => {
   const navigate = useNavigate();
@@ -21,8 +21,8 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isMobileLandsca
 
   return (
     <div className="flex items-center space-x-2">
-      {/* Botão Home/Mapa - TEMPORARIAMENTE DESATIVADO */}
-      {/* <button
+      {/* Botão Home/Mapa */}
+      <button
         onClick={() => navigate('/')}
         className={getButtonStyle(isActive('/'))}
         title="Voltar ao mapa das escolas indígenas"
@@ -34,22 +34,22 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isMobileLandsca
         <span className="xl:hidden">
           Mapa
         </span>
-      </button> */}
+      </button>
 
-      {/* Botão Conteúdo Educacional - TEMPORARIAMENTE DESATIVADO */}
-      {/* <button
+      {/* Botão Materiais Didáticos */}
+      <button
         onClick={() => navigate('/conteudo')}
         className={getButtonStyle(isActive('/conteudo'))}
-        title="Ver todo o conteúdo educacional"
+        title="Ver materiais didáticos indígenas"
       >
         <BookOpen className="w-5 h-5" />
         <span className="hidden xl:inline">
-          {isActive('/conteudo') ? 'Conteúdo Ativo' : 'Conteúdo Educacional'}
+          {isActive('/conteudo') ? 'Materiais Ativos' : 'Materiais Didáticos'}
         </span>
         <span className="xl:hidden">
-          Conteúdo
+          Materiais
         </span>
-      </button> */}
+      </button>
 
       {/* Botão Busca (apenas se estivermos na página de busca) */}
       {isSearchPage && (
