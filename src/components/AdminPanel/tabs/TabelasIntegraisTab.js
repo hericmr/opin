@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Eye, RefreshCw, Database, FileText, Users, Image, Video, FileImage, Archive, Cloud, HardDrive, Globe, FileDown } from 'lucide-react';
+import { Download, Eye, RefreshCw, Database, FileText, Users, Image, Video, FileImage, Archive, HardDrive, Globe, FileDown, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '../../../supabaseClient';
 
 const TabelasIntegraisTab = () => {
@@ -19,35 +19,56 @@ const TabelasIntegraisTab = () => {
       nome: 'Escolas Completas',
       descricao: 'Dados principais de todas as escolas indígenas',
       icone: Database,
-      cor: 'bg-blue-500'
+      cor: 'bg-blue-500',
+      registros: 0
     },
     {
       id: 'historias_professor',
       nome: 'Histórias dos Professores',
       descricao: 'Depoimentos e histórias dos professores indígenas',
       icone: Users,
-      cor: 'bg-green-500'
+      cor: 'bg-green-500',
+      registros: 0
     },
     {
       id: 'documentos_escola',
       nome: 'Documentos das Escolas',
       descricao: 'PDFs e documentos das escolas',
       icone: FileText,
-      cor: 'bg-purple-500'
+      cor: 'bg-purple-500',
+      registros: 0
     },
     {
       id: 'titulos_videos',
       nome: 'Vídeos das Escolas',
       descricao: 'Links e títulos dos vídeos das escolas',
       icone: Video,
-      cor: 'bg-red-500'
+      cor: 'bg-red-500',
+      registros: 0
     },
     {
       id: 'legendas_fotos',
       nome: 'Legendas das Fotos',
       descricao: 'Legendas e descrições das imagens',
       icone: Image,
-      cor: 'bg-yellow-500'
+      cor: 'bg-yellow-500',
+      registros: 0
+    },
+    {
+      id: 'imagens_professores',
+      nome: 'Imagens dos Professores',
+      descricao: 'Metadados das imagens dos professores',
+      icone: Users,
+      cor: 'bg-teal-500',
+      registros: 0
+    },
+    {
+      id: 'imagens_escola',
+      nome: 'Imagens das Escolas',
+      descricao: 'Metadados das imagens das escolas',
+      icone: Image,
+      cor: 'bg-indigo-500',
+      registros: 0
     }
   ];
 
@@ -58,23 +79,143 @@ const TabelasIntegraisTab = () => {
       nome: 'Imagens das Escolas',
       descricao: 'Fotos das escolas indígenas',
       icone: Image,
-      cor: 'bg-indigo-500'
+      cor: 'bg-indigo-500',
+      arquivos: 0
     },
     {
       id: 'imagens-professores',
       nome: 'Imagens dos Professores',
       descricao: 'Fotos dos professores indígenas',
       icone: Users,
-      cor: 'bg-teal-500'
+      cor: 'bg-teal-500',
+      arquivos: 0
     },
     {
       id: 'pdfs',
       nome: 'Documentos PDF',
       descricao: 'Documentos das escolas em PDF',
       icone: FileText,
-      cor: 'bg-orange-500'
+      cor: 'bg-orange-500',
+      arquivos: 0
+    },
+    {
+      id: 'historias-professor',
+      nome: 'Histórias dos Professores',
+      descricao: 'Imagens das histórias dos professores',
+      icone: Users,
+      cor: 'bg-green-500',
+      arquivos: 0
     }
   ];
+
+  // Função para testar buckets
+  const testarBuckets = async () => {
+    console.log('Testando buckets do Supabase...');
+    setBackupStatus({ status: 'testando', message: 'Testando buckets...' });
+    
+    const resultados = [];
+    
+    for (const bucket of BUCKETS_BACKUP) {
+      try {
+        console.log(`Testando bucket: ${bucket.id}`);
+        
+        // Tentar listar arquivos do bucket
+        const { data, error } = await supabase.storage
+          .from(bucket.id)
+          .list('', { limit: 1000 });
+        
+        if (error) {
+          console.error(`❌ Erro no bucket ${bucket.id}:`, error);
+          resultados.push({ bucket: bucket.id, status: 'erro', mensagem: error.message });
+        } else {
+          console.log(`✅ Bucket ${bucket.id} OK - ${data?.length || 0} arquivos encontrados`);
+          if (data && data.length > 0) {
+            console.log(`📁 Arquivos no bucket ${bucket.id}:`, data.map(f => f.name));
+          }
+          resultados.push({ bucket: bucket.id, status: 'ok', arquivos: data?.length || 0 });
+        }
+      } catch (err) {
+        console.error(`❌ Exceção no bucket ${bucket.id}:`, err);
+        resultados.push({ bucket: bucket.id, status: 'excecao', mensagem: err.message });
+      }
+    }
+    
+    // Mostrar resultados
+    console.log('Resultados dos testes:', resultados);
+    
+    const bucketsOk = resultados.filter(r => r.status === 'ok').length;
+    const bucketsErro = resultados.filter(r => r.status === 'erro' || r.status === 'excecao').length;
+    const totalArquivos = resultados.reduce((acc, r) => acc + (r.arquivos || 0), 0);
+    
+    if (bucketsErro === 0) {
+      setBackupStatus({ 
+        status: 'concluido', 
+        message: `✅ Todos os buckets estão funcionando! ${bucketsOk} buckets testados, ${totalArquivos} arquivos encontrados.` 
+      });
+    } else {
+      setBackupStatus({ 
+        status: 'erro', 
+        message: `⚠️ ${bucketsErro} bucket(s) com problema. Verifique o console para detalhes.` 
+      });
+    }
+    
+    setTimeout(() => {
+      setBackupStatus({});
+    }, 5000);
+  };
+
+  // Função para testar tabelas
+  const testarTabelas = async () => {
+    console.log('Testando tabelas do Supabase...');
+    setBackupStatus({ status: 'testando', message: 'Testando tabelas...' });
+    
+    const resultados = [];
+    
+    for (const tabela of TABELAS_SISTEMA) {
+      try {
+        console.log(`Testando tabela: ${tabela.id}`);
+        
+        // Tentar buscar dados da tabela
+        const { data, error } = await supabase
+          .from(tabela.id)
+          .select('*')
+          .limit(5);
+        
+        if (error) {
+          console.error(`❌ Erro na tabela ${tabela.id}:`, error);
+          resultados.push({ tabela: tabela.id, status: 'erro', mensagem: error.message });
+        } else {
+          console.log(`✅ Tabela ${tabela.id} OK - ${data?.length || 0} registros encontrados`);
+          resultados.push({ tabela: tabela.id, status: 'ok', registros: data?.length || 0 });
+        }
+      } catch (err) {
+        console.error(`❌ Exceção na tabela ${tabela.id}:`, err);
+        resultados.push({ tabela: tabela.id, status: 'excecao', mensagem: err.message });
+      }
+    }
+    
+    // Mostrar resultados
+    console.log('Resultados dos testes de tabelas:', resultados);
+    
+    const tabelasOk = resultados.filter(r => r.status === 'ok').length;
+    const tabelasErro = resultados.filter(r => r.status === 'erro' || r.status === 'excecao').length;
+    
+    if (tabelasErro === 0) {
+      setBackupStatus({ 
+        status: 'concluido', 
+        message: `✅ Todas as tabelas estão funcionando! ${tabelasOk} tabelas testadas.` 
+      });
+    } else {
+      setBackupStatus({ 
+        status: 'erro', 
+        message: `⚠️ ${tabelasErro} tabela(s) com problema. Verifique o console para detalhes.` 
+      });
+    }
+    
+    setTimeout(() => {
+      setBackupStatus({});
+    }, 5000);
+  };
 
   useEffect(() => {
     setTabelas(TABELAS_SISTEMA);
@@ -125,33 +266,49 @@ const TabelasIntegraisTab = () => {
   // Função para criar e baixar ZIP
   const createAndDownloadZip = async (files, zipName) => {
     try {
-      // Verificar se JSZip está disponível
-      if (typeof JSZip === 'undefined') {
-        // Se JSZip não estiver disponível, baixar arquivos individualmente
-        alert('JSZip não disponível. Baixando arquivos individualmente...');
-        for (const file of files) {
-          await downloadFile(file.url, file.name);
-          await new Promise(resolve => setTimeout(resolve, 100)); // Delay para evitar sobrecarga
-        }
-        return;
-      }
-
+      console.log('Iniciando criação do ZIP com', files.length, 'arquivos');
+      
+      // Importar JSZip dinamicamente
       const JSZip = (await import('jszip')).default;
       const zip = new JSZip();
 
       // Adicionar arquivos ao ZIP
+      let arquivosAdicionados = 0;
       for (const file of files) {
         try {
+          console.log(`Baixando arquivo: ${file.name} de ${file.url}`);
+          
           const response = await fetch(file.url);
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          
           const blob = await response.blob();
+          console.log(`Arquivo ${file.name} baixado, tamanho: ${blob.size} bytes`);
+          
           zip.file(file.name, blob);
+          arquivosAdicionados++;
+          
+          // Atualizar progresso
+          const progress = (arquivosAdicionados / files.length) * 100;
+          setBackupProgress(progress);
+          
         } catch (error) {
           console.error(`Erro ao adicionar ${file.name} ao ZIP:`, error);
+          // Continuar com outros arquivos
         }
       }
 
+      if (arquivosAdicionados === 0) {
+        throw new Error('Nenhum arquivo foi adicionado ao ZIP');
+      }
+
+      console.log(`Gerando ZIP com ${arquivosAdicionados} arquivos...`);
+      
       // Gerar e baixar ZIP
       const zipBlob = await zip.generateAsync({ type: 'blob' });
+      console.log(`ZIP gerado, tamanho: ${zipBlob.size} bytes`);
+      
       const downloadUrl = window.URL.createObjectURL(zipBlob);
       const link = document.createElement('a');
       link.href = downloadUrl;
@@ -160,13 +317,21 @@ const TabelasIntegraisTab = () => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(downloadUrl);
+      
+      console.log('ZIP baixado com sucesso:', zipName);
+      
     } catch (error) {
       console.error('Erro ao criar ZIP:', error);
+      
       // Fallback: baixar arquivos individualmente
-      alert('Erro ao criar ZIP. Baixando arquivos individualmente...');
+      console.log('Tentando download individual dos arquivos...');
       for (const file of files) {
-        await downloadFile(file.url, file.name);
-        await new Promise(resolve => setTimeout(resolve, 100));
+        try {
+          await downloadFile(file.url, file.name);
+          await new Promise(resolve => setTimeout(resolve, 200)); // Delay maior para evitar sobrecarga
+        } catch (downloadError) {
+          console.error(`Erro ao baixar ${file.name}:`, downloadError);
+        }
       }
     }
   };
@@ -205,15 +370,20 @@ const TabelasIntegraisTab = () => {
       
       for (const bucket of BUCKETS_BACKUP) {
         try {
+          console.log(`Listando arquivos do bucket: ${bucket.id}`);
           const { data, error } = await supabase.storage
             .from(bucket.id)
             .list('', { limit: 1000 });
           
           if (error) throw error;
           
+          console.log(`Bucket ${bucket.id}: ${data?.length || 0} arquivos encontrados`);
+          console.log('Arquivos encontrados:', data);
+          
           const arquivosComUrls = [];
           for (const arquivo of data) {
             try {
+              console.log(`Gerando URL para: ${arquivo.name}`);
               const { data: urlData } = await supabase.storage
                 .from(bucket.id)
                 .createSignedUrl(arquivo.name, 3600); // URL válida por 1 hora
@@ -227,12 +397,16 @@ const TabelasIntegraisTab = () => {
                 };
                 arquivosComUrls.push(arquivoCompleto);
                 todosArquivos.push(arquivoCompleto);
+                console.log(`URL gerada para ${arquivo.name}: ${urlData.signedUrl.substring(0, 50)}...`);
+              } else {
+                console.warn(`URL não gerada para ${arquivo.name}`);
               }
             } catch (err) {
               console.error(`Erro ao gerar URL para ${arquivo.name}:`, err);
             }
           }
           
+          console.log(`Bucket ${bucket.id}: ${arquivosComUrls.length} URLs geradas`);
           backupArquivos[bucket.id] = arquivosComUrls;
         } catch (err) {
           console.error(`Erro ao fazer backup do bucket ${bucket.id}:`, err);
@@ -274,6 +448,9 @@ const TabelasIntegraisTab = () => {
       document.body.removeChild(link);
 
       // 5. Download das imagens em ZIP
+      console.log(`Total de arquivos para download: ${todosArquivos.length}`);
+      console.log('Arquivos para download:', todosArquivos);
+      
       if (todosArquivos.length > 0) {
         setBackupStatus({ status: 'imagens', message: 'Baixando imagens...' });
         setBackupProgress(95);
@@ -282,17 +459,23 @@ const TabelasIntegraisTab = () => {
           todosArquivos, 
           `imagens_opin_${new Date().toISOString().split('T')[0]}.zip`
         );
+      } else {
+        console.warn('Nenhuma imagem encontrada para backup');
+        setBackupStatus({ 
+          status: 'erro', 
+          message: 'Nenhuma imagem encontrada para backup. Verifique se há arquivos nos buckets.' 
+        });
       }
 
       setBackupProgress(100);
       setBackupStatus({ 
         status: 'concluido', 
         message: 'Backup completo realizado com sucesso!',
-                  detalhes: {
-            tabelas: Object.keys(backupTabelas).length,
-            registros: Object.values(backupTabelas).reduce((acc, tabela) => acc + (tabela?.length || 0), 0),
-            arquivos: Object.values(backupArquivos).reduce((acc, bucket) => acc + (bucket?.length || 0), 0)
-          }
+        detalhes: {
+          tabelas: Object.keys(backupTabelas).length,
+          registros: Object.values(backupTabelas).reduce((acc, tabela) => acc + (tabela?.length || 0), 0),
+          arquivos: Object.values(backupArquivos).reduce((acc, bucket) => acc + (bucket?.length || 0), 0)
+        }
       });
 
       // Limpar status após 5 segundos
@@ -311,10 +494,10 @@ const TabelasIntegraisTab = () => {
     }
   };
 
-  // Backup apenas das tabelas
+  // Backup apenas das tabelas em formato CSV
   const backupApenasTabelas = async () => {
     try {
-      setBackupStatus({ status: 'tabelas', message: 'Fazendo backup das tabelas...' });
+      setBackupStatus({ status: 'tabelas', message: 'Fazendo backup das tabelas em CSV...' });
       setBackupProgress(0);
 
       const backupTabelasData = {};
@@ -334,30 +517,66 @@ const TabelasIntegraisTab = () => {
         }
       }
 
-      const backupData = {
-        metadata: {
-          dataBackup: new Date().toISOString(),
-          tipo: 'backup_tabelas',
-          tabelas: Object.keys(backupTabelasData),
-          totalRegistros: Object.values(backupTabelasData).reduce((acc, tabela) => acc + (tabela?.length || 0), 0)
-        },
-        dados: backupTabelasData
-      };
+      // Criar arquivo CSV para cada tabela
+      const dataAtual = new Date().toISOString().split('T')[0];
+      
+      // Importar JSZip dinamicamente para criar um arquivo ZIP com todos os CSVs
+      const JSZip = (await import('jszip')).default;
+      const zip = new JSZip();
 
-      const jsonContent = JSON.stringify(backupData, null, 2);
-      const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
+      // Adicionar cada tabela como um arquivo CSV separado
+      for (const [tabelaId, dados] of Object.entries(backupTabelasData)) {
+        if (dados && dados.length > 0) {
+          // Obter cabeçalhos das colunas
+          const headers = Object.keys(dados[0]);
+          
+          // Criar conteúdo CSV
+          const csvContent = [
+            headers.join(','),
+            ...dados.map(row => 
+              headers.map(header => {
+                const value = row[header];
+                // Escapar vírgulas e quebras de linha
+                if (typeof value === 'string' && (value.includes(',') || value.includes('\n') || value.includes('"'))) {
+                  return `"${value.replace(/"/g, '""')}"`;
+                }
+                return value || '';
+              }).join(',')
+            )
+          ].join('\n');
+
+          // Adicionar ao ZIP
+          zip.file(`${tabelaId}_${dataAtual}.csv`, csvContent);
+        }
+      }
+
+      // Adicionar arquivo de metadados
+      const metadata = {
+        dataBackup: new Date().toISOString(),
+        tipo: 'backup_tabelas_csv',
+        tabelas: Object.keys(backupTabelasData),
+        totalRegistros: Object.values(backupTabelasData).reduce((acc, tabela) => acc + (tabela?.length || 0), 0),
+        formato: 'CSV',
+        descricao: 'Backup das tabelas do sistema OPIN em formato CSV'
+      };
+      
+      zip.file(`metadata_${dataAtual}.json`, JSON.stringify(metadata, null, 2));
+
+      // Gerar e baixar ZIP
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const downloadUrl = window.URL.createObjectURL(zipBlob);
       const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', `backup_tabelas_opin_${new Date().toISOString().split('T')[0]}.json`);
+      link.href = downloadUrl;
+      link.download = `backup_tabelas_csv_opin_${dataAtual}.zip`;
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
 
       setBackupStatus({ 
         status: 'concluido', 
-        message: 'Backup das tabelas realizado com sucesso!' 
+        message: 'Backup das tabelas em CSV realizado com sucesso!' 
       });
 
       setTimeout(() => {
@@ -378,6 +597,7 @@ const TabelasIntegraisTab = () => {
   // Backup apenas das imagens
   const backupImagens = async () => {
     try {
+      console.log('Iniciando backup das imagens...');
       setBackupStatus({ status: 'imagens', message: 'Preparando backup das imagens...' });
       setBackupProgress(0);
 
@@ -386,46 +606,72 @@ const TabelasIntegraisTab = () => {
       for (let i = 0; i < BUCKETS_BACKUP.length; i++) {
         const bucket = BUCKETS_BACKUP[i];
         try {
+          console.log(`Processando bucket: ${bucket.id} (${bucket.nome})`);
           setBackupStatus({ 
             status: 'imagens', 
             message: `Processando bucket: ${bucket.nome}...` 
           });
           
-          const { data, error } = await supabase.storage
+          // Listar arquivos do bucket
+          const { data: arquivos, error } = await supabase.storage
             .from(bucket.id)
             .list('', { limit: 1000 });
           
-          if (error) throw error;
+          if (error) {
+            console.error(`Erro ao listar arquivos do bucket ${bucket.id}:`, error);
+            throw error;
+          }
           
-          for (const arquivo of data) {
-            try {
-              const { data: urlData } = await supabase.storage
-                .from(bucket.id)
-                .createSignedUrl(arquivo.name, 3600);
-              
-              if (urlData?.signedUrl) {
-                todosArquivos.push({
-                  ...arquivo,
-                  url: urlData.signedUrl,
-                  bucket: bucket.id,
-                  bucketNome: bucket.nome
-                });
+          console.log(`Bucket ${bucket.id} tem ${arquivos?.length || 0} arquivos`);
+          
+          if (arquivos && arquivos.length > 0) {
+            // Gerar URLs assinadas para cada arquivo
+            for (const arquivo of arquivos) {
+              try {
+                console.log(`Gerando URL para: ${arquivo.name}`);
+                
+                const { data: urlData, error: urlError } = await supabase.storage
+                  .from(bucket.id)
+                  .createSignedUrl(arquivo.name, 3600);
+                
+                if (urlError) {
+                  console.error(`Erro ao gerar URL para ${arquivo.name}:`, urlError);
+                  continue;
+                }
+                
+                if (urlData?.signedUrl) {
+                  const arquivoCompleto = {
+                    ...arquivo,
+                    url: urlData.signedUrl,
+                    bucket: bucket.id,
+                    bucketNome: bucket.nome
+                  };
+                  todosArquivos.push(arquivoCompleto);
+                  console.log(`URL gerada para ${arquivo.name}: ${urlData.signedUrl.substring(0, 50)}...`);
+                } else {
+                  console.warn(`URL não gerada para ${arquivo.name}`);
+                }
+              } catch (err) {
+                console.error(`Erro ao gerar URL para ${arquivo.name}:`, err);
               }
-            } catch (err) {
-              console.error(`Erro ao gerar URL para ${arquivo.name}:`, err);
             }
+          } else {
+            console.log(`Bucket ${bucket.id} está vazio`);
           }
           
           setBackupProgress((i + 1) / BUCKETS_BACKUP.length * 100);
         } catch (err) {
-          console.error(`Erro ao fazer backup do bucket ${bucket.id}:`, err);
+          console.error(`Erro ao processar bucket ${bucket.id}:`, err);
+          // Continuar com outros buckets
         }
       }
+
+      console.log(`Total de arquivos encontrados: ${todosArquivos.length}`);
 
       if (todosArquivos.length > 0) {
         setBackupStatus({ 
           status: 'download', 
-          message: 'Criando arquivo ZIP com as imagens...' 
+          message: `Criando arquivo ZIP com ${todosArquivos.length} imagens...` 
         });
         
         await createAndDownloadZip(
@@ -518,101 +764,146 @@ const TabelasIntegraisTab = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-        <span className="ml-2 text-gray-400">Carregando tabelas...</span>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400 mx-auto mb-4"></div>
+        <div className="text-gray-400 text-lg">Carregando tabelas...</div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Cabeçalho */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          Tabelas Integrais e Backup do Sistema
-        </h3>
-        <p className="text-sm text-gray-600">
-          Visualize, baixe e faça backup completo de todas as tabelas e arquivos do sistema
-        </p>
-      </div>
+    <div className="space-y-8">
 
       {/* Seção de Backup */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-          <Archive className="w-5 h-5 mr-2 text-blue-600" />
+      <div className="bg-gray-800/30 rounded-xl p-6 border border-gray-700/30">
+        <h4 className="text-lg font-semibold text-gray-100 mb-6 flex items-center gap-2">
+          <Archive className="w-5 h-5 text-blue-400" />
           Backup Completo do Sistema
         </h4>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <h5 className="font-medium text-blue-900 mb-2">Backup Completo</h5>
-            <p className="text-sm text-blue-700 mb-3">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          {/* Backup Completo */}
+          <div className="bg-gradient-to-br from-blue-600/20 to-blue-700/20 rounded-xl p-6 border border-blue-500/30 hover:border-blue-400/50 transition-all duration-200">
+            <div className="flex items-center mb-4">
+              <div className="bg-blue-500 p-3 rounded-lg mr-3">
+                <Archive className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h5 className="font-semibold text-gray-100">Backup Completo</h5>
+                <p className="text-sm text-gray-400">Sistema completo</p>
+              </div>
+            </div>
+            <p className="text-sm text-gray-300 mb-4">
               Inclui todas as tabelas, imagens dos buckets e metadados do sistema
             </p>
             <button
               onClick={backupCompletoSite}
               disabled={backupStatus.status === 'iniciando' || backupStatus.status === 'tabelas' || backupStatus.status === 'buckets' || backupStatus.status === 'finalizando' || backupStatus.status === 'download' || backupStatus.status === 'imagens'}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               <Archive className="w-4 h-4 inline mr-2" />
               Backup Completo
             </button>
           </div>
 
-          <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-            <h5 className="font-medium text-green-900 mb-2">Backup das Tabelas</h5>
-            <p className="text-sm text-green-700 mb-3">
-              Apenas os dados das tabelas em formato JSON
+          {/* Backup das Tabelas */}
+          <div className="bg-gradient-to-br from-green-600/20 to-green-700/20 rounded-xl p-6 border border-green-500/30 hover:border-green-400/50 transition-all duration-200">
+            <div className="flex items-center mb-4">
+              <div className="bg-green-500 p-3 rounded-lg mr-3">
+                <Database className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h5 className="font-semibold text-gray-100">Backup das Tabelas</h5>
+                <p className="text-sm text-gray-400">Apenas dados</p>
+              </div>
+            </div>
+            <p className="text-sm text-gray-300 mb-4">
+              Apenas os dados das tabelas em formato CSV
             </p>
-                          <button
+            <div className="space-y-2">
+              <button
                 onClick={backupApenasTabelas}
                 disabled={backupStatus.status === 'tabelas'}
-                className="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 <Database className="w-4 h-4 inline mr-2" />
                 Backup Tabelas
               </button>
+              <button
+                onClick={testarTabelas}
+                className="w-full px-3 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-600/50 transition-colors border border-gray-600/50 text-sm"
+              >
+                🔍 Testar Tabelas
+              </button>
+            </div>
           </div>
 
-          <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-            <h5 className="font-medium text-purple-900 mb-2">Backup das Imagens</h5>
-            <p className="text-sm text-purple-700 mb-3">
+          {/* Backup das Imagens */}
+          <div className="bg-gradient-to-br from-purple-600/20 to-purple-700/20 rounded-xl p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-200">
+            <div className="flex items-center mb-4">
+              <div className="bg-purple-500 p-3 rounded-lg mr-3">
+                <FileDown className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h5 className="font-semibold text-gray-100">Backup das Imagens</h5>
+                <p className="text-sm text-gray-400">Apenas arquivos</p>
+              </div>
+            </div>
+            <p className="text-sm text-gray-300 mb-4">
               Apenas as imagens dos buckets em arquivo ZIP
             </p>
-            <button
-              onClick={backupImagens}
-              disabled={backupStatus.status === 'imagens' || backupStatus.status === 'download'}
-              className="w-full px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              <FileDown className="w-4 h-4 inline mr-2" />
-              Backup Imagens
-            </button>
+            <div className="space-y-2">
+              <button
+                onClick={backupImagens}
+                disabled={backupStatus.status === 'imagens' || backupStatus.status === 'download'}
+                className="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl hover:from-purple-700 hover:to-purple-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                <FileDown className="w-4 h-4 inline mr-2" />
+                Backup Imagens
+              </button>
+              <button
+                onClick={testarBuckets}
+                className="w-full px-3 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-600/50 transition-colors border border-gray-600/50 text-sm"
+              >
+                🔍 Testar Buckets
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Status do Backup */}
         {backupStatus.status && (
-          <div className={`p-4 rounded-lg border ${
-            backupStatus.status === 'concluido' ? 'bg-green-50 border-green-200 text-green-800' :
-            backupStatus.status === 'erro' ? 'bg-red-50 border-red-200 text-red-800' :
-            'bg-blue-50 border-blue-200 text-blue-800'
+          <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+            backupStatus.status === 'concluido' 
+              ? 'bg-green-900/50 border-green-700/50 text-green-200' 
+              : backupStatus.status === 'erro' 
+                ? 'bg-red-900/50 border-red-700/50 text-red-200'
+                : 'bg-blue-900/50 border-blue-700/50 text-blue-200'
           }`}>
             <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">{backupStatus.message}</p>
-                {backupStatus.detalhes && (
-                  <p className="text-sm mt-1">
-                    Tabelas: {backupStatus.detalhes.tabelas} | 
-                    Registros: {backupStatus.detalhes.registros} | 
-                    Arquivos: {backupStatus.detalhes.arquivos}
-                  </p>
+              <div className="flex items-center gap-3">
+                {backupStatus.status === 'concluido' ? (
+                  <CheckCircle className="w-6 h-6 text-green-400" />
+                ) : backupStatus.status === 'erro' ? (
+                  <AlertCircle className="w-6 h-6 text-red-400" />
+                ) : (
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-400"></div>
                 )}
+                <div>
+                  <p className="font-semibold">{backupStatus.message}</p>
+                  {backupStatus.detalhes && (
+                    <p className="text-sm mt-1 text-gray-300">
+                      Tabelas: {backupStatus.detalhes.tabelas} | 
+                      Registros: {backupStatus.detalhes.registros} | 
+                      Arquivos: {backupStatus.detalhes.arquivos}
+                    </p>
+                  )}
+                </div>
               </div>
               {backupProgress > 0 && backupProgress < 100 && (
-                <div className="flex items-center">
-                  <div className="w-32 bg-gray-200 rounded-full h-2 mr-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-32 bg-gray-700 rounded-full h-2">
                     <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                      className="bg-green-400 h-2 rounded-full transition-all duration-300" 
                       style={{ width: `${backupProgress}%` }}
                     ></div>
                   </div>
@@ -625,13 +916,13 @@ const TabelasIntegraisTab = () => {
       </div>
 
       {/* Lista de Tabelas */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-          <Database className="w-5 h-5 mr-2 text-gray-600" />
+      <div className="bg-gray-800/30 rounded-xl p-6 border border-gray-700/30">
+        <h4 className="text-lg font-semibold text-gray-100 mb-6 flex items-center gap-2">
+          <Database className="w-5 h-5 text-gray-400" />
           Tabelas do Sistema
         </h4>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tabelas.map((tabela) => {
             const Icone = tabela.icone;
             const isSelected = selectedTabela === tabela.id;
@@ -639,25 +930,28 @@ const TabelasIntegraisTab = () => {
             return (
               <div
                 key={tabela.id}
-                className={`bg-white rounded-lg shadow-sm border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
+                className={`bg-gray-800/50 backdrop-blur-sm rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-lg ${
                   isSelected 
-                    ? 'border-green-500 bg-green-50' 
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'border-green-500/50 bg-green-600/20' 
+                    : 'border-gray-700/50 hover:border-gray-600/50 hover:bg-gray-700/30'
                 }`}
                 onClick={() => carregarDadosTabela(tabela.id)}
               >
-                <div className="p-4">
-                  <div className="flex items-center mb-3">
-                    <div className={`${tabela.cor} p-2 rounded-lg mr-3`}>
-                      <Icone className="w-5 h-5 text-white" />
+                <div className="p-6">
+                  <div className="flex items-center mb-4">
+                    <div className={`${tabela.cor} p-3 rounded-lg mr-3 shadow-lg`}>
+                      <Icone className="w-6 h-6 text-white" />
                     </div>
-                    <h4 className="font-medium text-gray-900">{tabela.nome}</h4>
+                    <div>
+                      <h4 className="font-semibold text-gray-100">{tabela.nome}</h4>
+                      <p className="text-sm text-gray-400">{tabela.registros} registros</p>
+                    </div>
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">{tabela.descricao}</p>
+                  <p className="text-sm text-gray-300 mb-4">{tabela.descricao}</p>
                   
                   <div className="flex space-x-2">
                     <button
-                      className="flex items-center px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
+                      className="flex items-center px-3 py-2 text-xs bg-blue-600/20 text-blue-300 rounded-lg hover:bg-blue-600/30 transition-colors border border-blue-500/30"
                       onClick={(e) => {
                         e.stopPropagation();
                         carregarDadosTabela(tabela.id);
@@ -674,115 +968,88 @@ const TabelasIntegraisTab = () => {
         </div>
       </div>
 
-      {/* Lista de Buckets */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-          <Cloud className="w-5 h-5 mr-2 text-gray-600" />
-          Buckets de Arquivos
-        </h4>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {BUCKETS_BACKUP.map((bucket) => {
-            const Icone = bucket.icone;
-            
-            return (
-              <div
-                key={bucket.id}
-                className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-center mb-3">
-                  <div className={`${bucket.cor} p-2 rounded-lg mr-3`}>
-                    <Icone className="w-5 h-5 text-white" />
-                  </div>
-                  <h4 className="font-medium text-gray-900">{bucket.nome}</h4>
-                </div>
-                <p className="text-sm text-gray-600 mb-3">{bucket.descricao}</p>
-                <p className="text-xs text-gray-500">
-                  Incluído no backup completo do sistema
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+
 
       {/* Visualização dos Dados */}
       {selectedTabela && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-gray-800/30 rounded-xl p-6 border border-gray-700/30">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h4 className="text-lg font-semibold text-gray-900">
+              <h4 className="text-lg font-semibold text-gray-100">
                 Dados da Tabela: {tabelas.find(t => t.id === selectedTabela)?.nome}
               </h4>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-400">
                 {dadosTabela.length} registros encontrados
               </p>
             </div>
             
-            <div className="flex space-x-2">
+            <div className="flex space-x-3">
               <button
                 onClick={() => carregarDadosTabela(selectedTabela)}
                 disabled={loadingDados}
-                className="flex items-center px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors disabled:opacity-50"
+                className="flex items-center px-4 py-2 text-sm bg-gray-700/50 text-gray-200 rounded-lg hover:bg-gray-600/50 transition-colors disabled:opacity-50 border border-gray-600/50"
               >
-                <RefreshCw className={`w-4 h-4 mr-1 ${loadingDados ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-4 h-4 mr-2 ${loadingDados ? 'animate-spin' : ''}`} />
                 Atualizar
               </button>
               
               <button
                 onClick={() => downloadCSV(selectedTabela, dadosTabela)}
                 disabled={loadingDados || dadosTabela.length === 0}
-                className="flex items-center px-3 py-2 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors disabled:opacity-50"
+                className="flex items-center px-4 py-2 text-sm bg-green-600/20 text-green-300 rounded-lg hover:bg-green-600/30 transition-colors disabled:opacity-50 border border-green-500/30"
               >
-                <Download className="w-4 h-4 mr-1" />
+                <Download className="w-4 h-4 mr-2" />
                 CSV
               </button>
               
               <button
                 onClick={() => downloadJSON(selectedTabela, dadosTabela)}
                 disabled={loadingDados || dadosTabela.length === 0}
-                className="flex items-center px-3 py-2 text-sm bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50"
+                className="flex items-center px-4 py-2 text-sm bg-purple-600/20 text-purple-300 rounded-lg hover:bg-purple-600/30 transition-colors disabled:opacity-50 border border-purple-500/30"
               >
-                <Download className="w-4 h-4 mr-1" />
+                <Download className="w-4 h-4 mr-2" />
                 JSON
               </button>
             </div>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded">
-              {error}
+            <div className="mb-6 p-4 bg-red-900/50 border border-red-700/50 text-red-200 rounded-xl backdrop-blur-sm">
+              <div className="flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-red-400" />
+                <span>{error}</span>
+              </div>
             </div>
           )}
 
           {loadingDados ? (
             <div className="flex items-center justify-center h-32">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
-              <span className="ml-2 text-gray-600">Carregando dados...</span>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400"></div>
+              <span className="ml-3 text-gray-400">Carregando dados...</span>
             </div>
           ) : (
             <div className="overflow-x-auto">
               {dadosTabela.length > 0 ? (
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                <table className="min-w-full divide-y divide-gray-700">
+                  <thead className="bg-gray-700/30">
                     <tr>
                       {Object.keys(dadosTabela[0]).map((header) => (
                         <th
                           key={header}
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
                         >
                           {header}
                         </th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-gray-800/20 divide-y divide-gray-700">
                     {dadosTabela.slice(0, 100).map((row, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
+                      <tr key={index} className="hover:bg-gray-700/30 transition-colors">
                         {Object.values(row).map((value, cellIndex) => (
                           <td
                             key={cellIndex}
-                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 max-w-xs truncate"
+                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-200 max-w-xs truncate"
                             title={typeof value === 'string' && value.length > 50 ? value : ''}
                           >
                             {typeof value === 'string' && value.length > 50 
@@ -795,13 +1062,16 @@ const TabelasIntegraisTab = () => {
                   </tbody>
                 </table>
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  Nenhum dado encontrado nesta tabela
+                <div className="text-center py-12 text-gray-400">
+                  <div className="w-16 h-16 bg-gray-700/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Database className="w-8 h-8 text-gray-500" />
+                  </div>
+                  <p>Nenhum dado encontrado nesta tabela</p>
                 </div>
               )}
               
               {dadosTabela.length > 100 && (
-                <div className="mt-4 text-center text-sm text-gray-600">
+                <div className="mt-6 text-center text-sm text-gray-400 bg-gray-700/20 p-4 rounded-lg">
                   Mostrando os primeiros 100 registros de {dadosTabela.length} total.
                   Use os botões de download para acessar todos os dados.
                 </div>
@@ -815,3 +1085,4 @@ const TabelasIntegraisTab = () => {
 };
 
 export default TabelasIntegraisTab;
+

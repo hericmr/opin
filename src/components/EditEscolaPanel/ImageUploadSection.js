@@ -255,6 +255,23 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     console.log('Dados da legenda:', legendaData);
     console.log('Escola ID:', escolaId);
     
+    // Validar e limpar dados da legenda
+    const cleanLegendaData = { ...legendaData };
+    
+    // Tratar campo data_foto - remover se estiver vazio
+    if (!cleanLegendaData.data_foto || cleanLegendaData.data_foto.trim() === '') {
+      delete cleanLegendaData.data_foto;
+    }
+    
+    // Tratar outros campos vazios que podem causar problemas
+    Object.keys(cleanLegendaData).forEach(key => {
+      if (cleanLegendaData[key] === '') {
+        delete cleanLegendaData[key];
+      }
+    });
+    
+    console.log('Dados limpos da legenda:', cleanLegendaData);
+    
     try {
       console.log('Buscando legenda existente...');
       let legenda = await getLegendaByImageUrl(imagem_url_relativa, escolaId, 'escola');
@@ -263,7 +280,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       if (legenda) {
         console.log('Atualizando legenda existente...');
         const updateData = {
-          ...legendaData,
+          ...cleanLegendaData,
           updated_at: new Date().toISOString()
         };
         console.log('Dados para atualização:', updateData);
@@ -275,7 +292,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         const novaLegendaData = {
           escola_id: escolaId,
           imagem_url: imagem_url_relativa,
-          ...legendaData,
+          ...cleanLegendaData,
           ativo: true,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
