@@ -43,6 +43,66 @@
   background: rgb(31 41 55);
 }
 
+/* Scrollbar horizontal para tabelas editáveis */
+.editable-table-scroll {
+  overflow-x: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(75 85 99) rgb(31 41 55);
+}
+
+.editable-table-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.editable-table-scroll::-webkit-scrollbar-track {
+  background: rgb(31 41 55);
+  border-radius: 4px;
+}
+
+.editable-table-scroll::-webkit-scrollbar-thumb {
+  background: rgb(75 85 99);
+  border-radius: 4px;
+}
+
+.editable-table-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgb(107 114 128);
+}
+
+.editable-table-scroll::-webkit-scrollbar-corner {
+  background: rgb(31 41 55);
+}
+
+/* Indicadores de scroll para tabelas */
+.editable-table-scroll::before,
+.editable-table-scroll::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.editable-table-scroll::before {
+  left: 0;
+  background: linear-gradient(to right, rgb(17 24 39), transparent);
+}
+
+.editable-table-scroll::after {
+  right: 0;
+  background: linear-gradient(to left, rgb(17 24 39), transparent);
+}
+
+/* Ocultar indicadores quando não há scroll */
+.editable-table-scroll:not(.can-scroll)::before,
+.editable-table-scroll:not(.can-scroll)::after {
+  display: none;
+}
+
 /* Garantir que as abas tenham scroll horizontal */
 .tabs-container {
   overflow-x: auto;
