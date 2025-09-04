@@ -154,7 +154,14 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
           </h3>
         )}
         <div 
-          className="historia-professor-content"
+          className="historia-professor-content prose prose-sm sm:prose-base md:prose-lg lg:prose-xl max-w-none
+            prose-headings:text-green-900 prose-p:text-black prose-p:leading-relaxed prose-p:text-justify
+            prose-img:rounded-xl prose-img:shadow-lg
+            prose-a:text-green-700 prose-a:no-underline prose-a:border-b-2 prose-a:border-green-100 hover:prose-a:border-green-600
+            prose-strong:text-green-800 prose-em:text-green-700
+            prose-blockquote:border-l-green-300 prose-blockquote:bg-green-50 prose-blockquote:pl-4 prose-blockquote:py-2 prose-blockquote:rounded-r-lg
+            prose-ul:text-black prose-ol:text-black prose-li:text-black
+            prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-sm"
           dangerouslySetInnerHTML={{ __html: currentHistoria.historia }}
         />
         {currentHistoria.imagem_public_url && (
@@ -211,10 +218,10 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
 
       {/* Modal de zoom da imagem */}
       {imagemZoom && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80" onClick={fecharZoom}>
-          <div className="relative max-w-3xl w-full p-4" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90" onClick={fecharZoom}>
+          <div className="relative max-w-[90vw] max-h-[90vh] flex items-center justify-center p-4" onClick={e => e.stopPropagation()}>
             <button
-              className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-80"
+              className="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-80 z-10"
               onClick={fecharZoom}
               aria-label="Fechar zoom"
             >
@@ -223,10 +230,10 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
             <img
               src={imagemZoom.imagem_public_url}
               alt={imagemZoom.descricao_imagem || 'Imagem da história do professor'}
-              className="w-full max-h-[80vh] object-contain rounded-xl shadow-2xl"
+              className="max-w-full max-h-full object-contain rounded-xl shadow-2xl border-4 border-white"
             />
             {imagemZoom.descricao_imagem && (
-              <figcaption className="text-center text-base text-gray-200 mt-4">
+              <figcaption className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center text-sm text-white bg-black bg-opacity-50 rounded-lg px-3 py-1.5 max-w-2xl">
                 {imagemZoom.descricao_imagem}
               </figcaption>
             )}

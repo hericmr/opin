@@ -13,8 +13,8 @@ O sistema de backup do OPIN (Observatório dos Professores Indígenas) permite f
 
 ### 2. Backup das Tabelas
 - **Inclui**: Apenas dados das tabelas
-- **Formato**: JSON estruturado
-- **Arquivo**: `backup_tabelas_opin_YYYY-MM-DD.json`
+- **Formato**: CSV estruturado (um arquivo por tabela)
+- **Arquivo**: `backup_tabelas_csv_opin_YYYY-MM-DD.zip`
 
 ### 3. Visualização Individual
 - **Tabelas**: Visualização e download CSV/JSON por tabela
@@ -101,7 +101,7 @@ O sistema de backup do OPIN (Observatório dos Professores Indígenas) permite f
 
 ### Tamanho dos Arquivos
 - **Backup completo**: Pode ser grande (10-50MB)
-- **Backup tabelas**: Geralmente pequeno (1-5MB)
+- **Backup tabelas**: Geralmente pequeno (1-5MB) - arquivo ZIP com CSVs
 - **Progresso**: Barra de progresso mostra o status
 
 ### Permissões

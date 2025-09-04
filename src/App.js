@@ -15,7 +15,7 @@ import { useEscolasData } from './hooks/useEscolasData';
 
 // Lazy loading dos componentes
 const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));
-const BibliotecaEducacionalIndigena = React.lazy(() => import("./components/BibliotecaEducacionalIndigena"));
+const MateriaisDidáticos = React.lazy(() => import("./components/MateriaisDidáticos/MateriaisDidáticos"));
 const AdminPanel = React.lazy(() => import("./components/AdminPanel"));
 const SearchResults = React.lazy(() => import("./components/SearchResults"));
 const TestLegendas = React.lazy(() => import("./components/TestLegendas"));
@@ -83,7 +83,7 @@ const AppContent = () => {
             path="/conteudo" 
             element={
               <main id="main-content" className="flex-grow">
-                <BibliotecaEducacionalIndigena locations={dataPoints} />
+                <MateriaisDidáticos locations={dataPoints} />
               </main>
             } 
           />

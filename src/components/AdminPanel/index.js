@@ -5,6 +5,7 @@ import { useModalidades } from './hooks/useModalidades';
 import { ADMIN_TABS, UI_CONFIG, FORM_CONFIG } from './constants/adminConstants';
 import AdminSidebar from './AdminSidebar';
 import AdminToolbar from './AdminToolbar';
+import './AdminPanel.css';
 import ModalidadesTab from './tabs/ModalidadesTab';
 import DadosBasicosTab from './tabs/DadosBasicosTab';
 import PovosLinguasTab from './tabs/PovosLinguasTab';
@@ -51,6 +52,10 @@ const AdminPanel = () => {
   const [saveError, setSaveError] = useState(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showBackupModal, setShowBackupModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [escolaToDelete, setEscolaToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Detectar se é mobile
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= UI_CONFIG.MOBILE_BREAKPOINT;
@@ -65,7 +70,8 @@ const AdminPanel = () => {
     selectedType, 
     setSelectedType,
     filteredEscolas,
-    saveEscola
+    saveEscola,
+    deleteEscola
   } = useEscolas();
 
   const {
@@ -214,6 +220,37 @@ const AdminPanel = () => {
     setEditingLocation(criarNovaEscolaVazia());
   };
 
+  // Função para abrir modal de remoção
+  const handleRemoverEscola = (escola) => {
+    setEscolaToDelete(escola);
+    setShowDeleteModal(true);
+  };
+
+  // Função para confirmar remoção
+  const handleConfirmarRemocao = async () => {
+    if (!escolaToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      const result = await deleteEscola(escolaToDelete.id);
+      
+      if (result.success) {
+        setShowDeleteModal(false);
+        setEscolaToDelete(null);
+        // Limpar edição se a escola removida estava sendo editada
+        if (editingLocation?.id === escolaToDelete.id) {
+          setEditingLocation(null);
+        }
+      } else {
+        console.error('Erro ao remover escola:', result.error);
+      }
+    } catch (error) {
+      console.error('Erro ao remover escola:', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   // Função para salvar escola
   const handleSaveEscola = async () => {
     if (!editingLocation) return;
@@ -344,8 +381,7 @@ const AdminPanel = () => {
           />
         );
       
-      case 'tabelas-integrais':
-        return <TabelasIntegraisTab />;
+
       
       case 'imagens-escola':
         if (!ImagensEscolaTab) {
@@ -376,7 +412,7 @@ const AdminPanel = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-950">
+    <div className="flex min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
       {/* Sidebar */}
       <AdminSidebar
         isMobile={isMobile}
@@ -387,8 +423,13 @@ const AdminPanel = () => {
       />
 
       {/* Conteúdo principal */}
-      <main className="flex-1 p-6 overflow-y-auto h-screen bg-gray-950">
-        <h1 className="text-2xl font-bold text-gray-100 mb-6">Painel de Administração</h1>
+      <main className="flex-1 p-4 lg:p-8 overflow-y-auto h-screen">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-300 mb-2">
+            Painel de Administração
+          </h1>
+        </div>
         
         {/* Toolbar */}
         <AdminToolbar
@@ -401,70 +442,114 @@ const AdminPanel = () => {
 
         {/* Loading state */}
         {escolasLoading && (
-          <div className="text-center py-8">
-            <div className="text-gray-400">Carregando escolas...</div>
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400 mx-auto mb-4"></div>
+              <div className="text-gray-400 text-lg">Carregando escolas...</div>
+            </div>
           </div>
         )}
 
         {/* Error state */}
         {escolasError && (
-          <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
-            Erro ao carregar escolas: {escolasError}
+          <div className="bg-red-900/50 border border-red-700/50 text-red-200 px-6 py-4 rounded-xl mb-6 backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div>
+                <h3 className="font-semibold">Erro ao carregar escolas</h3>
+                <p className="text-red-300">{escolasError}</p>
+              </div>
+            </div>
           </div>
         )}
 
         {/* Painel de Edição */}
         {editingLocation && typeof editingLocation === 'object' && (editingLocation.Escola !== undefined) && (
-          <div className="bg-gray-900 rounded-lg shadow-lg p-6 max-h-[calc(100vh-200px)] overflow-hidden flex flex-col border border-gray-800">
-            <div className="flex justify-between items-center mb-4 flex-shrink-0">
-              <h2 className="text-lg font-semibold text-gray-100">
+          <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800/50 p-6 max-h-[calc(100vh-200px)] overflow-hidden flex flex-col">
+            {/* Header do painel */}
+            <div className="flex justify-between items-center mb-6 flex-shrink-0">
+              <div>
+                <h2 className="text-xl lg:text-2xl font-semibold text-gray-100 mb-1">
                 {editingLocation.id ? 'Editar Escola' : 'Nova Escola'}
               </h2>
+                {editingLocation.Escola && (
+                  <p className="text-gray-400 text-sm">{editingLocation.Escola}</p>
+                )}
+              </div>
               <div className="flex items-center gap-3">
                 {/* Botão Salvar */}
                 <button
                   onClick={handleSaveEscola}
                   disabled={isSaving}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
                 >
-                  {isSaving ? 'Salvando...' : 'Salvar'}
+                  {isSaving ? (
+                    <div className="flex items-center gap-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      Salvando...
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Salvar
+                    </div>
+                  )}
                 </button>
                 
                 {/* Botão Fechar */}
                 <button
                   onClick={() => setEditingLocation(null)}
-                  className="text-gray-400 hover:text-gray-200"
+                  className="px-4 py-3 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-xl transition-colors"
                 >
-                  Fechar
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </button>
               </div>
             </div>
 
             {/* Mensagens de feedback */}
             {saveSuccess && (
-              <div className="mb-4 p-3 bg-green-900 border border-green-700 text-green-200 rounded-lg">
-                ✅ Escola salva com sucesso!
+              <div className="mb-6 p-4 bg-green-900/50 border border-green-700/50 text-green-200 rounded-xl backdrop-blur-sm">
+                <div className="flex items-center gap-3">
+                  <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="font-semibold">Escola salva com sucesso!</span>
+                </div>
               </div>
             )}
             
             {saveError && (
-              <div className="mb-4 p-3 bg-red-900 border border-red-700 text-red-200 rounded-lg">
-                ❌ Erro ao salvar: {saveError}
+              <div className="mb-6 p-4 bg-red-900/50 border border-red-700/50 text-red-200 rounded-xl backdrop-blur-sm">
+                <div className="flex items-center gap-3">
+                  <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div>
+                    <span className="font-semibold">Erro ao salvar:</span>
+                    <p className="text-red-300">{saveError}</p>
+                  </div>
+                </div>
               </div>
             )}
 
             {/* Navegação por abas */}
-            <div className="border-b border-gray-800 mb-6 flex-shrink-0 bg-gray-800 rounded-t-lg">
-              <nav className="-mb-px flex space-x-8 overflow-x-auto">
+            <div className="border-b border-gray-800 mb-6 flex-shrink-0 bg-gray-800/50 rounded-t-xl relative">
+              <nav className="-mb-px flex space-x-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 tabs-container">
                 {ADMIN_TABS.map((tab) => (
                   <button
                     key={tab.id}
                     type="button"
                     onClick={() => setEditingLocation({ ...editingLocation, activeTab: tab.id })}
-                    className={`whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                    className={`whitespace-nowrap py-3 px-3 sm:px-4 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 rounded-t-lg flex-shrink-0 min-w-fit ${
                       (editingLocation.activeTab || FORM_CONFIG.DEFAULT_ACTIVE_TAB) === tab.id
-                        ? 'border-green-400 text-green-300 bg-gray-900'
-                        : 'border-transparent text-gray-400 hover:text-green-200 hover:bg-gray-700'
+                        ? 'border-green-400 text-green-300 bg-gray-900 shadow-lg'
+                        : 'border-transparent text-gray-400 hover:text-green-200 hover:bg-gray-700/50'
                     }`}
                   >
                     {tab.label}
@@ -474,7 +559,7 @@ const AdminPanel = () => {
             </div>
 
             {/* Conteúdo da aba ativa */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
               {renderActiveTab()}
             </div>
           </div>
@@ -482,16 +567,211 @@ const AdminPanel = () => {
 
         {/* Mensagem quando nenhuma escola está selecionada */}
         {!editingLocation && !escolasLoading && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 text-lg mb-4">
-              Selecione uma escola para editar ou crie uma nova
+          <div className="text-center py-16">
+            <div className="max-w-md mx-auto">
+              <div className="w-24 h-24 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-200 mb-2">
+                Selecione uma escola para editar
+              </h3>
+              <p className="text-gray-400 mb-8">
+                Escolha uma escola da lista lateral ou crie uma nova escola nessa parte inicial do painel de edição
+              </p>
+              <div className="space-y-4">
+                <button
+                  onClick={handleNovaEscola}
+                  className="w-full px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  <div className="flex items-center gap-3 justify-center">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Criar Nova Escola
+                  </div>
+                </button>
+                
+                <button
+                  onClick={() => setShowBackupModal(true)}
+                  className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  <div className="flex items-center gap-3 justify-center">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    Backup dos Dados do Site
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setShowDeleteModal(true)}
+                  className="w-full px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  <div className="flex items-center gap-3 justify-center">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Remover Escola
+                  </div>
+                </button>
+              </div>
             </div>
+          </div>
+        )}
+
+        {/* Modal de Backup */}
+        {showBackupModal && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-gray-900/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800/50 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+              {/* Header da Modal */}
+              <div className="flex justify-between items-center p-6 border-b border-gray-800/50 flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-500 p-3 rounded-lg">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-100">Backup dos Dados do Site</h2>
+                    <p className="text-sm text-gray-400">Gerencie backups das tabelas e arquivos</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowBackupModal(false)}
+                  className="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-lg transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Conteúdo da Modal */}
+              <div className="flex-1 overflow-y-auto p-6">
+                <TabelasIntegraisTab />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Remoção de Escola */}
+        {showDeleteModal && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-gray-900/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800/50 w-full max-w-md">
+              {/* Header da Modal */}
+              <div className="flex justify-between items-center p-6 border-b border-gray-800/50">
+                <div className="flex items-center gap-3">
+                  <div className="bg-red-500 p-3 rounded-lg">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-100">Remover Escola</h2>
+                    <p className="text-sm text-gray-400">Selecione uma escola para remover</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-lg transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Conteúdo da Modal */}
+              <div className="p-6">
+                {!escolaToDelete ? (
+                  <div className="space-y-4">
+                    <p className="text-gray-300 mb-4">
+                      Selecione uma escola da lista para remover:
+                    </p>
+                    <div className="max-h-64 overflow-y-auto space-y-2">
+                      {filteredEscolas.map(escola => (
+                        <button
+                          key={escola.id}
+                          onClick={() => setEscolaToDelete(escola)}
+                          className="w-full text-left p-4 rounded-xl hover:bg-gray-800/50 transition-all duration-200 border border-transparent hover:border-gray-700/50 text-gray-200 hover:text-white"
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-medium truncate text-gray-200">
+                                {escola.Escola}
+                              </h3>
+                              {escola['Município'] && (
+                                <p className="text-sm text-gray-400 truncate mt-1">
+                                  {escola['Município']}
+                                </p>
+                              )}
+                            </div>
+                            <div className="ml-2 flex-shrink-0">
+                              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    <div className="bg-red-900/20 border border-red-700/50 rounded-xl p-4">
+                      <div className="flex items-center gap-3 mb-3">
+                        <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                        <h3 className="font-semibold text-red-200">Confirmar Remoção</h3>
+                      </div>
+                      <p className="text-red-300 text-sm">
+                        Você está prestes a remover a escola <strong>"{escolaToDelete.Escola}"</strong> de <strong>"{escolaToDelete['Município']}"</strong>.
+                      </p>
+                      <p className="text-red-400 text-sm mt-2">
+                        ⚠️ Esta ação é irreversível e removerá todos os dados da escola do sistema.
+                      </p>
+                    </div>
+
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => setEscolaToDelete(null)}
+                        className="flex-1 px-4 py-3 bg-gray-700 text-gray-200 rounded-xl hover:bg-gray-600 transition-colors"
+                      >
+                        Cancelar
+                      </button>
             <button
-              onClick={handleNovaEscola}
-              className="px-6 py-3 bg-green-700 text-white rounded-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-400 transition-colors"
-            >
-              + Criar Nova Escola
+                        onClick={handleConfirmarRemocao}
+                        disabled={isDeleting}
+                        className="flex-1 px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                      >
+                        {isDeleting ? (
+                          <div className="flex items-center gap-2 justify-center">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                            Removendo...
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 justify-center">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            Confirmar Remoção
+                          </div>
+                        )}
             </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </main>
