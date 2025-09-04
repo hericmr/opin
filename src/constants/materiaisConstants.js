@@ -77,3 +77,4 @@ export const FILTROS_PADRAO = {
   tipo: 'todos',
   termoBusca: ''
 };
+
