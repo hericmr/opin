@@ -64,8 +64,16 @@ const ModalidadesTab = ({
                 <input
                   type="checkbox"
                   className="mt-1 h-4 w-4 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500 focus:ring-2"
-                  checked={selectedModalidades.some(m => m.startsWith('Outro:'))}
-                  onChange={() => handleOutroModalidadeChange(outroModalidade)}
+                  checked={selectedModalidades.some(m => m.startsWith('Outro:')) || outroModalidade.trim() !== ''}
+                  onChange={(e) => {
+                    if (e.target.checked && !outroModalidade.trim()) {
+                      // Se está marcando o checkbox mas não há valor, adicionar um valor padrão
+                      handleOutroModalidadeChange('Modalidade específica');
+                    } else if (!e.target.checked) {
+                      // Se está desmarcando o checkbox, limpar o valor
+                      handleOutroModalidadeChange('');
+                    }
+                  }}
                 />
                 <div className="flex-1">
                   <span className="text-sm text-gray-200">Outro (especificar):</span>
@@ -128,6 +136,8 @@ const ModalidadesTab = ({
           </div>
         </div>
       )}
+
+
     </div>
   );
 };
