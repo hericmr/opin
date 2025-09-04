@@ -24,3 +24,4 @@ const FiltroTipo = ({ tipoSelecionado, onTipoChange }) => {
 };
 
 export default FiltroTipo;
+

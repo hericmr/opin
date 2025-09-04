@@ -91,3 +91,4 @@ const getIconePovo = (povo) => {
   };
   return icones[povo] || 'passaro';
 };
+
