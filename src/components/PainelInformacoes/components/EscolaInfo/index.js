@@ -8,7 +8,7 @@ import Modalidades from './Modalidades';
 import Infraestrutura from './Infraestrutura';
 import GestaoProfessores from './GestaoProfessores';
 import ProjetosParcerias from './ProjetosParcerias';
-import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
+// import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
 import HistoriadoProfessor from './HistoriadoProfessor';
 import DebugImagens from '../DebugImagens';
 
