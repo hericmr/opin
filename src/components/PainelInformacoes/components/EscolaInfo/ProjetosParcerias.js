@@ -13,22 +13,24 @@ const ProjectCard = ({ icon: Icon, label, value }) => {
   const isNegative = value?.trim().toLowerCase() === 'não';
 
   return (
-    <div className="flex items-start gap-4 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
-      <div className="mt-1">
-        <Icon className="w-5 h-5 text-green-600 flex-shrink-0" />
-      </div>
-      <div className="flex-1 space-y-1">
-        <div className="text-sm font-semibold text-gray-800">{label}</div>
-        {isNegative ? (
-          <div className="text-sm text-gray-400 flex items-center gap-1">
-            <X className="w-5 h-5 text-gray-400" />
-            Não
+    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-4 transition-all duration-200 hover:shadow-sm h-full flex flex-col">
+      <div className="flex items-start gap-3 flex-1">
+        <Icon className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+        <div className="flex-1 min-w-0 flex flex-col">
+          <div className="text-sm font-medium text-gray-700 mb-3 flex-shrink-0">{label}</div>
+          <div className="flex-1 flex items-start">
+            {isNegative ? (
+              <div className="text-sm text-gray-500 flex items-center gap-1">
+                <X className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                Não
+              </div>
+            ) : (
+              <div className="text-sm text-gray-800 leading-relaxed">
+                {value}
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="text-sm text-gray-700 leading-relaxed">
-            {value}
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
@@ -73,7 +75,7 @@ const ProjetosParcerias = memo(({ escola }) => {
 
   return (
     <InfoSection title="Projetos e Parcerias" icon={Target}>
-      <div className="grid grid-cols-1 gap-3 [&>*]:bg-green-100">
+      <div className="grid grid-cols-1 gap-4 items-stretch">
         {availableProjects.map((project) => (
           <ProjectCard
             key={project.field}

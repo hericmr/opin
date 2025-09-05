@@ -13,13 +13,17 @@ import {
 import InfoSection from '../InfoSection';
 
 const MiniCard = ({ icon: Icon, label, value, description }) => (
-  <div className="flex items-start gap-2 rounded-lg p-2 text-sm">
-    <Icon className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
-    <div className="flex-1">
-      <div className="text-xs text-gray-500">{label}</div>
-      <div className="text-gray-800 font-medium mt-0.5">{value}</div>
+  <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-full flex flex-col">
+    {/* Header com ícone e label */}
+    <div className="flex items-center gap-2 mb-2 flex-shrink-0">
+      <Icon className="w-5 h-5 text-green-600 flex-shrink-0" />
+      <span className="text-xs text-gray-600 font-medium">{label}</span>
+    </div>
+    {/* Conteúdo do valor */}
+    <div className="flex-1 flex flex-col">
+      <div className="text-sm text-gray-800 font-medium mb-2 break-words">{value}</div>
       {description && (
-        <div className="text-xs text-gray-600 mt-1 whitespace-pre-line">
+        <div className="text-xs text-gray-600 whitespace-pre-line leading-relaxed break-words">
           {description}
         </div>
       )}
@@ -100,22 +104,27 @@ const GestaoProfessores = memo(({ escola }) => {
 
   return (
     <InfoSection title="Gestores" icon={UsersRound}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 [&>*]:bg-green-100">
-        <MiniCard
-          icon={UserCheck}
-          label="Professores Indígenas"
-          value={escola.professores_indigenas}
-        />
-        <MiniCard
-          icon={UserMinus}
-          label="Professores Não Indígenas"
-          value={escola.professores_nao_indigenas}
-        />
-        <MiniCard
-          icon={MessageCircle}
-          label="Professores que falam língua indígena"
-          value={renderBooleanStatus(escola.professores_falam_lingua)}
-        />
+      <div className="space-y-4 mt-1">
+        {/* Cards em grid de 3 colunas */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
+          <MiniCard
+            icon={UserCheck}
+            label="Professores Indígenas"
+            value={escola.professores_indigenas}
+          />
+          <MiniCard
+            icon={UserMinus}
+            label="Professores Não Indígenas"
+            value={escola.professores_nao_indigenas}
+          />
+          <MiniCard
+            icon={MessageCircle}
+            label="Professores que falam língua indígena"
+            value={renderBooleanStatus(escola.professores_falam_lingua)}
+          />
+        </div>
+        
+        {/* Card de Formação em linha inteira */}
         {formacao?.status && (
           <MiniCard
             icon={Star}
@@ -126,7 +135,7 @@ const GestaoProfessores = memo(({ escola }) => {
         )}
       </div>
 
-      <div className="space-y-2 mt-4 [&>*]:bg-green-100">
+      <div className="space-y-4 mt-4">
         <MiniCard
           icon={User}
           label="Gestão/Nome"

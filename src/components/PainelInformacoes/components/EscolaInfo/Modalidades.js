@@ -33,11 +33,15 @@ const ExpandableList = ({ items, maxVisible = 3 }) => {
 
 // MiniCard padronizado
 const MiniCard = ({ icon: Icon, label, value }) => (
-  <div className="flex items-start rounded-lg p-2 text-sm">
-    <Icon className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
-    <div className="flex-1">
-      <div className="text-xs text-gray-500">{label}</div>
-      <div className="text-gray-800 font-medium p-0 m-0">{value}</div>
+  <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-full flex flex-col">
+    {/* Header com ícone e label */}
+    <div className="flex items-center gap-2 mb-2 flex-shrink-0">
+      <Icon className="w-5 h-5 text-green-600 flex-shrink-0" />
+      <span className="text-xs text-gray-600 font-medium">{label}</span>
+    </div>
+    {/* Conteúdo do valor */}
+    <div className="flex-1 flex items-start">
+      <div className="text-sm text-gray-800 font-medium break-words">{value}</div>
     </div>
   </div>
 );
@@ -91,16 +95,20 @@ const Modalidades = memo(({ escola }) => {
 
   return (
     <>
-      <InfoSection title="Modalidades" icon={Sparkles}>
+      <InfoSection>
         {/* Modalidade de Ensino em linha inteira */}
-        <div className="mb-4 bg-green-100 rounded-lg p-2">
-          <ExpandableList items={modalidadeList} maxVisible={3} />
+        <div className="mb-4 bg-green-50 rounded-lg p-4">
+          <div className="flex items-start gap-3 mb-2">
+            <Sparkles className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+            <span className="text-sm font-medium text-gray-700">Modalidade de Ensino</span>
+          </div>
+          <div className="ml-8">
+            <ExpandableList items={modalidadeList} maxVisible={3} />
+          </div>
         </div>
         
         {/* Grid com os outros cards */}
-        <div
-          className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mt-1 [&>*]:bg-green-100"
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-1 items-stretch">
           {gridItems.map((item, idx) => (
             <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} />
           ))}
@@ -112,7 +120,7 @@ const Modalidades = memo(({ escola }) => {
         icon={BookOpen}
         description="Diferenciados e não diferenciados, produzidos dentro e fora da comunidade."
       >
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mt-1 [&>*]:bg-green-100">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-1 items-stretch">
           {materiaisItems.map((item, idx) => (
             <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} />
           ))}
