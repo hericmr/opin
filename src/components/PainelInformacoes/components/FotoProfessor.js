@@ -20,7 +20,8 @@ const FotoProfessor = ({
   onError,
   onLoad,
   // Props para compatibilidade com tamanhos antigos
-  size
+  size,
+  customSize
 }) => {
   // Mapear tamanhos antigos para novos
   const sizeMapping = {
@@ -45,7 +46,8 @@ const FotoProfessor = ({
       src={fotoUrl}
       name={nomeProfessor}
       alt={nomeProfessor ? `Foto de ${nomeProfessor}` : 'Foto do professor'}
-      size={mappedSize}
+      size={customSize ? undefined : mappedSize}
+      customSize={customSize}
       shape={shape}
       variant={variant}
       theme={theme}

@@ -61,10 +61,11 @@ const Avatar = ({
   const sizeConfig = useMemo(() => {
     if (customSize) {
       return {
-        container: `w-[${customSize}] h-[${customSize}]`,
+        container: 'w-full h-full',
         text: 'text-sm',
         icon: 'w-6 h-6',
-        badge: 'w-3 h-3'
+        badge: 'w-3 h-3',
+        customSize: customSize
       };
     }
 
@@ -235,6 +236,7 @@ const Avatar = ({
   return (
     <div 
       className={baseClasses}
+      style={customSize ? { width: customSize, height: customSize } : undefined}
       onClick={handleClick}
       role={clickable || onClick ? 'button' : undefined}
       tabIndex={clickable || onClick ? 0 : undefined}
