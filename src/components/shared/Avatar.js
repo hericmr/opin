@@ -217,15 +217,6 @@ const Avatar = ({
   const shouldShowInitials = !shouldShowImage && initials && !error;
   const shouldShowIcon = !shouldShowImage && !shouldShowInitials && !error;
 
-  // Debug: Log da URL da imagem
-  React.useEffect(() => {
-    if (src) {
-      console.log('Avatar - URL da imagem:', src);
-      console.log('Avatar - Nome:', name);
-      console.log('Avatar - shouldShowImage:', shouldShowImage);
-    }
-  }, [src, name, shouldShowImage]);
-
   // Classes base
   const baseClasses = `
     ${sizeConfig.container}
