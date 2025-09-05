@@ -84,6 +84,10 @@ export class FotoProfessorService {
         .from('avatar')
         .getPublicUrl(caminhoArquivo);
       
+      console.log('FotoProfessorService - URL gerada:', publicUrl);
+      console.log('FotoProfessorService - Caminho:', caminhoArquivo);
+      console.log('FotoProfessorService - Bucket: avatar');
+      
       return {
         success: true,
         url: publicUrl,
