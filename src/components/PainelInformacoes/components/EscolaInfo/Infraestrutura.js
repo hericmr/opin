@@ -80,7 +80,7 @@ const Infraestrutura = memo(({ escola }) => {
           {escola.espaco_escolar}
         </div>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-3 items-stretch">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-3 items-stretch">
         {items.map((item, idx) => (
           <MiniCard
             key={idx}

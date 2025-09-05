@@ -217,7 +217,7 @@ const BasicInfo = memo(({ escola }) => {
       )}
       <InfoSection title="Localização" icon={MapPin}>
         {/* Cards informativos básicos - Layout otimizado */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 items-stretch">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-4 items-stretch">
           {basicInfoCards.map((item, index) => (
             <CompactCard key={index} {...item} />
           ))}

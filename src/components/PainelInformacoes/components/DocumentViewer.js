@@ -120,7 +120,7 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
 
   const renderDocumentGrid = () => {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         {documentos.map((doc) => (
           <div
             key={doc.id}
