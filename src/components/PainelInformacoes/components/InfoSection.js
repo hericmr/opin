@@ -70,10 +70,10 @@ const InfoCard = memo(({ label, value, icon: Icon, type = 'text', className = ''
 // Componente InfoGrid para layout em grid
 const InfoGrid = memo(({ children, columns = 'auto-fit', gap = 4, className = '' }) => {
   const gridClasses = {
-    'auto-fit': 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-    '2': 'grid-cols-1 sm:grid-cols-2',
-    '3': 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-    '4': 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+    'auto-fit': 'grid-cols-2 lg:grid-cols-3',
+    '2': 'grid-cols-2',
+    '3': 'grid-cols-2 lg:grid-cols-3',
+    '4': 'grid-cols-2 lg:grid-cols-4'
   };
 
   return (
