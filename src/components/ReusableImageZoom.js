@@ -207,32 +207,34 @@ const ReusableImageZoom = ({
 
       {/* Container da imagem */}
       <div className="image-zoom-container">
-        <img
-          src={currentImage.url || currentImage.publicURL || currentImage.imagem_public_url}
-          alt={currentImage.descricao || currentImage.descricao_imagem || 'Imagem'}
-          className="image-zoom-image"
-          style={{
-            transform: `scale(${zoomLevel}) rotate(${rotation}deg)`,
-            cursor: 'grab'
-          }}
-          onClick={(e) => e.stopPropagation()}
-          onMouseDown={(e) => {
-            e.preventDefault();
-            // Implementar drag se necessário
-          }}
-        />
+        <div className="image-zoom-image-wrapper">
+          <img
+            src={currentImage.url || currentImage.publicURL || currentImage.imagem_public_url}
+            alt={currentImage.descricao || currentImage.descricao_imagem || 'Imagem'}
+            className="image-zoom-image"
+            style={{
+              transform: `scale(${zoomLevel}) rotate(${rotation}deg)`,
+              cursor: 'grab'
+            }}
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              // Implementar drag se necessário
+            }}
+          />
+        </div>
 
         {/* Legenda */}
         {showCaption && (currentImage.descricao || currentImage.descricao_imagem) && (
           <div className="image-zoom-caption">
-            <h3 className="font-semibold text-white mb-2">
+            <h3 className="font-semibold text-gray-900 mb-2">
               {currentImage.descricao || currentImage.descricao_imagem}
             </h3>
             
             {/* Informações adicionais */}
-            <div className="flex items-center gap-4 text-sm text-gray-300 mb-2">
+            <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
               {currentImage.categoria && (
-                <span className="capitalize bg-gray-600 px-2 py-1 rounded">
+                <span className="capitalize bg-gray-100 px-2 py-1 rounded text-gray-800">
                   {currentImage.categoria}
                 </span>
               )}
@@ -246,7 +248,7 @@ const ReusableImageZoom = ({
             
             {/* Descrição detalhada */}
             {currentImage.descricaoDetalhada && (
-              <p className="text-gray-300 leading-relaxed">
+              <p className="text-gray-600 leading-relaxed">
                 {currentImage.descricaoDetalhada}
               </p>
             )}
