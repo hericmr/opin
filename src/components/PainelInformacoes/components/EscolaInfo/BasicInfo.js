@@ -25,27 +25,31 @@ const CompactCard = ({ icon: Icon, label, value, type = 'text' }) => {
       case 'boolean':
         return value ? (
           <span className="flex items-center gap-1 text-green-600 text-sm">
-            <Check className="w-5 h-5" />
+            <Check className="w-4 h-4 flex-shrink-0" />
             Sim
           </span>
         ) : (
           <span className="flex items-center gap-1 text-red-500 text-sm">
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 flex-shrink-0" />
             Não
           </span>
         );
       default:
-        return <span className="text-sm text-gray-800 truncate">{value}</span>;
+        return <span className="text-sm text-gray-800 break-words">{value}</span>;
     }
   };
 
   return (
-    <div className="p-1 rounded-md transition-all">
-      <div className="flex items-center gap-1.5 mb-1">
-        <Icon className="w-5 h-5 text-gray-600" />
-        <span className="text-xs text-gray-500 font-medium">{label}</span>
+    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-full flex flex-col">
+      {/* Header com ícone e label */}
+      <div className="flex items-center gap-2 mb-2 flex-shrink-0">
+        <Icon className="w-5 h-5 text-green-600 flex-shrink-0" />
+        <span className="text-xs text-gray-600 font-medium">{label}</span>
       </div>
-      {renderValue()}
+      {/* Conteúdo do valor */}
+      <div className="flex-1 flex items-start">
+        {renderValue()}
+      </div>
     </div>
   );
 };
@@ -212,22 +216,22 @@ const BasicInfo = memo(({ escola }) => {
         </div>
       )}
       <InfoSection title="Localização" icon={MapPin}>
-        {/* Cards informativos básicos */}
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2 mb-3 [&>*]:bg-green-100">
+        {/* Cards informativos básicos - Layout otimizado */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 items-stretch">
           {basicInfoCards.map((item, index) => (
             <CompactCard key={index} {...item} />
           ))}
+          {/* Diretoria de ensino como card */}
+          {escola.diretoria_ensino && (
+            <CompactCard 
+              icon={Building}
+              label="Diretoria de ensino"
+              value={escola.diretoria_ensino}
+            />
+          )}
         </div>
 
         <div className="space-y-1.5">
-          {/* Diretoria de ensino */}
-          {escola.diretoria_ensino && (
-            <InfoBlock 
-              icon={Building} 
-              label="Diretoria de ensino" 
-              value={escola.diretoria_ensino} 
-            />
-          )}
 
           {/* Gaveta do endereço */}
           {escola.endereco && (
