@@ -101,12 +101,6 @@ export const getHistoriasProfessor = async (escolaId) => {
 
     // Adicionar URLs públicas das imagens
     const historiasComImagens = data.map((historia) => {
-      // Debug: Log da foto de rosto
-      if (historia.foto_rosto) {
-        console.log('getHistoriasProfessor - foto_rosto encontrada:', historia.foto_rosto);
-        console.log('getHistoriasProfessor - professor:', historia.nome_professor);
-      }
-
       if (historia.imagem_url) {
         try {
           const { data: { publicUrl } } = supabase.storage

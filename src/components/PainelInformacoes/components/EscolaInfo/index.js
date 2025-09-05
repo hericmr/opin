@@ -10,7 +10,6 @@ import GestaoProfessores from './GestaoProfessores';
 import ProjetosParcerias from './ProjetosParcerias';
 // import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
 import HistoriadoProfessor from './HistoriadoProfessor';
-import DebugImagens from '../DebugImagens';
 
 // CSS para layout Masonry real usando CSS columns
 const masonryStyles = `
@@ -84,9 +83,6 @@ const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0 }) => {
           <Component key={index} {...props} />
         ))}
       </GridLayoutWrapper>
-
-      {/* Debug de Imagens - TEMPORÁRIO */}
-      <DebugImagens escola_id={escola.id} />
 
       {/* História da Escola em destaque */}
       <HistoriaEscola escola={escola} refreshKey={refreshKey} />
