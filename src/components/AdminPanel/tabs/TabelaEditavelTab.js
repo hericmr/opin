@@ -80,63 +80,63 @@ const TabelaEditavelTab = ({ setEditingLocation }) => {
     
     const csvContent = [
       headers.join(','),
-      ...filteredEscolas.map(escola => [
-        `"${escola.Escola || ''}"`,
-        `"${escola['Município'] || ''}"`,
-        `"${escola['Endereço'] || ''}"`,
-        `"${escola['Terra Indigena (TI)'] || ''}"`,
-        `"${escola['Parcerias com o município'] || ''}"`,
-        `"${escola['Diretoria de Ensino'] || ''}"`,
-        `"${escola['Ano de criação da escola'] || ''}"`,
-        `"${escola['Povos indigenas'] || ''}"`,
-        `"${escola['Linguas faladas'] || ''}"`,
-        `"${escola['Modalidade de Ensino/turnos de funcionamento'] || ''}"`,
-        escola['Numero de alunos'] || '',
-        `"${escola['turnos_funcionamento'] || ''}"`,
-        `"${escola['Espaço escolar e estrutura'] || ''}"`,
-        `"${escola['Acesso à água'] || ''}"`,
-        `"${escola['Tem coleta de lixo?'] || ''}"`,
-        `"${escola['Acesso à internet'] || ''}"`,
-        `"${escola['Equipamentos Tecnológicos (Computadores, tablets e impressoras)'] || ''}"`,
-        `"${escola['Modo de acesso à escola'] || ''}"`,
-        `"${escola['Gestão/Nome'] || ''}"`,
-        `"${escola['Outros funcionários'] || ''}"`,
-        `"${escola['Quantidade de professores indígenas'] || ''}"`,
-        `"${escola['Quantidade de professores não indígenas'] || ''}"`,
-        `"${escola['Professores falam a língua indígena?'] || ''}"`,
-        `"${escola['Formação dos professores'] || ''}"`,
-        `"${escola['Formação continuada oferecida'] || ''}"`,
-        `"${escola['A escola possui PPP próprio?'] || ''}"`,
-        `"${escola['PPP elaborado com a comunidade?'] || ''}"`,
-        `"${escola['Projetos em andamento'] || ''}"`,
-        `"${escola['Parcerias com universidades?'] || ''}"`,
-        `"${escola['Ações com ONGs ou coletivos?'] || ''}"`,
-        `"${escola['Desejos da comunidade para a escola'] || ''}"`,
-        `"${escola['Escola utiliza redes sociais?'] || ''}"`,
-        `"${escola['Links das redes sociais'] || ''}"`,
-        `"${escola['historia_da_escola'] || ''}"`,
-        escola['Latitude'] || '',
-        escola['Longitude'] || '',
-        `"${escola['links'] || ''}"`,
-        `"${escola['link_para_videos'] || ''}"`,
-        `"${escola['logradouro'] || ''}"`,
-        `"${escola['numero'] || ''}"`,
-        `"${escola['complemento'] || ''}"`,
-        `"${escola['bairro'] || ''}"`,
-        `"${escola['cep'] || ''}"`,
-        `"${escola['estado'] || ''}"`,
-        `"${escola['nome_professor'] || ''}"`,
-        `"${escola['professores_indigenas'] || ''}"`,
-        `"${escola['professores_nao_indigenas'] || ''}"`,
-        `"${escola['professores_falam_lingua_indigena'] || ''}"`,
-        `"${escola['formacao_professores'] || ''}"`,
-        `"${escola['visitas_supervisores_formacao'] || ''}"`,
-        `"${escola['outros_funcionarios'] || ''}"`,
-        `"${escola['gestao'] || ''}"`,
-        `"${escola['merenda_diferenciada'] || ''}"`,
-        `"${escola['cozinha'] || ''}"`,
-        `"${escola['merenda_escolar'] || ''}"`,
-        `"${escola['diferenciada'] || ''}"`
+      ...escolas.map(escola => [
+        `"${escola.nome_escola || ''}"`,
+        `"${escola.municipio || ''}"`,
+        `"${escola.endereco || ''}"`,
+        `"${escola.terra_indigena || ''}"`,
+        `"${escola.parcerias || ''}"`,
+        `"${escola.diretoria_ensino || ''}"`,
+        `"${escola.ano_criacao || ''}"`,
+        `"${escola.povos || ''}"`,
+        `"${escola.linguas || ''}"`,
+        `"${escola.modalidade || ''}"`,
+        `"${escola.numero_alunos || ''}"`,
+        `"${escola.turnos || ''}"`,
+        `"${escola.estrutura || ''}"`,
+        `"${escola.agua || ''}"`,
+        `"${escola.coleta_lixo || ''}"`,
+        `"${escola.internet || ''}"`,
+        `"${escola.equipamentos || ''}"`,
+        `"${escola.acesso || ''}"`,
+        `"${escola.gestao || ''}"`,
+        `"${escola.funcionarios || ''}"`,
+        `"${escola.professores_indigenas || ''}"`,
+        `"${escola.professores_nao_indigenas || ''}"`,
+        `"${escola.falam_lingua_indigena || ''}"`,
+        `"${escola.formacao_professores || ''}"`,
+        `"${escola.formacao_continuada || ''}"`,
+        `"${escola.ppp_proprio || ''}"`,
+        `"${escola.ppp_comunidade || ''}"`,
+        `"${escola.projetos || ''}"`,
+        `"${escola.parcerias_universidades || ''}"`,
+        `"${escola.parcerias_ongs || ''}"`,
+        `"${escola.desejos_comunidade || ''}"`,
+        `"${escola.redes_sociais || ''}"`,
+        `"${escola.links_redes_sociais || ''}"`,
+        `"${escola.historia_escola || ''}"`,
+        `"${escola.latitude || ''}"`,
+        `"${escola.longitude || ''}"`,
+        `"${escola.links_uteis || ''}"`,
+        `"${escola.link_para_videos || ''}"`,
+        `"${escola.logradouro || ''}"`,
+        `"${escola.numero || ''}"`,
+        `"${escola.complemento || ''}"`,
+        `"${escola.bairro || ''}"`,
+        `"${escola.cep || ''}"`,
+        `"${escola.estado || ''}"`,
+        `"${escola.nome_professor || ''}"`,
+        `"${escola.professores_indigenas_detalhado || ''}"`,
+        `"${escola.professores_nao_indigenas_detalhado || ''}"`,
+        `"${escola.falam_lingua_indigena_detalhado || ''}"`,
+        `"${escola.formacao_professores_detalhado || ''}"`,
+        `"${escola.visitas_supervisores || ''}"`,
+        `"${escola.outros_funcionarios_detalhado || ''}"`,
+        `"${escola.gestao_detalhado || ''}"`,
+        `"${escola.merenda_diferenciada || ''}"`,
+        `"${escola.cozinha || ''}"`,
+        `"${escola.merenda_escolar || ''}"`,
+        `"${escola.merenda_diferenciada_detalhado || ''}"`
       ].join(','))
     ].join('\n');
 
@@ -151,123 +151,75 @@ const TabelaEditavelTab = ({ setEditingLocation }) => {
     document.body.removeChild(link);
   };
 
-  // Função para salvar alterações da tabela
-  const handleTableSave = async (updatedEscola) => {
-    try {
-      setTableLoading(true);
-      setTableError(null);
-      
-      await saveEscola(updatedEscola);
-      
-      // Mostrar feedback de sucesso
-      setTimeout(() => {
-        setTableLoading(false);
-      }, 1000);
-      
-    } catch (error) {
-      setTableError(error.message);
-      setTableLoading(false);
-    }
-  };
+  // Filtrar escolas baseado no termo de busca
+  const filteredEscolas = escolas.filter(escola => {
+    if (!searchTerm) return true;
+    
+    const term = searchTerm.toLowerCase();
+    return (
+      escola.nome_escola?.toLowerCase().includes(term) ||
+      escola.municipio?.toLowerCase().includes(term) ||
+      escola.terra_indigena?.toLowerCase().includes(term) ||
+      escola.povos?.toLowerCase().includes(term) ||
+      escola.linguas?.toLowerCase().includes(term)
+    );
+  });
 
-  // Função para atualizar o site com todas as alterações
-  const handleAtualizarSite = async () => {
+  // Função para salvar alterações na tabela
+  const handleTableSave = async (escolaId, updatedData) => {
     try {
       setTableLoading(true);
       setTableError(null);
-      setUpdateSuccess(false);
       
-      // Aqui você pode adicionar lógica adicional para forçar atualização do cache
-      // ou invalidar cache do site se necessário
+      await saveEscola(escolaId, updatedData);
       
-      // Simular tempo de processamento
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Mostrar feedback de sucesso
       setUpdateSuccess(true);
       setTimeout(() => setUpdateSuccess(false), 3000);
       
-      setTableLoading(false);
-      
     } catch (error) {
+      console.error('Erro ao salvar escola:', error);
       setTableError(error.message);
+    } finally {
       setTableLoading(false);
     }
   };
 
-  // Filtrar escolas baseado no termo de busca
-  const filteredEscolas = escolas.filter(escola => 
-    escola.Escola?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    escola['Município']?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    escola['Terra Indigena (TI)']?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  if (escolasLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+        <span className="ml-2 text-gray-400">Carregando escolas...</span>
+      </div>
+    );
+  }
 
   return (
-    <div className="h-full flex flex-col bg-gray-900">
-      {/* Header com controles */}
-      <div className="bg-gray-800 rounded-lg p-4">
+    <div className="flex flex-col h-full bg-gray-800">
+      {/* Cabeçalho */}
+      <div className="flex-shrink-0 p-6 border-b border-gray-700">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
-            <h2 className="text-xl font-semibold text-gray-200">
-              Tabela Editável das Escolas
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-2">
+              Tabela Editável
             </h2>
-            {tableLoading && (
-              <div className="flex items-center text-yellow-400">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yellow-400 mr-2"></div>
-                <span className="text-sm">Atualizando...</span>
-              </div>
-            )}
-            {updateSuccess && (
-              <div className="flex items-center text-green-400">
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span className="text-sm">Atualizado!</span>
-              </div>
-            )}
-            {tableError && (
-              <div className="flex items-center text-red-400">
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span className="text-sm">{tableError}</span>
-              </div>
-            )}
+            <p className="text-gray-400">
+              Edite os dados das escolas diretamente na tabela
+            </p>
           </div>
-          <div className="flex items-center space-x-2">
+          
+          <div className="flex items-center space-x-3">
+            {updateSuccess && (
+              <div className="text-green-400 text-sm">
+                ✓ Dados salvos com sucesso!
+              </div>
+            )}
+            
             <button
-              className="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center space-x-2"
-              onClick={() => setEditingLocation(null)}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              <span>Voltar</span>
-            </button>
-            <button
-              className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
               onClick={exportToCSV}
+              className="flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
             >
               <Download size={16} />
               <span>Exportar CSV</span>
-            </button>
-            <button
-              className={`px-3 py-2 rounded-lg flex items-center space-x-2 transition-colors ${
-                tableLoading 
-                  ? 'bg-yellow-600 text-white cursor-not-allowed' 
-                  : updateSuccess 
-                    ? 'bg-green-600 text-white' 
-                    : 'bg-green-600 text-white hover:bg-green-700'
-              }`}
-              onClick={handleAtualizarSite}
-              disabled={tableLoading}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              <span>
-                {tableLoading ? 'Atualizando...' : updateSuccess ? 'Atualizado!' : 'Atualizar Site'}
-              </span>
             </button>
           </div>
         </div>
@@ -307,7 +259,6 @@ const TabelaEditavelTab = ({ setEditingLocation }) => {
           </div>
         )}
       </div>
-
 
     </div>
   );

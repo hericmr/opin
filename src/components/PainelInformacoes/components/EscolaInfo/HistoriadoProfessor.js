@@ -2,6 +2,7 @@ import React, { memo, useEffect, useState, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { getHistoriasProfessor } from '../../../../services/historiaProfessorService';
 import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
+import FotoProfessor from '../FotoProfessor';
 import './HistoriadoProfessor.css';
 
 const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
@@ -149,9 +150,17 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
       {/* Conteúdo da história atual */}
       <section className="text-base sm:text-lg leading-relaxed text-neutral-800">
         {currentHistoria.nome_professor && (
-          <h3 className="text-lg sm:text-xl font-semibold text-green-800 mb-4">
-            {currentHistoria.nome_professor}
-          </h3>
+          <div className="flex items-center gap-4 mb-6">
+            <FotoProfessor 
+              fotoUrl={currentHistoria.foto_rosto}
+              nomeProfessor={currentHistoria.nome_professor}
+              tamanho="medium"
+              className="flex-shrink-0"
+            />
+            <h3 className="text-lg sm:text-xl font-semibold text-green-800 m-0">
+              {currentHistoria.nome_professor}
+            </h3>
+          </div>
         )}
         <div 
           className="historia-professor-content prose prose-sm sm:prose-base md:prose-lg lg:prose-xl max-w-none

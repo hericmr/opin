@@ -23,3 +23,5 @@ const BuscaAvancada = ({ termoBusca, onTermoBuscaChange }) => {
 
 export default BuscaAvancada;
 
+
+
