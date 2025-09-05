@@ -29,35 +29,142 @@ export const testLegendasTable = async () => {
 };
 
 /**
- * Buscar legenda por URL da imagem
+ * Buscar legenda por URL da imagem (todos os atributos opcionais)
  * @param {string} imageUrl - URL da imagem
  * @param {number} escolaId - ID da escola
- * @param {string} categoria - Categoria da imagem (professor, escola, etc.)
+ * @param {Object} options - Opções de busca (todos opcionais)
+ * @param {string} options.categoria - Categoria da imagem
+ * @param {string} options.tipo_foto - Tipo da foto
+ * @param {boolean} options.ativo - Se deve buscar apenas ativas
  * @returns {Promise<Object|null>} Legenda encontrada ou null
  */
-export const getLegendaByImageUrl = async (imageUrl, escolaId, categoria = 'professor') => {
+export const getLegendaByImageUrl = async (imageUrl, escolaId, options = {}) => {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('legendas_fotos')
       .select('*')
       .eq('imagem_url', imageUrl)
-      .eq('escola_id', escolaId)
-      .eq('categoria', categoria)
-      .single();
+      .eq('escola_id', escolaId);
 
-    if (error) {
-      // Se não encontrar, retorna null (não é erro)
-      if (error.code === 'PGRST116') {
-        return null;
-      }
-      throw error;
+    // Aplicar filtros opcionais
+    if (options.ativo !== false) { // Por padrão, busca apenas ativas
+      query = query.eq('ativo', true);
+    }
+    
+    if (options.categoria) {
+      query = query.eq('categoria', options.categoria);
+    }
+    
+    if (options.tipo_foto) {
+      query = query.eq('tipo_foto', options.tipo_foto);
     }
 
-    return data;
+    const { data, error } = await query.order('created_at', { ascending: false });
+
+    if (error) {
+      console.warn('Erro ao buscar legenda:', error.message);
+      return null;
+    }
+
+    // Retorna a primeira legenda encontrada (mais recente)
+    return data && data.length > 0 ? data[0] : null;
   } catch (error) {
     console.warn('Erro ao buscar legenda:', error.message);
     return null;
   }
+};
+
+/**
+ * Buscar legenda por URL da imagem (busca flexível com múltiplas estratégias)
+ * @param {string} imageUrl - URL da imagem
+ * @param {number} escolaId - ID da escola
+ * @param {Object} preferencias - Preferências de busca (todos opcionais)
+ * @param {string} preferencias.categoria - Categoria preferida
+ * @param {string} preferencias.tipo_foto - Tipo de foto preferido
+ * @returns {Promise<Object|null>} Legenda encontrada ou null
+ */
+export const getLegendaByImageUrlFlexivel = async (imageUrl, escolaId, preferencias = {}) => {
+  try {
+    console.log(`🔍 Buscando legenda flexível para: ${imageUrl} (escola: ${escolaId})`);
+    
+    // Estratégia 1: Busca com preferências específicas
+    if (preferencias.categoria || preferencias.tipo_foto) {
+      console.log('  📋 Tentativa 1: Busca com preferências específicas');
+      const legenda = await getLegendaByImageUrl(imageUrl, escolaId, preferencias);
+      if (legenda) {
+        console.log('  ✅ Encontrada com preferências específicas');
+        return legenda;
+      }
+    }
+
+    // Estratégia 2: Busca apenas por URL e escola (sem outros filtros)
+    console.log('  📋 Tentativa 2: Busca apenas por URL e escola');
+    const { data: data2, error: error2 } = await supabase
+      .from('legendas_fotos')
+      .select('*')
+      .eq('imagem_url', imageUrl)
+      .eq('escola_id', escolaId)
+      .eq('ativo', true)
+      .order('created_at', { ascending: false });
+
+    if (error2) {
+      console.warn('  ❌ Erro na busca por URL e escola:', error2.message);
+    } else if (data2 && data2.length > 0) {
+      console.log('  ✅ Encontrada por URL e escola');
+      return data2[0];
+    }
+
+    // Estratégia 3: Busca incluindo legendas inativas
+    console.log('  📋 Tentativa 3: Busca incluindo legendas inativas');
+    const { data: data3, error: error3 } = await supabase
+      .from('legendas_fotos')
+      .select('*')
+      .eq('imagem_url', imageUrl)
+      .eq('escola_id', escolaId)
+      .order('created_at', { ascending: false });
+
+    if (error3) {
+      console.warn('  ❌ Erro na busca incluindo inativas:', error3.message);
+    } else if (data3 && data3.length > 0) {
+      console.log('  ✅ Encontrada incluindo legendas inativas');
+      return data3[0];
+    }
+
+    // Estratégia 4: Busca por nome do arquivo (sem caminho completo)
+    const nomeArquivo = imageUrl.split('/').pop();
+    console.log(`  📋 Tentativa 4: Busca por nome do arquivo: ${nomeArquivo}`);
+    const { data: data4, error: error4 } = await supabase
+      .from('legendas_fotos')
+      .select('*')
+      .ilike('imagem_url', `%${nomeArquivo}`)
+      .eq('escola_id', escolaId)
+      .eq('ativo', true)
+      .order('created_at', { ascending: false });
+
+    if (error4) {
+      console.warn('  ❌ Erro na busca por nome do arquivo:', error4.message);
+    } else if (data4 && data4.length > 0) {
+      console.log('  ✅ Encontrada por nome do arquivo');
+      return data4[0];
+    }
+
+    console.log('  ❌ Nenhuma legenda encontrada com todas as estratégias');
+    return null;
+
+  } catch (error) {
+    console.warn('Erro ao buscar legenda flexível:', error.message);
+    return null;
+  }
+};
+
+/**
+ * Buscar legenda por URL da imagem (sem filtro de categoria) - MANTIDA PARA COMPATIBILIDADE
+ * @param {string} imageUrl - URL da imagem
+ * @param {number} escolaId - ID da escola
+ * @returns {Promise<Object|null>} Legenda encontrada ou null
+ */
+export const getLegendaByImageUrlAnyCategory = async (imageUrl, escolaId) => {
+  return getLegendaByImageUrlFlexivel(imageUrl, escolaId);
 };
 
 /**
@@ -197,6 +304,8 @@ export const getTituloByVideoUrl = async (videoUrl, escolaId) => {
 export default {
   testLegendasTable,
   getLegendaByImageUrl,
+  getLegendaByImageUrlFlexivel,
+  getLegendaByImageUrlAnyCategory,
   addLegendaFoto,
   updateLegendaFoto,
   deleteLegendaFoto,

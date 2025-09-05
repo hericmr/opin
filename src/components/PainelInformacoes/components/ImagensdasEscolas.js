@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { X, RefreshCw } from 'lucide-react';
-import { getLegendaByImageUrl } from '../../../services/legendasService';
+import { RefreshCw } from 'lucide-react';
+import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
 import { supabase } from '../../../supabaseClient';
+import ReusableImageZoom from '../../ReusableImageZoom';
+import '../../ReusableImageZoom.css';
 
 const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [imagemZoom, setImagemZoom] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [error, setError] = useState('');
   const cacheRef = useRef({});
   const [cacheVersion, setCacheVersion] = useState(0); // Para forçar recarga
@@ -22,6 +25,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
 
   const fecharZoom = useCallback(() => {
     setImagemZoom(null);
+    setCurrentImageIndex(0);
     document.body.style.overflow = 'auto';
   }, []);
 
@@ -89,11 +93,14 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
               .from('imagens-das-escolas')
               .getPublicUrl(filePath);
 
-            // Buscar legenda da nova tabela
+            // Buscar legenda da nova tabela (busca flexível)
             let legenda = null;
             try {
               console.log('Buscando legenda para:', filePath);
-              legenda = await getLegendaByImageUrl(filePath, escola_id, 'escola');
+              legenda = await getLegendaByImageUrlFlexivel(filePath, escola_id, {
+                categoria: 'escola',
+                tipo_foto: 'escola'
+              });
               console.log('Legenda encontrada:', legenda);
             } catch (error) {
               console.warn('Erro ao buscar legenda para', filePath, ':', error);
@@ -178,7 +185,13 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
           <figure
             key={img.id}
             className="rounded-lg overflow-hidden border bg-white shadow-sm flex flex-col cursor-pointer transition hover:shadow-md"
-            onClick={() => img.publicURL && setImagemZoom(img)}
+            onClick={() => {
+              if (img.publicURL) {
+                const index = imagens.findIndex(i => i.publicURL === img.publicURL);
+                setCurrentImageIndex(index);
+                setImagemZoom(img);
+              }
+            }}
           >
             <div className="w-full aspect-[4/3] bg-gray-100 flex items-center justify-center">
               <img
@@ -224,61 +237,18 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
         ))}
       </div>
 
-      {/* Modal de Zoom */}
-      {imagemZoom && (
-        <div
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 cursor-zoom-out"
-          onClick={fecharZoom}
-        >
-          <button
-            onClick={fecharZoom}
-            className="absolute top-4 right-4 text-white hover:text-red-400 transition"
-            aria-label="Fechar"
-          >
-            <X size={32} />
-          </button>
-          
-          <div className="max-w-4xl max-h-full">
-          <img
-            src={imagemZoom.publicURL}
-            alt={imagemZoom.descricao}
-            className="max-w-full max-h-full rounded-lg shadow-2xl border-4 border-white"
-            onClick={(e) => e.stopPropagation()}
-          />
-            
-            {/* Legenda no modal */}
-            {imagemZoom.descricao && (
-              <div className="mt-4 bg-white rounded-lg p-4 shadow-lg">
-                <h3 className="font-semibold text-gray-900 mb-2">
-                  {imagemZoom.descricao}
-                </h3>
-                
-                {/* Informações adicionais */}
-                <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
-                  {imagemZoom.categoria && (
-                    <span className="capitalize bg-gray-100 px-2 py-1 rounded">
-                      {imagemZoom.categoria}
-                    </span>
-                  )}
-                  {imagemZoom.autor && (
-                    <span>Fotógrafo: {imagemZoom.autor}</span>
-                  )}
-                  {imagemZoom.dataFoto && (
-                    <span>Data: {new Date(imagemZoom.dataFoto).toLocaleDateString('pt-BR')}</span>
-                  )}
-                </div>
-                
-                {/* Descrição detalhada */}
-                {imagemZoom.descricaoDetalhada && (
-                  <p className="text-gray-700 leading-relaxed">
-                    {imagemZoom.descricaoDetalhada}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {/* Modal de Zoom Reutilizável */}
+      <ReusableImageZoom
+        images={imagens}
+        currentImageIndex={currentImageIndex}
+        isOpen={!!imagemZoom}
+        onClose={fecharZoom}
+        onImageChange={setCurrentImageIndex}
+        showNavigation={true}
+        showControls={true}
+        showCounter={true}
+        showCaption={true}
+      />
     </section>
   );
 };
