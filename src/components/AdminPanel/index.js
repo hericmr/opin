@@ -383,6 +383,7 @@ const AdminPanel = () => {
           />
         );
       
+      
       case 'coordenadas':
         return (
           <CoordenadasTab 
@@ -390,9 +391,6 @@ const AdminPanel = () => {
             setEditingLocation={setEditingLocation}
           />
         );
-      
-      case 'tabela-editavel':
-        return <TabelaEditavelTab setEditingLocation={setEditingLocation} />;
       
       case 'historias-professor':
         return <div className="text-center py-16">
@@ -429,20 +427,6 @@ const AdminPanel = () => {
             </p>
           </div>
         </div>;
-      
-      case 'imagens-professores':
-        return <div className="text-center py-16">
-          <div className="max-w-md mx-auto">
-            <h3 className="text-xl font-semibold text-gray-200 mb-2">
-              Tabela de Imagens dos Professores
-            </h3>
-            <p className="text-gray-400 mb-8">
-              Funcionalidade em desenvolvimento...
-            </p>
-          </div>
-        </div>;
-      
-
       
       case 'imagens-escola':
         if (!ImagensEscolaTab) {
