@@ -101,6 +101,12 @@ export const getHistoriasProfessor = async (escolaId) => {
 
     // Adicionar URLs públicas das imagens
     const historiasComImagens = data.map((historia) => {
+      // Debug: Log da foto de rosto
+      if (historia.foto_rosto) {
+        console.log('getHistoriasProfessor - foto_rosto encontrada:', historia.foto_rosto);
+        console.log('getHistoriasProfessor - professor:', historia.nome_professor);
+      }
+
       if (historia.imagem_url) {
         try {
           const { data: { publicUrl } } = supabase.storage
@@ -163,36 +169,24 @@ export const createHistoriaProfessor = async (historiaData) => {
  */
 export const updateHistoriaProfessor = async (historiaId, historiaData) => {
   try {
-    console.log('=== updateHistoriaProfessor SERVICE ===');
-    console.log('ID da história:', historiaId);
-    console.log('Dados recebidos no serviço:', historiaData);
-    console.log('foto_rosto no serviço:', historiaData.foto_rosto);
-    console.log('Tipo da foto_rosto:', typeof historiaData.foto_rosto);
-    
-    const updateData = {
-      nome_professor: historiaData.nome_professor,
-      historia: historiaData.historia,
-      ordem: historiaData.ordem,
-      ativo: historiaData.ativo,
-      foto_rosto: historiaData.foto_rosto || null,
-      updated_at: new Date().toISOString()
-    };
-    
-    console.log('Dados que serão atualizados:', updateData);
-    
     const { data, error } = await supabase
       .from('historias_professor')
-      .update(updateData)
+      .update({
+        nome_professor: historiaData.nome_professor,
+        historia: historiaData.historia,
+        ordem: historiaData.ordem,
+        ativo: historiaData.ativo,
+        foto_rosto: historiaData.foto_rosto || null,
+        updated_at: new Date().toISOString()
+      })
       .eq('id', historiaId)
       .select()
       .single();
 
     if (error) {
-      console.error('Erro do Supabase na atualização:', error);
       throw error;
     }
 
-    console.log('História atualizada com sucesso no Supabase:', data);
     return data;
 
   } catch (error) {
