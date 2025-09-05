@@ -1,6 +1,5 @@
 import React from 'react';
 import ImageUploadSection from '../../EditEscolaPanel/ImageUploadSection';
-import DebugLegendas from '../../DebugLegendas';
 
 const ImagensEscolaTab = ({ editingLocation }) => {
   const escolaId = editingLocation?.id;
@@ -15,9 +14,6 @@ const ImagensEscolaTab = ({ editingLocation }) => {
 
   return (
     <div className="space-y-6">
-      {/* Debug de Legendas */}
-      <DebugLegendas escolaId={escolaId} />
-      
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Imagens da Escola
