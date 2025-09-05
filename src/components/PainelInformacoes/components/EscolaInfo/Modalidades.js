@@ -108,7 +108,7 @@ const Modalidades = memo(({ escola }) => {
         </div>
         
         {/* Grid com os outros cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-1 items-stretch">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-1 items-stretch">
           {gridItems.map((item, idx) => (
             <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} />
           ))}
@@ -120,7 +120,7 @@ const Modalidades = memo(({ escola }) => {
         icon={BookOpen}
         description="Diferenciados e não diferenciados, produzidos dentro e fora da comunidade."
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-1 items-stretch">
+        <div className="grid grid-cols-2 gap-4 mt-1 items-stretch">
           {materiaisItems.map((item, idx) => (
             <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} />
           ))}

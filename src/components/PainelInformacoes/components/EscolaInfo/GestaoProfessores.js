@@ -105,8 +105,8 @@ const GestaoProfessores = memo(({ escola }) => {
   return (
     <InfoSection title="Gestores" icon={UsersRound}>
       <div className="space-y-4 mt-1">
-        {/* Cards em grid de 3 colunas */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
+        {/* Cards em grid de 2 colunas em mobile, 3 em desktop */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
           <MiniCard
             icon={UserCheck}
             label="Professores Indígenas"
