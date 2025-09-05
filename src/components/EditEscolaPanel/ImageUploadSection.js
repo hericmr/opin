@@ -57,26 +57,46 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   // Buscar legendas para as imagens existentes
   useEffect(() => {
     const fetchLegendas = async () => {
-      if (!existingImages.length) return;
-      console.log('Buscando legendas para', existingImages.length, 'imagens');
+      if (!existingImages.length || !escolaId) return;
+      
+      console.log('Buscando legendas para', existingImages.length, 'imagens da escola', escolaId);
       const legendasMap = {};
-      for (const img of existingImages) {
-        console.log('Buscando legenda para imagem:', img.url);
-        const legenda = await getLegendaByImageUrl(img.url, escolaId, 'escola');
-        console.log('Legenda encontrada:', legenda);
-        legendasMap[img.url] = legenda;
-      }
-      setExistingImages(prev => prev.map(img => ({
-        ...img,
-        legendaData: legendasMap[img.url] || {
-          legenda: '',
-          descricao_detalhada: '',
-          autor_foto: '',
-          data_foto: '',
-          categoria: 'geral',
+      
+      try {
+        for (const img of existingImages) {
+          console.log('Buscando legenda para imagem:', img.url);
+          
+          // Tentar buscar legenda com diferentes formatos de URL
+          let legenda = await getLegendaByImageUrl(img.url, escolaId, 'escola');
+          
+          // Se não encontrar, tentar com URL pública
+          if (!legenda && img.publicURL) {
+            console.log('Tentando buscar com URL pública:', img.publicURL);
+            legenda = await getLegendaByImageUrl(img.publicURL, escolaId, 'escola');
+          }
+          
+          console.log('Legenda encontrada:', legenda);
+          legendasMap[img.url] = legenda;
         }
-      })));
+        
+        setExistingImages(prev => prev.map(img => ({
+          ...img,
+          legendaData: legendasMap[img.url] || {
+            legenda: '',
+            descricao_detalhada: '',
+            autor_foto: '',
+            data_foto: '',
+            categoria: 'geral',
+          }
+        })));
+        
+        console.log('Legendas carregadas com sucesso');
+      } catch (error) {
+        console.error('Erro ao buscar legendas:', error);
+        setError('Erro ao carregar legendas: ' + error.message);
+      }
     };
+    
     fetchLegendas();
     // eslint-disable-next-line
   }, [existingImages.length, escolaId]);
@@ -255,17 +275,40 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     console.log('Dados da legenda:', legendaData);
     console.log('Escola ID:', escolaId);
     
+    // Validar dados obrigatórios
+    if (!escolaId) {
+      setError('ID da escola não encontrado');
+      return;
+    }
+    
+    if (!imagem_url_relativa) {
+      setError('URL da imagem não encontrada');
+      return;
+    }
+    
     // Validar e limpar dados da legenda
     const cleanLegendaData = { ...legendaData };
     
-    // Tratar campo data_foto - remover se estiver vazio
-    if (!cleanLegendaData.data_foto || cleanLegendaData.data_foto.trim() === '') {
+    // Tratar campo data_foto - converter para formato correto se necessário
+    if (cleanLegendaData.data_foto && cleanLegendaData.data_foto.trim() !== '') {
+      // Garantir que a data está no formato correto
+      try {
+        const data = new Date(cleanLegendaData.data_foto);
+        if (isNaN(data.getTime())) {
+          delete cleanLegendaData.data_foto;
+        } else {
+          cleanLegendaData.data_foto = data.toISOString().split('T')[0];
+        }
+      } catch (e) {
+        delete cleanLegendaData.data_foto;
+      }
+    } else {
       delete cleanLegendaData.data_foto;
     }
     
     // Tratar outros campos vazios que podem causar problemas
     Object.keys(cleanLegendaData).forEach(key => {
-      if (cleanLegendaData[key] === '') {
+      if (cleanLegendaData[key] === '' || cleanLegendaData[key] === null) {
         delete cleanLegendaData[key];
       }
     });
@@ -305,6 +348,10 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       }
       
       setSuccess('Legenda salva com sucesso!');
+      
+      // Recarregar as imagens para mostrar as legendas atualizadas
+      await fetchExistingImages();
+      
       if (onImagesUpdate) {
         console.log('Chamando onImagesUpdate...');
         onImagesUpdate();
@@ -314,7 +361,18 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       console.error('Erro completo:', err);
       console.error('Mensagem de erro:', err.message);
       console.error('Stack trace:', err.stack);
-      setError('Erro ao salvar legenda: ' + err.message);
+      console.error('Detalhes do erro:', err.details);
+      console.error('Hint do erro:', err.hint);
+      
+      let errorMessage = 'Erro ao salvar legenda: ' + err.message;
+      if (err.details) {
+        errorMessage += ' - Detalhes: ' + err.details;
+      }
+      if (err.hint) {
+        errorMessage += ' - Dica: ' + err.hint;
+      }
+      
+      setError(errorMessage);
     }
   };
 
