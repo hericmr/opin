@@ -137,7 +137,8 @@ export const createHistoriaProfessor = async (historiaData) => {
         nome_professor: historiaData.nome_professor || null,
         historia: historiaData.historia,
         ordem: historiaData.ordem || 1,
-        ativo: historiaData.ativo !== false
+        ativo: historiaData.ativo !== false,
+        foto_rosto: historiaData.foto_rosto || null
       }])
       .select()
       .single();
@@ -162,23 +163,36 @@ export const createHistoriaProfessor = async (historiaData) => {
  */
 export const updateHistoriaProfessor = async (historiaId, historiaData) => {
   try {
+    console.log('=== updateHistoriaProfessor SERVICE ===');
+    console.log('ID da história:', historiaId);
+    console.log('Dados recebidos no serviço:', historiaData);
+    console.log('foto_rosto no serviço:', historiaData.foto_rosto);
+    console.log('Tipo da foto_rosto:', typeof historiaData.foto_rosto);
+    
+    const updateData = {
+      nome_professor: historiaData.nome_professor,
+      historia: historiaData.historia,
+      ordem: historiaData.ordem,
+      ativo: historiaData.ativo,
+      foto_rosto: historiaData.foto_rosto || null,
+      updated_at: new Date().toISOString()
+    };
+    
+    console.log('Dados que serão atualizados:', updateData);
+    
     const { data, error } = await supabase
       .from('historias_professor')
-      .update({
-        nome_professor: historiaData.nome_professor,
-        historia: historiaData.historia,
-        ordem: historiaData.ordem,
-        ativo: historiaData.ativo,
-        updated_at: new Date().toISOString()
-      })
+      .update(updateData)
       .eq('id', historiaId)
       .select()
       .single();
 
     if (error) {
+      console.error('Erro do Supabase na atualização:', error);
       throw error;
     }
 
+    console.log('História atualizada com sucesso no Supabase:', data);
     return data;
 
   } catch (error) {

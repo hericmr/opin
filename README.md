@@ -78,6 +78,7 @@ nome_professor (text, NOT NULL)
 historia (text, NOT NULL)
 ordem (int, default 1)
 ativo (boolean, default true)
+foto_rosto (text, nullable) -- URL da foto de rosto do professor
 created_at (timestamp)
 updated_at (timestamp)
 ```
