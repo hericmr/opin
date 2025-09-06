@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import { Sparkles, BookOpen, Users, MessageCircle, Clock } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import BooleanValue from '../../components/BooleanValue';
@@ -49,10 +49,10 @@ const MiniCard = ({ icon: Icon, label, value, type = 'text' }) => {
   };
 
   return (
-    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-[120px] flex flex-col">
+    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-2 sm:p-3 transition-all duration-200 hover:shadow-sm h-[120px] flex flex-col">
       {/* Header com ícone e label */}
-      <div className="flex items-center justify-center gap-2 mb-3 flex-shrink-0 h-[40px]">
-        <Icon className="w-5 h-5 text-gray-700 flex-shrink-0" />
+      <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2 sm:mb-3 flex-shrink-0 h-[40px]">
+        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 flex-shrink-0" />
         <span className="text-xs text-gray-600 font-medium leading-tight">{label}</span>
       </div>
       {/* Conteúdo do valor */}
@@ -70,12 +70,6 @@ const Modalidades = memo(({ escola }) => {
   const turnosValue = escola.turnos_funcionamento || escola['turnos_funcionamento'] || '';
   const modalidadeList = parseModalidadeEnsino(escola.modalidade_ensino);
   
-  // Card de Modalidade de Ensino (separado para ocupar linha inteira)
-  const modalidadeEnsinoCard = {
-    icon: Sparkles,
-    label: 'Modalidade de Ensino',
-    value: <ExpandableList items={modalidadeList} maxVisible={3} />,
-  };
 
   // Outros cards para o grid
   const gridItems = [
@@ -109,6 +103,16 @@ const Modalidades = memo(({ escola }) => {
       label: 'Material Pedagógico Indígena',
       value: <BooleanValue value={escola.material_indigena} />,
     },
+    {
+      icon: BookOpen,
+      label: 'PPP Próprio',
+      value: <BooleanValue value={escola.ppp_proprio} />,
+    },
+    {
+      icon: BookOpen,
+      label: 'PPP com Comunidade',
+      value: <BooleanValue value={escola.ppp_comunidade} />,
+    },
   ];
 
   return (
@@ -126,7 +130,7 @@ const Modalidades = memo(({ escola }) => {
         </div>
         
         {/* Grid com os outros cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-1 mt-1 items-stretch">
+        <div className="grid grid-cols-3 lg:grid-cols-3 gap-0.5 sm:gap-1 mt-1 items-stretch">
           {gridItems.map((item, idx) => (
             <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} type={item.type} />
           ))}
@@ -138,11 +142,51 @@ const Modalidades = memo(({ escola }) => {
         icon={BookOpen}
         description="Diferenciados e não diferenciados, produzidos dentro e fora da comunidade."
       >
-        <div className="grid grid-cols-2 gap-1 mt-1 items-stretch">
-          {materiaisItems.map((item, idx) => (
-            <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} />
-          ))}
+        {/* Primeiro card em linha inteira */}
+        <div className="mb-3">
+          <MiniCard 
+            icon={materiaisItems[0].icon} 
+            label={materiaisItems[0].label} 
+            value={materiaisItems[0].value} 
+          />
         </div>
+        
+        {/* Cards restantes - agrupados por múltiplos de 3 */}
+        {materiaisItems.length > 1 && (
+          <div className="space-y-3">
+            {(() => {
+              const remainingCards = materiaisItems.slice(1);
+              const groups = [];
+              
+              // Agrupar em múltiplos de 3
+              for (let i = 0; i < remainingCards.length; i += 3) {
+                groups.push(remainingCards.slice(i, i + 3));
+              }
+              
+              return groups.map((group, groupIdx) => (
+                <div 
+                  key={groupIdx}
+                  className={`grid gap-0.5 sm:gap-1 items-stretch ${
+                    group.length === 3 
+                      ? 'grid-cols-3' 
+                      : group.length === 2 
+                        ? 'grid-cols-2' 
+                        : 'grid-cols-1'
+                  }`}
+                >
+                  {group.map((item, idx) => (
+                    <MiniCard 
+                      key={`${groupIdx}-${idx}`} 
+                      icon={item.icon} 
+                      label={item.label} 
+                      value={item.value} 
+                    />
+                  ))}
+                </div>
+              ));
+            })()}
+          </div>
+        )}
       </InfoSection>
     </>
   );

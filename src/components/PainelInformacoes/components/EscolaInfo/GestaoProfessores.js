@@ -29,10 +29,10 @@ const MiniCard = ({ icon: Icon, label, value, description, type = 'text' }) => {
   };
 
   return (
-    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-[120px] flex flex-col">
+    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-2 sm:p-3 transition-all duration-200 hover:shadow-sm h-[120px] flex flex-col">
       {/* Header com ícone e label */}
-      <div className="flex items-center justify-center gap-2 mb-3 flex-shrink-0 h-[40px]">
-        <Icon className="w-5 h-5 text-gray-700 flex-shrink-0" />
+      <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2 sm:mb-3 flex-shrink-0 h-[40px]">
+        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 flex-shrink-0" />
         <span className="text-xs text-gray-600 font-medium leading-tight">{label}</span>
       </div>
       {/* Conteúdo do valor */}
@@ -123,7 +123,7 @@ const GestaoProfessores = memo(({ escola }) => {
     <InfoSection title="Gestores" icon={UsersRound}>
       <div className="space-y-4 mt-1">
         {/* Cards em grid de 2 colunas em mobile, 3 em desktop */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-1 items-stretch">
+        <div className="grid grid-cols-3 lg:grid-cols-3 gap-0.5 sm:gap-1 items-stretch">
           <MiniCard
             icon={UserCheck}
             label="Professores Indígenas"

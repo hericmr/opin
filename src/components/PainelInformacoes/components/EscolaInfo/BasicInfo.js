@@ -48,10 +48,10 @@ const CompactCard = ({ icon: Icon, label, value, type = 'text' }) => {
   };
 
   return (
-    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-[120px] flex flex-col">
+    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-2 sm:p-3 transition-all duration-200 hover:shadow-sm h-[120px] flex flex-col">
       {/* Header com ícone e label */}
-      <div className="flex items-center justify-center gap-2 mb-3 flex-shrink-0 h-[40px]">
-        <Icon className="w-5 h-5 text-gray-700 flex-shrink-0" />
+      <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2 sm:mb-3 flex-shrink-0 h-[40px]">
+        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 flex-shrink-0" />
         <span className="text-xs text-gray-600 font-medium leading-tight">{label}</span>
       </div>
       {/* Conteúdo do valor */}
@@ -226,7 +226,7 @@ const BasicInfo = memo(({ escola }) => {
       )}
       <InfoSection title="Localização" icon={MapPin}>
         {/* Cards informativos básicos - Layout otimizado */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-1 mb-4 items-stretch">
+        <div className="grid grid-cols-3 lg:grid-cols-3 gap-0.5 sm:gap-1 mb-4 items-stretch">
           {basicInfoCards.map((item, index) => (
             <CompactCard key={index} {...item} />
           ))}
