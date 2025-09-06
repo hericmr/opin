@@ -8,8 +8,10 @@ const InfoCard = memo(({ label, value, icon: Icon, type = 'text', className = ''
     switch (type) {
       case 'number':
         return (
-          <div className="text-2xl font-bold text-green-800">
-            {value.toLocaleString('pt-BR')}
+          <div className="text-center">
+            <div className="text-3xl font-medium text-green-800 mb-1">
+              {value.toLocaleString('pt-BR')}
+            </div>
           </div>
         );
       case 'boolean':
@@ -118,7 +120,7 @@ const InfoStats = memo(({ stats, className = '' }) => {
           <div className="flex justify-center mb-2">
             {stat.icon && <stat.icon className="w-6 h-6 text-green-600" />}
           </div>
-          <div className="text-2xl font-bold text-green-800">
+          <div className="text-3xl font-medium text-green-800 mb-1">
             {stat.value}
           </div>
           <div className="text-xs text-gray-600 mt-1">

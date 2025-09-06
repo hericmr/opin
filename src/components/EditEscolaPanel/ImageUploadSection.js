@@ -504,7 +504,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
           <h4 className="font-medium text-gray-900">Imagens da Escola ({existingImages.length})</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {existingImages.map((image) => (
-              <div key={image.id} className="bg-white border rounded-lg overflow-hidden shadow-sm">
+              <div key={image.id} className="bg-white rounded-lg overflow-hidden shadow-sm">
                 {/* Imagem */}
                 <div className="relative group">
                 <img
