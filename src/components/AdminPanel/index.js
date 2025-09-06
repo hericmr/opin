@@ -5,6 +5,7 @@ import { useModalidades } from './hooks/useModalidades';
 import { ADMIN_TABS, UI_CONFIG, FORM_CONFIG } from './constants/adminConstants';
 import AdminSidebar from './AdminSidebar';
 import AdminToolbar from './AdminToolbar';
+import ProtectedRoute from '../Auth/ProtectedRoute';
 import './AdminPanel.css';
 import ModalidadesTab from './tabs/ModalidadesTab';
 import DadosBasicosTab from './tabs/DadosBasicosTab';
@@ -44,7 +45,7 @@ try {
   console.warn('DocumentosTab não encontrado:', e);
 }
 
-const AdminPanel = () => {
+const AdminPanelContent = () => {
   const { triggerRefresh } = useRefresh();
   
   // Estados principais
@@ -886,6 +887,14 @@ const AdminPanel = () => {
         )}
       </main>
     </div>
+  );
+};
+
+const AdminPanel = () => {
+  return (
+    <ProtectedRoute>
+      <AdminPanelContent />
+    </ProtectedRoute>
   );
 };
 

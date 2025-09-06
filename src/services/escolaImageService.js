@@ -275,6 +275,75 @@ export const updateImageDescription = async (imageId, descricao) => {
 };
 
 /**
+ * Substituir imagem existente (trocar imagem)
+ * @param {File} newFile - Novo arquivo de imagem
+ * @param {string} oldFilePath - Caminho do arquivo antigo
+ * @param {number} escolaId - ID da escola
+ * @param {string} bucketName - Nome do bucket
+ * @param {string} descricao - Descrição da nova imagem
+ * @returns {Promise<Object>} Dados da nova imagem
+ */
+export const replaceImage = async (newFile, oldFilePath, escolaId, bucketName, descricao = '') => {
+  try {
+    const config = bucketName === PROFESSOR_IMAGE_CONFIG.BUCKET_NAME 
+      ? PROFESSOR_IMAGE_CONFIG 
+      : ESCOLA_IMAGE_CONFIG;
+
+    // Validar novo arquivo
+    const validation = validateImageFile(newFile, config);
+    if (!validation.isValid) {
+      throw new Error(validation.error);
+    }
+
+    // Gerar nome único para o novo arquivo
+    const fileName = bucketName === PROFESSOR_IMAGE_CONFIG.BUCKET_NAME
+      ? generateUniqueFileNameWithGenero(newFile, escolaId, 'professor') // Assumindo professor por padrão
+      : generateUniqueFileName(newFile, escolaId);
+    
+    const newFilePath = `${escolaId}/${fileName}`;
+
+    // 1. Upload da nova imagem
+    const { error: uploadError } = await supabase.storage
+      .from(bucketName)
+      .upload(newFilePath, newFile, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (uploadError) {
+      throw new Error(`Erro no upload da nova imagem: ${uploadError.message}`);
+    }
+
+    // 2. Obter URL pública da nova imagem
+    const { data: { publicUrl } } = supabase.storage
+      .from(bucketName)
+      .getPublicUrl(newFilePath);
+
+    // 3. Deletar a imagem antiga
+    const { error: deleteError } = await supabase.storage
+      .from(bucketName)
+      .remove([oldFilePath]);
+
+    if (deleteError) {
+      console.warn('Erro ao deletar imagem antiga:', deleteError);
+      // Não falha a operação se não conseguir deletar a imagem antiga
+    }
+
+    return {
+      id: Date.now(), // ID temporário
+      url: newFilePath,
+      publicUrl,
+      descricao: descricao.trim() || `Imagem da escola ${escolaId}`,
+      created_at: new Date().toISOString()
+    };
+
+  } catch (error) {
+    console.error('Erro ao substituir imagem:', error);
+    throw error;
+  }
+};
+
+/**
  * Verificar limite de imagens (versão simplificada)
  * @param {number} escolaId - ID da escola
  * @param {string} bucketName - Nome do bucket

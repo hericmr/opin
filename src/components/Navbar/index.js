@@ -2,19 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Leaf } from 'lucide-react';
 import { useSearch } from '../../contexts/SearchContext';
+import { useAuth } from '../../hooks/useAuth';
 import NavLogo from './NavLogo';
 import MobileToggle from './MobileToggle';
 import DesktopNav from './DesktopNav';
 import MobileMenu from './MobileMenu';
 import SearchBar from './SearchBar';
+import MinimalLoginModal from '../Auth/MinimalLoginModal';
 
 const Navbar = ({ dataPoints, openPainelFunction }) => {
-  const [isAdmin, setIsAdmin] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobileLandscape, setIsMobileLandscape] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { setSearch } = useSearch();
+  const { isAuthenticated, user, logout } = useAuth();
 
   // Detectar se é mobile na horizontal
   useEffect(() => {
@@ -28,10 +31,16 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   }, []);
 
   const handleAdminClick = () => {
-    const enteredPassword = prompt("Digite a senha de administrador:");
-    if (enteredPassword === process.env.REACT_APP_ADMIN_PASSWORD) {
-      setIsAdmin(true);
+    if (isAuthenticated) {
+      navigate('/admin');
+    } else {
+      setShowLoginModal(true);
     }
+  };
+
+  const handleLoginSuccess = (userData) => {
+    setShowLoginModal(false);
+    navigate('/admin');
   };
 
   const isConteudoPage = location.pathname === '/conteudo';
@@ -165,7 +174,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
               />
               
               {/* Admin Panel */}
-              {!isAdmin ? (
+              {!isAuthenticated ? (
                 <button
                   onClick={handleAdminClick}
                   className="p-2 rounded hover:bg-[#215A36] transition-colors"
@@ -174,12 +183,24 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                   <Leaf className="w-5 h-5" />
                 </button>
               ) : (
-                <button
-                  onClick={() => navigate('/admin')}
-                  className="px-3 py-2 text-sm font-medium bg-green-600 text-white rounded hover:bg-green-300 transition-colors"
-                >
-                  Admin
-                </button>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-white/80">
+                    Olá, {user?.username}
+                  </span>
+                  <button
+                    onClick={() => navigate('/admin')}
+                    className="px-3 py-2 text-sm font-medium bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                  >
+                    Admin
+                  </button>
+                  <button
+                    onClick={logout}
+                    className="px-3 py-2 text-sm font-medium bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                    title="Sair"
+                  >
+                    Sair
+                  </button>
+                </div>
               )}
             </div>
           </div>
@@ -201,10 +222,17 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
         isConteudoPage={isConteudoPage}
         isSearchPage={isSearchPage}
         isAdminPage={isAdminPage}
-        isAdmin={isAdmin}
+        isAdmin={isAuthenticated}
         onAdminClick={handleAdminClick}
         isMobileLandscape={isMobileLandscape}
         onNavigation={handleNavigation}
+      />
+
+      {/* Modal de Login Minimalista */}
+      <MinimalLoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSuccess={handleLoginSuccess}
       />
     </header>
   );
