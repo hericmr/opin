@@ -48,10 +48,10 @@ const FontSizeController = ({ onFontSizeChange }) => {
       {/* Botão principal */}
       <button
         onClick={() => setIsVisible(!isVisible)}
-        className="bg-green-600 hover:bg-green-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 flex items-center gap-2"
+        className="bg-green-600 hover:bg-green-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 flex items-center gap-2 min-w-[80px]"
         title="Controle de tamanho da fonte"
       >
-        <Type className="w-5 h-5" />
+        <Type className="w-5 h-5 flex-shrink-0" />
         <span className="text-sm font-medium">{currentOption?.label}</span>
       </button>
 
@@ -73,10 +73,10 @@ const FontSizeController = ({ onFontSizeChange }) => {
             <button
               onClick={decreaseFontSize}
               disabled={fontSize <= 0.8}
-              className="p-2 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-3 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 font-bold"
               title="Diminuir fonte"
             >
-              <Minus className="w-4 h-4" />
+              −
             </button>
             
             <div className="flex-1 text-center">
@@ -91,10 +91,10 @@ const FontSizeController = ({ onFontSizeChange }) => {
             <button
               onClick={increaseFontSize}
               disabled={fontSize >= 1.4}
-              className="p-2 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-3 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 font-bold"
               title="Aumentar fonte"
             >
-              <Plus className="w-4 h-4" />
+              +
             </button>
           </div>
 
