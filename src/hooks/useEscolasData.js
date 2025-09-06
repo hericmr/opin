@@ -122,6 +122,7 @@ export function useEscolasData() {
           video: e.video,
           link_para_documentos: e.link_para_documentos,
           link_para_videos: e.link_para_videos,
+          imagem_header: e.imagem_header,
           tipo: 'educacao',
           pontuacao: 100,
           pontuacaoPercentual: 100

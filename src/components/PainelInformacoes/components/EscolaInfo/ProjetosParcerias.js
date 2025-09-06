@@ -15,7 +15,7 @@ const ProjectCard = ({ icon: Icon, label, value }) => {
   return (
     <div className="bg-green-50 hover:bg-green-100 rounded-lg p-5 transition-all duration-200 hover:shadow-sm min-h-[120px] flex flex-col">
       <div className="flex items-start gap-4 flex-1">
-        <Icon className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+        <Icon className="w-5 h-5 text-gray-700 mt-0.5 flex-shrink-0" />
         <div className="flex-1 min-w-0 flex flex-col space-y-4">
           <div className="text-sm font-medium text-gray-700 flex-shrink-0">{label}</div>
           <div className="flex-1 flex items-start">

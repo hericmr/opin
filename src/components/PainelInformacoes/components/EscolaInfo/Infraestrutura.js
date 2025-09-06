@@ -14,15 +14,15 @@ import InfoSection from '../InfoSection';
 import BooleanValue from '../BooleanValue';
 
 const MiniCard = ({ icon: Icon, label, value }) => (
-  <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-full flex flex-col">
+  <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-[120px] flex flex-col">
     {/* Header com ícone e label */}
-    <div className="flex items-center gap-2 mb-2 flex-shrink-0">
-      <Icon className="w-5 h-5 text-green-600 flex-shrink-0" />
-      <span className="text-xs text-gray-600 font-medium">{label}</span>
+    <div className="flex items-center justify-center gap-2 mb-3 flex-shrink-0 h-[40px]">
+      <Icon className="w-5 h-5 text-gray-700 flex-shrink-0" />
+      <span className="text-xs text-gray-600 font-medium leading-tight">{label}</span>
     </div>
     {/* Conteúdo do valor */}
-    <div className="flex-1 flex items-start">
-      <div className="text-sm text-gray-800 font-medium break-words">{value}</div>
+    <div className="flex-1 flex items-center justify-center">
+      <div className="text-sm text-gray-800 font-medium break-words text-center w-full">{value}</div>
     </div>
   </div>
 );
@@ -80,7 +80,7 @@ const Infraestrutura = memo(({ escola }) => {
           {escola.espaco_escolar}
         </div>
       )}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-3 items-stretch">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-1 mt-3 items-stretch">
         {items.map((item, idx) => (
           <MiniCard
             key={idx}

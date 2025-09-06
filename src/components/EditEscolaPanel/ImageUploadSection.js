@@ -13,6 +13,7 @@ import {
   updateLegendaFoto,
   testLegendasTable
 } from '../../services/legendasService';
+import { HeaderImageService } from '../../services/headerImageService';
 
 const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -25,6 +26,66 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
 
   const [editingImage, setEditingImage] = useState(null);
   const [editingDescription, setEditingDescription] = useState('');
+  
+  // Estados para imagem do header
+  const [imagemHeaderAtual, setImagemHeaderAtual] = useState(null);
+  const [loadingHeader, setLoadingHeader] = useState(false);
+
+  // Buscar imagem atual do header
+  const fetchImagemHeader = useCallback(async () => {
+    if (!escolaId) return;
+    
+    try {
+      const imagemUrl = await HeaderImageService.getImagemHeader(escolaId);
+      setImagemHeaderAtual(imagemUrl);
+    } catch (err) {
+      console.error('Erro ao buscar imagem do header:', err);
+    }
+  }, [escolaId]);
+
+  // Definir imagem como header
+  const definirImagemHeader = async (imagemUrl) => {
+    if (!escolaId) return;
+    
+    try {
+      setLoadingHeader(true);
+      await HeaderImageService.setImagemHeader(escolaId, imagemUrl);
+      
+      setImagemHeaderAtual(imagemUrl);
+      setSuccess('Imagem definida como header com sucesso!');
+      setTimeout(() => setSuccess(''), 3000);
+      
+      // Notificar atualização
+      if (onImagesUpdate) onImagesUpdate();
+    } catch (err) {
+      console.error('Erro ao definir imagem do header:', err);
+      setError('Erro ao definir imagem do header: ' + err.message);
+    } finally {
+      setLoadingHeader(false);
+    }
+  };
+
+  // Remover imagem do header
+  const removerImagemHeader = async () => {
+    if (!escolaId) return;
+    
+    try {
+      setLoadingHeader(true);
+      await HeaderImageService.removeImagemHeader(escolaId);
+      
+      setImagemHeaderAtual(null);
+      setSuccess('Imagem removida do header com sucesso!');
+      setTimeout(() => setSuccess(''), 3000);
+      
+      // Notificar atualização
+      if (onImagesUpdate) onImagesUpdate();
+    } catch (err) {
+      console.error('Erro ao remover imagem do header:', err);
+      setError('Erro ao remover imagem do header: ' + err.message);
+    } finally {
+      setLoadingHeader(false);
+    }
+  };
 
   // Buscar imagens existentes
   const fetchExistingImages = useCallback(async () => {
@@ -44,7 +105,8 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
 
   useEffect(() => {
     fetchExistingImages();
-  }, [fetchExistingImages]);
+    fetchImagemHeader();
+  }, [fetchExistingImages, fetchImagemHeader]);
 
   // Testar estrutura da tabela quando o componente for carregado
   useEffect(() => {
@@ -504,7 +566,9 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
           <h4 className="font-medium text-gray-900">Imagens da Escola ({existingImages.length})</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {existingImages.map((image) => (
-              <div key={image.id} className="bg-white rounded-lg overflow-hidden shadow-sm">
+              <div key={image.id} className={`bg-white rounded-lg overflow-hidden shadow-sm ${
+                imagemHeaderAtual === image.publicUrl ? 'ring-2 ring-blue-500 ring-opacity-75' : ''
+              }`}>
                 {/* Imagem */}
                 <div className="relative group">
                 <img
@@ -513,9 +577,41 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                     className="w-full h-48 object-cover"
                 />
                 
+                {/* Badge de imagem do header */}
+                {imagemHeaderAtual === image.publicUrl && (
+                  <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                    <Check className="w-3 h-3" />
+                    Header
+                  </div>
+                )}
+                
                 {/* Overlay de ações */}
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center">
                   <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {/* Botão para definir como header */}
+                    {imagemHeaderAtual !== image.publicUrl && (
+                      <button
+                        onClick={() => definirImagemHeader(image.publicUrl)}
+                        disabled={loadingHeader}
+                        className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50"
+                        title="Usar como imagem do header"
+                      >
+                        <Check className="w-5 h-5" />
+                      </button>
+                    )}
+                    
+                    {/* Botão para remover do header */}
+                    {imagemHeaderAtual === image.publicUrl && (
+                      <button
+                        onClick={removerImagemHeader}
+                        disabled={loadingHeader}
+                        className="p-2 bg-yellow-600 text-white rounded-full hover:bg-yellow-700 disabled:opacity-50"
+                        title="Remover do header"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    )}
+                    
                     <button
                       onClick={() => handleDeleteImage(image.id, image.url)}
                       className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
