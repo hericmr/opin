@@ -34,6 +34,14 @@ const CompactCard = ({ icon: Icon, label, value, type = 'text' }) => {
             Não
           </span>
         );
+      case 'number':
+        return (
+          <div className="text-center w-full">
+            <div className="text-3xl font-medium text-green-800 mb-1" style={{fontSize: '1.875rem', fontWeight: '500', color: '#166534'}}>
+              {value || '0'}
+            </div>
+          </div>
+        );
       default:
         return <span className="text-sm text-gray-800 break-words">{value}</span>;
     }
@@ -196,6 +204,7 @@ const BasicInfo = memo(({ escola }) => {
       icon: Calendar,
       label: 'Fundação',
       value: escola.ano_criacao,
+      type: 'number',
     },
     {
       icon: Globe,
