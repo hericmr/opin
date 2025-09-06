@@ -108,11 +108,20 @@
 @media (max-width: 480px) {
   .escola-header-image {
     min-height: 150px !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   
   .escola-header-image h2 {
     font-size: 1.5rem !important;
     line-height: 1.2 !important;
+  }
+  
+  /* Garantir que não há gaps */
+  .escola-header-image img {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
   }
 }
 

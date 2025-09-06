@@ -73,7 +73,7 @@ const PainelContainer = ({
         {painelInfo.imagem_header && (
           <EscolaHeaderImage 
             imagemUrl={painelInfo.imagem_header}
-            className="h-56 sm:h-64 md:h-72 lg:h-80 xl:h-96"
+            className="h-56 sm:h-64 md:h-72 lg:h-80 xl:h-96 w-full"
           />
         )}
         
