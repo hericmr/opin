@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Upload, X, Image as ImageIcon, Trash2, Edit3, Check, AlertCircle, Save } from 'lucide-react';
+import { Upload, X, Image as ImageIcon, Trash2, Edit3, Check, AlertCircle, Save, RefreshCw } from 'lucide-react';
 import { 
   uploadEscolaImage, 
   getEscolaImages, 
   deleteImage, 
-  updateImageDescription
+  updateImageDescription,
+  replaceImage
 } from '../../services/escolaImageService';
 import { 
   getLegendaByImageUrl, 
@@ -26,6 +27,10 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
 
   const [editingImage, setEditingImage] = useState(null);
   const [editingDescription, setEditingDescription] = useState('');
+  
+  // Estados para trocar imagem
+  const [replacingImage, setReplacingImage] = useState(null);
+  const [replacementFile, setReplacementFile] = useState(null);
   
   // Estados para imagem do header
   const [imagemHeaderAtual, setImagemHeaderAtual] = useState(null);
@@ -288,6 +293,69 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     } catch (err) {
       console.error('Erro ao deletar imagem:', err);
       setError(`Erro ao excluir imagem: ${err.message}`);
+    }
+  };
+
+  // Trocar imagem existente
+  const handleReplaceImage = async (imageId, oldFilePath) => {
+    if (!replacementFile) {
+      setError('Selecione uma nova imagem para substituir');
+      return;
+    }
+
+    try {
+      setUploading(true);
+      setError('');
+
+      // Substituir a imagem
+      const newImage = await replaceImage(
+        replacementFile, 
+        oldFilePath, 
+        escolaId, 
+        'imagens-das-escolas',
+        existingImages.find(img => img.id === imageId)?.descricao || ''
+      );
+
+      // Atualizar lista de imagens
+      setExistingImages(prev => prev.map(img => 
+        img.id === imageId ? newImage : img
+      ));
+
+      // Limpar estados
+      setReplacingImage(null);
+      setReplacementFile(null);
+      setSuccess('Imagem substituída com sucesso!');
+
+      // Notificar componente pai
+      if (onImagesUpdate) {
+        onImagesUpdate();
+      }
+
+    } catch (err) {
+      console.error('Erro ao substituir imagem:', err);
+      setError(`Erro ao substituir imagem: ${err.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Iniciar processo de trocar imagem
+  const startReplaceImage = (imageId) => {
+    setReplacingImage(imageId);
+    setReplacementFile(null);
+  };
+
+  // Cancelar troca de imagem
+  const cancelReplaceImage = () => {
+    setReplacingImage(null);
+    setReplacementFile(null);
+  };
+
+  // Selecionar arquivo para substituição
+  const handleReplacementFileSelect = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setReplacementFile(file);
     }
   };
 
@@ -613,6 +681,14 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                     )}
                     
                     <button
+                      onClick={() => startReplaceImage(image.id)}
+                      className="p-2 bg-orange-600 text-white rounded-full hover:bg-orange-700"
+                      title="Trocar imagem"
+                    >
+                      <RefreshCw className="w-5 h-5" />
+                    </button>
+                    
+                    <button
                       onClick={() => handleDeleteImage(image.id, image.url)}
                       className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
                       title="Excluir imagem"
@@ -685,6 +761,58 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Trocar Imagem */}
+      {replacingImage && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">Trocar Imagem</h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Selecione a nova imagem
+                </label>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                  onChange={handleReplacementFileSelect}
+                  className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              
+              {replacementFile && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Pré-visualização
+                  </label>
+                  <img
+                    src={URL.createObjectURL(replacementFile)}
+                    alt="Nova imagem"
+                    className="w-full h-32 object-cover rounded-lg border"
+                  />
+                </div>
+              )}
+            </div>
+            
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={cancelReplaceImage}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => handleReplaceImage(replacingImage, existingImages.find(img => img.id === replacingImage)?.url)}
+                disabled={!replacementFile || uploading}
+                className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {uploading ? 'Trocando...' : 'Trocar Imagem'}
+              </button>
+            </div>
           </div>
         </div>
       )}
