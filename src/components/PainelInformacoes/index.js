@@ -4,6 +4,7 @@ import { useDynamicURL } from "../hooks/useDynamicURL";
 import { useClickOutside } from "../hooks/useClickOutside";
 import useAudio from "../hooks/useAudio";
 import useDocumentosEscola from "../hooks/useDocumentosEscola";
+import { useFontSize } from "../../hooks/useFontSize";
 
 // Import modular components
 import EscolaInfo from "./components/EscolaInfo";
@@ -13,6 +14,7 @@ import IntroPanel from "./IntroPanel";
 import PainelContainer from "./components/PainelContainer";
 import DocumentViewer from "./components/DocumentViewer";
 import VideoPlayer from "./components/VideoPlayer";
+import FontSizeController from "./components/FontSizeController";
 
 const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 }) => {
   const painelRef = useRef(null);
@@ -20,6 +22,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
   
   const { gerarLinkCustomizado, copiarLink, compartilhar } = useShare(painelInfo);
   const { documentos } = useDocumentosEscola(painelInfo?.id);
+  const { fontSize, changeFontSize } = useFontSize();
   
   const toggleMaximize = () => setIsMaximized(prev => !prev);
   
@@ -87,6 +90,9 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
           painelInfo={painelInfo}
         />
       </PainelContainer>
+      
+      {/* Controle experimental de tamanho da fonte */}
+      <FontSizeController onFontSizeChange={changeFontSize} />
     </div>
   );
 };
