@@ -24,7 +24,7 @@ const EscolaHeaderImage = ({ imagemUrl, className = '' }) => {
   return (
     <div className={`escola-header-image escola-header-shimmer relative overflow-hidden ${className}`}>
       {/* Imagem de fundo que rola com a página */}
-      <div className="relative">
+      <div className="absolute inset-0">
         <img
           src={imagemUrl}
           alt="Imagem da escola"
