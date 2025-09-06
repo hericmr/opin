@@ -122,7 +122,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
         {imagens.map((img, index) => (
           <figure
             key={img.id}
-            className="rounded-lg overflow-hidden border bg-white shadow-sm flex flex-col cursor-pointer transition hover:shadow-md"
+            className="rounded-lg overflow-hidden bg-white shadow-sm flex flex-col cursor-pointer transition hover:shadow-md"
             onClick={() => {
               if (img.publicURL) {
                 setCurrentImageIndex(index);

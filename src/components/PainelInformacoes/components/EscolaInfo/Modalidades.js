@@ -32,19 +32,36 @@ const ExpandableList = ({ items, maxVisible = 3 }) => {
 };
 
 // MiniCard padronizado
-const MiniCard = ({ icon: Icon, label, value }) => (
-  <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-full flex flex-col">
-    {/* Header com ícone e label */}
-    <div className="flex items-center gap-2 mb-2 flex-shrink-0">
-      <Icon className="w-5 h-5 text-green-600 flex-shrink-0" />
-      <span className="text-xs text-gray-600 font-medium">{label}</span>
-    </div>
-    {/* Conteúdo do valor */}
-    <div className="flex-1 flex items-start">
+const MiniCard = ({ icon: Icon, label, value, type = 'text' }) => {
+  const renderValue = () => {
+    if (type === 'number') {
+      return (
+        <div className="text-center w-full">
+          <div className="text-3xl font-medium text-green-800 mb-1" style={{fontSize: '1.875rem', fontWeight: '500', color: '#166534'}}>
+            {value || '0'}
+          </div>
+        </div>
+      );
+    }
+    return (
       <div className="text-sm text-gray-800 font-medium break-words">{value}</div>
+    );
+  };
+
+  return (
+    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-full flex flex-col">
+      {/* Header com ícone e label */}
+      <div className="flex items-center gap-2 mb-2 flex-shrink-0">
+        <Icon className="w-5 h-5 text-green-600 flex-shrink-0" />
+        <span className="text-xs text-gray-600 font-medium">{label}</span>
+      </div>
+      {/* Conteúdo do valor */}
+      <div className="flex-1 flex items-start">
+        {renderValue()}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Modalidades = memo(({ escola }) => {
   if (!escola) return null;
@@ -70,7 +87,8 @@ const Modalidades = memo(({ escola }) => {
     {
       icon: Users,
       label: 'Número de Alunos',
-      value: escola.numero_alunos,
+      value: escola.numero_alunos || '0',
+      type: 'number',
     },
     {
       icon: MessageCircle,
@@ -110,7 +128,7 @@ const Modalidades = memo(({ escola }) => {
         {/* Grid com os outros cards */}
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-1 items-stretch">
           {gridItems.map((item, idx) => (
-            <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} />
+            <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} type={item.type} />
           ))}
         </div>
       </InfoSection>

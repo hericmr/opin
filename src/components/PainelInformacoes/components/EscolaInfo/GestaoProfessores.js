@@ -12,24 +12,41 @@ import {
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
 
-const MiniCard = ({ icon: Icon, label, value, description }) => (
-  <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-full flex flex-col">
-    {/* Header com ícone e label */}
-    <div className="flex items-center gap-2 mb-2 flex-shrink-0">
-      <Icon className="w-5 h-5 text-green-600 flex-shrink-0" />
-      <span className="text-xs text-gray-600 font-medium">{label}</span>
-    </div>
-    {/* Conteúdo do valor */}
-    <div className="flex-1 flex flex-col">
-      <div className="text-sm text-gray-800 font-medium mb-2 break-words">{value}</div>
-      {description && (
-        <div className="text-xs text-gray-600 whitespace-pre-line leading-relaxed break-words">
-          {description}
+const MiniCard = ({ icon: Icon, label, value, description, type = 'text' }) => {
+  const renderValue = () => {
+    if (type === 'number') {
+      return (
+        <div className="text-center w-full">
+          <div className="text-3xl font-medium text-green-800 mb-1" style={{fontSize: '1.875rem', fontWeight: '500', color: '#166534'}}>
+            {value || '0'}
+          </div>
         </div>
-      )}
+      );
+    }
+    return (
+      <div className="text-sm text-gray-800 font-medium mb-2 break-words">{value}</div>
+    );
+  };
+
+  return (
+    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-full flex flex-col">
+      {/* Header com ícone e label */}
+      <div className="flex items-center gap-2 mb-2 flex-shrink-0">
+        <Icon className="w-5 h-5 text-green-600 flex-shrink-0" />
+        <span className="text-xs text-gray-600 font-medium">{label}</span>
+      </div>
+      {/* Conteúdo do valor */}
+      <div className="flex-1 flex flex-col">
+        {renderValue()}
+        {description && (
+          <div className="text-xs text-gray-600 whitespace-pre-line leading-relaxed break-words">
+            {description}
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const formatarNomeProfessor = (nome) => {
   if (!nome) return nome;
@@ -111,11 +128,13 @@ const GestaoProfessores = memo(({ escola }) => {
             icon={UserCheck}
             label="Professores Indígenas"
             value={escola.professores_indigenas}
+            type="number"
           />
           <MiniCard
             icon={UserMinus}
             label="Professores Não Indígenas"
             value={escola.professores_nao_indigenas}
+            type="number"
           />
           <MiniCard
             icon={MessageCircle}
