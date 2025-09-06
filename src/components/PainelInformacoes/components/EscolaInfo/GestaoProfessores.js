@@ -16,34 +16,34 @@ const MiniCard = ({ icon: Icon, label, value, description, type = 'text' }) => {
   const renderValue = () => {
     if (type === 'number') {
       return (
-        <div className="text-center w-full">
-          <div className="text-3xl font-medium text-green-800 mb-1" style={{fontSize: '1.875rem', fontWeight: '500', color: '#166534'}}>
+        <div className="text-center w-full flex items-center justify-center h-full">
+          <div className="text-3xl font-medium text-green-800" style={{fontSize: '1.875rem', fontWeight: '500', color: '#166534'}}>
             {value || '0'}
           </div>
         </div>
       );
     }
     return (
-      <div className="text-sm text-gray-800 font-medium mb-2 break-words">{value}</div>
+      <div className="text-sm text-gray-800 font-medium mb-2 break-words text-center w-full">{value}</div>
     );
   };
 
   return (
-    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-full flex flex-col">
+    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-3 transition-all duration-200 hover:shadow-sm h-[120px] flex flex-col">
       {/* Header com ícone e label */}
-      <div className="flex items-center gap-2 mb-2 flex-shrink-0">
-        <Icon className="w-5 h-5 text-green-600 flex-shrink-0" />
-        <span className="text-xs text-gray-600 font-medium">{label}</span>
+      <div className="flex items-center justify-center gap-2 mb-3 flex-shrink-0 h-[40px]">
+        <Icon className="w-5 h-5 text-gray-700 flex-shrink-0" />
+        <span className="text-xs text-gray-600 font-medium leading-tight">{label}</span>
       </div>
       {/* Conteúdo do valor */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex items-center justify-center">
         {renderValue()}
-        {description && (
-          <div className="text-xs text-gray-600 whitespace-pre-line leading-relaxed break-words">
-            {description}
-          </div>
-        )}
       </div>
+      {description && (
+        <div className="text-xs text-gray-600 whitespace-pre-line leading-relaxed break-words mt-2">
+          {description}
+        </div>
+      )}
     </div>
   );
 };
@@ -123,7 +123,7 @@ const GestaoProfessores = memo(({ escola }) => {
     <InfoSection title="Gestores" icon={UsersRound}>
       <div className="space-y-4 mt-1">
         {/* Cards em grid de 2 colunas em mobile, 3 em desktop */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-1 items-stretch">
           <MiniCard
             icon={UserCheck}
             label="Professores Indígenas"

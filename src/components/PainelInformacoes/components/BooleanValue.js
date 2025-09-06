@@ -4,7 +4,7 @@ const BooleanValue = memo(({ value }) => {
   if (value === undefined || value === null) return null;
 
   return (
-    <span className={`font-medium ${value ? 'text-green-600' : 'text-neutral-400'}`}>
+    <span className={`font-medium text-center w-full block ${value ? 'text-green-600' : 'text-neutral-400'}`}>
       {value ? 'Sim' : 'Não'}
     </span>
   );

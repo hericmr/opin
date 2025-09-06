@@ -1,5 +1,6 @@
 import React from 'react';
 import PainelHeader from '../../PainelHeader';
+import EscolaHeaderImage from './EscolaHeaderImage';
 import usePainelVisibility from '../../hooks/usePainelVisibility';
 import { usePainelDimensions } from '../../hooks/usePainelDimensions';
 
@@ -64,10 +65,19 @@ const PainelContainer = ({
         closePainel={closePainel}
         toggleMaximize={onToggleMaximize}
         isMaximized={isMaximized}
+        imagemHeader={painelInfo.imagem_header}
       />
       
       <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-green-600/40 scrollbar-track-green-50/20">
-        <div className={`${isMobile ? 'p-3 sm:p-4' : 'p-6'} space-y-6 sm:space-y-8`}>
+        {/* Imagem do header que rola com a página */}
+        {painelInfo.imagem_header && (
+          <EscolaHeaderImage 
+            imagemUrl={painelInfo.imagem_header}
+            className="h-56 sm:h-64 md:h-72 lg:h-80 xl:h-96"
+          />
+        )}
+        
+        <div className={`${isMobile ? 'p-3 sm:p-4' : 'p-6'} space-y-4 sm:space-y-5 -mt-2`}>
           <div className="prose prose-sm sm:prose-base md:prose-lg lg:prose-xl max-w-none">
             {children}
           </div>

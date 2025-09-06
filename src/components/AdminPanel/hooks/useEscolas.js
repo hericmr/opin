@@ -144,7 +144,8 @@ export const useEscolas = () => {
             'merenda_diferenciada': escolaData['merenda_diferenciada'],
             'cozinha': escolaData['cozinha'],
             'merenda_escolar': escolaData['merenda_escolar'],
-            'diferenciada': escolaData['diferenciada']
+            'diferenciada': escolaData['diferenciada'],
+            'imagem_header': escolaData['imagem_header']
           })
           .eq('id', escolaData.id)
           .select();
@@ -215,7 +216,8 @@ export const useEscolas = () => {
             'merenda_diferenciada': escolaData['merenda_diferenciada'],
             'cozinha': escolaData['cozinha'],
             'merenda_escolar': escolaData['merenda_escolar'],
-            'diferenciada': escolaData['diferenciada']
+            'diferenciada': escolaData['diferenciada'],
+            'imagem_header': escolaData['imagem_header']
           })
           .select();
 
