@@ -10,6 +10,7 @@ import GestaoProfessores from './GestaoProfessores';
 import ProjetosParcerias from './ProjetosParcerias';
 // import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
 import HistoriadoProfessor from './HistoriadoProfessor';
+import ImagensdasEscolas from '../ImagensdasEscolas';
 
 // CSS para layout Masonry real usando CSS columns
 const masonryStyles = `
@@ -86,6 +87,10 @@ const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0 }) => {
 
       {/* História da Escola em destaque */}
       <HistoriaEscola escola={escola} refreshKey={refreshKey} />
+      
+      {/* Imagens da escola, agora renderizadas independentemente da história */}
+      <ImagensdasEscolas escola_id={escola.id} refreshKey={refreshKey} />
+
       <HistoriadoProfessor escola={escola} refreshKey={refreshKey} />
     </div>
   );
