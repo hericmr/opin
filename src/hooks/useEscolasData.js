@@ -90,7 +90,7 @@ export function useEscolasData() {
           acesso_agua: e["Acesso à água"],
           coleta_lixo: e["Tem coleta de lixo?"],
           acesso_internet: e["Acesso à internet"],
-          equipamentos: e["Equipamentos Tecnológicos (Computadores, tablets e impressoras)"],
+          equipamentos: e["Equipamentos Tecs"],
           modo_acesso: e["Modo de acesso à escola"],
           cozinha,
           merenda_escolar,

@@ -11,7 +11,7 @@ export const ADMIN_TABS = [
   { id: 'video', label: 'Vídeo' },
   { id: 'historias', label: 'Histórias' },
   { id: 'historia-professores', label: 'História dos Professores' },
-  { id: 'test-foto-rosto', label: '🧪 Teste Foto Rosto' },
+  
   { id: 'coordenadas', label: 'Coordenadas' },
   { id: 'imagens-escola', label: 'Imagens da Escola' },
   { id: 'imagens-professores', label: 'Imagens dos Professores' },

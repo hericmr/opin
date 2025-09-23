@@ -260,7 +260,6 @@ const MapSelector = ({
                   label="Escolas Indígenas"
                   checked={showMarcadores}
                   onChange={() => setShowMarcadores(!showMarcadores)}
-                  total={dataPoints?.length}
                   color="#3B82F6"
                 />
                 <BotaoCamada
@@ -342,4 +341,4 @@ const MapSelector = ({
   );
 };
 
-export default MapSelector; 
+export default MapSelector; ; 

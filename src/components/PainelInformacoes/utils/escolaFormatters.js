@@ -31,7 +31,7 @@ export const formatters = {
     "Acesso à Água": escola.acesso_agua,
     "Coleta de Lixo": escola.coleta_lixo,
     "Acesso à Internet": escola.acesso_internet,
-    "Equipamentos Tecnológicos": escola.equipamentos,
+    "Equipamentos Tecs": escola.equipamentos,
     "Modo de Acesso à Escola": escola.modo_acesso,
     "Cozinha": escola.cozinha,
     "Merenda Escolar": escola.merenda_escolar,

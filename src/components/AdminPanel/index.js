@@ -105,7 +105,7 @@ const AdminPanelContent = () => {
       'Acesso à água': escola['Acesso à água'],
       'Tem coleta de lixo?': escola['Tem coleta de lixo?'],
       'Acesso à internet': escola['Acesso à internet'],
-      'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': escola['Equipamentos Tecnológicos (Computadores, tablets e impressoras)'],
+      'Equipamentos Tecs': escola['Equipamentos Tecs'],
       'Modo de acesso à escola': escola['Modo de acesso à escola'],
       'Gestão/Nome': escola['Gestão/Nome'],
       'Outros funcionários': escola['Outros funcionários'],
@@ -182,7 +182,7 @@ const AdminPanelContent = () => {
       'Acesso à água': '',
       'Tem coleta de lixo?': '',
       'Acesso à internet': '',
-      'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': '',
+      'Equipamentos Tecs': '',
       'Modo de acesso à escola': '',
       'Gestão/Nome': '',
       'Outros funcionários': '',
@@ -507,7 +507,7 @@ const AdminPanelContent = () => {
 
         {/* Painel de Edição */}
         {editingLocation && typeof editingLocation === 'object' && (editingLocation.Escola !== undefined) && editingLocation.activeTab !== 'tabela-editavel' && (
-          <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800/50 p-6 max-h-[calc(100vh-200px)] overflow-hidden flex flex-col">
+          <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800/50 p-6 flex flex-col">
             {/* Header do painel */}
             <div className="flex justify-between items-center mb-6 flex-shrink-0">
               <div>
@@ -599,7 +599,7 @@ const AdminPanelContent = () => {
             </div>
 
             {/* Conteúdo da aba ativa */}
-            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
+            <div className="scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
               {renderActiveTab()}
             </div>
           </div>
