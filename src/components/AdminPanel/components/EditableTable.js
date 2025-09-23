@@ -91,7 +91,7 @@ const EditableTable = ({
     { key: 'Acesso à água', label: 'Água', width: 'w-24' },
     { key: 'Tem coleta de lixo?', label: 'Coleta Lixo', width: 'w-24' },
     { key: 'Acesso à internet', label: 'Internet', width: 'w-24' },
-    { key: 'Equipamentos Tecnológicos (Computadores, tablets e impressoras)', label: 'Equipamentos', width: 'w-32' },
+    { key: 'Equipamentos Tecs', label: 'Equipamentos', width: 'w-32' },
     { key: 'Modo de acesso à escola', label: 'Acesso', width: 'w-32' },
     { key: 'Gestão/Nome', label: 'Gestão', width: 'w-32' },
     { key: 'Outros funcionários', label: 'Funcionários', width: 'w-32' },

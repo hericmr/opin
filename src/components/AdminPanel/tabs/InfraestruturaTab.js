@@ -49,8 +49,8 @@ const InfraestruturaTab = ({ editingLocation, setEditingLocation }) => {
         </label>
         <textarea
           className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 h-24 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-gray-100 placeholder-gray-400 text-base"
-          value={editingLocation['Equipamentos Tecnológicos (Computadores, tablets e impressoras)'] || ''}
-          onChange={e => setEditingLocation({ ...editingLocation, 'Equipamentos Tecnológicos (Computadores, tablets e impressoras)': e.target.value })}
+          value={editingLocation['Equipamentos Tecs'] || ''}
+          onChange={e => setEditingLocation({ ...editingLocation, 'Equipamentos Tecs': e.target.value })}
           placeholder="Descreva os equipamentos tecnológicos disponíveis..."
         />
       </div>

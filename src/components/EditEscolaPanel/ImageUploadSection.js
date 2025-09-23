@@ -508,10 +508,10 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
 
   if (loading) {
     return (
-      <div className="p-6 bg-gray-50 rounded-lg">
+      <div className="p-6 bg-gray-800/30 rounded-lg">
         <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <span className="ml-2 text-gray-600">Carregando imagens...</span>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+          <span className="ml-2 text-gray-400">Carregando imagens...</span>
         </div>
       </div>
     );
@@ -522,26 +522,26 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <ImageIcon className="w-5 h-5 text-blue-600" />
-          <h3 className="text-lg font-semibold text-gray-900">Imagens da Escola</h3>
+          <ImageIcon className="w-5 h-5 text-blue-400" />
+          <h3 className="text-lg font-semibold text-gray-100">Imagens da Escola</h3>
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-gray-400">
           {existingImages.length} imagens
         </div>
       </div>
 
       {/* Mensagens */}
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <AlertCircle className="w-5 h-5 text-red-600" />
-          <span className="text-red-700">{error}</span>
+        <div className="flex items-center gap-2 p-3 bg-red-900/50 border-red-700/50 rounded-xl">
+          <AlertCircle className="w-5 h-5 text-red-400" />
+          <span className="text-red-300">{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-          <Check className="w-5 h-5 text-green-600" />
-          <span className="text-green-700">{success}</span>
+        <div className="flex items-center gap-2 p-3 bg-green-900/50 border-green-700/50 rounded-xl">
+          <Check className="w-5 h-5 text-green-400" />
+          <span className="text-green-300">{success}</span>
         </div>
       )}
 
@@ -551,17 +551,17 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
           <div
             className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
               uploading 
-                ? 'border-gray-300 bg-gray-50' 
-                : 'border-blue-300 bg-blue-50 hover:border-blue-400 hover:bg-blue-100'
+                ? 'border-gray-600 bg-gray-800/50' 
+                : 'border-gray-600 bg-gray-800/50 hover:border-blue-400 hover:bg-gray-700/50'
             }`}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
           >
-            <Upload className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-            <p className="text-gray-600 mb-2">
+            <Upload className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+            <p className="text-gray-300 mb-2">
               Arraste imagens aqui ou clique para selecionar
             </p>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-gray-400 mb-4">
               JPG, PNG, WEBP, GIF • Máximo 5MB por arquivo
             </p>
             
@@ -581,13 +581,13 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
           {/* Progress Bar */}
           {uploading && (
             <div className="space-y-2">
-              <div className="flex justify-between text-sm text-gray-600">
+              <div className="flex justify-between text-sm text-gray-400">
                 <span>Fazendo upload...</span>
                 <span>{Math.round(uploadProgress)}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-gray-700 rounded-full h-2">
                 <div 
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${uploadProgress}%` }}
                 ></div>
               </div>
@@ -597,7 +597,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
           {/* Arquivos Selecionados */}
           {selectedFiles.length > 0 && (
             <div className="space-y-3">
-              <h4 className="font-medium text-gray-900">Arquivos selecionados ({selectedFiles.length})</h4>
+              <h4 className="font-medium text-gray-100">Arquivos selecionados ({selectedFiles.length})</h4>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {selectedFiles.map((file, index) => (
                   <div key={index} className="relative group">
@@ -608,11 +608,11 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                     />
                     <button
                       onClick={() => removeSelectedFile(index)}
-                      className="absolute top-1 right-1 p-1 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <X className="w-3 h-3" />
                     </button>
-                    <p className="text-xs text-gray-600 mt-1 truncate">{file.name}</p>
+                    <p className="text-xs text-gray-400 mt-1 truncate">{file.name}</p>
                   </div>
                 ))}
               </div>
@@ -631,11 +631,11 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       {/* Imagens Existentes */}
       {existingImages.length > 0 && (
         <div className="space-y-4">
-          <h4 className="font-medium text-gray-900">Imagens da Escola ({existingImages.length})</h4>
+          <h4 className="font-medium text-gray-100">Imagens da Escola ({existingImages.length})</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {existingImages.map((image) => (
-              <div key={image.id} className={`bg-white rounded-lg overflow-hidden shadow-sm ${
-                imagemHeaderAtual === image.publicUrl ? 'ring-2 ring-blue-500 ring-opacity-75' : ''
+              <div key={image.id} className={`bg-gray-800/50 border border-gray-700/50 rounded-lg overflow-hidden shadow-sm ${
+                imagemHeaderAtual === image.publicUrl ? 'ring-2 ring-blue-400' : ''
               }`}>
                 {/* Imagem */}
                 <div className="relative group">
@@ -647,7 +647,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                 
                 {/* Badge de imagem do header */}
                 {imagemHeaderAtual === image.publicUrl && (
-                  <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                  <div className="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                     <Check className="w-3 h-3" />
                     Header
                   </div>
@@ -661,7 +661,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                       <button
                         onClick={() => definirImagemHeader(image.publicUrl)}
                         disabled={loadingHeader}
-                        className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50"
+                        className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-700 disabled:opacity-50"
                         title="Usar como imagem do header"
                       >
                         <Check className="w-5 h-5" />
@@ -673,7 +673,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                       <button
                         onClick={removerImagemHeader}
                         disabled={loadingHeader}
-                        className="p-2 bg-yellow-600 text-white rounded-full hover:bg-yellow-700 disabled:opacity-50"
+                        className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-700 disabled:opacity-50"
                         title="Remover do header"
                       >
                         <X className="w-5 h-5" />
@@ -682,7 +682,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                     
                     <button
                       onClick={() => startReplaceImage(image.id)}
-                      className="p-2 bg-orange-600 text-white rounded-full hover:bg-orange-700"
+                      className="p-2 bg-orange-500 text-white rounded-full hover:bg-orange-700"
                       title="Trocar imagem"
                     >
                       <RefreshCw className="w-5 h-5" />
@@ -690,7 +690,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                     
                     <button
                       onClick={() => handleDeleteImage(image.id, image.url)}
-                      className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700"
+                      className="p-2 bg-red-500 text-white rounded-full hover:bg-red-700"
                       title="Excluir imagem"
                     >
                       <Trash2 className="w-5 h-5" />
@@ -701,50 +701,50 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
 
                 {/* Campos de legenda integrados com legendas_fotos */}
                 <div className="p-4 space-y-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Legenda
                   </label>
                   <input
                     type="text"
-                    className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-gray-100"
                     value={image.legendaData?.legenda || ''}
                     onChange={e => handleLegendaFieldChange(image.id, 'legenda', e.target.value)}
                     placeholder="Digite a legenda da imagem..."
                   />
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Descrição Detalhada
                   </label>
                   <textarea
-                    className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-gray-100"
                     value={image.legendaData?.descricao_detalhada || ''}
                     onChange={e => handleLegendaFieldChange(image.id, 'descricao_detalhada', e.target.value)}
                     placeholder="Descrição detalhada da imagem..."
                   />
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Autor da Foto
                   </label>
                   <input
                     type="text"
-                    className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-gray-100"
                     value={image.legendaData?.autor_foto || ''}
                     onChange={e => handleLegendaFieldChange(image.id, 'autor_foto', e.target.value)}
                     placeholder="Nome do fotógrafo"
                   />
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Data da Foto
                   </label>
                   <input
                     type="date"
-                    className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-gray-100"
                     value={image.legendaData?.data_foto || ''}
                     onChange={e => handleLegendaFieldChange(image.id, 'data_foto', e.target.value)}
                   />
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Categoria
                   </label>
                   <input
                     type="text"
-                    className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-gray-100"
                     value={image.legendaData?.categoria || ''}
                     onChange={e => handleLegendaFieldChange(image.id, 'categoria', e.target.value)}
                     placeholder="Digite a categoria da imagem..."
@@ -768,31 +768,31 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       {/* Modal de Trocar Imagem */}
       {replacingImage && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold mb-4">Trocar Imagem</h3>
+          <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4 text-gray-100">Trocar Imagem</h3>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Selecione a nova imagem
                 </label>
                 <input
                   type="file"
                   accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
                   onChange={handleReplacementFileSelect}
-                  className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-gray-100"
                 />
               </div>
               
               {replacementFile && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Pré-visualização
                   </label>
                   <img
                     src={URL.createObjectURL(replacementFile)}
                     alt="Nova imagem"
-                    className="w-full h-32 object-cover rounded-lg border"
+                    className="w-full h-32 object-cover rounded-lg border border-gray-600"
                   />
                 </div>
               )}
@@ -801,7 +801,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={cancelReplaceImage}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                className="flex-1 px-4 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700"
               >
                 Cancelar
               </button>
@@ -819,8 +819,8 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
 
       {/* Mensagem quando não há imagens */}
       {existingImages.length === 0 && !uploading && (
-        <div className="text-center py-8 text-gray-500">
-          <ImageIcon className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+        <div className="text-center py-8 text-gray-400">
+          <ImageIcon className="w-12 h-12 mx-auto mb-2 text-gray-500" />
           <p>Nenhuma imagem adicionada ainda.</p>
           <p className="text-sm">Adicione imagens para mostrar a escola.</p>
         </div>
@@ -834,4 +834,4 @@ ImageUploadSection.propTypes = {
   onImagesUpdate: PropTypes.func
 };
 
-export default ImageUploadSection; 
+export default ImageUploadSection;
