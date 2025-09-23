@@ -152,10 +152,7 @@ const AdminSidebar = ({
           <div className="mt-auto pt-6 border-t border-gray-800/50">
             <div className="text-center">
               <p className="text-gray-500 text-xs">
-                Painel de Administração
-              </p>
-              <p className="text-gray-600 text-xs mt-1">
-                Escolas Indígenas SP
+                Opin - desenvolvido por <a href="https://hericmr.github.io/me/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400">Heric mr</a>
               </p>
             </div>
           </div>
