@@ -3,6 +3,7 @@ import PainelHeader from '../../PainelHeader';
 import EscolaHeaderImage from './EscolaHeaderImage';
 import usePainelVisibility from '../../hooks/usePainelVisibility';
 import { usePainelDimensions } from '../../hooks/usePainelDimensions';
+import useImagePreloader from '../../../hooks/useImagePreloader';
 
 const PainelContainer = ({ 
   painelInfo, 
@@ -13,6 +14,9 @@ const PainelContainer = ({
 }) => {
   const { isVisible, isMobile } = usePainelVisibility(painelInfo);
   const painelDimensions = usePainelDimensions(isMobile, isMaximized);
+  
+  // Hook de preload de imagens
+  const { isImagePreloaded } = useImagePreloader(painelInfo?.id, true);
 
   if (!painelInfo) return null;
 
@@ -74,6 +78,7 @@ const PainelContainer = ({
           <EscolaHeaderImage 
             imagemUrl={painelInfo.imagem_header}
             className="h-56 sm:h-64 md:h-72 lg:h-80 xl:h-96 w-full"
+            isPreloaded={isImagePreloaded(painelInfo.imagem_header)}
           />
         )}
         

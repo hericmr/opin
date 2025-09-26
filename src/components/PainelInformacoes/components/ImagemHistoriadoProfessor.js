@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { supabase } from '../../../supabaseClient';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
 import ReusableImageZoom from '../../ReusableImageZoom';
+import OptimizedImage from '../../shared/OptimizedImage';
+import useImagePreloader from '../../../hooks/useImagePreloader';
 import '../../ReusableImageZoom.css';
 
 const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
@@ -11,6 +13,9 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
   const [error, setError] = useState(null);
   const [imagemZoom, setImagemZoom] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Hook de preload de imagens
+  const { isImagePreloaded } = useImagePreloader(escola_id, true);
 
   const fecharZoom = useCallback(() => {
     setImagemZoom(null);
@@ -131,11 +136,11 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
             }}
           >
             <div className="w-full aspect-[4/3] bg-gray-100 flex items-center justify-center">
-              <img
+              <OptimizedImage
                 src={img.publicURL}
                 alt={img.legenda}
                 className="w-full h-full object-cover object-center transition-transform duration-200 hover:scale-105"
-                loading="lazy"
+                isPreloaded={isImagePreloaded(img.publicURL)}
                 style={{ maxHeight: '350px' }}
               />
             </div>
