@@ -34,47 +34,29 @@ A plataforma visa mapear, documentar e compartilhar informações sobre as escol
 
 ### Principais Funcionalidades
 
-- **Mapa Interativo**: Visualização geográfica das escolas indígenas com informações detalhadas
-- **Painel de Informações**: Dados completos sobre cada escola, incluindo infraestrutura, modalidades de ensino e histórias
-- **Sistema de Compartilhamento**: URLs específicas para cada escola com meta tags customizadas para redes sociais
-- **Painel Administrativo**: Interface completa para gerenciamento de dados
-- **Busca Avançada**: Sistema de pesquisa por localização, nome ou características
-- **Materiais Didáticos**: Seção dedicada a recursos educacionais
+- **Mapa Interativo**: Visualização geográfica das escolas indígenas
+- **Painel de Informações**: Dados completos sobre cada escola
+- **Sistema de Compartilhamento**: URLs específicas com meta tags customizadas
+- **Painel Administrativo**: Interface para gerenciamento de dados
+- **Busca Avançada**: Pesquisa por localização e características
+- **Materiais Didáticos**: Recursos educacionais
 
 ---
 
 ## Estrutura do Mapa Dinâmico
 
-O site é apresentado em um mapa dinâmico com as seguintes características:
+Mapa interativo com base em imagem de satélite e três camadas principais:
 
-### Base Cartográfica
-- **Imagem de satélite** do mundo inteiro
-- **Aproximação por zoom** para visualização detalhada
-- **Navegação fluida** com controles intuitivos
+### Camadas
+1. **Estado de São Paulo** - Limites administrativos e divisão municipal
+2. **Terras Indígenas** - Demarcação oficial das áreas protegidas  
+3. **Escolas Indígenas** - Marcadores com informações detalhadas
 
-### Três Camadas Principais
-
-#### 1. Estado de São Paulo
-- **Limites administrativos** do estado
-- **Divisão municipal** para referência geográfica
-- **Contexto territorial** para localização das escolas
-
-#### 2. Terras Indígenas
-- **Demarcação oficial** das terras indígenas
-- **Limites territoriais** reconhecidos
-- **Identificação visual** das áreas protegidas
-
-#### 3. Escolas Indígenas
-- **Marcadores específicos** para cada escola
-- **Informações detalhadas** ao clicar nos marcadores
-- **Painel lateral** com dados completos da instituição
-- **Sistema de filtros** por características específicas
-
-### Funcionalidades do Mapa
-- **Zoom e pan** para navegação livre
-- **Controles de camadas** para ativar/desativar visualizações
-- **Busca geográfica** por localização
-- **Integração com painel** de informações detalhadas
+### Funcionalidades
+- Zoom e navegação livre
+- Controles de camadas
+- Busca geográfica
+- Painel lateral com dados completos
 
 ---
 
