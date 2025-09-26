@@ -2,13 +2,31 @@
 
 Portal informativo interativo que mapeia e apresenta informações detalhadas sobre escolas indígenas no estado de São Paulo, Brasil.
 
+![OPIN Logo](public/opin.png)
+
 **Site:** https://hericmr.github.io/escolasindigenas/
+
+---
+
+## Screenshots
+
+![Exemplo da Interface](public/exemplo1.png)
 
 ---
 
 ## Sobre o Projeto
 
-O OPIN é uma plataforma digital desenvolvida para mapear, documentar e compartilhar informações sobre as escolas indígenas no estado de São Paulo. O projeto visa dar visibilidade às instituições educacionais indígenas, suas características, desafios e conquistas, contribuindo para o conhecimento e valorização da educação indígena.
+O OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) é uma plataforma digital desenvolvida como parte do projeto "Ação Saberes Indígenas nas Escolas". 
+
+### Objetivos do Projeto
+
+- **Reunir dados das escolas indígenas** do estado de São Paulo
+- **Sistematizar materiais pedagógicos**, registros, jogos e brincadeiras
+- **Valorizar e fortalecer os saberes indígenas** nas escolas e comunidades
+- **Dar visibilidade às demandas** das escolas indígenas
+- **Contribuir para o conhecimento** e valorização da educação indígena
+
+A plataforma visa mapear, documentar e compartilhar informações sobre as escolas indígenas, suas características, desafios e conquistas, fortalecendo a educação diferenciada e intercultural.
 
 ### Principais Funcionalidades
 
@@ -69,6 +87,14 @@ https://hericmr.github.io/escolasindigenas/?panel=e-e-i-nhandepouwa
 1. **Detecção Automática**: O sistema detecta automaticamente qual escola está sendo visualizada via parâmetro `panel` na URL
 2. **Meta Tags Customizadas**: Gera título, descrição e URL específicos para cada escola
 3. **Compartilhamento Rico**: Quando compartilhada nas redes sociais, a URL mostra um snippet atrativo com informações específicas da escola
+
+#### Exemplo de Meta Tags Customizadas
+
+![Exemplo de Meta Tags](public/ex1.png)
+
+#### Resultado no Compartilhamento Social
+
+![Resultado no Compartilhamento](public/ex2.png)
 
 ---
 
