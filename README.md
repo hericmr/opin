@@ -1,6 +1,7 @@
 # OPIN - Observatório dos Professores Indígenas no Estado de São Paulo
 
-Portal informativo interativo que mapeia e apresenta informações detalhadas sobre escolas indígenas no estado de São Paulo, Brasil.
+O OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) é um site que mapeia e apresenta informações detalhadas sobre escolas indígenas no estado de São Paulo, Brasil. desenvolvida como parte do projeto "Ação Saberes Indígenas nas Escolas" pela LINDI/UNIFESP em 2025. A plataforma visa mapear, documentar e compartilhar informações sobre as escolas indígenas, suas características, desafios e conquistas, fortalecendo a educação diferenciada e intercultural.
+
 
 ![OPIN Logo](public/opin.png)
 
@@ -18,28 +19,13 @@ Portal informativo interativo que mapeia e apresenta informações detalhadas so
 
 ---
 
-## Sobre o Projeto
-
-O OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) é uma plataforma digital desenvolvida como parte do projeto "Ação Saberes Indígenas nas Escolas". 
-
-### Objetivos do Projeto
-
-- **Reunir dados das escolas indígenas** do estado de São Paulo
-- **Sistematizar materiais pedagógicos**, registros, jogos e brincadeiras
-- **Valorizar e fortalecer os saberes indígenas** nas escolas e comunidades
-- **Dar visibilidade às demandas** das escolas indígenas
-- **Contribuir para o conhecimento** e valorização da educação indígena
-
-A plataforma visa mapear, documentar e compartilhar informações sobre as escolas indígenas, suas características, desafios e conquistas, fortalecendo a educação diferenciada e intercultural.
-
-### Principais Funcionalidades
+### Funcionalidades
 
 - **Mapa Interativo**: Visualização geográfica das escolas indígenas
 - **Painel de Informações**: Dados completos sobre cada escola
-- **Sistema de Compartilhamento**: URLs específicas com meta tags customizadas
 - **Painel Administrativo**: Interface para gerenciamento de dados
-- **Busca Avançada**: Pesquisa por localização e características
-- **Materiais Didáticos**: Recursos educacionais
+- **Busca**: Pesquisa por localização e características
+- **Materiais Didáticos**: Recursos educacionais (em construção)
 
 ---
 
