@@ -52,16 +52,6 @@ Se você é administrador do OPIN e tem alguma dúvida, provavelmente ela será 
 
 **[📋 Guia do Administrador](docs/GUIA_ADMINISTRADOR.md)**
 
-Este guia inclui informações sobre:
-- Painel de administração (`/admin`)
-- Sistema de meta tags e compartilhamento
-- Estrutura do banco de dados
-- Funcionalidades especiais
-- Configuração do Supabase
-- Campos obrigatórios
-- Boas práticas
-- Solução de problemas
-
 
 ---
 
