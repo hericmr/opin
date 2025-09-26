@@ -1,72 +1,12 @@
-# OPIN - Observatório dos Professores Indígenas no Estado de São Paulo
+# Guia do Administrador - OPIN
 
-O OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) é uma plataforma que mapeia escolas indígenas no estado de São Paulo. Integrante do projeto "Ação Saberes Indígenas nas Escolas", da LINDI/UNIFESP (2025), o site visa documentar e compartilhar dados sobre essas escolas, destacando suas realidades, histórias e práticas pedagógicas.
+Se você é administrador do OPIN e tem alguma dúvida, provavelmente ela será respondida nesta documentação.
 
-
-![OPIN Logo](public/opin.png)
-
-**Site:** https://hericmr.github.io/opin/
-
----
-
-## Screenshots
-
-![Exemplo da Interface](public/exemplo1.png)
-
-![Exemplo](public/exemplo2.png)
-
-![Exemplo do Painel de Informações](public/exemplo3.png)
-
----
-
-### Funcionalidades
-
-- **Mapa Interativo**: Visualização geográfica das escolas indígenas
-- **Painel de Informações**: Dados completos sobre cada escola
-- **Painel Administrativo**: Interface para gerenciamento de dados
-- **Busca**: Pesquisa por localização e características
-- **Materiais Didáticos**: Recursos educacionais (em construção)
-
----
-
-## Estrutura do Mapa Dinâmico
-
-Mapa interativo com base em imagem de satélite e três camadas principais:
-
-### Camadas
-1. **Estado de São Paulo** - Limites administrativos e divisão municipal
-2. **Terras Indígenas** - Demarcação oficial das áreas protegidas  
-3. **Escolas Indígenas** - Marcadores com informações detalhadas
-
-### Funcionalidades
-- Zoom e navegação livre
-- Controles de camadas
-- Busca geográfica
-- Painel lateral com dados completos
-
----
-
-## Documentação para Administradores
-
-Se você é administrador do OPIN e tem alguma dúvida, provavelmente ela será respondida nesta documentação:
-
-**[📋 Guia do Administrador](docs/GUIA_ADMINISTRADOR.md)**
-
-Este guia inclui informações sobre:
-- Painel de administração (`/admin`)
-- Sistema de meta tags e compartilhamento
-- Estrutura do banco de dados
-- Funcionalidades especiais
-- Configuração do Supabase
-- Campos obrigatórios
-- Boas práticas
-- Solução de problemas
-
-### Painel de Administração (`/admin`)
+## Painel de Administração (`/admin`)
 
 Acesse o painel administrativo para gerenciar todas as informações das escolas através de abas organizadas:
 
-#### Abas Principais
+### Abas Principais
 - **Dados Básicos**: Nome, município, endereço, terra indígena, diretoria
 - **Povos**: Povos indígenas e línguas faladas
 - **Modalidades**: Ensino, alunos, turnos de funcionamento
@@ -84,6 +24,15 @@ Acesse o painel administrativo para gerenciar todas as informações das escolas
 
 ---
 
+## Sistema de Meta Tags e Compartilhamento
+
+### URLs Específicas para Escolas
+
+Cada escola possui uma URL única que gera meta tags customizadas para compartilhamento social:
+
+```
+https://hericmr.github.io/opin/?panel=e-e-i-nhandepouwa
+```
 
 ---
 
@@ -176,95 +125,11 @@ created_at (timestamp)
 - Ativação/desativação de histórias
 - Upload de fotos de rosto
 
----
-
-## Tecnologias Utilizadas
-
-### Frontend
-- **React 18** - Biblioteca principal para interface
-- **TailwindCSS** - Framework CSS para estilização
-- **Lucide React** - Biblioteca de ícones
-- **OpenLayers** - Mapas interativos de alta performance
-- **Framer Motion** - Animações e transições
-- **React Router** - Roteamento de páginas
-- **React Helmet Async** - Gerenciamento de meta tags
-
-### Backend e Dados
-- **Supabase** - Backend como serviço e banco de dados
-- **GeoJSON** - Formato para dados geográficos
-- **PapaParse** - Parser para arquivos CSV
-- **React Markdown** - Renderização de conteúdo markdown
-
-### Deploy e Hospedagem
-- **GitHub Pages** - Hospedagem estática
-- **GitHub Actions** - CI/CD automático
-
----
-
-## Instalação e Desenvolvimento
-
-### Pré-requisitos
-- Node.js 16 ou superior
-- npm ou yarn
-- Conta no Supabase
-
-### Instalação
-
-1. Clone o repositório:
-```bash
-git clone https://github.com/hericmr/opin.git
-cd opin
-```
-
-2. Instale as dependências:
-```bash
-npm install
-```
-
-3. Configure as variáveis de ambiente:
-```bash
-cp .env.example .env.local
-# Edite .env.local com suas credenciais do Supabase
-```
-
-4. Inicie o servidor de desenvolvimento:
-```bash
-npm start
-```
-
-### Comandos Disponíveis
-
-```bash
-npm start      # Iniciar servidor de desenvolvimento
-npm run build  # Build para produção
-npm run deploy # Deploy no GitHub Pages
-npm test       # Executar testes
-npm run lint   # Verificar código com ESLint
-```
-
----
-
-## Estrutura do Projeto
-
-```
-src/
-├── components/
-│   ├── MetaTags/              # Sistema de meta tags dinâmicas
-│   ├── PainelInformacoes/     # Informações detalhadas das escolas
-│   ├── MapaEscolasIndigenas/  # Mapa interativo principal
-│   ├── AdminPanel/            # Painel de administração
-│   ├── Navbar/                # Barra de navegação
-│   ├── SearchResults/         # Resultados de busca
-│   └── ...
-├── hooks/                     # Hooks personalizados
-│   ├── useEscolasData.js      # Hook para dados das escolas
-│   ├── useEscolaAtual.js      # Hook para detecção de escola atual
-│   └── useMetaTags.js         # Hook para meta tags
-├── services/                  # Serviços de API
-├── utils/                     # Utilitários e helpers
-├── config/                    # Configurações
-└── App.js                     # Componente raiz
-```
+### Sistema de Busca
+- Busca por nome da escola
+- Busca por localização geográfica
+- Filtros por características específicas
+- Resultados com preview de informações
 
 ---
 
@@ -356,28 +221,3 @@ Configure as políticas de Row Level Security (RLS) conforme necessário para co
 - Confirme dados no formato correto
 - Teste conexão com Supabase
 - Verifique console para erros JavaScript
-
----
-
-## Contribuição
-
-Para contribuir com o projeto:
-
-1. Faça um fork do repositório
-2. Crie uma branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
-3. Commit suas mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
-4. Push para a branch (`git push origin feature/nova-funcionalidade`)
-5. Abra um Pull Request
-
----
-
-## Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
----
-
-## Contato
-
-Para dúvidas ou sugestões sobre o projeto, entre em contato através dos issues do GitHub ou pelo email do desenvolvedor.
-
