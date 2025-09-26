@@ -30,7 +30,6 @@ const ViewModeToggle = ({ viewMode, setViewMode }) => (
       role="tab"
       aria-selected={viewMode === 'list'}
       aria-label="Visualizar em lista"
-      aria-pressed={viewMode === 'list'}
       onClick={() => setViewMode('list')}
       className={`p-2 rounded-lg flex items-center gap-1 transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 ${
         viewMode === 'list'
@@ -50,7 +49,6 @@ const ViewModeToggle = ({ viewMode, setViewMode }) => (
       role="tab"
       aria-selected={viewMode === 'grid'}
       aria-label="Visualizar em grade"
-      aria-pressed={viewMode === 'grid'}
       onClick={() => setViewMode('grid')}
       className={`p-2 rounded-lg flex items-center gap-1 transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 ${
         viewMode === 'grid'

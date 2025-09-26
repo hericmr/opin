@@ -220,6 +220,7 @@ const TabelasIntegraisTab = () => {
   useEffect(() => {
     setTabelas(TABELAS_SISTEMA);
     setLoading(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Carregar dados de uma tabela específica

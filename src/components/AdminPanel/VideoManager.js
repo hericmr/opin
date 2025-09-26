@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getVideosEscola, createVideoEscola, updateVideoEscola, deleteVideoEscola } from '../../services/videoService';
 import { Plus, Edit3, Trash2, Save } from 'lucide-react';
 
@@ -19,7 +19,7 @@ const VideoManager = ({ escolaId }) => {
   });
 
   // Carregar vídeos
-  const carregarVideos = async () => {
+  const carregarVideos = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -30,11 +30,11 @@ const VideoManager = ({ escolaId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [escolaId]);
 
   useEffect(() => {
     if (escolaId) carregarVideos();
-  }, [escolaId]);
+  }, [escolaId, carregarVideos]);
 
   // Reset form
   const resetForm = () => {

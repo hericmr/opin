@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getHistoriasProfessor, createHistoriaProfessor, updateHistoriaProfessor, deleteHistoriaProfessor } from '../../../services/historiaProfessorService';
 import FotoProfessorService from '../../../services/fotoProfessorService';
 import RichTextEditor from './RichTextEditor';
@@ -13,14 +13,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
   const [photoError, setPhotoError] = useState('');
   const [photoSuccess, setPhotoSuccess] = useState('');
 
-  // Carregar histórias existentes
-  useEffect(() => {
-    if (editingLocation?.id) {
-      loadHistorias();
-    }
-  }, [editingLocation?.id]);
-
-  const loadHistorias = async () => {
+  const loadHistorias = useCallback(async () => {
     if (!editingLocation?.id) return;
     
     setLoading(true);
@@ -32,7 +25,14 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [editingLocation?.id]);
+
+  // Carregar histórias existentes
+  useEffect(() => {
+    if (editingLocation?.id) {
+      loadHistorias();
+    }
+  }, [editingLocation?.id, loadHistorias]);
 
   const handleSaveHistoria = async (historiaData) => {
     if (!editingLocation?.id) return;

@@ -43,6 +43,7 @@ const usePainelVisibility = (painelInfo) => {
     return () => {
       document.body.style.overflow = "";
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [painelInfo]);
 
   console.log("usePainelVisibility - returning state:", { isVisible, isMobile });
