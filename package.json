@@ -2,6 +2,7 @@
   "name": "opin-observatorio-professores-indigenas",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://hericmr.github.io/opin",
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
