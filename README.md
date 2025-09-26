@@ -39,6 +39,41 @@ A plataforma visa mapear, documentar e compartilhar informações sobre as escol
 
 ---
 
+## Estrutura do Mapa Dinâmico
+
+O site é apresentado em um mapa dinâmico com as seguintes características:
+
+### Base Cartográfica
+- **Imagem de satélite** do mundo inteiro
+- **Aproximação por zoom** para visualização detalhada
+- **Navegação fluida** com controles intuitivos
+
+### Três Camadas Principais
+
+#### 1. Estado de São Paulo
+- **Limites administrativos** do estado
+- **Divisão municipal** para referência geográfica
+- **Contexto territorial** para localização das escolas
+
+#### 2. Terras Indígenas
+- **Demarcação oficial** das terras indígenas
+- **Limites territoriais** reconhecidos
+- **Identificação visual** das áreas protegidas
+
+#### 3. Escolas Indígenas
+- **Marcadores específicos** para cada escola
+- **Informações detalhadas** ao clicar nos marcadores
+- **Painel lateral** com dados completos da instituição
+- **Sistema de filtros** por características específicas
+
+### Funcionalidades do Mapa
+- **Zoom e pan** para navegação livre
+- **Controles de camadas** para ativar/desativar visualizações
+- **Busca geográfica** por localização
+- **Integração com painel** de informações detalhadas
+
+---
+
 ## Guia do Administrador
 
 ### Painel de Administração (`/admin`)
