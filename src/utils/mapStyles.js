@@ -1,6 +1,9 @@
 import { Style, Fill, Stroke, Text, Icon } from 'ol/style';
 import { MARKER_COLORS, CLUSTER_SIZES, GEOJSON_CONFIG } from './mapConfig';
 
+// Importar funções auxiliares
+import { getClusterConfig, calculateClusterScale } from './mapUtils';
+
 // Função para criar SVG base do marcador (gota invertida com bolinha branca)
 export const createMarkerSVG = (color, size = 24, options = {}) => {
   const {
@@ -191,7 +194,4 @@ export const createEstadoSPStyle = () => {
       width: 2
     })
   });
-};
-
-// Importar funções auxiliares
-import { getClusterConfig, calculateClusterScale } from './mapUtils'; 
+}; 
