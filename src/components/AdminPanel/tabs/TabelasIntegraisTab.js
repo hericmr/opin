@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Eye, RefreshCw, Database, FileText, Users, Image, Video, FileImage, Archive, HardDrive, Globe, FileDown, CheckCircle, AlertCircle } from 'lucide-react';
+import { Download, Eye, RefreshCw, Database, FileText, Users, Image, Video, Archive, FileDown, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '../../../supabaseClient';
 
 const TabelasIntegraisTab = () => {

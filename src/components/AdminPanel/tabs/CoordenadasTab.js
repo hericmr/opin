@@ -8,7 +8,7 @@ import XYZ from 'ol/source/XYZ';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import { Point } from 'ol/geom';
 import { Feature } from 'ol';
-import { Style, Fill, Stroke, Icon } from 'ol/style';
+import { Style, Icon } from 'ol/style';
 import 'ol/ol.css';
 
 // Caminho para o marcador SVG

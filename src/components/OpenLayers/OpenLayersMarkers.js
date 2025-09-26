@@ -6,11 +6,9 @@ import { Point } from 'ol/geom';
 import { fromLonLat } from 'ol/proj';
 import { 
   createMarkerStyle, 
-  applyHoverStyle,
-  applySelectionStyle 
+  applyHoverStyle
 } from '../../utils/openlayers/markerStyles';
 import { createMarkerInteractions } from '../../utils/openlayers/interactions';
-import { MAP_CONFIG } from '../../utils/mapConfig';
 import { isMobile } from '../../utils/mobileUtils';
 
 /**

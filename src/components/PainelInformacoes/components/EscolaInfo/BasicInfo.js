@@ -1,7 +1,6 @@
 import React, { memo, useState } from 'react';
 import {
   MapPin,
-  Users,
   Globe,
   Calendar,
   Building,

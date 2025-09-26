@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Feature } from 'ol';
-import { Point, LineString } from 'ol/geom';
+import { Point } from 'ol/geom';
 import { fromLonLat } from 'ol/proj';
 import { findNearbyPairs } from '../utils/mapUtils';
 

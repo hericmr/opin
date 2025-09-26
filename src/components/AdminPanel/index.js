@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRefresh } from '../../contexts/RefreshContext';
 import { useEscolas } from './hooks/useEscolas';
 import { useModalidades } from './hooks/useModalidades';

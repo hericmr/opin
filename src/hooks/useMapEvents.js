@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { toLonLat } from 'ol/proj';
 import { createTooltipHTML, createClusterTooltipHTML } from '../utils/mapUtils';
 
 export const useMapEvents = (map, mapContainer, onPainelOpen) => {

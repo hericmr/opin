@@ -5,7 +5,6 @@ import {
   uploadProfessorImage, 
   getEscolaImages, 
   deleteImage, 
-  updateImageDescription,
   replaceImage
 } from '../../services/escolaImageService';
 import { 

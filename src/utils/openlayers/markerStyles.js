@@ -1,6 +1,5 @@
 import { Style, Fill, Stroke, Text, Icon } from 'ol/style';
 import { Point } from 'ol/geom';
-import { Feature } from 'ol';
 
 // Caminho para o marcador SVG
 const MARKER_SVG_PATH = `${process.env.PUBLIC_URL || ''}/map-marker.svg`;
