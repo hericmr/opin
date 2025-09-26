@@ -67,6 +67,7 @@ export const usePainelDimensions = (isMobile, isMaximized) => {
       breakpoints,
       zIndex: 1000
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile, isMaximized, windowWidth, windowHeight]);
 
   return dimensions;

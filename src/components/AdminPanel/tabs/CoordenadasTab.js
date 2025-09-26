@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -65,7 +65,7 @@ const CoordenadasTab = ({ editingLocation, setEditingLocation }) => {
   };
 
   // Função para atualizar coordenadas quando o mapa é clicado
-  const handleMapClick = (event) => {
+  const handleMapClick = useCallback((event) => {
     const coordinates = toLonLat(event.coordinate);
     const [lng, lat] = coordinates;
     
@@ -74,7 +74,8 @@ const CoordenadasTab = ({ editingLocation, setEditingLocation }) => {
       'latitude': lat.toFixed(6),
       'longitude': lng.toFixed(6)
     });
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editingLocation]);
 
   // Inicializar mapa
   useEffect(() => {
@@ -116,13 +117,15 @@ const CoordenadasTab = ({ editingLocation, setEditingLocation }) => {
         mapInstanceRef.current.setTarget(undefined);
       }
     };
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handleMapClick]);
 
   // Atualizar mapa quando coordenadas mudam
   useEffect(() => {
     const lat = editingLocation['Latitude'];
     const lng = editingLocation['Longitude'];
     updateMap(lat, lng);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingLocation['Latitude'], editingLocation['Longitude']]);
 
   return (
