@@ -13,13 +13,7 @@ O OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) é um 
 
 ![Exemplo da Interface](public/exemplo1.png)
 
-![Exemplo](public/exemplo2.png)
-
-![Exemplo do Painel de Informações](public/exemplo3.png)
-
----
-
-### Funcionalidades
+## Funcionalidades
 
 - **Mapa Interativo**: Visualização geográfica das escolas indígenas
 - **Painel de Informações**: Dados completos sobre cada escola
@@ -27,7 +21,7 @@ O OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) é um 
 - **Busca**: Pesquisa por localização e características
 - **Materiais Didáticos**: Recursos educacionais (em construção)
 
----
+![Exemplo](public/exemplo2.png)
 
 ## Estrutura do Mapa Dinâmico
 
@@ -43,6 +37,8 @@ Mapa interativo com base em imagem de satélite e três camadas principais:
 - Controles de camadas
 - Busca geográfica
 - Painel lateral com dados completos
+
+![Exemplo do Painel de Informações](public/exemplo3.png)
 
 ---
 
