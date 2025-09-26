@@ -249,10 +249,10 @@ export const uploadHistoriaProfessorImage = async (file, escolaId, historiaId, d
       throw new Error(`Erro no upload: ${uploadError.message}`);
     }
 
-    // Obter URL pública
-    const { data: { publicUrl } } = supabase.storage
-      .from(HISTORIA_PROFESSOR_CONFIG.BUCKET_NAME)
-      .getPublicUrl(filePath);
+    // Obter URL pública - não usado
+    // const { data: { publicUrl } } = supabase.storage
+    //   .from(HISTORIA_PROFESSOR_CONFIG.BUCKET_NAME)
+    //   .getPublicUrl(filePath);
 
     // Atualizar a história com a URL da imagem
     const { data: historia, error: updateError } = await supabase
