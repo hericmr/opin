@@ -84,6 +84,7 @@ const MapSelector = ({
       console.log('MapSelector: Painel fechado em mobile, reativando marcadores');
       setShowMarcadores(true);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [painelAberto, isMobile]);
 
   // Log para monitorar mudanças no showMarcadores

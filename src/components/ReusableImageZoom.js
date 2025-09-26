@@ -37,21 +37,21 @@ const ReusableImageZoom = ({
     setRotation(0);
   };
 
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     if (currentIndex < images.length - 1) {
       const newIndex = currentIndex + 1;
       setCurrentIndex(newIndex);
       if (onImageChange) onImageChange(newIndex);
     }
-  };
+  }, [currentIndex, images.length, onImageChange]);
 
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
     if (currentIndex > 0) {
       const newIndex = currentIndex - 1;
       setCurrentIndex(newIndex);
       if (onImageChange) onImageChange(newIndex);
     }
-  };
+  }, [currentIndex, onImageChange]);
 
   // Fecha modal com tecla ESC
   useEffect(() => {
@@ -106,7 +106,7 @@ const ReusableImageZoom = ({
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isOpen, currentIndex, images.length]);
+  }, [isOpen, currentIndex, images.length, nextImage, prevImage]);
 
   if (!isOpen || !currentImage) return null;
 

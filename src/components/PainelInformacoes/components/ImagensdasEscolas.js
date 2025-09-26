@@ -15,13 +15,20 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
   const cacheRef = useRef({});
   const [cacheVersion, setCacheVersion] = useState(0); // Para forçar recarga
 
+  // Função para limpar cache e recarregar
+  const limparCacheERecarregar = useCallback(() => {
+    console.log('Limpando cache e recarregando imagens...');
+    cacheRef.current = {};
+    setCacheVersion(prev => prev + 1);
+  }, []);
+
   // Forçar recarga quando refreshKey mudar
   useEffect(() => {
     if (refreshKey > 0) {
       console.log('ImagensdasEscolas: refreshKey mudou, forçando recarga');
       limparCacheERecarregar();
     }
-  }, [refreshKey]);
+  }, [refreshKey, limparCacheERecarregar]);
 
   const fecharZoom = useCallback(() => {
     setImagemZoom(null);
@@ -38,15 +45,6 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
     return () => window.removeEventListener('keydown', handleEsc);
   }, [fecharZoom]);
 
-  // Função para limpar cache e recarregar
-  const limparCacheERecarregar = useCallback(() => {
-    console.log('Limpando cache e recarregando imagens...');
-    cacheRef.current = {};
-    setCacheVersion(prev => prev + 1);
-    setImagens([]);
-    setLoading(true);
-    setError('');
-  }, []);
 
   useEffect(() => {
     if (!escola_id) {
