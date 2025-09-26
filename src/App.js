@@ -1,5 +1,6 @@
 import React, { useState, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { SearchProvider } from "./contexts/SearchContext";
 import { RefreshProvider } from "./contexts/RefreshContext";
 import Navbar from "./components/Navbar";
@@ -12,6 +13,7 @@ import { SkipLink } from './components/Accessibility';
 import WelcomeModal from './components/WelcomeModal';
 import { Spinner } from './components/LoadingStates';
 import { useEscolasData } from './hooks/useEscolasData';
+import { MetaTagsDetector } from './components/MetaTags';
 
 // Lazy loading dos componentes
 const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));
@@ -57,6 +59,9 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Meta tags automáticas para escolas específicas */}
+      <MetaTagsDetector dataPoints={dataPoints} />
+      
       <Navbar onConteudoClick={() => navigate('/conteudo')} dataPoints={dataPoints} openPainelFunction={openPainelFunction} />
       <Suspense fallback={
         <div className="flex items-center justify-center p-8 bg-green-50">
@@ -137,17 +142,19 @@ function AppRoutes() {
 
 const App = () => {
   return (
-    <ToastProvider>
-      <SearchProvider>
-        <RefreshProvider>
-          <Router basename="/escolasindigenas">
-            <ErrorBoundary>
-              <AppRoutes />
-            </ErrorBoundary>
-          </Router>
-        </RefreshProvider>
-      </SearchProvider>
-    </ToastProvider>
+    <HelmetProvider>
+      <ToastProvider>
+        <SearchProvider>
+          <RefreshProvider>
+            <Router basename="/escolasindigenas">
+              <ErrorBoundary>
+                <AppRoutes />
+              </ErrorBoundary>
+            </Router>
+          </RefreshProvider>
+        </SearchProvider>
+      </ToastProvider>
+    </HelmetProvider>
   );
 };
 

@@ -4,6 +4,8 @@ import { RefreshCw } from 'lucide-react';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
 import { supabase } from '../../../supabaseClient';
 import ReusableImageZoom from '../../ReusableImageZoom';
+import OptimizedImage from '../../shared/OptimizedImage';
+import useImagePreloader from '../../../hooks/useImagePreloader';
 import '../../ReusableImageZoom.css';
 
 const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
@@ -14,6 +16,9 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
   const [error, setError] = useState('');
   const cacheRef = useRef({});
   const [cacheVersion, setCacheVersion] = useState(0); // Para forçar recarga
+
+  // Hook de preload de imagens
+  const { isImagePreloaded } = useImagePreloader(escola_id, true);
 
   // Função para limpar cache e recarregar
   const limparCacheERecarregar = useCallback(() => {
@@ -192,11 +197,11 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
             }}
           >
             <div className="w-full aspect-[4/3] bg-gray-100 flex items-center justify-center">
-              <img
+              <OptimizedImage
                 src={img.publicURL}
                 alt={img.descricao}
                 className="w-full h-full object-cover object-center transition-transform duration-200 hover:scale-105"
-                loading="lazy"
+                isPreloaded={isImagePreloaded(img.publicURL)}
                 style={{ maxHeight: '350px' }}
               />
             </div>

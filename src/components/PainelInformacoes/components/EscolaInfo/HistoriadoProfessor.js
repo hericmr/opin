@@ -161,6 +161,7 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
                 nomeProfessor={currentHistoria.nome_professor}
                 customSize="200px"
                 className="shadow-lg"
+                escolaId={escola.id}
               />
             </div>
             <div className="w-full text-center">
