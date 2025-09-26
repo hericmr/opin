@@ -50,13 +50,15 @@ describe('MediaSection', () => {
 
       const input = screen.getByLabelText(/Imagens/i);
       
-      await act(async () => {
-        await userEvent.upload(input, mockFile);
-      });
+      await userEvent.upload(input, mockFile);
 
       await waitFor(() => {
         expect(uploadImage).toHaveBeenCalledWith(mockFile);
+      });
+      await waitFor(() => {
         expect(mockOnUploadComplete).toHaveBeenCalledWith(mockUrl);
+      });
+      await waitFor(() => {
         expect(mockOnUpload).toHaveBeenCalled();
       });
     });
@@ -76,12 +78,12 @@ describe('MediaSection', () => {
 
       const input = screen.getByLabelText(/Imagens/i);
       
-      await act(async () => {
-        await userEvent.upload(input, new File(['test'], 'test.jpg', { type: 'image/jpeg' }));
-      });
+      await userEvent.upload(input, new File(['test'], 'test.jpg', { type: 'image/jpeg' }));
 
       await waitFor(() => {
         expect(screen.getByText(/Erro ao fazer upload do arquivo/i)).toBeInTheDocument();
+      });
+      await waitFor(() => {
         expect(mockOnUploadComplete).not.toHaveBeenCalled();
       });
     });
@@ -118,13 +120,15 @@ describe('MediaSection', () => {
 
       const input = screen.getByLabelText(/Áudio/i);
       
-      await act(async () => {
-        await userEvent.upload(input, mockFile);
-      });
+      await userEvent.upload(input, mockFile);
 
       await waitFor(() => {
         expect(uploadAudio).toHaveBeenCalledWith(mockFile);
+      });
+      await waitFor(() => {
         expect(mockOnUploadComplete).toHaveBeenCalledWith(mockUrl);
+      });
+      await waitFor(() => {
         expect(mockOnUpload).toHaveBeenCalled();
       });
     });
@@ -144,12 +148,12 @@ describe('MediaSection', () => {
 
       const input = screen.getByLabelText(/Áudio/i);
       
-      await act(async () => {
-        await userEvent.upload(input, new File(['test'], 'test.mp3', { type: 'audio/mpeg' }));
-      });
+      await userEvent.upload(input, new File(['test'], 'test.mp3', { type: 'audio/mpeg' }));
 
       await waitFor(() => {
         expect(screen.getByText(/Erro ao fazer upload do arquivo/i)).toBeInTheDocument();
+      });
+      await waitFor(() => {
         expect(mockOnUploadComplete).not.toHaveBeenCalled();
       });
     });
@@ -183,12 +187,12 @@ describe('MediaSection', () => {
 
       const input = screen.getByPlaceholderText(/Cole a URL do YouTube/i);
       
-      await act(async () => {
-        await userEvent.type(input, mockUrl);
-      });
+      await userEvent.type(input, mockUrl);
 
       await waitFor(() => {
         expect(mockOnUpload).toHaveBeenCalled();
+      });
+      await waitFor(() => {
         expect(mockOnUploadComplete).toHaveBeenCalledWith(mockUrl);
       });
     });
@@ -208,9 +212,7 @@ describe('MediaSection', () => {
 
       const removeButton = screen.getByText(/Remover Imagem/i);
       
-      await act(async () => {
-        await userEvent.click(removeButton);
-      });
+      await userEvent.click(removeButton);
 
       expect(mockOnRemove).toHaveBeenCalled();
     });
