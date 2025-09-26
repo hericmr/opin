@@ -27,7 +27,7 @@ const OpenLayersTerrasIndigenas = ({
   const interactionsRef = useRef(null);
   
   // Estados para controle de interações
-  const [hoveredFeature, setHoveredFeature] = React.useState(null);
+  const [, setHoveredFeature] = React.useState(null);
   const [selectedFeature, setSelectedFeature] = React.useState(null);
   // const [features, setFeatures] = React.useState([]); // Removido - não utilizado
 
@@ -105,6 +105,7 @@ const OpenLayersTerrasIndigenas = ({
       console.error('[OpenLayersTerrasIndigenas] Erro ao criar camada:', error);
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, data]);
 
   /**
@@ -125,6 +126,7 @@ const OpenLayersTerrasIndigenas = ({
     interactionsRef.current.on('hover', handleFeatureHover);
     interactionsRef.current.on('hoverOut', handleFeatureHoverOut);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
 
   /**

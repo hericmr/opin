@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../../supabaseClient';
 import { X, MapPin, Users, AlertCircle } from 'lucide-react';
 
@@ -165,7 +165,7 @@ const CompletenessDashboard = () => {
   };
 
   // Buscar dados de completude
-  const fetchCompletenessData = async () => {
+  const fetchCompletenessData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -199,11 +199,12 @@ const CompletenessDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetchCompletenessData();
-  }, []);
+  }, [fetchCompletenessData]);
 
   if (loading) {
     return (
@@ -240,7 +241,7 @@ const CompletenessDashboard = () => {
     );
   }
 
-  const { totalRecords, overallCompleteness, categoryCompleteness } = completenessData;
+  const { overallCompleteness, categoryCompleteness } = completenessData;
 
   // Componente Modal para mostrar escolas sem informação
   const IncompleteSchoolsModal = () => {

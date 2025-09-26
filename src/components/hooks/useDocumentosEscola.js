@@ -123,15 +123,12 @@ const useDocumentosEscola = (escolaId) => {
         setError(err.message);
       } finally {
         setIsLoading(false);
-        console.log('🏁 Estado final:', { 
-          documentos: documentos.length, 
-          isLoading, 
-          error: error || 'nenhum' 
-        });
+        // console.log removido para evitar dependências desnecessárias
       }
     };
 
     fetchDocumentos();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [escolaId]);
 
   return { documentos, isLoading, error };

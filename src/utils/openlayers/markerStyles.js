@@ -46,8 +46,8 @@ export const createMarkerStyle = (feature, showNames = false) => {
   
   if (!markerData) return null;
 
-  const baseColor = isNearbyPair ? MARKER_COLORS.nearbyPair : MARKER_COLORS.individual;
-  const borderColor = isNearbyPair ? '#DC2626' : MARKER_COLORS.individualBorder;
+  // const baseColor = isNearbyPair ? MARKER_COLORS.nearbyPair : MARKER_COLORS.individual; // Removido - não utilizado
+  // const borderColor = isNearbyPair ? '#DC2626' : MARKER_COLORS.individualBorder; // Removido - não utilizado
 
   // Estilo base do marcador (ícone SVG)
   const markerStyle = new Style({
@@ -105,24 +105,24 @@ export const createClusterStyle = (feature, markerStyleFunction) => {
   }
 
   // Determinar tamanho e cor do cluster baseado na quantidade
-  let clusterSize, clusterColor;
+  let clusterSize; // clusterColor removido - não utilizado
   const count = features.length;
 
   if (count <= CLUSTER_SIZES.small.max) {
     clusterSize = CLUSTER_SIZES.small.size;
-    clusterColor = MARKER_COLORS.cluster.small;
+    // clusterColor = MARKER_COLORS.cluster.small; // Removido - não utilizado
   } else if (count <= CLUSTER_SIZES.medium.max) {
     clusterSize = CLUSTER_SIZES.medium.size;
-    clusterColor = MARKER_COLORS.cluster.medium;
+    // clusterColor = MARKER_COLORS.cluster.medium; // Removido - não utilizado
   } else if (count <= CLUSTER_SIZES.large.max) {
     clusterSize = CLUSTER_SIZES.large.size;
-    clusterColor = MARKER_COLORS.cluster.large;
+    // clusterColor = MARKER_COLORS.cluster.large; // Removido - não utilizado
   } else if (count <= CLUSTER_SIZES.xlarge.max) {
     clusterSize = CLUSTER_SIZES.xlarge.size;
-    clusterColor = MARKER_COLORS.cluster.xlarge;
+    // clusterColor = MARKER_COLORS.cluster.xlarge; // Removido - não utilizado
   } else {
     clusterSize = CLUSTER_SIZES.xxlarge.size;
-    clusterColor = MARKER_COLORS.cluster.xlarge;
+    // clusterColor = MARKER_COLORS.cluster.xlarge; // Removido - não utilizado
   }
 
   // Determinar fonte baseada no tamanho
