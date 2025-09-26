@@ -1,6 +1,6 @@
 # OPIN - Observatório dos Professores Indígenas no Estado de São Paulo
 
-O OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) é um site que mapeia e apresenta informações detalhadas sobre escolas indígenas no estado de São Paulo, Brasil. É parte do projeto "Ação Saberes Indígenas nas Escolas" realizado pela LINDI/UNIFESP em 2025. A plataforma visa mapear, documentar e compartilhar informações sobre as escolas indígenas, suas características, desafios e conquistas, fortalecendo a educação diferenciada e intercultural.
+O OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) é uma plataforma que mapeia escolas indígenas no estado de São Paulo. Integrante do projeto "Ação Saberes Indígenas nas Escolas", da LINDI/UNIFESP (2025), o site visa documentar e compartilhar dados sobre essas escolas, destacando suas realidades, histórias e práticas pedagógicas.
 
 
 ![OPIN Logo](public/opin.png)
