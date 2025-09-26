@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Eye, EyeOff, Lock, AlertCircle, CheckCircle } from 'lucide-react';
+import { X, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
 import { AuthService } from '../../services/authService';
 
 const LoginModal = ({ isOpen, onClose, onSuccess }) => {

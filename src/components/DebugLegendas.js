@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { testLegendasTable, getLegendaByImageUrl, addLegendaFoto, updateLegendaFoto } from '../services/legendasService';
 import { supabase } from '../supabaseClient';
 

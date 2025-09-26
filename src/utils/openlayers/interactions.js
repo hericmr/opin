@@ -1,5 +1,4 @@
-import { isMobile, hasTouchCapabilities, isTouchEvent } from '../mobileUtils';
-import { DragPan, MouseWheelZoom, PinchZoom } from 'ol/interaction';
+import { isMobile, hasTouchCapabilities } from '../mobileUtils';
 
 /**
  * Classe para gerenciar interações e eventos do OpenLayers

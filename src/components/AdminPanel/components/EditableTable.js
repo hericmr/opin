@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Edit2, Save, X, Check, AlertCircle } from 'lucide-react';
+import { Edit2, X, Check, AlertCircle } from 'lucide-react';
 
 const EditableTable = ({ 
   escolas, 

@@ -4,12 +4,8 @@ import {
   TwitterShareButton,
   WhatsappShareButton,
   LinkedinShareButton,
-  FacebookIcon,
-  TwitterIcon,
-  WhatsappIcon,
-  LinkedinIcon,
 } from "react-share";
-import { Share2, Link, Check, MessageCircle, Facebook, Twitter, Linkedin } from "lucide-react";
+import { Link, Check, MessageCircle, Facebook, Twitter, Linkedin } from "lucide-react";
 
 // Componente Tooltip melhorado
 const Tooltip = ({ children, text, position = "top" }) => {

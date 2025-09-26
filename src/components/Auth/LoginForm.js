@@ -147,15 +147,15 @@ const LoginForm = ({
     }
   };
 
-  const resetForm = () => {
-    setFormData({ username: '', password: '' });
-    setError('');
-    setSuccess('');
-    setShowPassword(false);
-    setAttempts(0);
-    setIsLocked(false);
-    setLockTime(0);
-  };
+  // const resetForm = () => {
+  //   setFormData({ username: '', password: '' });
+  //   setError('');
+  //   setSuccess('');
+  //   setShowPassword(false);
+  //   setAttempts(0);
+  //   setIsLocked(false);
+  //   setLockTime(0);
+  // }; // Removido - não utilizado
 
   return (
     <div className="space-y-4">
