@@ -3,23 +3,18 @@ import PropTypes from 'prop-types';
 import { 
   Video, 
   Plus, 
-  Edit3, 
   Trash2, 
   Save, 
   X, 
   AlertCircle,
   Check,
-  Clock,
-  Tag,
-  Play,
   Link
 } from 'lucide-react';
 import { 
   getTitulosVideos, 
   addTituloVideo, 
   updateTituloVideo, 
-  deleteTituloVideo,
-  getTituloByVideoUrl 
+  deleteTituloVideo
 } from '../../services/legendasService';
 
 const VideoSection = ({ escolaId, videoUrl, onVideoUrlChange, onTitulosUpdate }) => {

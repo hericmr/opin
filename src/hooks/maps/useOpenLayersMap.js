@@ -2,8 +2,6 @@ import { useRef, useState } from 'react';
 import useMapInitialization from './useMapInitialization';
 import useMapEvents from './useMapEvents';
 import useMapView from './useMapView';
-import { MAP_CONFIG } from '../../utils/mapConfig';
-import { isMobile } from '../../utils/mobileUtils';
 
 /**
  * Hook principal para orquestração do mapa OpenLayers

@@ -92,7 +92,7 @@ const CompletenessDashboard = () => {
   const calculateFieldCompleteness = (data, fieldName) => {
     if (!data || data.length === 0) return 0;
     
-    const totalRecords = data.length;
+    // const totalRecords = data.length; // Removido - não utilizado
     const filledRecords = data.filter(record => {
       const value = record[fieldName];
       return value !== null && value !== undefined && value !== '' && value !== 'null';

@@ -24,7 +24,6 @@ const AppContent = () => {
   const { dataPoints, loading, error } = useEscolasData();
   const [openPainelFunction, setOpenPainelFunction] = useState(null);
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handlePainelOpenFunction = (openPainelFn) => {
     setOpenPainelFunction(() => openPainelFn);

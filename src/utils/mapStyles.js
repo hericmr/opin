@@ -1,5 +1,5 @@
 import { Style, Fill, Stroke, Text, Icon } from 'ol/style';
-import { MARKER_COLORS, CLUSTER_SIZES, GEOJSON_CONFIG } from './mapConfig';
+import { MARKER_COLORS, GEOJSON_CONFIG } from './mapConfig';
 
 // Importar funções auxiliares
 import { getClusterConfig, calculateClusterScale } from './mapUtils';

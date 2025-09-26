@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Style, Circle, Fill, Stroke, Text, Icon } from 'ol/style';
+import { Style, Fill, Stroke, Text, Icon } from 'ol/style';
 import { createMarkerSVG } from '../../utils/markers/svgGenerator';
 
 /**

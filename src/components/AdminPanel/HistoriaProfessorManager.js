@@ -4,12 +4,10 @@ import {
   Plus, 
   Edit3, 
   Trash2, 
-  Upload, 
   X, 
   Save, 
   ArrowUp, 
   ArrowDown,
-  Eye,
   EyeOff
 } from 'lucide-react';
 import { 
@@ -28,8 +26,8 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
   const [error, setError] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingHistoria, setEditingHistoria] = useState(null);
-  const [uploadingImage, setUploadingImage] = useState(null);
   const [success, setSuccess] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(null);
 
   // Form states
   const [formData, setFormData] = useState({

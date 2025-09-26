@@ -1,5 +1,4 @@
 import { useCallback, useEffect } from 'react';
-import { isMobile } from '../../utils/mobileUtils';
 
 /**
  * Hook para gerenciar interações com marcadores

@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from "react";
 import { useShare } from "../hooks/useShare";
 import { useDynamicURL } from "../hooks/useDynamicURL";
 import { useClickOutside } from "../hooks/useClickOutside";
-import useAudio from "../hooks/useAudio";
 import useDocumentosEscola from "../hooks/useDocumentosEscola";
 
 // Import modular components
