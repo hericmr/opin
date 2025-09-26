@@ -47,12 +47,12 @@ Mapa interativo com base em imagem de satélite e três camadas principais:
 ### Para Desenvolvedores
 Se você quer clonar este repositório e executar o projeto localmente:
 
-**[🚀 Guia para Instalação](Guia%20para%20Instalação.md)**
+**[Guia para Instalação](Guia%20para%20Instalação.md)**
 
 ### Para Administradores
 Se você é administrador do OPIN e tem alguma dúvida, provavelmente ela será respondida nesta documentação:
 
-**[📋 Guia do Administrador](docs/GUIA_ADMINISTRADOR.md)**
+**[Guia do Administrador](docs/GUIA_ADMINISTRADOR.md)**
 
 
 ---
