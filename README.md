@@ -42,55 +42,18 @@ Mapa interativo com base em imagem de satélite e três camadas principais:
 
 ---
 
-## Documentação para Administradores
+## Documentação
 
+### Para Desenvolvedores
+Se você quer clonar este repositório e executar o projeto localmente:
+
+**[🚀 Guia para Instalação](Guia%20para%20Instalação.md)**
+
+### Para Administradores
 Se você é administrador do OPIN e tem alguma dúvida, provavelmente ela será respondida nesta documentação:
 
 **[📋 Guia do Administrador](docs/GUIA_ADMINISTRADOR.md)**
 
-
----
-
-## Instalação e Desenvolvimento
-
-### Pré-requisitos
-- Node.js 16 ou superior
-- npm ou yarn
-- Conta no Supabase
-
-### Instalação
-
-1. Clone o repositório:
-```bash
-git clone https://github.com/hericmr/opin.git
-cd opin
-```
-
-2. Instale as dependências:
-```bash
-npm install
-```
-
-3. Configure as variáveis de ambiente:
-```bash
-cp .env.example .env.local
-# Edite .env.local com suas credenciais do Supabase
-```
-
-4. Inicie o servidor de desenvolvimento:
-```bash
-npm start
-```
-
-### Comandos Disponíveis
-
-```bash
-npm start      # Iniciar servidor de desenvolvimento
-npm run build  # Build para produção
-npm run deploy # Deploy no GitHub Pages
-npm test       # Executar testes
-npm run lint   # Verificar código com ESLint
-```
 
 ---
 
