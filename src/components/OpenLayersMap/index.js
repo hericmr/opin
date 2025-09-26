@@ -9,7 +9,7 @@ import { useMapMarkers } from '../../hooks/useMapMarkers';
 import { useMapLayers } from '../../hooks/useMapLayers';
 
 // Componentes
-import MapInfo from './MapInfo';
+// import MapInfo from './MapInfo'; // Removido - não utilizado
 import MapContainer from './MapContainer';
 
 // Configurações
@@ -37,7 +37,7 @@ const OpenLayersMap = ({
   const mapContainer = useRef(null);
 
   // Hook principal do mapa
-  const { map, mapInfo } = useOpenLayersMap(mapContainer, center, zoom);
+  const { map } = useOpenLayersMap(mapContainer, center, zoom);
 
   // Hook para marcadores e clusters
   useMapMarkers(map, dataPoints, showMarcadores);

@@ -45,7 +45,7 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
     [dataPoints]
   );
   
-  const totalEscolas = useMemo(() => escolasVisiveis.length, [escolasVisiveis]);
+  // const totalEscolas = useMemo(() => escolasVisiveis.length, [escolasVisiveis]); // Removido - não utilizado
 
   // Abrir painel automaticamente quando initialPanel for encontrado (apenas uma vez)
   useEffect(() => {

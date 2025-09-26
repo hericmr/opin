@@ -161,7 +161,7 @@ export const getThemeClasses = (theme) => {
   };
 };
 
-export default {
+const AvatarThemeConfig = {
   themes: avatarThemes,
   sizes: avatarSizes,
   shapes: avatarShapes,
@@ -171,3 +171,5 @@ export default {
   applyTheme,
   getThemeClasses
 };
+
+export default AvatarThemeConfig;

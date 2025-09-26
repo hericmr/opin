@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useRefresh } from '../../contexts/RefreshContext';
+// import { useRefresh } from '../../contexts/RefreshContext'; // Removido - não utilizado
 import { useEscolas } from './hooks/useEscolas';
 import { useModalidades } from './hooks/useModalidades';
 import { ADMIN_TABS, UI_CONFIG, FORM_CONFIG } from './constants/adminConstants';
@@ -48,7 +48,7 @@ try {
 }
 
 const AdminPanelContent = () => {
-  const { triggerRefresh } = useRefresh();
+  // const { triggerRefresh } = useRefresh(); // Removido - não utilizado
   
   // Estados principais
   const [editingLocation, setEditingLocation] = useState(null);
@@ -67,7 +67,7 @@ const AdminPanelContent = () => {
 
   // Hooks customizados
   const { 
-    escolas, 
+    // escolas, // Removido - não utilizado
     loading: escolasLoading, 
     error: escolasError,
     searchTerm, 
@@ -234,11 +234,11 @@ const AdminPanelContent = () => {
     setEditingLocation(criarNovaEscolaVazia());
   };
 
-  // Função para abrir modal de remoção
-  const handleRemoverEscola = (escola) => {
-    setEscolaToDelete(escola);
-    setShowDeleteModal(true);
-  };
+  // Função para abrir modal de remoção - REMOVIDO: não utilizado
+  // const handleRemoverEscola = (escola) => {
+  //   setEscolaToDelete(escola);
+  //   setShowDeleteModal(true);
+  // };
 
   // Função para verificar se uma aba tem informações faltando
   const hasMissingInfo = (tabId, escola) => {

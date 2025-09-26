@@ -142,6 +142,9 @@ export const useKeyboardNavigation = (items, onSelect) => {
       case 'Escape':
         setFocusedIndex(-1);
         break;
+      default:
+        // Não fazer nada para outras teclas
+        break;
     }
   };
 
@@ -307,7 +310,7 @@ export const AccessibleFormField = ({
   );
 };
 
-export default {
+const AccessibilityComponents = {
   SkipLink,
   useFocusManagement,
   FocusIndicator,
@@ -319,4 +322,6 @@ export default {
   AccessibleImage,
   useModalAccessibility,
   AccessibleFormField
-}; 
+};
+
+export default AccessibilityComponents; 

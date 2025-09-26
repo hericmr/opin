@@ -5,8 +5,8 @@ import useSearch from '../../hooks/useSearch';
 
 const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataPoints }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
+  // const [searchTerm, setSearchTerm] = useState(''); // Removido - não utilizado
+  // const [suggestions, setSuggestions] = useState([]); // Removido - não utilizado
   const [localSearchTerm, setLocalSearchTerm] = useState('');
   const searchRef = useRef(null);
   const inputRef = useRef(null);
@@ -19,7 +19,7 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setIsExpanded(false);
         setLocalSearchTerm('');
-        setSearchTerm('');
+        // setSearchTerm(''); // Removido - não utilizado
       }
     };
 
@@ -37,15 +37,15 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
   // Buscar dados quando o termo local mudar (busca em tempo real)
   useEffect(() => {
     if (localSearchTerm.length < 2) {
-      setSuggestions([]);
+      // setSuggestions([]); // Removido - não utilizado
       return;
     }
 
     const searchData = async () => {
       try {
         await performSearch(localSearchTerm);
-        const newSuggestions = getSearchSuggestions(localSearchTerm);
-        setSuggestions(newSuggestions);
+        // const newSuggestions = getSearchSuggestions(localSearchTerm); // Removido - não utilizado
+        // setSuggestions(newSuggestions); // Removido - não utilizado
       } catch (error) {
         console.error('Erro na busca:', error);
       }
@@ -62,7 +62,7 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
       onSearch(termToSearch);
       setIsExpanded(false);
       setLocalSearchTerm('');
-      setSearchTerm('');
+      // setSearchTerm(''); // Removido - não utilizado
     }
   };
 
@@ -78,17 +78,17 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
     }
     setIsExpanded(false);
     setLocalSearchTerm('');
-    setSearchTerm('');
+    // setSearchTerm(''); // Removido - não utilizado
   };
 
-  const handleSuggestionClick = (suggestion) => {
-    setLocalSearchTerm(suggestion);
-    setSearchTerm('');
-  };
+  // const handleSuggestionClick = (suggestion) => {
+  //   setLocalSearchTerm(suggestion);
+  //   setSearchTerm('');
+  // }; // Removido - não utilizado
 
   const handleInputChange = (e) => {
     const value = e.target.value;
-    setSearchTerm('');
+    // setSearchTerm(''); // Removido - não utilizado
     setLocalSearchTerm(value);
   };
 
@@ -100,12 +100,12 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
         onSearch(termToSearch);
         setIsExpanded(false);
         setLocalSearchTerm('');
-        setSearchTerm('');
+        // setSearchTerm(''); // Removido - não utilizado
       }
     } else if (e.key === 'Escape') {
       setIsExpanded(false);
       setLocalSearchTerm('');
-      setSearchTerm('');
+      // setSearchTerm(''); // Removido - não utilizado
     }
   };
 
@@ -119,14 +119,14 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
     }
   };
 
-  const getCategoryColor = (category) => {
-    switch (category) {
-      case 'educação': return 'text-blue-600';
-      case 'comunidades': return 'text-red-600';
-      case 'histórico': return 'text-yellow-600';
-      default: return 'text-gray-600';
-    }
-  };
+  // const getCategoryColor = (category) => {
+  //   switch (category) {
+  //     case 'educação': return 'text-blue-600';
+  //     case 'comunidades': return 'text-red-600';
+  //     case 'histórico': return 'text-yellow-600';
+  //     default: return 'text-gray-600';
+  //   }
+  // }; // Removido - não utilizado
 
   const highlightText = (text, searchTerm) => {
     if (!searchTerm) return text;
@@ -189,7 +189,7 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
                 onClick={() => {
                   setIsExpanded(false);
                   setLocalSearchTerm('');
-                  setSearchTerm('');
+                  // setSearchTerm(''); // Removido - não utilizado
                 }}
                 className="px-3 py-2 text-gray-400 hover:text-gray-600 transition-colors"
                 whileHover={{ scale: 1.1 }}

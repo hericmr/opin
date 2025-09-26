@@ -29,10 +29,10 @@ const OpenLayersMarkers = ({
   
   // Estados para controle de interações
   const [hoveredMarker, setHoveredMarker] = React.useState(null);
-  const [selectedMarker, setSelectedMarker] = React.useState(null);
+  // const [selectedMarker, setSelectedMarker] = React.useState(null); // Removido - não utilizado
 
-  // Verificar se é mobile
-  const isMobileDevice = useMemo(() => isMobile(), []);
+  // Verificar se é mobile - REMOVIDO: não utilizado
+  // const isMobileDevice = useMemo(() => isMobile(), []);
 
   /**
    * Inicializa a camada de marcadores (SEM clustering)
