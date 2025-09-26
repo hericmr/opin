@@ -1,6 +1,6 @@
 # OPIN - Observatório dos Professores Indígenas no Estado de São Paulo
 
-O OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) é um site que mapeia e apresenta informações detalhadas sobre escolas indígenas no estado de São Paulo, Brasil. desenvolvida como parte do projeto "Ação Saberes Indígenas nas Escolas" pela LINDI/UNIFESP em 2025. A plataforma visa mapear, documentar e compartilhar informações sobre as escolas indígenas, suas características, desafios e conquistas, fortalecendo a educação diferenciada e intercultural.
+O OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) é um site que mapeia e apresenta informações detalhadas sobre escolas indígenas no estado de São Paulo, Brasil. É parte do projeto "Ação Saberes Indígenas nas Escolas" realizado pela LINDI/UNIFESP em 2025. A plataforma visa mapear, documentar e compartilhar informações sobre as escolas indígenas, suas características, desafios e conquistas, fortalecendo a educação diferenciada e intercultural.
 
 
 ![OPIN Logo](public/opin.png)
@@ -13,7 +13,7 @@ O OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) é um 
 
 ![Exemplo da Interface](public/exemplo1.png)
 
-![Exemplo do Mapa](public/exemplo2.png)
+![Exemplo](public/exemplo2.png)
 
 ![Exemplo do Painel de Informações](public/exemplo3.png)
 
@@ -69,16 +69,6 @@ Acesse o painel administrativo para gerenciar todas as informações das escolas
 - **Documentos**: Gerenciamento de PDFs
 
 ---
-
-## Sistema de Meta Tags e Compartilhamento
-
-### URLs Específicas para Escolas
-
-Cada escola possui uma URL única que gera meta tags customizadas para compartilhamento social:
-
-```
-https://hericmr.github.io/escolasindigenas/?panel=e-e-i-nhandepouwa
-```
 
 ### Redes Sociais Suportadas
 
@@ -193,12 +183,6 @@ created_at (timestamp)
 - Ordenação personalizável
 - Ativação/desativação de histórias
 - Upload de fotos de rosto
-
-### Sistema de Busca
-- Busca por nome da escola
-- Busca por localização geográfica
-- Filtros por características específicas
-- Resultados com preview de informações
 
 ---
 
