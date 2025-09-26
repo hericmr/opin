@@ -22,7 +22,7 @@ const DebugLegendas = ({ escolaId }) => {
       // Teste 2: Verificar estrutura da tabela
       if (tableExists) {
         console.log('🔍 Verificando estrutura da tabela...');
-        const { data: structure, error: structureError } = await supabase
+        const { data: structure, error: structureError } = await supabase // structure não usado
           .from('legendas_fotos')
           .select('*')
           .limit(1);

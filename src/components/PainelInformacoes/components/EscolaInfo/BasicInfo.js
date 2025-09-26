@@ -61,13 +61,13 @@ const CompactCard = ({ icon: Icon, label, value, type = 'text' }) => {
   );
 };
 
-const InfoBlock = ({ icon: Icon, label, value }) => (
-  <div className="flex items-center gap-2 bg-green-100 p-1.5 rounded-md text-xs">
-    <Icon className="w-5 h-5 text-green-600" />
-    <span className="text-gray-700 font-medium">{label}:</span>
-    <span className="font-semibold text-green-800">{capitalize(value)}</span>
-  </div>
-);
+// const InfoBlock = ({ icon: Icon, label, value }) => ( // Removido - não utilizado
+//   <div className="flex items-center gap-2 bg-green-100 p-1.5 rounded-md text-xs">
+//     <Icon className="w-5 h-5 text-green-600" />
+//     <span className="text-gray-700 font-medium">{label}:</span>
+//     <span className="font-semibold text-green-800">{capitalize(value)}</span>
+//   </div>
+// );
 
 const AddressDetails = ({ escola }) => {
   const hasDetailedAddress = escola.logradouro || escola.numero || escola.bairro || escola.cep;

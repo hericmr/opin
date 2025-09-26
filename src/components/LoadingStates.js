@@ -153,7 +153,7 @@ export const FormSkeleton = () => (
   </div>
 );
 
-export default {
+const LoadingComponents = {
   EscolaCardSkeleton,
   PainelSkeleton,
   MapaSkeleton,
@@ -163,4 +163,6 @@ export default {
   LoadingButton,
   EscolaListSkeleton,
   FormSkeleton
-}; 
+};
+
+export default LoadingComponents; 

@@ -27,7 +27,7 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingHistoria, setEditingHistoria] = useState(null);
   const [success, setSuccess] = useState('');
-  const [uploadingImage, setUploadingImage] = useState(null);
+  // const [uploadingImage, setUploadingImage] = useState(null); // Removido - não utilizado
 
   // Form states
   const [formData, setFormData] = useState({
@@ -131,34 +131,34 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
     }
   };
 
-  // Handle image upload
-  const handleImageUpload = async (historiaId, file) => {
-    try {
-      setUploadingImage(historiaId);
-      setError('');
-      
-      await uploadHistoriaProfessorImage(file, escolaId, historiaId);
-      setSuccess('Imagem carregada com sucesso!');
-      carregarHistorias();
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setUploadingImage(null);
-    }
-  };
+  // Handle image upload - REMOVIDO: não utilizado
+  // const handleImageUpload = async (historiaId, file) => {
+  //   try {
+  //     setUploadingImage(historiaId);
+  //     setError('');
+  //     
+  //     await uploadHistoriaProfessorImage(file, escolaId, historiaId);
+  //     setSuccess('Imagem carregada com sucesso!');
+  //     carregarHistorias();
+  //   } catch (err) {
+  //     setError(err.message);
+  //   } finally {
+  //     setUploadingImage(null);
+  //   }
+  // };
 
-  // Handle image delete
-  const handleImageDelete = async (historiaId) => {
-    if (!window.confirm('Tem certeza que deseja remover a imagem desta história?')) return;
+  // Handle image delete - REMOVIDO: não utilizado
+  // const handleImageDelete = async (historiaId) => {
+  //   if (!window.confirm('Tem certeza que deseja remover a imagem desta história?')) return;
 
-    try {
-      await deleteHistoriaProfessorImage(historiaId);
-      setSuccess('Imagem removida com sucesso!');
-      carregarHistorias();
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+  //   try {
+  //     await deleteHistoriaProfessorImage(historiaId);
+  //     setSuccess('Imagem removida com sucesso!');
+  //     carregarHistorias();
+  //   } catch (err) {
+  //     setError(err.message);
+  //   }
+  // };
 
   // Handle edit
   const handleEdit = (historia) => {

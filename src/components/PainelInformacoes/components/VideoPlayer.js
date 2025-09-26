@@ -40,7 +40,7 @@ const extrairIdYoutube = (url) => {
 
 const VideoPlayer = ({ videoUrl, title = "Vídeo", escolaId }) => {
   const [tituloPersonalizado, setTituloPersonalizado] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
 
   // Buscar título personalizado da nova tabela
   useEffect(() => {

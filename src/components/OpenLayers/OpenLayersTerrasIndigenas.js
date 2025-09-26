@@ -29,7 +29,7 @@ const OpenLayersTerrasIndigenas = ({
   // Estados para controle de interações
   const [hoveredFeature, setHoveredFeature] = React.useState(null);
   const [selectedFeature, setSelectedFeature] = React.useState(null);
-  const [features, setFeatures] = React.useState([]);
+  // const [features, setFeatures] = React.useState([]); // Removido - não utilizado
 
   // Verificar se é mobile
   const isMobileDevice = useMemo(() => isMobile(), []);
@@ -55,7 +55,7 @@ const OpenLayersTerrasIndigenas = ({
 
       // Ler features do GeoJSON
       const geoJSONFeatures = geoJSONFormat.readFeatures(data);
-      setFeatures(geoJSONFeatures);
+      // setFeatures(geoJSONFeatures); // Removido - não utilizado
 
       // Criar fonte vetorial
       vectorSourceRef.current = new VectorSource({

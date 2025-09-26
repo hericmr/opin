@@ -10,7 +10,7 @@ import { supabase } from '../supabaseClient';
  */
 export const testLegendasTable = async () => {
   try {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('legendas_fotos')
       .select('count')
       .limit(1);
@@ -301,7 +301,7 @@ export const getTituloByVideoUrl = async (videoUrl, escolaId) => {
   }
 };
 
-export default {
+const LegendasService = {
   testLegendasTable,
   getLegendaByImageUrl,
   getLegendaByImageUrlFlexivel,
@@ -312,3 +312,5 @@ export default {
   getLegendasByEscola,
   getTituloByVideoUrl
 };
+
+export default LegendasService;
