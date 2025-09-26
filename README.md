@@ -1,36 +1,78 @@
-# OPIN (Observatório dos Professores Indígenas no Estado de São Paulo)
+# OPIN - Observatório dos Professores Indígenas no Estado de São Paulo
 
 Portal informativo interativo que mapeia e apresenta informações detalhadas sobre escolas indígenas no estado de São Paulo, Brasil.
 
-**🌐 Site:** https://hericmr.github.io/escolasindigenas/
+**Site:** https://hericmr.github.io/escolasindigenas/
 
 ---
 
-## 🎯 Guia do Administrador
+## Sobre o Projeto
+
+O OPIN é uma plataforma digital desenvolvida para mapear, documentar e compartilhar informações sobre as escolas indígenas no estado de São Paulo. O projeto visa dar visibilidade às instituições educacionais indígenas, suas características, desafios e conquistas, contribuindo para o conhecimento e valorização da educação indígena.
+
+### Principais Funcionalidades
+
+- **Mapa Interativo**: Visualização geográfica das escolas indígenas com informações detalhadas
+- **Painel de Informações**: Dados completos sobre cada escola, incluindo infraestrutura, modalidades de ensino e histórias
+- **Sistema de Compartilhamento**: URLs específicas para cada escola com meta tags customizadas para redes sociais
+- **Painel Administrativo**: Interface completa para gerenciamento de dados
+- **Busca Avançada**: Sistema de pesquisa por localização, nome ou características
+- **Materiais Didáticos**: Seção dedicada a recursos educacionais
+
+---
+
+## Guia do Administrador
 
 ### Painel de Administração (`/admin`)
 
-Edite todas as informações das escolas através de abas organizadas:
+Acesse o painel administrativo para gerenciar todas as informações das escolas através de abas organizadas:
 
 #### Abas Principais
-- **📋 Dados Básicos**: Nome, município, endereço, TI, diretoria
-- **👥 Povos**: Povos indígenas e línguas faladas
-- **🎓 Modalidades**: Ensino, alunos, turnos
-- **🏗️ Infraestrutura**: Estrutura, água, internet, equipamentos, **cozinha**, **merenda escolar**, **merenda diferenciada**
-- **👨‍🏫 Gestores**: Direção, professores, formação
-- **📚 Material Pedagógico**: PPP próprio e com comunidade
-- **🤝 Projetos**: Parcerias, ONGs, desejos da comunidade
-- **📱 Redes Sociais**: Links e uso de redes
-- **🎥 Vídeo**: Links para vídeos da escola
-- **📖 Histórias**: História da escola
-- **👨‍🏫 História dos Professores**: Sistema para múltiplos professores
-- **📍 Coordenadas**: Latitude e longitude
-- **🖼️ Imagens**: Upload de fotos da escola e professores
-- **📄 Documentos**: Gerenciamento de PDFs
+- **Dados Básicos**: Nome, município, endereço, terra indígena, diretoria
+- **Povos**: Povos indígenas e línguas faladas
+- **Modalidades**: Ensino, alunos, turnos de funcionamento
+- **Infraestrutura**: Estrutura física, água, internet, equipamentos, cozinha, merenda escolar
+- **Gestores**: Direção, professores, formação profissional
+- **Material Pedagógico**: PPP próprio e com comunidade
+- **Projetos**: Parcerias, ONGs, desejos da comunidade
+- **Redes Sociais**: Links e uso de redes sociais
+- **Vídeo**: Links para vídeos da escola
+- **Histórias**: História da escola
+- **História dos Professores**: Sistema para múltiplos professores
+- **Coordenadas**: Latitude e longitude
+- **Imagens**: Upload de fotos da escola e professores
+- **Documentos**: Gerenciamento de PDFs
 
 ---
 
-## 🗄️ Estrutura das Tabelas
+## Sistema de Meta Tags e Compartilhamento
+
+### URLs Específicas para Escolas
+
+Cada escola possui uma URL única que gera meta tags customizadas para compartilhamento social:
+
+```
+https://hericmr.github.io/escolasindigenas/?panel=e-e-i-nhandepouwa
+```
+
+### Redes Sociais Suportadas
+
+- **Facebook**: Open Graph tags com título, descrição e imagem customizados
+- **WhatsApp**: Compatível com Open Graph (mesmas tags do Facebook)
+- **LinkedIn**: Open Graph tags otimizadas para profissionais
+- **Twitter/X**: Twitter Cards com informações específicas da escola
+- **Telegram**: Open Graph tags para previews ricos
+- **Google Search**: Meta tags SEO e dados estruturados (JSON-LD)
+
+### Como Funciona
+
+1. **Detecção Automática**: O sistema detecta automaticamente qual escola está sendo visualizada via parâmetro `panel` na URL
+2. **Meta Tags Customizadas**: Gera título, descrição e URL específicos para cada escola
+3. **Compartilhamento Rico**: Quando compartilhada nas redes sociais, a URL mostra um snippet atrativo com informações específicas da escola
+
+---
+
+## Estrutura do Banco de Dados
 
 ### Tabela Principal: `escolas_completa`
 
@@ -54,7 +96,7 @@ latitude (numeric)
 longitude (numeric)
 link_para_videos (text)
 
--- Novos campos de infraestrutura
+-- Campos de infraestrutura
 cozinha (text) -- Ex: "Sim", "Não", "Em construção"
 merenda_escolar (text) -- Ex: "Sim", "Não", "Parcial"
 diferenciada (text) -- Ex: "Sim", "Não", "Específica"
@@ -101,97 +143,63 @@ created_at (timestamp)
 
 ---
 
-## 🛠️ Funcionalidades Especiais
+## Funcionalidades Especiais
 
 ### Sistema de Vídeos
-- Suporte a YouTube, Vimeo e outros
+- Suporte a YouTube, Vimeo e outras plataformas
 - Pré-visualização automática
 - Títulos editáveis
 
 ### Gerenciamento de Imagens
-- Upload direto via interface
+- Upload direto via interface administrativa
 - Legendas editáveis em tempo real
-- Organização por escola
+- Organização por escola e professor
 
 ### Histórias dos Professores
 - Sistema independente para cada professor
 - Ordenação personalizável
 - Ativação/desativação de histórias
+- Upload de fotos de rosto
+
+### Sistema de Busca
+- Busca por nome da escola
+- Busca por localização geográfica
+- Filtros por características específicas
+- Resultados com preview de informações
 
 ---
 
-## 🔧 Comandos Úteis
-
-```bash
-npm install    # Instalar dependências
-npm start      # Iniciar servidor de desenvolvimento
-npm run build  # Build para produção
-npm run deploy # Deploy no GitHub Pages
-```
-
-### Supabase (Permissões)
-```sql
--- Liberar permissões para histórias dos professores
-GRANT ALL ON TABLE historias_professor TO authenticated;
-GRANT ALL ON TABLE historias_professor TO anon;
-```
-
----
-
-## 📝 Notas Importantes
-
-### Formulários
-- **História dos Professores**: Formulário independente
-- **Outras abas**: Todas dentro do form principal da escola
-- **Salvamento**: Cada aba salva independentemente
-
-### Dados Obrigatórios
-- Nome da escola (Dados Básicos)
-- Nome do professor (História dos Professores)
-- História do professor (História dos Professores)
-- Título e link do documento (Documentos)
-
-### Boas Práticas
-- Use links do Google Drive para documentos (permissão pública)
-- Mantenha histórias dos professores organizadas por ordem
-- Verifique coordenadas antes de salvar
-- Teste links de vídeo antes de salvar
-
----
-
-## 🆘 Solução de Problemas
-
-### Formulário não salva
-- Verifique campos obrigatórios
-- Confirme erros no console do navegador
-- Verifique permissões no Supabase
-
-### Imagens não carregam
-- Verifique se o arquivo não excede 5MB
-- Confirme formato (JPG, PNG, GIF)
-- Verifique conexão com internet
-
----
-
-## Tecnologias
+## Tecnologias Utilizadas
 
 ### Frontend
-- **React 18** - Biblioteca principal
-- **TailwindCSS** - Framework CSS
-- **Lucide React** - Ícones
+- **React 18** - Biblioteca principal para interface
+- **TailwindCSS** - Framework CSS para estilização
+- **Lucide React** - Biblioteca de ícones
 - **OpenLayers** - Mapas interativos de alta performance
-- **Framer Motion** - Animações
-- **React Router** - Roteamento
+- **Framer Motion** - Animações e transições
+- **React Router** - Roteamento de páginas
+- **React Helmet Async** - Gerenciamento de meta tags
 
-### Dados e APIs
-- **Supabase** - Backend e banco de dados
-- **GeoJSON** - Dados geográficos
-- **PapaParse** - Parser CSV
-- **React Markdown** - Conteúdo markdown
+### Backend e Dados
+- **Supabase** - Backend como serviço e banco de dados
+- **GeoJSON** - Formato para dados geográficos
+- **PapaParse** - Parser para arquivos CSV
+- **React Markdown** - Renderização de conteúdo markdown
+
+### Deploy e Hospedagem
+- **GitHub Pages** - Hospedagem estática
+- **GitHub Actions** - CI/CD automático
 
 ---
 
-## Instalação
+## Instalação e Desenvolvimento
+
+### Pré-requisitos
+- Node.js 16 ou superior
+- npm ou yarn
+- Conta no Supabase
+
+### Instalação
 
 1. Clone o repositório:
 ```bash
@@ -204,9 +212,25 @@ cd escolasindigenas
 npm install
 ```
 
-3. Inicie o servidor:
+3. Configure as variáveis de ambiente:
+```bash
+cp .env.example .env.local
+# Edite .env.local com suas credenciais do Supabase
+```
+
+4. Inicie o servidor de desenvolvimento:
 ```bash
 npm start
+```
+
+### Comandos Disponíveis
+
+```bash
+npm start      # Iniciar servidor de desenvolvimento
+npm run build  # Build para produção
+npm run deploy # Deploy no GitHub Pages
+npm test       # Executar testes
+npm run lint   # Verificar código com ESLint
 ```
 
 ---
@@ -216,22 +240,146 @@ npm start
 ```
 src/
 ├── components/
-│   ├── PainelInformacoes/     # Informações detalhadas
-│   ├── MapaEscolasIndigenas/  # Mapa interativo
+│   ├── MetaTags/              # Sistema de meta tags dinâmicas
+│   ├── PainelInformacoes/     # Informações detalhadas das escolas
+│   ├── MapaEscolasIndigenas/  # Mapa interativo principal
 │   ├── AdminPanel/            # Painel de administração
-│   ├── EditEscolaPanel/       # Edição de escolas
+│   ├── Navbar/                # Barra de navegação
+│   ├── SearchResults/         # Resultados de busca
 │   └── ...
+├── hooks/                     # Hooks personalizados
+│   ├── useEscolasData.js      # Hook para dados das escolas
+│   ├── useEscolaAtual.js      # Hook para detecção de escola atual
+│   └── useMetaTags.js         # Hook para meta tags
 ├── services/                  # Serviços de API
-├── utils/                     # Utilitários
+├── utils/                     # Utilitários e helpers
+├── config/                    # Configurações
 └── App.js                     # Componente raiz
 ```
 
 ---
 
-## Campos Obrigatórios para o Mapa
+## Configuração do Supabase
 
-- **Latitude** e **Longitude**: Essenciais para marcadores no mapa
+### Permissões Necessárias
+
+```sql
+-- Liberar permissões para histórias dos professores
+GRANT ALL ON TABLE historias_professor TO authenticated;
+GRANT ALL ON TABLE historias_professor TO anon;
+
+-- Liberar permissões para documentos
+GRANT ALL ON TABLE documentos_escola TO authenticated;
+GRANT ALL ON TABLE documentos_escola TO anon;
+
+-- Liberar permissões para imagens
+GRANT ALL ON TABLE escola_images TO authenticated;
+GRANT ALL ON TABLE escola_images TO anon;
+GRANT ALL ON TABLE professor_images TO authenticated;
+GRANT ALL ON TABLE professor_images TO anon;
+```
+
+### Políticas de Segurança (RLS)
+
+Configure as políticas de Row Level Security (RLS) conforme necessário para controlar acesso aos dados.
+
+---
+
+## Campos Obrigatórios
+
+### Para Funcionamento do Mapa
+- **Latitude** e **Longitude**: Essenciais para posicionamento dos marcadores
 - **Nome da escola**: Exibido no popup do marcador
-- **Município**: Informação básica da escola
+- **Município**: Informação básica para identificação
 
-**Dica:** Sempre valide as coordenadas e relacionamentos entre tabelas para garantir funcionamento correto do mapa.
+### Para Funcionamento do Sistema
+- **Nome da escola** (Dados Básicos)
+- **Nome do professor** (História dos Professores)
+- **História do professor** (História dos Professores)
+- **Título e link do documento** (Documentos)
+
+---
+
+## Boas Práticas
+
+### Dados
+- Use links do Google Drive para documentos (com permissão pública)
+- Mantenha histórias dos professores organizadas por ordem
+- Verifique coordenadas antes de salvar
+- Teste links de vídeo antes de salvar
+
+### Desenvolvimento
+- Mantenha componentes modulares e reutilizáveis
+- Use TypeScript para melhor tipagem (quando aplicável)
+- Documente componentes complexos
+- Teste funcionalidades em diferentes navegadores
+
+### SEO e Compartilhamento
+- Verifique meta tags com ferramentas de debug das redes sociais
+- Mantenha URLs limpas e descritivas
+- Otimize imagens para web
+- Teste compartilhamento em diferentes plataformas
+
+---
+
+## Solução de Problemas
+
+### Formulário não salva
+- Verifique campos obrigatórios
+- Confirme erros no console do navegador
+- Verifique permissões no Supabase
+- Teste conexão com internet
+
+### Imagens não carregam
+- Verifique se o arquivo não excede 5MB
+- Confirme formato suportado (JPG, PNG, GIF)
+- Verifique conexão com internet
+- Confirme URL da imagem
+
+### Meta tags não aparecem
+- Verifique se HelmetProvider está configurado
+- Confirme se MetaTagsDetector está sendo renderizado
+- Teste com ferramentas de debug das redes sociais
+- Verifique se escola não é null/undefined
+
+### Mapa não carrega
+- Verifique coordenadas válidas
+- Confirme dados no formato correto
+- Teste conexão com Supabase
+- Verifique console para erros JavaScript
+
+---
+
+## Contribuição
+
+Para contribuir com o projeto:
+
+1. Faça um fork do repositório
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)
+5. Abra um Pull Request
+
+---
+
+## Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+---
+
+## Contato
+
+Para dúvidas ou sugestões sobre o projeto, entre em contato através dos issues do GitHub ou pelo email do desenvolvedor.
+
+---
+
+## Changelog
+
+### Versão Atual
+- Sistema de meta tags customizadas para compartilhamento social
+- Detecção automática de escola via URL
+- Suporte completo para Facebook, WhatsApp, LinkedIn, Twitter
+- Melhorias no painel administrativo
+- Otimizações de performance
+- Sistema de busca aprimorado
