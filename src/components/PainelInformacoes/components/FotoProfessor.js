@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from '../../shared/Avatar';
 import { avatarThemes } from '../../shared/AvatarThemes';
+import useImagePreloader from '../../../hooks/useImagePreloader';
 
 const FotoProfessor = ({ 
   fotoUrl, 
@@ -21,7 +22,9 @@ const FotoProfessor = ({
   onLoad,
   // Props para compatibilidade com tamanhos antigos
   size,
-  customSize
+  customSize,
+  // Props para preload
+  escolaId
 }) => {
   // Mapear tamanhos antigos para novos
   const sizeMapping = {
@@ -32,6 +35,9 @@ const FotoProfessor = ({
   };
 
   const mappedSize = size || sizeMapping[tamanho] || 'large';
+  
+  // Hook de preload de imagens
+  const { isImagePreloaded } = useImagePreloader(escolaId, !!escolaId);
   
   // Aplicar tema
   const themeConfig = avatarThemes[theme] || avatarThemes.professor;
@@ -61,7 +67,7 @@ const FotoProfessor = ({
       showInitials={true}
       maxInitials={2}
       fallbackIcon="user"
-      lazy={true}
+      lazy={!isImagePreloaded(fotoUrl)}
       // Aplicar tema customizado
       borderColor={themeConfig.borderColor}
       backgroundColor={themeConfig.backgroundColor}
@@ -89,7 +95,8 @@ FotoProfessor.propTypes = {
   onClick: PropTypes.func,
   onError: PropTypes.func,
   onLoad: PropTypes.func,
-  size: PropTypes.oneOf(['xs', 'small', 'medium', 'large', 'xlarge', 'xxlarge'])
+  size: PropTypes.oneOf(['xs', 'small', 'medium', 'large', 'xlarge', 'xxlarge']),
+  escolaId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };
 
 export default FotoProfessor;
