@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useEffect, useRef, useCallback, useMemo, forwardRef } from 'react';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { GeoJSON } from 'ol/format';
@@ -14,13 +14,13 @@ import { isMobile } from '../../utils/mobileUtils';
  * Componente OpenLayersTerrasIndigenas - Substitui completamente o TerrasIndigenas.js do Leaflet
  * Implementa camada GeoJSON de terras indígenas com estilos dinâmicos e interações
  */
-const OpenLayersTerrasIndigenas = ({ 
+const OpenLayersTerrasIndigenas = forwardRef(({ 
   data,
   onPainelOpen,
   showTerrasIndigenas = true,
   map,
   className = "h-full w-full"
-}) => {
+}, ref) => {
   // Refs para controle da camada
   const vectorSourceRef = useRef(null);
   const vectorLayerRef = useRef(null);
@@ -276,6 +276,6 @@ const OpenLayersTerrasIndigenas = ({
           apenas gerencia a camada GeoJSON do OpenLayers */}
     </div>
   );
-};
+});
 
 export default OpenLayersTerrasIndigenas;

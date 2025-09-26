@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, forwardRef } from 'react';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { GeoJSON } from 'ol/format';
@@ -9,12 +9,12 @@ import { PROJECTION_CONFIG } from '../../utils/mapConfig';
  * Componente OpenLayersEstadoSP - Substitui completamente o EstadoSP.js do Leaflet
  * Implementa camada GeoJSON de fundo do estado de São Paulo (não-interativa)
  */
-const OpenLayersEstadoSP = ({ 
+const OpenLayersEstadoSP = forwardRef(({ 
   data,
   showEstadoSP = true,
   map,
   className = "h-full w-full"
-}) => {
+}, ref) => {
   // Refs para controle da camada
   const vectorSourceRef = useRef(null);
   const vectorLayerRef = useRef(null);
@@ -90,6 +90,6 @@ const OpenLayersEstadoSP = ({
           apenas gerencia a camada GeoJSON de fundo do OpenLayers */}
     </div>
   );
-};
+});
 
 export default OpenLayersEstadoSP;
