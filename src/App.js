@@ -146,7 +146,7 @@ const App = () => {
       <ToastProvider>
         <SearchProvider>
           <RefreshProvider>
-            <Router basename="/escolasindigenas">
+            <Router basename="/opin">
               <ErrorBoundary>
                 <AppRoutes />
               </ErrorBoundary>

@@ -5,7 +5,7 @@ O OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) é um 
 
 ![OPIN Logo](public/opin.png)
 
-**Site:** https://hericmr.github.io/escolasindigenas/
+**Site:** https://hericmr.github.io/opin/
 
 ---
 
@@ -220,8 +220,8 @@ created_at (timestamp)
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/hericmr/escolasindigenas.git
-cd escolasindigenas
+git clone https://github.com/hericmr/opin.git
+cd opin
 ```
 
 2. Instale as dependências:
