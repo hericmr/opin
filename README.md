@@ -70,28 +70,6 @@ Acesse o painel administrativo para gerenciar todas as informações das escolas
 
 ---
 
-### Redes Sociais Suportadas
-
-- **Facebook**: Open Graph tags com título, descrição e imagem customizados
-- **WhatsApp**: Compatível com Open Graph (mesmas tags do Facebook)
-- **LinkedIn**: Open Graph tags otimizadas para profissionais
-- **Twitter/X**: Twitter Cards com informações específicas da escola
-- **Telegram**: Open Graph tags para previews ricos
-- **Google Search**: Meta tags SEO e dados estruturados (JSON-LD)
-
-### Como Funciona
-
-1. **Detecção Automática**: O sistema detecta automaticamente qual escola está sendo visualizada via parâmetro `panel` na URL
-2. **Meta Tags Customizadas**: Gera título, descrição e URL específicos para cada escola
-3. **Compartilhamento Rico**: Quando compartilhada nas redes sociais, a URL mostra um snippet atrativo com informações específicas da escola
-
-#### Exemplo de Meta Tags Customizadas
-
-![Exemplo de Meta Tags](public/ex1.png)
-
-#### Resultado no Compartilhamento Social
-
-![Resultado no Compartilhamento](public/ex2.png)
 
 ---
 
