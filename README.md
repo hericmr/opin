@@ -12,6 +12,10 @@ Portal informativo interativo que mapeia e apresenta informações detalhadas so
 
 ![Exemplo da Interface](public/exemplo1.png)
 
+![Exemplo do Mapa](public/exemplo2.png)
+
+![Exemplo do Painel de Informações](public/exemplo3.png)
+
 ---
 
 ## Sobre o Projeto
