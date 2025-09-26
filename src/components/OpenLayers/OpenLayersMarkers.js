@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { Feature } from 'ol';
@@ -9,7 +9,7 @@ import {
   applyHoverStyle
 } from '../../utils/openlayers/markerStyles';
 import { createMarkerInteractions } from '../../utils/openlayers/interactions';
-import { isMobile } from '../../utils/mobileUtils';
+// import { isMobile } from '../../utils/mobileUtils'; // Removido - não utilizado
 
 /**
  * Componente OpenLayersMarkers - Substitui completamente o Marcadores.js do Leaflet
@@ -28,7 +28,7 @@ const OpenLayersMarkers = ({
   const vectorLayerRef = useRef(null);
   
   // Estados para controle de interações
-  const [hoveredMarker, setHoveredMarker] = React.useState(null);
+  const [, setHoveredMarker] = React.useState(null);
   // const [selectedMarker, setSelectedMarker] = React.useState(null); // Removido - não utilizado
 
   // Verificar se é mobile - REMOVIDO: não utilizado
@@ -58,6 +58,7 @@ const OpenLayersMarkers = ({
     // Configurar interações
     setupInteractions();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, showNomesEscolas]);
 
   /**
@@ -84,6 +85,7 @@ const OpenLayersMarkers = ({
     // O sistema de interações do OpenLayers precisa estar ativo para detectar hover
     console.log('[OpenLayersMarkers] Interações configuradas e integradas com o mapa');
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
 
   /**
