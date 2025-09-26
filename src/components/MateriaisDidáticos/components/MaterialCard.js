@@ -20,7 +20,7 @@ const MaterialCard = ({ material, onClick }) => {
     } else {
       // Navegação padrão para o painel da escola
       const slug = material.titulo?.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
-      const basePath = window.location.pathname.includes('/escolasindigenas') ? '/escolasindigenas' : '';
+      const basePath = window.location.pathname.includes('/opin') ? '/opin' : '';
       window.location.href = `${basePath}/?panel=${slug}`;
     }
   };
