@@ -367,14 +367,3 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 Para dúvidas ou sugestões sobre o projeto, entre em contato através dos issues do GitHub ou pelo email do desenvolvedor.
 
----
-
-## Changelog
-
-### Versão Atual
-- Sistema de meta tags customizadas para compartilhamento social
-- Detecção automática de escola via URL
-- Suporte completo para Facebook, WhatsApp, LinkedIn, Twitter
-- Melhorias no painel administrativo
-- Otimizações de performance
-- Sistema de busca aprimorado
