@@ -188,9 +188,11 @@ export const useImageCache = () => {
   };
 };
 
-export default {
+const ImageLoaderHooks = {
   useImageLoader,
   useImagePreloader,
   useImageVisibility,
   useImageCache
-}; 
+};
+
+export default ImageLoaderHooks; 

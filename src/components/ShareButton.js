@@ -41,7 +41,7 @@ const Tooltip = ({ children, text, position = "top" }) => {
 
 const ShareButton = ({ onClick, url, title, description = "" }) => {
   const [copied, setCopied] = useState(false);
-  const [showShareOptions, setShowShareOptions] = useState(false);
+  // const [showShareOptions, setShowShareOptions] = useState(false); // Removido - não utilizado
 
   const handleCopyLink = async () => {
     try {

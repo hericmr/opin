@@ -42,7 +42,7 @@ const OpenLayersMap = ({
   const mapContainer = useRef(null);
   const map = useRef(null);
   const baseLayer = useRef(null);
-  const [mapInfo, setMapInfo] = useState({
+  const [, setMapInfo] = useState({
     lng: center[0],
     lat: center[1],
     zoom: zoom

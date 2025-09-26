@@ -55,11 +55,11 @@ const OpenLayersLayers = ({
   }, []);
 
   /**
-   * Handler para mudanças na visibilidade das camadas
+   * Handler para mudanças na visibilidade das camadas - REMOVIDO: não utilizado
    */
-  const handleLayerVisibilityChange = useCallback((layerName, visible) => {
-    updateLayerStatus(layerName, { visible });
-  }, [updateLayerStatus]);
+  // const handleLayerVisibilityChange = useCallback((layerName, visible) => {
+  //   updateLayerStatus(layerName, { visible });
+  // }, [updateLayerStatus]);
 
   /**
    * Handler para erros nas camadas

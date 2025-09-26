@@ -5,7 +5,6 @@ import {
   uploadEscolaImage, 
   getEscolaImages, 
   deleteImage, 
-  updateImageDescription,
   replaceImage
 } from '../../services/escolaImageService';
 import { 
@@ -25,8 +24,8 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   const [existingImages, setExistingImages] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [editingImage, setEditingImage] = useState(null);
-  const [editingDescription, setEditingDescription] = useState('');
+  // const [editingImage, setEditingImage] = useState(null); // Removido - não utilizado
+  // const [editingDescription, setEditingDescription] = useState(''); // Removido - não utilizado
   
   // Estados para trocar imagem
   const [replacingImage, setReplacingImage] = useState(null);
@@ -359,32 +358,32 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     }
   };
 
-  // Atualizar descrição da imagem
-  const handleDescriptionChange = async (imageId, novaDescricao) => {
-    if (!novaDescricao.trim()) return;
+  // Atualizar descrição da imagem - REMOVIDO: não utilizado
+  // const handleDescriptionChange = async (imageId, novaDescricao) => {
+  //   if (!novaDescricao.trim()) return;
 
-    try {
-      await updateImageDescription(imageId, novaDescricao);
-      
-      // Atualizar lista
-      setExistingImages(prev => prev.map(img => 
-        img.id === imageId 
-          ? { ...img, descricao: novaDescricao.trim() }
-          : img
-      ));
+  //   try {
+  //     await updateImageDescription(imageId, novaDescricao);
+  //     
+  //     // Atualizar lista
+  //     setExistingImages(prev => prev.map(img => 
+  //       img.id === imageId 
+  //         ? { ...img, descricao: novaDescricao.trim() }
+  //         : img
+  //     ));
 
-      setSuccess('Legenda atualizada com sucesso!');
+  //     setSuccess('Legenda atualizada com sucesso!');
 
-      // Notificar componente pai
-      if (onImagesUpdate) {
-        onImagesUpdate();
-      }
+  //     // Notificar componente pai
+  //     if (onImagesUpdate) {
+  //       onImagesUpdate();
+  //     }
 
-    } catch (err) {
-      console.error('Erro ao atualizar descrição:', err);
-      setError(`Erro ao atualizar legenda: ${err.message}`);
-    }
-  };
+  //   } catch (err) {
+  //     console.error('Erro ao atualizar descrição:', err);
+  //     setError(`Erro ao atualizar legenda: ${err.message}`);
+  //   }
+  // };
 
   // Atualizar legenda inline
   const handleLegendaFieldChange = (imageId, field, value) => {

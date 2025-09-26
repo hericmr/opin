@@ -29,7 +29,7 @@ const useDocumentosEscola = (escolaId) => {
         });
 
         // Verificar permissões da tabela
-        const { data: rlsData, error: rlsError } = await supabase
+        const { error: rlsError } = await supabase
           .from('documentos_escola')
           .select('count')
           .limit(1);

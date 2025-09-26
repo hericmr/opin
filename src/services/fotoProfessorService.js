@@ -68,7 +68,7 @@ export class FotoProfessorService {
       });
 
       // Fazer upload para o Supabase Storage
-      const { data, error } = await supabase.storage
+      const { error } = await supabase.storage
         .from('avatar')
         .upload(caminhoArquivo, arquivo, {
           cacheControl: '3600',

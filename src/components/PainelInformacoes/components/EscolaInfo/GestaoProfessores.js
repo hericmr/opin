@@ -48,26 +48,26 @@ const MiniCard = ({ icon: Icon, label, value, description, type = 'text' }) => {
   );
 };
 
-const formatarNomeProfessor = (nome) => {
-  if (!nome) return nome;
+// const formatarNomeProfessor = (nome) => { // Removido - não utilizado
+//   if (!nome) return nome;
 
-  const padroesIndigenas = [
-    /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+\(([^)]+)\)/,
-    /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+-\s+([^)]+)/,
-    /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+ou\s+([^)]+)/,
-  ];
+//   const padroesIndigenas = [
+//     /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+\(([^)]+)\)/,
+//     /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+-\s+([^)]+)/,
+//     /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+ou\s+([^)]+)/,
+//   ];
 
-  for (const padrao of padroesIndigenas) {
-    const match = nome.match(padrao);
-    if (match) {
-      const nomeIndigena = `${match[1]} ${match[2]}`;
-      const nomePortugues = match[3];
-      return `${nomeIndigena} (${nomePortugues})`;
-    }
-  }
+//   for (const padrao of padroesIndigenas) {
+//     const match = nome.match(padrao);
+//     if (match) {
+//       const nomeIndigena = `${match[1]} ${match[2]}`;
+//       const nomePortugues = match[3];
+//       return `${nomeIndigena} (${nomePortugues})`;
+//     }
+//   }
 
-  return nome.includes('(') && nome.includes(')') ? nome : nome;
-};
+//   return nome.includes('(') && nome.includes(')') ? nome : nome;
+// };
 
 const formatarFormacaoProfessores = (formacao) => {
   if (!formacao) return null;
