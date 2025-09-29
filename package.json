@@ -90,5 +90,11 @@
   "browser": {
     "http": false,
     "https": false
+  },
+  "overrides": {
+    "nth-check": "^2.1.1",
+    "quill": "^2.0.3",
+    "webpack-dev-server": "^4.15.2",
+    "resolve-url-loader": "^5.0.0"
   }
 }
