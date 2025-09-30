@@ -1,5 +1,6 @@
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import ScrollAnimatedWrapper from '../ScrollAnimatedWrapper';
 
 const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaData }) => {
   const NATURAL_GREEN_COLORS = ['#22c55e', '#16a34a', '#15803d', '#166534', '#14532d', '#365314', '#3f6212', '#4ade80'];
@@ -104,28 +105,30 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
         <h4 className="text-lg font-semibold mb-4 text-gray-700 text-center">
           Visão Geral da Distribuição
         </h4>
-        <div className="h-96">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={dataWithTotal}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={CustomLabel}
-                outerRadius={120}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {dataWithTotal.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={NATURAL_GREEN_COLORS[index % NATURAL_GREEN_COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip content={<PieTooltip />} />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+        <ScrollAnimatedWrapper animationType="scaleIn" delay={0.2}>
+          <div className="h-96">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={dataWithTotal}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={CustomLabel}
+                  outerRadius={120}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {dataWithTotal.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={NATURAL_GREEN_COLORS[index % NATURAL_GREEN_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip content={<PieTooltip />} />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </ScrollAnimatedWrapper>
       </div>
 
       {/* Segundo gráfico - Detalhamento por Escola (Barras) */}
@@ -141,33 +144,35 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
           Detalhamento por Escola Indígena
         </h4>
 
-        <div className="h-96">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={normalizedAlunosData}
-              margin={{
-                top: 20,
-                right: 30,
-                left: 20,
-                bottom: 60,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="nome" 
-                angle={-45}
-                textAnchor="end"
-                height={100}
-                interval={0}
-              />
-              <YAxis 
-                label={{ value: 'Número de Alunos', angle: -90, position: 'insideLeft' }}
-              />
-              <Tooltip content={<BarTooltip />} />
-              <Bar dataKey="alunos" fill="#22c55e" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        <ScrollAnimatedWrapper animationType="fadeInUp" delay={0.4}>
+          <div className="h-96">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={normalizedAlunosData}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 60,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="nome" 
+                  angle={-45}
+                  textAnchor="end"
+                  height={100}
+                  interval={0}
+                />
+                <YAxis 
+                  label={{ value: 'Número de Alunos', angle: -90, position: 'insideLeft' }}
+                />
+                <Tooltip content={<BarTooltip />} />
+                <Bar dataKey="alunos" fill="#22c55e" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </ScrollAnimatedWrapper>
       </div>
 
       {/* Fonte */}
