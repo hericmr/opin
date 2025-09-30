@@ -3,6 +3,7 @@ import { Search, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEscolasData } from '../../hooks/useEscolasData';
 import MaterialCard from './components/MaterialCard';
+import PageHeader from '../PageHeader';
 
 const MateriaisDidáticos = ({ locations }) => {
   const { dataPoints, loading, error } = useEscolasData();
@@ -122,18 +123,12 @@ const MateriaisDidáticos = ({ locations }) => {
       </div>
 
       {/* Cabeçalho com design indígena */}
-      <div className="bg-gradient-to-r from-green-800 to-green-700 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4 font-[Caveat]">
-              Materiais Didáticos Indígenas
-            </h1>
-            <p className="text-xl text-green-100 max-w-3xl mx-auto">
-              Conteúdos produzidos por professores indígenas sobre línguas, histórias, plantas medicinais, cantos, jogos, meio ambiente e saberes ancestrais
-            </p>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="Materiais Didaticos"
+        titleSize="text-3xl md:text-4xl lg:text-5xl"
+        descriptionSize="text-base md:text-lg"
+        description="Conteúdos produzidos por professores indígenas sobre línguas, histórias, plantas medicinais, cantos, jogos, meio ambiente e saberes ancestrais"
+      />
 
       {/* Ferramenta simples de busca */}
       <div className="bg-white shadow-sm border-b">

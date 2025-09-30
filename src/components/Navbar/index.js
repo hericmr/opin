@@ -120,15 +120,15 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                 className="text-left hover:opacity-80 transition-opacity"
               >
                 <div className="flex items-center space-x-2">
-                  <h1 className="text-white md:text-8xl text-6xl uppercase leading-none" style={{fontFamily: 'PapakiloDecorative, sans-serif'}}>
+                  <h1 className="text-white md:text-6xl text-5xl uppercase leading-none" style={{fontFamily: 'PapakiloDecorative, sans-serif'}}>
                     OPIN
                   </h1>
                   <div className="w-px h-8 bg-white/30"></div>
                   <div className="flex flex-col justify-center">
-                    <span className="text-white md:text-2xl text-lg uppercase" style={{fontFamily: 'Cinzel, serif'}}>
-                      OBSERVATORIO DOS PROFESSORES INDIGENAS
+                    <span className="text-white md:text-2xl text-lg capitalize" style={{fontFamily: 'Cinzel, serif'}}>
+                      Observatório Dos Professores Indígenas
                     </span>
-                    <p className="text-xs text-white/80 normal-case">
+                    <p className="text-sm text-white/80 normal-case">
                       do Estado de São Paulo
                     </p>
                   </div>
