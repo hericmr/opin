@@ -1,0 +1,47 @@
+name: Optimize Assets
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'public/**'
+      - 'src/assets/**'
+      - 'src/images/**'
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run image optimization
+      run: npm run optimize-images
+      
+    - name: Check for changes
+      id: verify-changed-files
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "changed=true" >> $GITHUB_OUTPUT
+        else
+          echo "changed=false" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Commit optimized assets
+      if: steps.verify-changed-files.outputs.changed == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "Optimize assets [skip ci]"
+        git push

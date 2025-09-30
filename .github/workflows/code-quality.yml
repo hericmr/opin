@@ -1,0 +1,55 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run ESLint
+      run: npm run lint
+      
+    - name: Check TypeScript (if applicable)
+      run: |
+        if [ -f "tsconfig.json" ]; then
+          npx tsc --noEmit
+        else
+          echo "No TypeScript configuration found, skipping..."
+        fi
+        
+    - name: Check for console.log statements
+      run: |
+        echo "Checking for console.log statements..."
+        if grep -r "console\.log" src/ --include="*.js" --include="*.jsx" --include="*.ts" --include="*.tsx"; then
+          echo "Warning: Found console.log statements in production code"
+          echo "Consider removing or replacing with proper logging"
+        else
+          echo "No console.log statements found"
+        fi
+        
+    - name: Check for TODO/FIXME comments
+      run: |
+        echo "Checking for TODO/FIXME comments..."
+        if grep -r "TODO\|FIXME" src/ --include="*.js" --include="*.jsx" --include="*.ts" --include="*.tsx"; then
+          echo "Found TODO/FIXME comments:"
+          grep -r "TODO\|FIXME" src/ --include="*.js" --include="*.jsx" --include="*.ts" --include="*.tsx"
+        else
+          echo "No TODO/FIXME comments found"
+        fi
