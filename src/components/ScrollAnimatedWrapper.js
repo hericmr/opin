@@ -77,7 +77,7 @@ const ScrollAnimatedWrapper = ({
         delay,
         ease: "easeOut"
       }}
-      className={className}
+      className={`w-full ${className}`}
     >
       {children}
     </motion.div>

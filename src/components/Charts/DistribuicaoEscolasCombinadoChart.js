@@ -106,7 +106,7 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
           Visão Geral da Distribuição
         </h4>
         <ScrollAnimatedWrapper animationType="scaleIn" delay={0.2}>
-          <div className="h-96">
+          <div className="h-96 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -145,15 +145,15 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
         </h4>
 
         <ScrollAnimatedWrapper animationType="fadeInUp" delay={0.4}>
-          <div className="h-96">
+          <div className="h-96 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={normalizedAlunosData}
                 margin={{
                   top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 60,
+                  right: 10,
+                  left: 10,
+                  bottom: 80,
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
