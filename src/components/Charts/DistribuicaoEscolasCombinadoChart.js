@@ -88,7 +88,7 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
       {/* Título principal */}
-      <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+      <h3 className="text-2xl font-bold mb-6 text-gray-800">
         Distribuição de Escolas por Número de Alunos
       </h3>
 
@@ -130,16 +130,16 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
 
       {/* Segundo gráfico - Detalhamento por Escola (Barras) */}
       <div className="mb-6">
-        <h4 className="text-lg font-semibold mb-4 text-gray-700 text-center">
-          Detalhamento por Escola Indígena
-        </h4>
-        
         {/* Texto introdutório */}
         <div className="mb-6 p-4 bg-gray-50 rounded-lg max-w-4xl mx-auto">
           <p className="text-gray-700 leading-relaxed text-justify">
             Entre as escolas de maior porte, destacam-se a Indígena Guarani Gwyra Pepo, com 296 alunos, a E.E.I. Djekupe Amba Arandy, com 249 alunos, a E.E.I. Txeru Ba'e Kua-i, com 111 alunos, e a CECI Krukutu, com 101 alunos. No extremo oposto, algumas escolas atendem menos de 10 alunos, como a Aldeia Uru'ity, com 4 estudantes, e a Aldeia Santa Cruz, com apenas 3. Essa distribuição evidencia a grande heterogeneidade no tamanho das turmas, o que impacta diretamente a gestão, a oferta de recursos e a qualidade do ensino.
           </p>
         </div>
+        
+        <h4 className="text-lg font-semibold mb-4 text-gray-700 text-center">
+          Detalhamento por Escola Indígena
+        </h4>
 
         <div className="h-96">
           <ResponsiveContainer width="100%" height="100%">
