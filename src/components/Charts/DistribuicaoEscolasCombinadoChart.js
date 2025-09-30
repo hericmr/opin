@@ -87,22 +87,22 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
   const dataWithTotal = distribuicaoData.map(item => ({ ...item, total }));
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg">
       {/* Título principal */}
-      <h3 className="text-2xl font-bold mb-6 text-gray-800">
+      <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800">
         Distribuição de Escolas por Número de Alunos
       </h3>
 
+      {/* Texto introdutório */}
+      <div className="mb-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
+        <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
+          As EEIs, em sua grande parte, funcionam com turmas de número reduzido a moderado, o que garante um cuidado individualizado e um acompanhamento pedagógico mais próximo dos estudantes. Dez escolas (24,4%) possuem até 10 alunos, 11 escolas (26,8%) atendem entre 11 e 25 alunos, e 12 escolas (29,3%) concentram de 26 a 50 alunos. Juntas, essas pequenas unidades representam 80,5% da rede, evidenciando o predomínio de escolas de porte reduzido. Em contraste, apenas quatro escolas (9,8%) atendem entre 51 e 100 alunos, e outras quatro (9,8%) possuem mais de 100 alunos, indicando que poucas unidades concentram grandes contingentes estudantis.
+        </p>
+      </div>
+
       {/* Primeiro gráfico - Distribuição Geral (Pizza) */}
-      <div className="mb-8">
-        {/* Texto introdutório antes do gráfico */}
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg max-w-4xl mx-auto">
-          <p className="text-gray-700 leading-relaxed text-justify">
-            As EEIs, em sua grande parte, funcionam com turmas de número reduzido a moderado, o que garante um cuidado individualizado e um acompanhamento pedagógico mais próximo dos estudantes. Dez escolas (24,4%) possuem até 10 alunos, 11 escolas (26,8%) atendem entre 11 e 25 alunos, e 12 escolas (29,3%) concentram de 26 a 50 alunos. Juntas, essas pequenas unidades representam 80,5% da rede, evidenciando o predomínio de escolas de porte reduzido. Em contraste, apenas quatro escolas (9,8%) atendem entre 51 e 100 alunos, e outras quatro (9,8%) possuem mais de 100 alunos, indicando que poucas unidades concentram grandes contingentes estudantis.
-          </p>
-        </div>
-        
-        <h4 className="text-lg font-semibold mb-4 text-gray-700 text-center">
+      <div className="mb-6 sm:mb-8">
+        <h4 className="text-lg font-semibold mb-3 sm:mb-4 text-gray-700 text-center">
           Visão Geral da Distribuição
         </h4>
         <ScrollAnimatedWrapper animationType="scaleIn" delay={0.2}>
@@ -131,16 +131,16 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
         </ScrollAnimatedWrapper>
       </div>
 
+      {/* Texto adicional */}
+      <div className="mb-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
+          <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
+            Entre as escolas de maior porte, destacam-se a Indígena Guarani Gwyra Pepo, com 296 alunos, a E.E.I. Djekupe Amba Arandy, com 249 alunos, a E.E.I. Txeru Ba'e Kua-i, com 111 alunos, e a CECI Krukutu, com 101 alunos. No extremo oposto, algumas escolas atendem menos de 10 alunos, como a Aldeia Uru'ity, com 4 estudantes, e a Aldeia Santa Cruz, com apenas 3.
+          </p>
+      </div>
+
       {/* Segundo gráfico - Detalhamento por Escola (Barras) */}
       <div className="mb-6">
-        {/* Texto introdutório */}
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg max-w-4xl mx-auto">
-          <p className="text-gray-700 leading-relaxed text-justify">
-            Entre as escolas de maior porte, destacam-se a Indígena Guarani Gwyra Pepo, com 296 alunos, a E.E.I. Djekupe Amba Arandy, com 249 alunos, a E.E.I. Txeru Ba'e Kua-i, com 111 alunos, e a CECI Krukutu, com 101 alunos. No extremo oposto, algumas escolas atendem menos de 10 alunos, como a Aldeia Uru'ity, com 4 estudantes, e a Aldeia Santa Cruz, com apenas 3. Essa distribuição evidencia a grande heterogeneidade no tamanho das turmas, o que impacta diretamente a gestão, a oferta de recursos e a qualidade do ensino.
-          </p>
-        </div>
-        
-        <h4 className="text-lg font-semibold mb-4 text-gray-700 text-center">
+        <h4 className="text-lg font-semibold mb-3 sm:mb-4 text-gray-700 text-center">
           Detalhamento por Escola Indígena
         </h4>
 
