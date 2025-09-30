@@ -44,7 +44,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   const isConteudoPage = location.pathname === '/conteudo';
   const isSearchPage = location.pathname === '/search';
   const isAdminPage = location.pathname === '/admin';
-  const isPainelPage = location.pathname === '/dashboard';
+  const isPainelPage = location.pathname === '/dashboard' || location.pathname === '/painel-dados' || location.pathname === '/dados-escolas-indigenas';
   
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   

@@ -116,6 +116,22 @@ const AppContent = () => {
               </main>
             } 
           />
+          <Route 
+            path="/painel-dados" 
+            element={
+              <main id="main-content" className="flex-grow" style={{ height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
+                <Dashboard />
+              </main>
+            } 
+          />
+          <Route 
+            path="/dados-escolas-indigenas" 
+            element={
+              <main id="main-content" className="flex-grow" style={{ height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
+                <Dashboard />
+              </main>
+            } 
+          />
           <Route path="/test-legendas" element={<TestLegendas />} />
         </Routes>
       </Suspense>
