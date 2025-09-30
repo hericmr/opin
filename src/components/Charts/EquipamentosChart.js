@@ -34,18 +34,18 @@ const EquipamentosChart = ({ data }) => {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg">
       {/* Texto sobre infraestrutura tecnológica */}
       <div className="mb-6">
-        <h4 className="text-lg font-semibold mb-4 text-gray-700 text-center">
+        <h4 className="text-lg font-semibold mb-3 sm:mb-4 text-gray-700 text-center">
           Infraestrutura Tecnológica
         </h4>
         
-        <div className="p-4 max-w-4xl mx-auto">
-          <p className="text-gray-700 leading-relaxed text-justify">
+        <div className="p-3 sm:p-4 bg-gray-50 rounded-lg">
+          <p className="text-gray-700 leading-relaxed text-sm sm:text-base mb-3">
             A infraestrutura tecnológica das escolas estaduais indígenas evidencia desigualdades significativas no acesso a equipamentos e conectividade. O recurso mais presente é o tablet para alunos, disponível em 653 unidades (55,4%), seguido por computadores portáteis (110, 9,3%) e computadores destinados aos alunos (98, 8,3%). Outros recursos, como aparelhos de TV (57, 4,8%), computadores para uso administrativo (56, 4,8%), aparelhos de Wi-Fi/access points (33, 2,8%) e rede local (18, 1,5%), estão presentes em proporções muito inferiores.
           </p>
-          <p className="text-gray-700 leading-relaxed mt-3 text-justify">
+          <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
             O acesso à internet é muito restrito. Para uso pedagógico e administrativo, está disponível em apenas 22 escolas (1,9%). Para uso pelos alunos, são apenas 19 escolas (1,6%). Isso mostra que a maior parte das escolas ainda não dispõe de conectividade adequada para práticas digitais. Embora a tecnologia esteja presente em diversas escolas, seu uso pedagógico efetivo continua limitado. Essa limitação compromete a qualidade do ensino e dificulta a inclusão digital de professores e estudantes.
           </p>
         </div>
