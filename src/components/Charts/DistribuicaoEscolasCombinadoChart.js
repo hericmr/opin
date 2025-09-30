@@ -94,16 +94,16 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
 
       {/* Primeiro gráfico - Distribuição Geral (Pizza) */}
       <div className="mb-8">
-        <h4 className="text-lg font-semibold mb-4 text-gray-700 text-center">
-          Visão Geral da Distribuição
-        </h4>
-        
         {/* Texto introdutório antes do gráfico */}
         <div className="mb-6 p-4 bg-gray-50 rounded-lg">
           <p className="text-gray-700 leading-relaxed">
             As EEIs, em sua grande parte, funcionam com turmas de número reduzido a moderado, o que garante um cuidado individualizado e um acompanhamento pedagógico mais próximo dos estudantes. Dez escolas (24,4%) possuem até 10 alunos, 11 escolas (26,8%) atendem entre 11 e 25 alunos, e 12 escolas (29,3%) concentram de 26 a 50 alunos. Juntas, essas pequenas unidades representam 80,5% da rede, evidenciando o predomínio de escolas de porte reduzido. Em contraste, apenas quatro escolas (9,8%) atendem entre 51 e 100 alunos, e outras quatro (9,8%) possuem mais de 100 alunos, indicando que poucas unidades concentram grandes contingentes estudantis.
           </p>
         </div>
+        
+        <h4 className="text-lg font-semibold mb-4 text-gray-700 text-center">
+          Visão Geral da Distribuição
+        </h4>
         <div className="h-96">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
