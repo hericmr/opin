@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import csvDataService from '../services/csvDataService';
+import PageHeader from './PageHeader';
 import {
   AlunosPorEscolaChart,
   DistribuicaoAlunosChart,
@@ -142,28 +143,22 @@ const Dashboard = () => {
       </div>
 
       {/* Cabeçalho com design indígena */}
-      <div className="bg-gradient-to-r from-green-800 to-green-700 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center">
-            <h1 className="text-6xl font-bold mb-6 uppercase" style={{ fontFamily: 'PapakiloLight, sans-serif' }}>
-              Painel de Dados
-            </h1>
-            <div className="max-w-4xl mx-auto">
-              <p className="text-base text-green-100 leading-relaxed">
-                Este espaço reúne informações sobre as escolas indígenas do estado de São Paulo, apresentando indicadores como número de estudantes e docentes, infraestrutura disponível, distribuição geográfica por Diretorias de Ensino e modalidades de ensino oferecidas. Os dados foram fornecidos pela Secretaria da Educação do Estado de São Paulo (SEDUC) e referem-se ao ano de 2025. A base completa pode ser acessada em:{' '}
-                <a 
-                  href="https://dados.educacao.sp.gov.br/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-green-100 underline font-medium"
-                >
-                  dados.educacao.sp.gov.br
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="Painel de Dados"
+        description={
+          <>
+            Este espaço reúne informações sobre as escolas indígenas do estado de São Paulo, apresentando indicadores como número de estudantes e docentes, infraestrutura disponível, distribuição geográfica por Diretorias de Ensino e modalidades de ensino oferecidas. Os dados foram fornecidos pela Secretaria da Educação do Estado de São Paulo (SEDUC) e referem-se ao ano de 2025. A base completa pode ser acessada em:{' '}
+            <a 
+              href="https://dados.educacao.sp.gov.br/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-white hover:text-green-100 underline font-medium"
+            >
+              dados.educacao.sp.gov.br
+            </a>
+          </>
+        }
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
