@@ -34,19 +34,25 @@ const EquipamentosChart = ({ data }) => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
+      {/* Texto sobre infraestrutura tecnológica */}
+      <div className="mb-6">
+        <h4 className="text-lg font-semibold mb-4 text-gray-700 text-center">
+          Infraestrutura Tecnológica
+        </h4>
+        
+        <div className="p-4 max-w-4xl mx-auto">
+          <p className="text-gray-700 leading-relaxed text-justify">
+            A infraestrutura tecnológica das escolas estaduais indígenas evidencia desigualdades significativas no acesso a equipamentos e conectividade. O recurso mais presente é o tablet para alunos, disponível em 653 unidades (55,4%), seguido por computadores portáteis (110, 9,3%) e computadores destinados aos alunos (98, 8,3%). Outros recursos, como aparelhos de TV (57, 4,8%), computadores para uso administrativo (56, 4,8%), aparelhos de Wi-Fi/access points (33, 2,8%) e rede local (18, 1,5%), estão presentes em proporções muito inferiores.
+          </p>
+          <p className="text-gray-700 leading-relaxed mt-3 text-justify">
+            O acesso à internet é muito restrito. Para uso pedagógico e administrativo, está disponível em apenas 22 escolas (1,9%). Para uso pelos alunos, são apenas 19 escolas (1,6%). Isso mostra que a maior parte das escolas ainda não dispõe de conectividade adequada para práticas digitais. Embora a tecnologia esteja presente em diversas escolas, seu uso pedagógico efetivo continua limitado. Essa limitação compromete a qualidade do ensino e dificulta a inclusão digital de professores e estudantes.
+          </p>
+        </div>
+      </div>
+      
       <h3 className="text-xl font-bold mb-4 text-gray-800">
         Distribuição de Equipamentos nas Escolas
       </h3>
-      
-      {/* Texto sobre infraestrutura tecnológica */}
-      <div className="mb-6 p-4">
-        <p className="text-gray-700 leading-relaxed">
-          A infraestrutura tecnológica das escolas estaduais indígenas evidencia desigualdades significativas no acesso a equipamentos e conectividade. O recurso mais presente é o tablet para alunos, disponível em 653 unidades (55,4%), seguido por computadores portáteis (110, 9,3%) e computadores destinados aos alunos (98, 8,3%). Outros recursos, como aparelhos de TV (57, 4,8%), computadores para uso administrativo (56, 4,8%), aparelhos de Wi-Fi/access points (33, 2,8%) e rede local (18, 1,5%), estão presentes em proporções muito inferiores.
-        </p>
-        <p className="text-gray-700 leading-relaxed mt-3">
-          O acesso à internet é muito restrito. Para uso pedagógico e administrativo, está disponível em apenas 22 escolas (1,9%). Para uso pelos alunos, são apenas 19 escolas (1,6%). Isso mostra que a maior parte das escolas ainda não dispõe de conectividade adequada para práticas digitais. Embora a tecnologia esteja presente em diversas escolas, seu uso pedagógico efetivo continua limitado. Essa limitação compromete a qualidade do ensino e dificulta a inclusão digital de professores e estudantes.
-        </p>
-      </div>
       <div className="h-96">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
