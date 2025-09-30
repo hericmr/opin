@@ -1,5 +1,6 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+import ScrollAnimatedWrapper from '../ScrollAnimatedWrapper';
 
 const DistribuicaoAlunosModalidadeChart = ({ data }) => {
   // Cores específicas para cada modalidade
@@ -99,41 +100,43 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
           <h4 className="text-lg font-semibold mb-3 text-gray-700 text-center">
             Distribuição por Quantidade
           </h4>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={dataWithPercentual}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis 
-                  dataKey="name" 
-                  tick={{ fontSize: 12 }}
-                  angle={-45}
-                  textAnchor="end"
-                  height={80}
-                />
-                <YAxis 
-                  tick={{ fontSize: 12 }}
-                  label={{ value: 'Número de Alunos', angle: -90, position: 'insideLeft' }}
-                />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar 
-                  dataKey="value" 
-                  radius={[4, 4, 0, 0]}
+          <ScrollAnimatedWrapper animationType="fadeInLeft" delay={0.2}>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={dataWithPercentual}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
                 >
-                  {dataWithPercentual.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={MODALIDADE_COLORS[entry.name]} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis 
+                    dataKey="name" 
+                    tick={{ fontSize: 12 }}
+                    angle={-45}
+                    textAnchor="end"
+                    height={80}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12 }}
+                    label={{ value: 'Número de Alunos', angle: -90, position: 'insideLeft' }}
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Bar 
+                    dataKey="value" 
+                    radius={[4, 4, 0, 0]}
+                  >
+                    {dataWithPercentual.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={MODALIDADE_COLORS[entry.name]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </ScrollAnimatedWrapper>
         </div>
 
         {/* Gráfico de Pizza */}
@@ -141,36 +144,38 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
           <h4 className="text-lg font-semibold mb-3 text-gray-700 text-center">
             Distribuição Percentual
           </h4>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={dataWithPercentual}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={CustomLabel}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {dataWithPercentual.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={MODALIDADE_COLORS[entry.name]} />
-                  ))}
-                </Pie>
-                <Tooltip content={<CustomPieTooltip />} />
-                <Legend 
-                  verticalAlign="bottom" 
-                  height={36}
-                  formatter={(value, entry) => (
-                    <span style={{ color: entry.color }}>
-                      {value}
-                    </span>
-                  )}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
+          <ScrollAnimatedWrapper animationType="fadeInRight" delay={0.4}>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={dataWithPercentual}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={CustomLabel}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {dataWithPercentual.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={MODALIDADE_COLORS[entry.name]} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<CustomPieTooltip />} />
+                  <Legend 
+                    verticalAlign="bottom" 
+                    height={36}
+                    formatter={(value, entry) => (
+                      <span style={{ color: entry.color }}>
+                        {value}
+                      </span>
+                    )}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </ScrollAnimatedWrapper>
         </div>
       </div>
 
