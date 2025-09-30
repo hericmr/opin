@@ -3,8 +3,7 @@ import { ChevronRight } from 'lucide-react';
 import csvDataService from '../services/csvDataService';
 import PageHeader from './PageHeader';
 import {
-  AlunosPorEscolaChart,
-  DistribuicaoAlunosChart,
+  DistribuicaoEscolasCombinadoChart,
   DistribuicaoAlunosModalidadeChart,
   EquipamentosChart,
   EscolasPorDiretoriaChart,
@@ -175,14 +174,12 @@ const Dashboard = () => {
             <TiposEnsinoChart data={data.tiposEnsino} />
           </div>
 
-          {/* Gráfico de Barras - Alunos por Escola */}
+          {/* Gráfico Combinado - Distribuição de Escolas por Número de Alunos */}
           <div>
-            <AlunosPorEscolaChart data={data.alunosPorEscola} />
-          </div>
-
-          {/* Gráfico de Pizza - Distribuição de Alunos */}
-          <div>
-            <DistribuicaoAlunosChart data={data.distribuicaoAlunos} />
+            <DistribuicaoEscolasCombinadoChart 
+              distribuicaoData={data.distribuicaoAlunos}
+              alunosPorEscolaData={data.alunosPorEscola}
+            />
           </div>
 
           {/* Gráfico de Barras Horizontais - Equipamentos */}

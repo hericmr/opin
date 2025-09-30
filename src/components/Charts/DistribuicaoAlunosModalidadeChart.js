@@ -75,7 +75,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
       {/* Texto introdutório */}
       <div className="mb-6 p-4">
         <p className="text-gray-700 leading-relaxed">
-          As escolas estaduais indígenas de São Paulo somam atualmente 42 unidades, distribuídas entre a capital, o interior e o litoral, atendendo 1.688 estudantes. Essas escolas oferecem os anos iniciais e finais do Ensino Fundamental, o Ensino Médio e a Educação de Jovens e Adultos (EJA). A maior parte das matrículas está no Ensino Fundamental, que reúne 75,4% dos alunos. Os anos iniciais concentram 654 estudantes (40,3%), seguidos pelos anos finais, com 568 alunos (35,0%). O Ensino Médio responde por 269 matrículas (16,6%), enquanto a EJA conta com 130 estudantes (7,7%).
+          Existem 42 Escolas Estaduais Indígenas no estado de São Paulo, distribuídas entre a capital, o interior e o litoral, atendendo 1.621 estudantes. Essas escolas oferecem os anos iniciais e finais do Ensino Fundamental, o Ensino Médio e a Educação de Jovens e Adultos (EJA). A maior parte das matrículas está no Ensino Fundamental, que reúne 75,4% dos alunos. Os anos iniciais concentram 654 estudantes (40,3%), seguidos pelos anos finais, com 568 alunos (35,0%). O Ensino Médio responde por 269 matrículas (16,6%), enquanto a EJA conta com 130 estudantes (7,7%).
         </p>
       </div>
       
