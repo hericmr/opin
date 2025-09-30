@@ -50,7 +50,7 @@ const EquipamentosChart = ({ data }) => {
         </div>
       </div>
       
-      <h3 className="text-xl font-bold mb-4 text-gray-800">
+      <h3 className="text-xl font-bold mb-4 text-gray-800 text-center">
         Distribuição de Equipamentos nas Escolas
       </h3>
       <div className="h-96">
