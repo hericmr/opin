@@ -1,5 +1,6 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import ScrollAnimatedWrapper from '../ScrollAnimatedWrapper';
 
 const EquipamentosChart = ({ data }) => {
   const CustomTooltip = ({ active, payload }) => {
@@ -53,38 +54,40 @@ const EquipamentosChart = ({ data }) => {
       <h3 className="text-xl font-bold mb-4 text-gray-800 text-center">
         Distribuição de Equipamentos nas Escolas
       </h3>
-      <div className="h-96">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={data}
-            margin={{
-              top: 20,
-              right: 30,
-              left: 20,
-              bottom: 80,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="equipamento"
-              angle={-45}
-              textAnchor="end"
-              height={100}
-              interval={0}
-              tick={{ fontSize: 10 }}
-            />
-            <YAxis 
-              label={{ value: 'Quantidade Total', angle: -90, position: 'insideLeft' }}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="quantidade" fill="#16a34a">
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill="#16a34a" />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      <ScrollAnimatedWrapper animationType="fadeInUp" delay={0.2}>
+        <div className="h-96">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={data}
+              margin={{
+                top: 20,
+                right: 30,
+                left: 20,
+                bottom: 80,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                dataKey="equipamento"
+                angle={-45}
+                textAnchor="end"
+                height={100}
+                interval={0}
+                tick={{ fontSize: 10 }}
+              />
+              <YAxis 
+                label={{ value: 'Quantidade Total', angle: -90, position: 'insideLeft' }}
+              />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar dataKey="quantidade" fill="#16a34a">
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill="#16a34a" />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </ScrollAnimatedWrapper>
       <p className="text-sm text-gray-500 mt-2 text-center">
         Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2025
       </p>
