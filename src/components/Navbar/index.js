@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Leaf } from 'lucide-react';
+import { Leaf, BookOpen, BarChart3, Shield } from 'lucide-react';
 import { useSearch } from '../../contexts/SearchContext';
 import { useAuth } from '../../hooks/useAuth';
 import MobileToggle from './MobileToggle';
@@ -109,26 +109,26 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#215A36] text-white shadow-lg">
       {/* Header Principal - Estilo UNIFESP */}
-      <div className="w-full max-w-none px-8 lg:px-16 xl:px-24">
-        <div className="flex items-center justify-between py-0.5 md:py-0.5">
+      <div className="w-full max-w-none px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24">
+        <div className="flex items-center justify-between py-2 sm:py-1 md:py-0.5">
           
           {/* Título do Projeto - Lado esquerdo */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             <div>
               <button
                 onClick={() => navigate('/')}
                 className="text-left hover:opacity-80 transition-opacity"
               >
-                <div className="flex items-center space-x-2">
-                  <h1 className="text-white md:text-6xl text-5xl uppercase leading-none" style={{fontFamily: 'PapakiloDecorative, sans-serif'}}>
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <h1 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl uppercase leading-none" style={{fontFamily: 'PapakiloDecorative, sans-serif'}}>
                     OPIN
                   </h1>
-                  <div className="w-px h-8 bg-white/30"></div>
+                  <div className="w-px h-4 sm:h-6 md:h-8 bg-white/30"></div>
                   <div className="flex flex-col justify-center">
-                    <span className="text-white md:text-2xl text-lg capitalize" style={{fontFamily: 'Cinzel, serif'}}>
+                    <span className="text-white text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl capitalize" style={{fontFamily: 'Cinzel, serif'}}>
                       Observatório Dos Professores Indígenas
                     </span>
-                    <p className="text-sm text-white/80 normal-case">
+                    <p className="text-xs sm:text-sm text-white/80 normal-case">
                       do Estado de São Paulo
                     </p>
                   </div>
@@ -151,26 +151,28 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
             </div>
             
             {/* Links de Navegação */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
               <button
                 onClick={() => navigate('/conteudo')}
-                className={`px-3 py-2 text-sm font-medium rounded transition-colors ${
+                className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded transition-colors ${
                   isConteudoPage 
                     ? 'bg-green-600 text-white' 
-                    : 'text-white hover:bg-[#215A36]'
+                    : 'text-white hover:bg-green-700/20'
                 }`}
               >
-                Materiais
+                <BookOpen className="w-4 h-4" />
+                <span className="hidden xl:inline">Materiais</span>
               </button>
               <button
                 onClick={() => navigate('/dashboard')}
-                className={`px-3 py-2 text-sm font-medium rounded transition-colors ${
+                className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded transition-colors ${
                   isPainelPage 
                     ? 'bg-green-600 text-white' 
-                    : 'text-white hover:bg-[#215A36]'
+                    : 'text-white hover:bg-green-700/20'
                 }`}
               >
-                Painel de Dados
+                <BarChart3 className="w-4 h-4" />
+                <span className="hidden xl:inline">Painel de Dados</span>
               </button>
             </div>
             
@@ -181,25 +183,26 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
               {!isAuthenticated ? (
                 <button
                   onClick={handleAdminClick}
-                  className="p-2 rounded hover:bg-[#215A36] transition-colors"
+                  className="p-2 rounded hover:bg-green-700/20 transition-colors"
                   title="Acesso administrativo"
                 >
                   <Leaf className="w-5 h-5" />
                 </button>
               ) : (
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-white/80">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-white/80 hidden xl:inline">
                     Olá, {user?.username}
                   </span>
                   <button
                     onClick={() => navigate('/admin')}
-                    className="px-3 py-2 text-sm font-medium bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                    className="flex items-center gap-1 px-2 py-1 text-xs font-medium bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
                   >
-                    Admin
+                    <Shield className="w-3 h-3" />
+                    <span className="hidden lg:inline">Admin</span>
                   </button>
                   <button
                     onClick={logout}
-                    className="px-3 py-2 text-sm font-medium bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                    className="px-2 py-1 text-xs font-medium bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
                     title="Sair"
                   >
                     Sair
@@ -209,7 +212,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
             </div>
             
             {/* Logos - Por último */}
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="hidden lg:flex items-center space-x-2 xl:space-x-4">
               <a 
                 href="https://www.unifesp.br/lindi" 
                 target="_blank" 
@@ -219,7 +222,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                 <img 
                   src={`${process.env.PUBLIC_URL}/lindi.svg`} 
                   alt="LINDI - Licenciatura Intercultural Indígena" 
-                  className="h-16 w-auto"
+                  className="h-12 xl:h-16 w-auto"
                 />
               </a>
               
@@ -232,7 +235,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                 <img 
                   src={`${process.env.PUBLIC_URL}/logo.webp`} 
                   alt="UNIFESP" 
-                  className="h-12 w-auto"
+                  className="h-8 xl:h-12 w-auto"
                 />
               </a>
             </div>
