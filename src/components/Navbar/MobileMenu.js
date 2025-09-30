@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { BookOpen, Leaf, Shield, LayoutGrid, Map } from 'lucide-react';
+import { BookOpen, Leaf, Shield, LayoutGrid, Map, BarChart3 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const MobileMenu = ({ 
@@ -8,6 +8,7 @@ const MobileMenu = ({
   isConteudoPage, 
   isSearchPage,
   isAdminPage,
+  isDashboardPage,
   isAdmin, 
   onAdminClick, 
   isMobileLandscape,
@@ -17,7 +18,7 @@ const MobileMenu = ({
 
   const getActiveStyle = (isActive) => 
     isActive 
-      ? 'bg-amber-600 text-white' 
+      ? 'bg-green-600 text-white' 
       : 'text-white hover:bg-[#215A36]';
 
   return (
@@ -55,6 +56,16 @@ const MobileMenu = ({
                 <div className="flex items-center gap-3">
                   <BookOpen className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
                   <span>Materiais Didáticos</span>
+                </div>
+              </button>
+              
+              <button
+                onClick={() => onNavigation('/dashboard')}
+                className={`w-full text-left px-4 py-3 font-medium rounded transition-colors ${getActiveStyle(isDashboardPage)}`}
+              >
+                <div className="flex items-center gap-3">
+                  <BarChart3 className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
+                  <span>Painel de Dados</span>
                 </div>
               </button>
             </div>

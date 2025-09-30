@@ -21,6 +21,7 @@ const MateriaisDidáticos = React.lazy(() => import("./components/MateriaisDidá
 const AdminPanel = React.lazy(() => import("./components/AdminPanel"));
 const SearchResults = React.lazy(() => import("./components/SearchResults"));
 const TestLegendas = React.lazy(() => import("./components/TestLegendas"));
+const Dashboard = React.lazy(() => import("./components/Dashboard"));
 
 const AppContent = () => {
   const { dataPoints, loading, error } = useEscolasData();
@@ -104,6 +105,14 @@ const AppContent = () => {
             element={
               <main id="main-content" className="flex-grow">
                 <AdminPanel />
+              </main>
+            } 
+          />
+          <Route 
+            path="/dashboard" 
+            element={
+              <main id="main-content" className="flex-grow" style={{ height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
+                <Dashboard />
               </main>
             } 
           />
