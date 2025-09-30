@@ -127,7 +127,7 @@ const MateriaisDidáticos = ({ locations }) => {
         title="Materiais Didaticos"
         titleSize="text-3xl md:text-4xl lg:text-5xl"
         descriptionSize="text-base md:text-lg"
-        description="Conteúdos produzidos por professores indígenas sobre línguas, histórias, plantas medicinais, cantos, jogos, meio ambiente e saberes ancestrais"
+        description="Conteúdos produzidos por professores indígenas sobre línguas, histórias, plantas medicinais, canto e, jogos"
       />
 
       {/* Ferramenta simples de busca */}
