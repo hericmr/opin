@@ -56,14 +56,6 @@ const MateriaisDidáticos = () => {
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
               Página em Desenvolvimento
             </h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
-              Esta seção está sendo desenvolvida para apresentar os materiais didáticos produzidos por professores indígenas. Em breve, você poderá acessar conteúdos sobre línguas, histórias, plantas medicinais, cantos e jogos.
-            </p>
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <p className="text-green-800 font-medium">
-                Aguarde novidades em breve!
-              </p>
-            </div>
           </div>
         </div>
       </div>
