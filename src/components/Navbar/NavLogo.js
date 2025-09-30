@@ -14,8 +14,8 @@ const NavLogo = ({ isMobileLandscape }) => {
         {/* Título completo com fonte Caveat */}
         <h1 className={`font-[Caveat] leading-tight ${
           isMobileLandscape 
-            ? 'text-sm' 
-            : 'text-sm sm:text-base md:text-lg lg:text-xl'
+            ? 'text-base' 
+            : 'text-base sm:text-lg md:text-xl lg:text-2xl'
         }`}>
           OPIN - Observatório dos Professores Indígenas Estado de São Paulo
         </h1>

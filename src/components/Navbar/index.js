@@ -44,6 +44,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   const isConteudoPage = location.pathname === '/conteudo';
   const isSearchPage = location.pathname === '/search';
   const isAdminPage = location.pathname === '/admin';
+  const isPainelPage = location.pathname === '/dashboard';
   
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   
@@ -108,61 +109,38 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#215A36] text-white shadow-lg">
       {/* Header Principal - Estilo UNIFESP */}
-      <div className="container mx-auto">
-        <div className="flex items-center justify-between py-1 md:py-2 px-4">
+      <div className="w-full max-w-none px-8 lg:px-16 xl:px-24">
+        <div className="flex items-center justify-between py-0.5 md:py-0.5">
           
-          {/* Logo UNIFESP - Lado esquerdo */}
+          {/* Título do Projeto - Lado esquerdo */}
           <div className="flex items-center space-x-4">
-            {/* Logos - Apenas Desktop */}
-            <div className="hidden md:flex items-center space-x-4">
-              <a 
-                href="https://www.unifesp.br/lindi" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:opacity-80 transition-opacity"
-              >
-                <img 
-                  src={`${process.env.PUBLIC_URL}/lindi.svg`} 
-                  alt="LINDI - Licenciatura Intercultural Indígena" 
-                  className="h-16 w-auto"
-                />
-              </a>
-              
-              <a 
-                href="https://www.unifesp.br" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center hover:opacity-80 transition-opacity"
-              >
-                <img 
-                  src={`${process.env.PUBLIC_URL}/logo.webp`} 
-                  alt="UNIFESP" 
-                  className="h-12 w-auto"
-                />
-              </a>
-            </div>
-            
-            {/* Título do Projeto - Mobile e Desktop */}
-            <div className="md:border-l md:border-white/30 md:pl-4">
+            <div>
               <button
                 onClick={() => navigate('/')}
                 className="text-left hover:opacity-80 transition-opacity"
               >
-                <h1 className="font-['Cinzel'] text-white md:text-lg text-sm">
-                  OPIN - Observatório dos Professores Indígenas
-                </h1>
-                <p className="text-xs text-white/80">
-                  do Estado de São Paulo
-                </p>
+                <div className="flex items-center space-x-2">
+                  <h1 className="text-white md:text-8xl text-6xl uppercase leading-none" style={{fontFamily: 'PapakiloDecorative, sans-serif'}}>
+                    OPIN
+                  </h1>
+                  <div className="w-px h-8 bg-white/30"></div>
+                  <div className="flex flex-col justify-center">
+                    <span className="text-white md:text-2xl text-lg uppercase" style={{fontFamily: 'Cinzel, serif'}}>
+                      OBSERVATORIO DOS PROFESSORES INDIGENAS
+                    </span>
+                    <p className="text-xs text-white/80 normal-case">
+                      do Estado de São Paulo
+                    </p>
+                  </div>
+                </div>
               </button>
             </div>
           </div>
 
           {/* Menu Superior - Lado direito */}
           <div className="hidden lg:flex items-center space-x-6 text-sm">
-            {/* Busca e Admin */}
+            {/* Busca */}
             <div className="flex items-center space-x-2">
-              {/* Barra de busca */}
               <SearchBar 
                 onSearch={handleSearch} 
                 onResultClick={handleResultClick}
@@ -170,6 +148,34 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                 isMobileLandscape={isMobileLandscape}
                 dataPoints={dataPoints}
               />
+            </div>
+            
+            {/* Links de Navegação */}
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => navigate('/conteudo')}
+                className={`px-3 py-2 text-sm font-medium rounded transition-colors ${
+                  isConteudoPage 
+                    ? 'bg-green-600 text-white' 
+                    : 'text-white hover:bg-[#215A36]'
+                }`}
+              >
+                Materiais
+              </button>
+              <button
+                onClick={() => navigate('/dashboard')}
+                className={`px-3 py-2 text-sm font-medium rounded transition-colors ${
+                  isPainelPage 
+                    ? 'bg-green-600 text-white' 
+                    : 'text-white hover:bg-[#215A36]'
+                }`}
+              >
+                Painel de Dados
+              </button>
+            </div>
+            
+            {/* Admin */}
+            <div className="flex items-center space-x-2">
               
               {/* Admin Panel */}
               {!isAuthenticated ? (
@@ -201,6 +207,35 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                 </div>
               )}
             </div>
+            
+            {/* Logos - Por último */}
+            <div className="hidden md:flex items-center space-x-4">
+              <a 
+                href="https://www.unifesp.br/lindi" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center hover:opacity-80 transition-opacity"
+              >
+                <img 
+                  src={`${process.env.PUBLIC_URL}/lindi.svg`} 
+                  alt="LINDI - Licenciatura Intercultural Indígena" 
+                  className="h-16 w-auto"
+                />
+              </a>
+              
+              <a 
+                href="https://www.unifesp.br" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center hover:opacity-80 transition-opacity"
+              >
+                <img 
+                  src={`${process.env.PUBLIC_URL}/logo.webp`} 
+                  alt="UNIFESP" 
+                  className="h-12 w-auto"
+                />
+              </a>
+            </div>
           </div>
 
           {/* Mobile - Botão hambúrguer */}
@@ -220,6 +255,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
         isConteudoPage={isConteudoPage}
         isSearchPage={isSearchPage}
         isAdminPage={isAdminPage}
+        isDashboardPage={isPainelPage}
         isAdmin={isAuthenticated}
         onAdminClick={handleAdminClick}
         isMobileLandscape={isMobileLandscape}
