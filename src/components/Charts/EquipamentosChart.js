@@ -55,14 +55,14 @@ const EquipamentosChart = ({ data }) => {
         Distribuição de Equipamentos nas Escolas
       </h3>
       <ScrollAnimatedWrapper animationType="fadeInUp" delay={0.2}>
-        <div className="h-96">
+        <div className="h-96 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
               margin={{
                 top: 20,
-                right: 30,
-                left: 20,
+                right: 10,
+                left: 10,
                 bottom: 80,
               }}
             >

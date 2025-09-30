@@ -101,14 +101,14 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
             Distribuição por Quantidade
           </h4>
           <ScrollAnimatedWrapper animationType="fadeInLeft" delay={0.2}>
-            <div className="h-80">
+            <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={dataWithPercentual}
                   margin={{
                     top: 20,
-                    right: 30,
-                    left: 20,
+                    right: 10,
+                    left: 10,
                     bottom: 5,
                   }}
                 >
@@ -145,7 +145,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
             Distribuição Percentual
           </h4>
           <ScrollAnimatedWrapper animationType="fadeInRight" delay={0.4}>
-            <div className="h-80">
+            <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
