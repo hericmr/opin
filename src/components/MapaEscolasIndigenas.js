@@ -13,7 +13,7 @@ import "./MapaEscolasIndigenas.css";
 import { criarSlug } from '../utils/slug';
 import { useRefresh } from '../contexts/RefreshContext';
 
-const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
+const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) => {
   console.log("DataPoints recebidos no MapaEscolasIndigenas:", dataPoints ? {
     quantidade: dataPoints.length,
     exemplo: dataPoints[0] ? {
@@ -106,6 +106,7 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen }) => {
         onPainelOpen={abrirPainel}
         painelAberto={!!painelInfo}
         className="h-full w-full"
+        isMainLoading={isLoading}
       />
 
       {/* Painel de informações */}

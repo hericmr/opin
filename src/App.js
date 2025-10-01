@@ -11,7 +11,6 @@ import ErrorBoundary from './components/ErrorBoundary';
 import ToastProvider from './components/Toast';
 import { SkipLink } from './components/Accessibility';
 import WelcomeModal from './components/WelcomeModal';
-import { Spinner } from './components/LoadingStates';
 import { useEscolasData } from './hooks/useEscolasData';
 import { MetaTagsDetector } from './components/MetaTags';
 
@@ -36,7 +35,6 @@ const AppContent = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-green-50">
         <div className="text-center">
-          <Spinner size="xl" color="green" className="mx-auto mb-4" />
           <p className="text-green-800">Carregando...</p>
         </div>
       </div>
@@ -65,12 +63,13 @@ const AppContent = () => {
       
       <Navbar onConteudoClick={() => navigate('/conteudo')} dataPoints={dataPoints} openPainelFunction={openPainelFunction} />
       <Suspense fallback={
-        <div className="flex items-center justify-center p-8 bg-green-50">
-          <div className="text-center">
-            <Spinner size="lg" color="green" className="mx-auto mb-4" />
-            <p className="text-green-800">Carregando...</p>
+        loading ? null : (
+          <div className="flex items-center justify-center p-8 bg-green-50">
+            <div className="text-center">
+              <p className="text-green-800">Carregando...</p>
+            </div>
           </div>
-        </div>
+        )
       }>
         <Routes>
           <Route 
@@ -80,6 +79,7 @@ const AppContent = () => {
                 <MapaEscolasIndigenas 
                   dataPoints={dataPoints}
                   onPainelOpen={handlePainelOpenFunction}
+                  isLoading={loading}
                 />
               </main>
             } 

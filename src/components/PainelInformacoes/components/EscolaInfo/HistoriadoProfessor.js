@@ -78,7 +78,6 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
     return (
       <div className="mt-8 mb-12 max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-6 bg-white rounded-2xl shadow-lg border border-green-100/50">
         <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
           <span className="ml-2 text-gray-600">Carregando histórias do professor...</span>
         </div>
       </div>
