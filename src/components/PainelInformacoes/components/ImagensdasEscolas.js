@@ -145,7 +145,6 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
   if (loading) {
     return (
       <div className="text-gray-500 flex items-center gap-2">
-        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
         Carregando imagens da escola...
       </div>
     );

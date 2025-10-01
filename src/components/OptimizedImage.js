@@ -93,10 +93,10 @@ const OptimizedImage = ({
         />
       )}
       
-      {/* Loading Spinner - apenas se demorar muito */}
+      {/* Loading State - apenas se demorar muito */}
       {showLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-50 bg-opacity-20">
-          <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-green-600"></div>
+          <span className="text-xs text-gray-600">Carregando...</span>
         </div>
       )}
       

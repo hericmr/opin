@@ -218,12 +218,11 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
           >
             <div className="p-2 max-h-64 overflow-y-auto">
               {isSearching ? (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="p-4 text-center text-gray-500"
                 >
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#215A36] mx-auto"></div>
                   <p className="mt-2 text-xs">Buscando...</p>
                 </motion.div>
               ) : (

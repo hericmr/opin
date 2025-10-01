@@ -170,7 +170,6 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
         <span className="ml-2 text-gray-600">Carregando histórias...</span>
       </div>
     );
@@ -281,7 +280,6 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
                   <div className="flex flex-col items-center gap-2">
                     {uploadingPhoto ? (
                       <>
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
                         <span className="text-sm text-blue-400">Enviando foto...</span>
                       </>
                     ) : (

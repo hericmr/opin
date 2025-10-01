@@ -765,7 +765,6 @@ const TabelasIntegraisTab = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400 mx-auto mb-4"></div>
         <div className="text-gray-400 text-lg">Carregando tabelas...</div>
       </div>
     );
@@ -887,7 +886,7 @@ const TabelasIntegraisTab = () => {
                 ) : backupStatus.status === 'erro' ? (
                   <AlertCircle className="w-6 h-6 text-red-400" />
                 ) : (
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-400"></div>
+                  <div className="w-6 h-6"></div>
                 )}
                 <div>
                   <p className="font-semibold">{backupStatus.message}</p>
@@ -990,7 +989,7 @@ const TabelasIntegraisTab = () => {
                 disabled={loadingDados}
                 className="flex items-center px-4 py-2 text-sm bg-gray-700/50 text-gray-200 rounded-lg hover:bg-gray-600/50 transition-colors disabled:opacity-50 border border-gray-600/50"
               >
-                <RefreshCw className={`w-4 h-4 mr-2 ${loadingDados ? 'animate-spin' : ''}`} />
+                <RefreshCw className="w-4 h-4 mr-2" />
                 Atualizar
               </button>
               
@@ -1025,7 +1024,6 @@ const TabelasIntegraisTab = () => {
 
           {loadingDados ? (
             <div className="flex items-center justify-center h-32">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400"></div>
               <span className="ml-3 text-gray-400">Carregando dados...</span>
             </div>
           ) : (
