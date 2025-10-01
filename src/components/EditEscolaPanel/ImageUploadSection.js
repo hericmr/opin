@@ -509,7 +509,6 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     return (
       <div className="p-6 bg-gray-800/30 rounded-lg">
         <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
           <span className="ml-2 text-gray-400">Carregando imagens...</span>
         </div>
       </div>

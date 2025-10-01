@@ -605,7 +605,6 @@ const AdminPanelContent = () => {
         {escolasLoading && (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400 mx-auto mb-4"></div>
               <div className="text-gray-400 text-lg">Carregando escolas...</div>
             </div>
           </div>
@@ -655,7 +654,6 @@ const AdminPanelContent = () => {
                 >
                   {isSaving ? (
                     <div className="flex items-center gap-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                       Salvando...
                     </div>
                   ) : (
@@ -1026,7 +1024,6 @@ const AdminPanelContent = () => {
                       >
                         {isDeleting ? (
                           <div className="flex items-center gap-2 justify-center">
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                             Removendo...
                           </div>
                         ) : (

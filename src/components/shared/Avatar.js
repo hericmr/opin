@@ -245,7 +245,7 @@ const Avatar = ({
       {/* Estado de loading */}
       {loading && (
         <div className={`absolute inset-0 ${backgroundColor} flex items-center justify-center`}>
-          <Loader2 className={`${sizeConfig.icon} animate-spin text-green-600`} />
+          <span className="text-xs text-green-600">Carregando...</span>
         </div>
       )}
 
@@ -265,7 +265,7 @@ const Avatar = ({
       {/* Estado de loading da imagem */}
       {imageLoading && shouldShowImage && (
         <div className={`absolute inset-0 ${backgroundColor} flex items-center justify-center`}>
-          <Loader2 className={`${sizeConfig.icon} animate-spin text-green-600`} />
+          <span className="text-xs text-green-600">Carregando...</span>
         </div>
       )}
 

@@ -50,10 +50,9 @@ const OptimizedImage = ({
       {/* Placeholder/Loading */}
       {!imageLoaded && (
         <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-          <div className="flex flex-col items-center space-y-2">
-            <div className="w-6 h-6 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-            <div className="text-xs text-gray-500">Carregando...</div>
-          </div>
+        <div className="flex flex-col items-center space-y-2">
+          <div className="text-xs text-gray-500">Carregando...</div>
+        </div>
         </div>
       )}
 

@@ -48,26 +48,6 @@ export const MapaSkeleton = () => (
   </div>
 );
 
-// Spinner contextual
-export const Spinner = ({ size = 'md', color = 'green', className = '' }) => {
-  const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-8 h-8',
-    lg: 'w-12 h-12',
-    xl: 'w-16 h-16'
-  };
-
-  const colorClasses = {
-    green: 'border-green-600',
-    blue: 'border-blue-600',
-    gray: 'border-gray-600',
-    white: 'border-white'
-  };
-
-  return (
-    <div className={`animate-spin rounded-full border-2 border-gray-300 border-t-current ${sizeClasses[size]} ${colorClasses[color]} ${className}`}></div>
-  );
-};
 
 // Loading overlay para ações
 export const LoadingOverlay = ({ isVisible, message = 'Carregando...' }) => {
@@ -76,7 +56,6 @@ export const LoadingOverlay = ({ isVisible, message = 'Carregando...' }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 flex flex-col items-center space-y-4">
-        <Spinner size="lg" />
         <p className="text-gray-700 font-medium">{message}</p>
       </div>
     </div>
@@ -107,11 +86,6 @@ export const LoadingButton = ({
     disabled={disabled || loading}
     {...props}
   >
-    {loading && (
-      <div className="absolute inset-0 flex items-center justify-center bg-inherit rounded">
-        <Spinner size="sm" color="white" />
-      </div>
-    )}
     <span className={loading ? 'opacity-0' : 'opacity-100'}>
       {loading ? loadingText : children}
     </span>
@@ -157,7 +131,6 @@ const LoadingComponents = {
   EscolaCardSkeleton,
   PainelSkeleton,
   MapaSkeleton,
-  Spinner,
   LoadingOverlay,
   ProgressBar,
   LoadingButton,
