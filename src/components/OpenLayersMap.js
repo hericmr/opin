@@ -15,6 +15,9 @@ import 'ol/ol.css';
 import OpenLayersMarkers from './OpenLayers/OpenLayersMarkers';
 import OpenLayersLayers from './OpenLayers/OpenLayersLayers';
 
+// Componentes responsivos
+import ResponsiveZoomControls from './map/ResponsiveZoomControls';
+
 // Configurações e utilitários
 import { MAP_CONFIG, BASE_LAYER_CONFIG } from '../utils/mapConfig';
 import { isMobile } from '../utils/mobileUtils';
@@ -180,6 +183,9 @@ const OpenLayersMap = ({
             onPainelOpen={onPainelOpen}
             map={map.current}
           />
+
+          {/* Controles de zoom responsivos */}
+          <ResponsiveZoomControls mapRef={map} />
         </>
       )}
     </MapWrapper>
