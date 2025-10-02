@@ -1,0 +1,141 @@
+/**
+ * Controles de Mapa Responsivos
+ * 
+ * Este arquivo contém estilos específicos para controles de mapa,
+ * seguindo princípios de design responsivo e acessibilidade.
+ * 
+ * Breakpoints utilizados:
+ * - Mobile: até 767px
+ * - Tablet: 768px - 1023px  
+ * - Desktop: 1024px+
+ */
+
+/* ===== CONTROLES DE ZOOM ===== */
+
+/* Configuração base dos controles de zoom */
+.ol-zoom {
+  position: absolute;
+  top: unset !important;
+  left: 0.5em !important;
+  right: unset !important;
+  z-index: 1001;
+  transition: bottom 0.3s ease-in-out;
+}
+
+/* Desktop (1024px+): Posicionamento padrão */
+@media (min-width: 1024px) {
+  .ol-zoom {
+    bottom: 60px !important;
+  }
+}
+
+/* Tablet (768px - 1023px): Posicionamento intermediário */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .ol-zoom {
+    bottom: 40px !important;
+  }
+}
+
+/* Mobile (até 767px): Posicionamento otimizado */
+@media (max-width: 767px) {
+  .ol-zoom {
+    bottom: 120px !important; /* Aumentado para evitar sobreposição com menu de camadas */
+  }
+  
+  /* Área de toque otimizada para mobile (44px mínimo recomendado) */
+  .ol-zoom-in, .ol-zoom-out {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 8px;
+  }
+}
+
+/* ===== ESTILOS DOS BOTÕES ===== */
+
+/* Espaçamento entre botões */
+.ol-zoom-in, .ol-zoom-out {
+  margin-bottom: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Espaçamento aumentado em mobile */
+@media (max-width: 767px) {
+  .ol-zoom-in, .ol-zoom-out {
+    margin-bottom: 8px;
+  }
+}
+
+/* Cores e ícones */
+.ol-zoom-in, .ol-zoom-out {
+  color: #222 !important;
+  fill: #222 !important;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+/* Estados de hover e foco */
+.ol-zoom-in:hover, .ol-zoom-out:hover {
+  background-color: rgba(255, 255, 255, 1);
+  border-color: rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+.ol-zoom-in:focus, .ol-zoom-out:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Ícones SVG */
+.ol-zoom-in svg, .ol-zoom-out svg {
+  color: #222 !important;
+  fill: #222 !important;
+}
+
+/* ===== RESPONSIVIDADE AVANÇADA ===== */
+
+/* Dispositivos muito pequenos (até 320px) */
+@media (max-width: 320px) {
+  .ol-zoom {
+    left: 0.25em !important;
+    bottom: 100px !important; /* Ajustado para evitar sobreposição */
+  }
+  
+  .ol-zoom-in, .ol-zoom-out {
+    min-height: 40px;
+    min-width: 40px;
+    padding: 6px;
+  }
+}
+
+/* Dispositivos em landscape (mobile) */
+@media (max-width: 767px) and (orientation: landscape) {
+  .ol-zoom {
+    bottom: 80px !important; /* Ajustado para landscape mobile */
+  }
+}
+
+/* ===== ACESSIBILIDADE ===== */
+
+/* Reduzir movimento para usuários que preferem */
+@media (prefers-reduced-motion: reduce) {
+  .ol-zoom,
+  .ol-zoom-in, 
+  .ol-zoom-out {
+    transition: none;
+  }
+  
+  .ol-zoom-in:hover, .ol-zoom-out:hover {
+    transform: none;
+  }
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  .ol-zoom-in, .ol-zoom-out {
+    background-color: white;
+    border: 2px solid black;
+    color: black !important;
+    fill: black !important;
+  }
+}
