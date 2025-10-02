@@ -43,10 +43,10 @@ const EquipamentosChart = ({ data }) => {
         
         <div className="p-3 sm:p-4 bg-gray-50 rounded-lg">
           <p className="text-gray-700 leading-relaxed text-sm sm:text-base mb-3">
-            A infraestrutura tecnológica das escolas estaduais indígenas evidencia desigualdades significativas no acesso a equipamentos e conectividade. O recurso mais presente é o tablet para alunos, disponível em 653 unidades (55,4%), seguido por computadores portáteis (110, 9,3%) e computadores destinados aos alunos (98, 8,3%). Outros recursos, como aparelhos de TV (57, 4,8%), computadores para uso administrativo (56, 4,8%), aparelhos de Wi-Fi/access points (33, 2,8%) e rede local (18, 1,5%), estão presentes em proporções muito inferiores.
+            A infraestrutura tecnológica das escolas estaduais indígenas evidencia desigualdades significativas no acesso a equipamentos e conectividade. O recurso mais presente é o tablet para alunos, disponível em 653 unidades, seguido por computadores portáteis (110) e computadores destinados aos alunos (98). Outros recursos, como aparelhos de TV (57), computadores para uso administrativo (56), aparelhos de Wi-Fi/access points (33) e rede local (18), estão presentes em proporções muito inferiores.
           </p>
           <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
-            O acesso à internet é muito restrito. Para uso pedagógico e administrativo, está disponível em apenas 22 escolas (1,9%). Para uso pelos alunos, são apenas 19 escolas (1,6%). Isso mostra que a maior parte das escolas ainda não dispõe de conectividade adequada para práticas digitais. Embora a tecnologia esteja presente em diversas escolas, seu uso pedagógico efetivo continua limitado. Essa limitação compromete a qualidade do ensino e dificulta a inclusão digital de professores e estudantes.
+            O acesso à internet é muito restrito. Para uso pedagógico e administrativo, está disponível em apenas 22 escolas. Para uso pelos alunos, são apenas 19 escolas. Isso mostra que a maior parte das escolas ainda não dispõe de conectividade adequada para práticas digitais. Embora a tecnologia esteja presente em diversas escolas, seu uso pedagógico efetivo continua limitado. Essa limitação compromete a qualidade do ensino e dificulta a inclusão digital de professores e estudantes.
           </p>
         </div>
       </div>
