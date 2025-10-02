@@ -1,9 +1,9 @@
 {
   "files": {
-    "main.css": "/opin/static/css/main.19cd339a.css",
-    "main.js": "/opin/static/js/main.717143e8.js",
-    "static/css/606.ae501b9a.chunk.css": "/opin/static/css/606.ae501b9a.chunk.css",
-    "static/js/606.2a7babb6.chunk.js": "/opin/static/js/606.2a7babb6.chunk.js",
+    "main.css": "/opin/static/css/main.f4709bc7.css",
+    "main.js": "/opin/static/js/main.9f1baa16.js",
+    "static/css/446.dd92a538.chunk.css": "/opin/static/css/446.dd92a538.chunk.css",
+    "static/js/446.a641e9fb.chunk.js": "/opin/static/js/446.a641e9fb.chunk.js",
     "static/js/622.04cfd0ed.chunk.js": "/opin/static/js/622.04cfd0ed.chunk.js",
     "static/css/590.9e7cf8e6.chunk.css": "/opin/static/css/590.9e7cf8e6.chunk.css",
     "static/js/590.9de75287.chunk.js": "/opin/static/js/590.9de75287.chunk.js",
@@ -19,10 +19,10 @@
     "static/media/PapakiloDecorative-OVwG4.ttf": "/opin/static/media/PapakiloDecorative-OVwG4.f4f10c9c75dd0b148ab1.ttf",
     "static/media/PapakiloLight-ZVWpm.ttf": "/opin/static/media/PapakiloLight-ZVWpm.46e50e117340e36511fa.ttf",
     "index.html": "/opin/index.html",
-    "main.19cd339a.css.map": "/opin/static/css/main.19cd339a.css.map",
-    "main.717143e8.js.map": "/opin/static/js/main.717143e8.js.map",
-    "606.ae501b9a.chunk.css.map": "/opin/static/css/606.ae501b9a.chunk.css.map",
-    "606.2a7babb6.chunk.js.map": "/opin/static/js/606.2a7babb6.chunk.js.map",
+    "main.f4709bc7.css.map": "/opin/static/css/main.f4709bc7.css.map",
+    "main.9f1baa16.js.map": "/opin/static/js/main.9f1baa16.js.map",
+    "446.dd92a538.chunk.css.map": "/opin/static/css/446.dd92a538.chunk.css.map",
+    "446.a641e9fb.chunk.js.map": "/opin/static/js/446.a641e9fb.chunk.js.map",
     "622.04cfd0ed.chunk.js.map": "/opin/static/js/622.04cfd0ed.chunk.js.map",
     "590.9e7cf8e6.chunk.css.map": "/opin/static/css/590.9e7cf8e6.chunk.css.map",
     "590.9de75287.chunk.js.map": "/opin/static/js/590.9de75287.chunk.js.map",
@@ -37,7 +37,7 @@
     "956.488ee52c.chunk.js.map": "/opin/static/js/956.488ee52c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.19cd339a.css",
-    "static/js/main.717143e8.js"
+    "static/css/main.f4709bc7.css",
+    "static/js/main.9f1baa16.js"
   ]
 }
