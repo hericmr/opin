@@ -1,0 +1,7 @@
+# Netlify redirects for SPA routing
+/*    /opin/index.html   200
+
+# Specific routes for dashboard
+/dashboard    /opin/index.html   200
+/painel-dados    /opin/index.html   200
+/dados-escolas-indigenas    /opin/index.html   200
