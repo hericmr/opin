@@ -166,6 +166,20 @@ function AppRoutes() {
 }
 
 const App = () => {
+  // Verifica se há uma rota inicial definida (para o dashboard)
+  React.useEffect(() => {
+    if (window.__INITIAL_ROUTE__) {
+      const initialRoute = window.__INITIAL_ROUTE__;
+      // Limpa a variável global
+      delete window.__INITIAL_ROUTE__;
+      // Navega para a rota inicial após um pequeno delay para garantir que o router esteja pronto
+      setTimeout(() => {
+        window.history.replaceState({}, '', `/opin${initialRoute}`);
+        window.location.reload();
+      }, 100);
+    }
+  }, []);
+
   return (
     <HelmetProvider>
       <ToastProvider>
