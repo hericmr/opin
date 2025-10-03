@@ -4,7 +4,6 @@ RewriteEngine On
 # Handle Angular and React Router
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/opin/dashboard
 RewriteRule ^(.*)$ /opin/index.html [QSA,L]
 
 # Security headers
