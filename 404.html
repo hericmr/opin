@@ -20,9 +20,9 @@
           return;
         }
         
-        // Para outras rotas, redireciona para o index.html com a rota preservada
+        // Para outras rotas, redireciona para o index.html com a rota como hash
         // Isso permite que o React Router processe a rota
-        window.location.href = '/opin/index.html' + path;
+        window.location.href = '/opin/index.html#' + path;
       }
       
       // Executa o redirecionamento
