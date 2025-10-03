@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import csvDataService from '../services/csvDataService';
 import PageHeader from './PageHeader';
 import {
@@ -11,6 +12,7 @@ import {
 } from './Charts';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [data, setData] = useState({
@@ -124,7 +126,7 @@ const Dashboard = () => {
                 )}
                 {crumb.path ? (
                   <button
-                    onClick={() => window.location.href = crumb.path}
+                    onClick={() => navigate(crumb.path)}
                     className="text-gray-600 hover:text-green-700 transition-colors"
                   >
                     {crumb.label}
