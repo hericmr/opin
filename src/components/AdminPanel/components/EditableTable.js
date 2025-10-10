@@ -235,9 +235,6 @@ const EditableTable = ({
       {/* Header com status */}
       <div className="bg-gray-800 px-4 py-3 border-b border-gray-700">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-200">
-            Tabela Editável das Escolas
-          </h3>
           <div className="flex items-center space-x-2">
             {loading && (
               <div className="flex items-center text-yellow-400">
