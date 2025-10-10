@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import EditableTable from '../components/EditableTable';
 import { useEscolas } from '../hooks/useEscolas';
-import { Search, Download } from 'lucide-react';
+import { Download } from 'lucide-react';
 
 const TabelaEditavelTab = ({ setEditingLocation }) => {
   const { 
     escolas, 
     loading: escolasLoading, 
     error: escolasError,
-    saveEscola,
-    searchTerm, 
-    setSearchTerm 
+    saveEscola
   } = useEscolas();
 
   const [tableLoading, setTableLoading] = useState(false);
@@ -151,19 +149,6 @@ const TabelaEditavelTab = ({ setEditingLocation }) => {
     document.body.removeChild(link);
   };
 
-  // Filtrar escolas baseado no termo de busca
-  const filteredEscolas = escolas.filter(escola => {
-    if (!searchTerm) return true;
-    
-    const term = searchTerm.toLowerCase();
-    return (
-      escola.nome_escola?.toLowerCase().includes(term) ||
-      escola.municipio?.toLowerCase().includes(term) ||
-      escola.terra_indigena?.toLowerCase().includes(term) ||
-      escola.povos?.toLowerCase().includes(term) ||
-      escola.linguas?.toLowerCase().includes(term)
-    );
-  });
 
   // Função para salvar alterações na tabela
   const handleTableSave = async (escolaId, updatedData) => {
@@ -223,19 +208,6 @@ const TabelaEditavelTab = ({ setEditingLocation }) => {
           </div>
         </div>
 
-        {/* Barra de busca */}
-        <div className="flex items-center space-x-4">
-          <div className="flex-1 relative">
-            <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Buscar escolas, municípios ou terras indígenas..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500"
-            />
-          </div>
-        </div>
       </div>
 
       {/* Tabela Editável */}
@@ -250,7 +222,7 @@ const TabelaEditavelTab = ({ setEditingLocation }) => {
         ) : (
           <div className="h-full">
             <EditableTable
-              escolas={filteredEscolas}
+              escolas={escolas}
               onSave={handleTableSave}
               loading={tableLoading}
               error={tableError}
