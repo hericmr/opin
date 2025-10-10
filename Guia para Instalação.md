@@ -1,17 +1,15 @@
-# Guia para Instalação - OPIN
+# Guia de Instalação - OPIN
 
-Se você quer clonar este repositório e executar o projeto localmente, este guia te ajudará com todo o processo de configuração.
+## Pré-requisitos
 
-## 📋 Pré-requisitos
+Antes de iniciar, instale os seguintes componentes:
 
-Antes de começar, certifique-se de ter instalado:
+- Node.js 16 ou superior
+- npm ou yarn (incluído no Node.js)
+- Git
+- Conta ativa no Supabase
 
-- **Node.js** 16 ou superior ([Download](https://nodejs.org/))
-- **npm** ou **yarn** (vem com o Node.js)
-- **Git** ([Download](https://git-scm.com/))
-- **Conta no Supabase** ([Criar conta](https://supabase.com/))
-
-## 🚀 Instalação Passo a Passo
+## Instalação
 
 ### 1. Clone o Repositório
 
@@ -26,14 +24,16 @@ cd opin
 npm install
 ```
 
-### 3. Configure as Variáveis de Ambiente
+### 3. Configure Variáveis de Ambiente
 
-1. Copie o arquivo de exemplo:
+Copie o arquivo de exemplo:
+
 ```bash
 cp .env.example .env.local
 ```
 
-2. Edite o arquivo `.env.local` com suas credenciais do Supabase:
+Edite o arquivo `.env.local` com suas credenciais do Supabase:
+
 ```env
 REACT_APP_SUPABASE_URL=sua_url_do_supabase
 REACT_APP_SUPABASE_ANON_KEY=sua_chave_anonima_do_supabase
@@ -43,12 +43,11 @@ REACT_APP_JWT_SECRET=sua_chave_jwt_secreta
 
 ### 4. Configure o Banco de Dados Supabase
 
-#### Criar as Tabelas Necessárias
+#### Criar Tabelas
 
 Execute os seguintes comandos SQL no editor SQL do Supabase:
 
 ```sql
--- Tabela principal das escolas
 CREATE TABLE escolas_completa (
   id SERIAL PRIMARY KEY,
   Escola TEXT,
@@ -82,7 +81,6 @@ CREATE TABLE escolas_completa (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Tabela de histórias dos professores
 CREATE TABLE historias_professor (
   id SERIAL PRIMARY KEY,
   escola_id INTEGER REFERENCES escolas_completa(id),
@@ -95,7 +93,6 @@ CREATE TABLE historias_professor (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Tabela de documentos das escolas
 CREATE TABLE documentos_escola (
   id SERIAL PRIMARY KEY,
   escola_id INTEGER REFERENCES escolas_completa(id),
@@ -106,7 +103,6 @@ CREATE TABLE documentos_escola (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Tabela de imagens das escolas
 CREATE TABLE escola_images (
   id SERIAL PRIMARY KEY,
   escola_id INTEGER REFERENCES escolas_completa(id),
@@ -116,7 +112,6 @@ CREATE TABLE escola_images (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Tabela de imagens dos professores
 CREATE TABLE professor_images (
   id SERIAL PRIMARY KEY,
   professor_id INTEGER REFERENCES historias_professor(id),
@@ -127,24 +122,21 @@ CREATE TABLE professor_images (
 );
 ```
 
-#### Configurar Permissões (RLS)
+#### Configurar Row Level Security (RLS)
 
 ```sql
--- Habilitar RLS nas tabelas
 ALTER TABLE escolas_completa ENABLE ROW LEVEL SECURITY;
 ALTER TABLE historias_professor ENABLE ROW LEVEL SECURITY;
 ALTER TABLE documentos_escola ENABLE ROW LEVEL SECURITY;
 ALTER TABLE escola_images ENABLE ROW LEVEL SECURITY;
 ALTER TABLE professor_images ENABLE ROW LEVEL SECURITY;
 
--- Políticas para acesso público (leitura)
 CREATE POLICY "Permitir leitura pública" ON escolas_completa FOR SELECT USING (true);
 CREATE POLICY "Permitir leitura pública" ON historias_professor FOR SELECT USING (true);
 CREATE POLICY "Permitir leitura pública" ON documentos_escola FOR SELECT USING (true);
 CREATE POLICY "Permitir leitura pública" ON escola_images FOR SELECT USING (true);
 CREATE POLICY "Permitir leitura pública" ON professor_images FOR SELECT USING (true);
 
--- Políticas para operações administrativas (se necessário)
 CREATE POLICY "Permitir operações admin" ON escolas_completa FOR ALL USING (true);
 CREATE POLICY "Permitir operações admin" ON historias_professor FOR ALL USING (true);
 CREATE POLICY "Permitir operações admin" ON documentos_escola FOR ALL USING (true);
@@ -154,24 +146,21 @@ CREATE POLICY "Permitir operações admin" ON professor_images FOR ALL USING (tr
 
 #### Configurar Storage Buckets
 
-No painel do Supabase, vá para **Storage** e crie os seguintes buckets:
+Crie os seguintes buckets no painel do Supabase, em Storage:
 
-1. **`imagens-das-escolas`** - Para fotos das escolas
-2. **`imagens-professores`** - Para fotos dos professores
-3. **`pdfs`** - Para documentos PDF
+- `imagens-das-escolas`
+- `imagens-professores`
+- `pdfs`
 
 Configure as políticas de storage:
 
 ```sql
--- Política para bucket de imagens das escolas
 CREATE POLICY "Permitir acesso público às imagens das escolas" ON storage.objects
 FOR SELECT USING (bucket_id = 'imagens-das-escolas');
 
--- Política para bucket de imagens dos professores
 CREATE POLICY "Permitir acesso público às imagens dos professores" ON storage.objects
 FOR SELECT USING (bucket_id = 'imagens-professores');
 
--- Política para bucket de PDFs
 CREATE POLICY "Permitir acesso público aos PDFs" ON storage.objects
 FOR SELECT USING (bucket_id = 'pdfs');
 ```
@@ -182,9 +171,9 @@ FOR SELECT USING (bucket_id = 'pdfs');
 npm start
 ```
 
-O projeto estará disponível em `http://localhost:3000`
+O projeto estará disponível em `http://localhost:3000`.
 
-## 🛠️ Comandos Disponíveis
+## Comandos Disponíveis
 
 ```bash
 npm start      # Iniciar servidor de desenvolvimento
@@ -194,89 +183,53 @@ npm test       # Executar testes
 npm run lint   # Verificar código com ESLint
 ```
 
-## 🔧 Configurações Adicionais
+## Fluxo de Desenvolvimento
 
-### Para Desenvolvimento
+Para contribuir com o projeto:
 
-Se você quiser contribuir com o projeto:
-
-1. **Fork** o repositório no GitHub
-2. **Clone** seu fork localmente
-3. **Crie uma branch** para sua feature:
+1. Fork o repositório no GitHub
+2. Clone seu fork localmente
+3. Crie uma branch para sua feature:
    ```bash
    git checkout -b feature/nova-funcionalidade
    ```
-4. **Faça suas alterações** e teste localmente
-5. **Commit** suas mudanças:
+4. Faça as alterações e teste localmente
+5. Commit as mudanças:
    ```bash
    git commit -m 'Adiciona nova funcionalidade'
    ```
-6. **Push** para sua branch:
+6. Push para sua branch:
    ```bash
    git push origin feature/nova-funcionalidade
    ```
-7. **Abra um Pull Request** no GitHub
+7. Abra um Pull Request no GitHub
 
-### Para Produção
+## Deploy em Produção
 
-Para fazer deploy em produção:
+Configure as variáveis de ambiente de produção, execute o build e faça o deploy:
 
-1. **Configure** as variáveis de ambiente de produção
-2. **Execute** o build:
-   ```bash
-   npm run build
-   ```
-3. **Deploy** usando o comando disponível:
-   ```bash
-   npm run deploy
-   ```
+```bash
+npm run build
+npm run deploy
+```
 
-## 🐛 Solução de Problemas
+## Solução de Problemas
 
-### Erro de Conexão com Supabase
-- Verifique se as URLs e chaves estão corretas no `.env.local`
-- Confirme se as políticas RLS estão configuradas
-- Teste a conexão no painel do Supabase
+**Erro de Conexão com Supabase**: Verifique se as URLs e chaves estão corretas no `.env.local`, confirme se as políticas RLS estão configuradas e teste a conexão no painel do Supabase.
 
-### Erro de Build
-- Verifique se todas as dependências estão instaladas: `npm install`
-- Limpe o cache: `npm run build -- --reset-cache`
-- Verifique se há erros de lint: `npm run lint`
+**Erro de Build**: Instale novamente as dependências com `npm install`, limpe o cache com `npm run build -- --reset-cache` e verifique erros de lint com `npm run lint`.
 
-### Problemas com Imagens
-- Verifique se os buckets do Supabase estão criados
-- Confirme as políticas de storage
-- Teste o upload manualmente no painel do Supabase
+**Problemas com Imagens**: Verifique se os buckets do Supabase estão criados, confirme as políticas de storage e teste o upload manualmente no painel.
 
-### Erro de Permissões
-- Verifique as políticas RLS nas tabelas
-- Confirme se as políticas de storage estão corretas
-- Teste as operações no painel do Supabase
+**Erro de Permissões**: Verifique as políticas RLS nas tabelas, confirme se as políticas de storage estão corretas e teste as operações no painel do Supabase.
 
-## 📚 Recursos Úteis
+## Recursos Técnicos
 
-- **Documentação do Supabase**: [https://supabase.com/docs](https://supabase.com/docs)
-- **Documentação do React**: [https://reactjs.org/docs](https://reactjs.org/docs)
-- **OpenLayers Documentation**: [https://openlayers.org/doc/](https://openlayers.org/doc/)
-- **Guia do Administrador**: [docs/GUIA_ADMINISTRADOR.md](docs/GUIA_ADMINISTRADOR.md)
+- Documentação do Supabase: https://supabase.com/docs
+- Documentação do React: https://reactjs.org/docs
+- OpenLayers: https://openlayers.org/doc/
+- Guia do Administrador: docs/GUIA_ADMINISTRADOR.md
 
-## 💡 Dicas
+## Contato
 
-- **Use o modo de desenvolvimento** para testar alterações rapidamente
-- **Monitore o console** do navegador para erros
-- **Teste em diferentes navegadores** para garantir compatibilidade
-- **Use o painel do Supabase** para verificar dados e configurações
-- **Consulte o guia do administrador** para informações técnicas detalhadas
-
-## 📞 Suporte
-
-Se você encontrar problemas durante a instalação:
-
-1. **Verifique** este guia primeiro
-2. **Consulte** a documentação do Supabase
-3. **Abra uma issue** no GitHub com detalhes do erro
-4. **Entre em contato** através do email: heric.moura@unifesp.br
-
----
-
-**Boa sorte com sua instalação!** 🚀
+Para problemas durante a instalação, abra uma issue no GitHub ou entre em contato através de: heric.moura@unifesp.br
