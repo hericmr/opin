@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Leaf, BookOpen, BarChart3, Shield } from 'lucide-react';
+import { Leaf, Shield } from 'lucide-react';
 import { useSearch } from '../../contexts/SearchContext';
 import { useAuth } from '../../hooks/useAuth';
 import MobileToggle from './MobileToggle';
 import MobileMenu from './MobileMenu';
 import SearchBar from './SearchBar';
+import NavButtons from './NavButtons';
 import MinimalLoginModal from '../Auth/MinimalLoginModal';
 
 const Navbar = ({ dataPoints, openPainelFunction }) => {
@@ -16,6 +17,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   const navigate = useNavigate();
   const { setSearch } = useSearch();
   const { isAuthenticated, user, logout } = useAuth();
+  const searchBarRef = useRef(null);
 
   // Detectar se é mobile na horizontal
   useEffect(() => {
@@ -26,6 +28,25 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
     checkMobileLandscape();
     window.addEventListener('resize', checkMobileLandscape);
     return () => window.removeEventListener('resize', checkMobileLandscape);
+  }, []);
+
+  // Atalho de teclado Ctrl+K / Cmd+K para busca
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        if (searchBarRef.current) {
+          // Forçar a expansão da busca
+          const searchButton = searchBarRef.current.querySelector('button[aria-label="Buscar"]');
+          if (searchButton) {
+            searchButton.click();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const handleAdminClick = () => {
@@ -54,8 +75,6 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   };
 
   const handleSearch = (searchTerm, coordinates = null) => {
-    console.log('Buscando por:', searchTerm);
-    
     if (coordinates) {
       // Se temos coordenadas, navegar para o mapa e centralizar
       setSearch(searchTerm, coordinates, searchTerm);
@@ -74,13 +93,8 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   };
 
   const handleResultClick = (result) => {
-    console.log('Resultado clicado:', result);
-    console.log('openPainelFunction disponível:', !!openPainelFunction);
-    console.log('result.data disponível:', !!result.data);
-    
     // Se temos a função de abrir painel e o resultado tem dados da escola
     if (openPainelFunction && result.data) {
-      console.log('Abrindo painel com dados:', result.data);
       // Abrir o painel de informações com os dados da escola
       openPainelFunction(result.data);
       // Navegar para o mapa se não estivermos lá
@@ -88,7 +102,6 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
         navigate('/');
       }
     } else if (result.coordinates) {
-      console.log('Fallback: navegando para o mapa com coordenadas');
       // Fallback: navegar para o mapa e centralizar no ponto
       setSearch(result.title, result.coordinates, result.title);
       navigate('/', { 
@@ -99,7 +112,6 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
         } 
       });
     } else {
-      console.log('Fallback: navegando para página de busca');
       // Busca simples
       setSearch(result.title);
       navigate(`/search?q=${encodeURIComponent(result.title)}`);
@@ -107,40 +119,51 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#215A36] text-white shadow-lg">
+    <header 
+      className="fixed top-0 left-0 right-0 z-50 bg-[#215A36] text-white shadow-lg"
+      role="banner"
+    >
       {/* Header Principal - Estilo UNIFESP */}
-      <div className="w-full max-w-none px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24">
-        <div className="flex items-center justify-between py-2 sm:py-1 md:py-0.5">
+      <div className="w-full max-w-none px-2 sm:px-4 md:px-6 lg:px-16 xl:px-24">
+        <div className="flex items-center justify-between py-1 sm:py-1.5 md:py-2">
           
           {/* Título do Projeto - Lado esquerdo */}
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            <div>
-              <button
-                onClick={() => navigate('/')}
-                className="text-left hover:opacity-80 transition-opacity"
-              >
-                <div className="flex items-center space-x-1 sm:space-x-2">
-                  <h1 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl uppercase leading-none" style={{fontFamily: 'PapakiloDecorative, sans-serif'}}>
-                    OPIN
-                  </h1>
-                  <div className="w-px h-4 sm:h-6 md:h-8 bg-white/30"></div>
-                  <div className="flex flex-col justify-center">
-                    <span className="text-white text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl capitalize" style={{fontFamily: 'Cinzel, serif'}}>
-                      Observatório Dos Professores Indígenas
-                    </span>
-                    <p className="text-xs sm:text-sm text-white/80 normal-case">
-                      do Estado de São Paulo
-                    </p>
-                  </div>
+          <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4 min-w-0 flex-shrink">
+            <button
+              onClick={() => navigate('/')}
+              className="text-left hover:opacity-80 transition-opacity focus:outline-none focus:rounded"
+              aria-label="Ir para página inicial - OPIN"
+            >
+              <div className="flex items-center space-x-1 sm:space-x-2">
+                <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl uppercase leading-none whitespace-nowrap" style={{fontFamily: 'PapakiloDecorative, sans-serif'}}>
+                  OPIN
+                </h1>
+                <div className="hidden sm:block w-px h-4 sm:h-6 md:h-8 bg-white/30 flex-shrink-0"></div>
+                <div className="hidden md:flex flex-col justify-center min-w-0">
+                  <span className="text-white text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl capitalize truncate" style={{fontFamily: 'Cinzel, serif'}}>
+                    Observatório Dos Professores Indígenas
+                  </span>
+                  <p className="text-xs sm:text-sm text-white/80 normal-case truncate">
+                    do Estado de São Paulo
+                  </p>
                 </div>
-              </button>
-            </div>
+              </div>
+            </button>
           </div>
 
           {/* Menu Superior - Lado direito */}
-          <div className="hidden lg:flex items-center space-x-6 text-sm">
+          <div className="hidden lg:flex items-center space-x-4 xl:space-x-6 text-sm">
+            {/* Botões de Navegação */}
+            <NavButtons
+              isConteudoPage={isConteudoPage}
+              isSearchPage={isSearchPage}
+              isAdminPage={isAdminPage}
+              isPainelPage={isPainelPage}
+              isMobileLandscape={isMobileLandscape}
+            />
+            
             {/* Busca */}
-            <div className="flex items-center space-x-2">
+            <div ref={searchBarRef} className="flex items-center">
               <SearchBar 
                 onSearch={handleSearch} 
                 onResultClick={handleResultClick}
@@ -150,60 +173,37 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
               />
             </div>
             
-            {/* Links de Navegação */}
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => navigate('/conteudo')}
-                className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded transition-colors ${
-                  isConteudoPage 
-                    ? 'bg-green-600 text-white' 
-                    : 'text-white hover:bg-green-700/20'
-                }`}
-              >
-                <BookOpen className="w-4 h-4" />
-                <span className="hidden xl:inline">Materiais</span>
-              </button>
-              <button
-                onClick={() => navigate('/dashboard')}
-                className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded transition-colors ${
-                  isPainelPage 
-                    ? 'bg-green-600 text-white' 
-                    : 'text-white hover:bg-green-700/20'
-                }`}
-              >
-                <BarChart3 className="w-4 h-4" />
-                <span className="hidden xl:inline">Painel de Dados</span>
-              </button>
-            </div>
-            
             {/* Admin */}
             <div className="flex items-center space-x-2">
               
               {/* Admin Panel */}
               {!isAuthenticated ? (
-                <button
-                  onClick={handleAdminClick}
-                  className="p-2 rounded hover:bg-green-700/20 transition-colors"
-                  title="Acesso administrativo"
-                >
+              <button
+                onClick={handleAdminClick}
+                className="p-2 rounded hover:bg-green-700/20 transition-colors focus:outline-none"
+                title="Acesso administrativo"
+                aria-label="Acesso administrativo"
+              >
                   <Leaf className="w-5 h-5" />
                 </button>
               ) : (
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-white/80 hidden xl:inline">
+                  <span className="text-sm text-white/80 hidden xl:inline" aria-live="polite">
                     Olá, {user?.username}
                   </span>
                   <button
                     onClick={() => navigate('/admin')}
-                    className="flex items-center gap-1 px-2 py-1 text-xs font-medium bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                    className="flex items-center gap-1 px-2 py-1 text-xs font-medium bg-green-600 text-white rounded hover:bg-green-700 transition-colors focus:outline-none"
+                    aria-label="Painel administrativo"
                   >
                     <Shield className="w-3 h-3" />
                     <span className="hidden lg:inline">Admin</span>
                   </button>
                   <button
                     onClick={logout}
-                    className="px-2 py-1 text-xs font-medium bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                    className="px-2 py-1 text-xs font-medium bg-red-600 text-white rounded hover:bg-red-700 transition-colors focus:outline-none"
                     title="Sair"
+                    aria-label="Sair da conta"
                   >
                     Sair
                   </button>
@@ -241,8 +241,17 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
             </div>
           </div>
 
-          {/* Mobile - Botão hambúrguer */}
-          <div className="lg:hidden">
+          {/* Mobile - Busca e Botão hambúrguer */}
+          <div className="lg:hidden flex items-center gap-2">
+            <div className="flex-1 max-w-xs">
+              <SearchBar 
+                onSearch={handleSearch} 
+                onResultClick={handleResultClick}
+                isMobile={true} 
+                isMobileLandscape={isMobileLandscape}
+                dataPoints={dataPoints}
+              />
+            </div>
             <MobileToggle 
               mobileMenuOpen={mobileMenuOpen} 
               toggleMobileMenu={toggleMobileMenu} 
