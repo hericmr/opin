@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecionando...</title>
+    <script>
+      // Função para redirecionar mantendo a rota
+      function redirectToApp() {
+        // Pega o path atual (sem o domínio)
+        var path = window.location.pathname;
+        
+        // Remove '/opin' do início se existir
+        if (path.startsWith('/opin')) {
+          path = path.substring(5); // Remove '/opin'
+        }
+        
+        // Se não há path ou é apenas '/', vai para a página principal
+        if (!path || path === '/') {
+          window.location.href = '/opin/';
+          return;
+        }
+        
+        // Para outras rotas, redireciona para o index.html com a rota como hash
+        // Isso permite que o React Router processe a rota
+        window.location.href = '/opin/index.html#' + path;
+      }
+      
+      // Executa o redirecionamento
+      redirectToApp();
+    </script>
+  </head>
+  <body>
+    <p>Redirecionando...</p>
+    <noscript>
+      <p>Se você não foi redirecionado automaticamente, <a href="/opin/">clique aqui</a>.</p>
+    </noscript>
+  </body>
+</html>
