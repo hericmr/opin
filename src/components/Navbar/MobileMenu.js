@@ -12,7 +12,7 @@ const MobileMenu = ({
   isAdmin, 
   onAdminClick, 
   isMobileLandscape,
-  onNavigation 
+  onNavigation
 }) => {
   const location = useLocation();
 
@@ -41,7 +41,9 @@ const MobileMenu = ({
               
               <button
                 onClick={() => onNavigation('/')}
-                className={`w-full text-left px-4 py-3 font-medium rounded transition-colors ${getActiveStyle(location.pathname === '/')}`}
+                className={`w-full text-left px-4 py-2.5 font-medium rounded transition-colors ${getActiveStyle(location.pathname === '/')}`}
+                aria-label="Ir para o mapa das escolas indígenas"
+                aria-current={location.pathname === '/' ? 'page' : undefined}
               >
                 <div className="flex items-center gap-3">
                   <Map className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
@@ -51,7 +53,9 @@ const MobileMenu = ({
               
               <button
                 onClick={() => onNavigation('/conteudo')}
-                className={`w-full text-left px-4 py-3 font-medium rounded transition-colors ${getActiveStyle(isConteudoPage)}`}
+                className={`w-full text-left px-4 py-2.5 font-medium rounded transition-colors ${getActiveStyle(isConteudoPage)}`}
+                aria-label="Ver materiais didáticos indígenas"
+                aria-current={isConteudoPage ? 'page' : undefined}
               >
                 <div className="flex items-center gap-3">
                   <BookOpen className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
@@ -61,11 +65,13 @@ const MobileMenu = ({
               
               <button
                 onClick={() => onNavigation('/dashboard')}
-                className={`w-full text-left px-4 py-3 font-medium rounded transition-colors ${getActiveStyle(isDashboardPage)}`}
+                className={`w-full text-left px-4 py-2.5 font-medium rounded transition-colors ${getActiveStyle(isDashboardPage)}`}
+                aria-label="Ver dados das escolas indígenas"
+                aria-current={isDashboardPage ? 'page' : undefined}
               >
                 <div className="flex items-center gap-3">
                   <BarChart3 className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
-                  <span>Painel de Dados</span>
+                  <span>Alguns dados</span>
                 </div>
               </button>
             </div>
@@ -79,7 +85,8 @@ const MobileMenu = ({
               {!isAdmin ? (
                 <button
                   onClick={onAdminClick}
-                  className="w-full text-left px-4 py-3 font-medium text-white hover:bg-[#215A36] rounded transition-colors"
+                  className="w-full text-left px-4 py-2.5 font-medium text-white hover:bg-[#215A36] rounded transition-colors focus:outline-none"
+                  aria-label="Acesso administrativo"
                 >
                   <div className="flex items-center gap-3">
                     <Leaf className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
@@ -97,7 +104,9 @@ const MobileMenu = ({
                   
                   <button
                     onClick={() => onNavigation('/admin')}
-                    className={`w-full text-left px-4 py-3 font-medium rounded transition-colors ${getActiveStyle(isAdminPage)}`}
+                    className={`w-full text-left px-4 py-2.5 font-medium rounded transition-colors ${getActiveStyle(isAdminPage)} focus:outline-none`}
+                    aria-label="Painel administrativo"
+                    aria-current={isAdminPage ? 'page' : undefined}
                   >
                     <div className="flex items-center gap-3">
                       <LayoutGrid className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
