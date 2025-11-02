@@ -11,12 +11,24 @@ console.log('=== DEBUG: Valores das variáveis ===');
 console.log('supabaseUrl está definido:', !!supabaseUrl);
 console.log('supabaseAnonKey está definido:', !!supabaseAnonKey);
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('=== ERRO: Credenciais do Supabase ausentes ===');
+// Verificar se as credenciais são válidas (não são apenas placeholders)
+const isUrlPlaceholder = supabaseUrl && (supabaseUrl.includes('seu-projeto') || supabaseUrl === 'https://seu-projeto.supabase.co');
+const isKeyPlaceholder = supabaseAnonKey && supabaseAnonKey.includes('sua_chave_anonima');
+
+if (!supabaseUrl || !supabaseAnonKey || isUrlPlaceholder || isKeyPlaceholder) {
+  console.error('=== ERRO: Credenciais do Supabase ausentes ou inválidas ===');
   console.error('supabaseUrl está ausente:', !supabaseUrl);
   console.error('supabaseAnonKey está ausente:', !supabaseAnonKey);
+  console.error('supabaseUrl é placeholder:', isUrlPlaceholder);
+  console.error('supabaseAnonKey é placeholder:', isKeyPlaceholder);
   console.error('Ambiente atual:', process.env.NODE_ENV);
-  console.error('Todas as variáveis de ambiente REACT_APP_ disponíveis:', 
+  console.error('\n=== INSTRUÇÕES PARA RESOLVER ===');
+  console.error('1. Verifique se o arquivo .env.local existe na raiz do projeto');
+  console.error('2. Preencha as seguintes variáveis com suas credenciais reais do Supabase:');
+  console.error('   - REACT_APP_SUPABASE_URL (encontrada em Settings > API > Project URL)');
+  console.error('   - REACT_APP_SUPABASE_ANON_KEY (encontrada em Settings > API > anon public)');
+  console.error('3. Reinicie o servidor de desenvolvimento (npm start) após alterar o arquivo .env.local');
+  console.error('\nTodas as variáveis de ambiente REACT_APP_ disponíveis:', 
     Object.keys(process.env).filter(key => key.startsWith('REACT_APP_')));
 }
 
