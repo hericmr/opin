@@ -1,0 +1,117 @@
+.mj-panel {
+  /* ArcGIS Map Journal-inspired panel look */
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 6px 12px rgba(0, 0, 0, 0.08);
+  border-top: 4px solid #2e7bcf; /* accent */
+}
+
+.mj-panel .mj-panel-content {
+  background: #ffffff;
+}
+
+/* Typography similar to Map Journal narrative */
+.mj-panel .mj-prose {
+  color: #2b2b2b;
+  line-height: 1.7;
+}
+
+.mj-panel .mj-prose h1,
+.mj-panel .mj-prose h2,
+.mj-panel .mj-prose h3,
+.mj-panel .mj-prose h4 {
+  color: #1f2a44;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-top: 1.25em;
+}
+
+.mj-panel .mj-prose h2 {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 0.35em;
+}
+
+.mj-panel .mj-prose h4 {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.mj-panel .mj-prose p {
+  margin: 0.75em 0 1em;
+}
+
+.mj-panel .mj-prose a {
+  color: #2e7bcf;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(46, 123, 207, 0.35);
+}
+
+.mj-panel .mj-prose a:hover {
+  color: #205b98;
+  border-bottom-color: rgba(32, 91, 152, 0.6);
+}
+
+.mj-panel .mj-prose ul,
+.mj-panel .mj-prose ol {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.mj-panel .mj-prose blockquote {
+  border-left: 3px solid #2e7bcf;
+  padding-left: 1rem;
+  color: #4a5568;
+  background: rgba(46, 123, 207, 0.06);
+}
+
+/* Media inside narrative */
+.mj-panel .mj-prose img,
+.mj-panel .mj-prose video {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.mj-panel .mj-prose figure {
+  margin: 1rem 0;
+}
+
+.mj-panel .mj-prose figcaption {
+  font-size: 0.9em;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* Section separators */
+.mj-panel .mj-section-separator {
+  height: 1px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0));
+  margin: 1rem 0 1.25rem;
+}
+
+/* Subtle custom scrollbar (overlaying Tailwind scrollbar utilities) */
+.mj-panel .mj-panel-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.mj-panel .mj-panel-content::-webkit-scrollbar-thumb {
+  background-color: rgba(46, 123, 207, 0.35);
+  border-radius: 8px;
+  border: 2px solid #ffffff;
+}
+
+.mj-panel .mj-panel-content::-webkit-scrollbar-track {
+  background: rgba(46, 123, 207, 0.06);
+}
+
+/* Mobile tweaks */
+@media (max-width: 640px) {
+  .mj-panel {
+    border-top-width: 3px;
+    box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.12);
+  }
+}
+
+
