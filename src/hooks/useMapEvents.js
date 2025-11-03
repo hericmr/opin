@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { showClickPulse, flyTo } from '../utils/openlayers/effects';
 import { createTooltipHTML, createClusterTooltipHTML } from '../utils/mapUtils';
 
 export const useMapEvents = (map, mapContainer, onPainelOpen) => {
@@ -18,6 +19,11 @@ export const useMapEvents = (map, mapContainer, onPainelOpen) => {
             // Cluster com apenas um marcador, abrir painel
             const schoolData = features[0].get('schoolData');
             if (schoolData && onPainelOpen) {
+              const coord = features[0].getGeometry()?.getCoordinates();
+              if (coord) {
+                flyTo(map, coord, { durationMs: 350 });
+                showClickPulse(map, coord);
+              }
               onPainelOpen(schoolData);
             }
           } else {
@@ -61,6 +67,11 @@ export const useMapEvents = (map, mapContainer, onPainelOpen) => {
           // Marcador individual
           const schoolData = feature.get('schoolData');
           if (schoolData && onPainelOpen) {
+            const coord = feature.getGeometry()?.getCoordinates();
+            if (coord) {
+              flyTo(map, coord, { durationMs: 350 });
+              showClickPulse(map, coord);
+            }
             onPainelOpen(schoolData);
           }
         }

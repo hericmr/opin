@@ -58,7 +58,7 @@ const GridLayoutWrapper = memo(({ children, shouldUseGrid }) => {
   );
 });
 
-const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0 }) => {
+const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0, sectionRefs }) => {
   console.log("EscolaInfo recebeu:", escola);
   
   if (!escola) {
@@ -79,19 +79,25 @@ const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0 }) => {
   return (
     <div className="space-y-8">
       {/* Grid de cards */}
-      <GridLayoutWrapper shouldUseGrid={shouldUseGrid}>
-        {gridSections.map(({ Component, props }, index) => (
-          <Component key={index} {...props} />
-        ))}
-      </GridLayoutWrapper>
+      <div ref={(el) => sectionRefs && (sectionRefs.dados = el)}>
+        <GridLayoutWrapper shouldUseGrid={shouldUseGrid}>
+          {gridSections.map(({ Component, props }, index) => (
+            <Component key={index} {...props} />
+          ))}
+        </GridLayoutWrapper>
+      </div>
 
       {/* História da Escola em destaque */}
-      <HistoriaEscola escola={escola} refreshKey={refreshKey} />
+      <div ref={(el) => sectionRefs && (sectionRefs.historia = el)}>
+        <HistoriaEscola escola={escola} refreshKey={refreshKey} />
+      </div>
       
       {/* Imagens da escola, agora renderizadas independentemente da história */}
       <ImagensdasEscolas escola_id={escola.id} refreshKey={refreshKey} />
 
-      <HistoriadoProfessor escola={escola} refreshKey={refreshKey} />
+      <div ref={(el) => sectionRefs && (sectionRefs.depoimentos = el)}>
+        <HistoriadoProfessor escola={escola} refreshKey={refreshKey} />
+      </div>
     </div>
   );
 });

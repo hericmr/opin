@@ -60,6 +60,8 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
     );
   }, [historias.length]);
 
+  // (sem dots laterais aqui; manter navegação simples local)
+
   // Navegação com teclado
   useEffect(() => {
     const handleKeyDown = (e) => {
