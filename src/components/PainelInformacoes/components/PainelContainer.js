@@ -1,4 +1,5 @@
 import React from 'react';
+import '../PainelInformacoes.css';
 import PainelHeader from '../../PainelHeader';
 import EscolaHeaderImage from './EscolaHeaderImage';
 import usePainelVisibility from '../../hooks/usePainelVisibility';
@@ -31,7 +32,7 @@ const PainelContainer = ({
       : 'top-30 bottom-0 right-0 w-full sm:w-3/4 lg:w-[49%] h-auto'
     }
     rounded-t-xl shadow-xl z-[9999] transform transition-all duration-500 ease-in-out
-    bg-white border-t-4 border-white
+    bg-white border-t-4 border-white mj-panel
   `;
   
   const visibilityClasses = isVisible 
@@ -72,7 +73,7 @@ const PainelContainer = ({
         imagemHeader={painelInfo.imagem_header}
       />
       
-      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-green-600/40 scrollbar-track-green-50/20">
+      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-green-600/40 scrollbar-track-green-50/20 mj-panel-content">
         {/* Imagem do header que rola com a página */}
         {painelInfo.imagem_header && (
           <EscolaHeaderImage 
@@ -83,7 +84,7 @@ const PainelContainer = ({
         )}
         
         <div className={`${isMobile ? 'p-3 sm:p-4' : 'p-6'} space-y-4 sm:space-y-5 -mt-2`}>
-          <div className="prose prose-sm sm:prose-base md:prose-lg lg:prose-xl max-w-none">
+          <div className="prose prose-sm sm:prose-base md:prose-lg lg:prose-xl max-w-none mj-prose">
             {children}
           </div>
         </div>
