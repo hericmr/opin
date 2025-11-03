@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { BookOpen, Search, Home, BarChart3 } from 'lucide-react';
+import { BookOpen, Home, BarChart3 } from 'lucide-react';
 
 const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, isMobileLandscape }) => {
   const navigate = useNavigate();
