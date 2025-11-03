@@ -9,7 +9,7 @@ import {
   applyHoverStyle
 } from '../../utils/openlayers/markerStyles';
 import { createMarkerInteractions } from '../../utils/openlayers/interactions';
-// import { isMobile } from '../../utils/mobileUtils'; // Removido - não utilizado
+import logger from '../../utils/logger';
 
 /**
  * Componente OpenLayersMarkers - Substitui completamente o Marcadores.js do Leaflet
@@ -40,7 +40,7 @@ const OpenLayersMarkers = ({
   const initializeMarkers = useCallback(() => {
     if (!map) return;
 
-    console.log('[OpenLayersMarkers] Inicializando marcadores individuais...');
+    logger.debug('[OpenLayersMarkers] Inicializando marcadores individuais...');
 
     // Criar fonte vetorial para marcadores
     vectorSourceRef.current = new VectorSource();
@@ -67,7 +67,7 @@ const OpenLayersMarkers = ({
   const setupInteractions = useCallback(() => {
     if (!map || !vectorLayerRef.current) return;
 
-    console.log('[OpenLayersMarkers] Configurando interações com tooltips...');
+    logger.debug('[OpenLayersMarkers] Configurando interações com tooltips...');
 
     // Criar interações específicas para marcadores com tooltips
     const interactions = createMarkerInteractions(
@@ -81,9 +81,7 @@ const OpenLayersMarkers = ({
     interactions.on('hover', handleMarkerHover);
     interactions.on('hoverOut', handleMarkerHoverOut);
 
-    // IMPORTANTE: Integrar as interações com o mapa para que os tooltips funcionem
-    // O sistema de interações do OpenLayers precisa estar ativo para detectar hover
-    console.log('[OpenLayersMarkers] Interações configuradas e integradas com o mapa');
+    logger.debug('[OpenLayersMarkers] Interações configuradas e integradas com o mapa');
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
@@ -95,7 +93,7 @@ const OpenLayersMarkers = ({
     // Usar schoolData em vez de markerData para consistência com o sistema de interações
     const schoolData = feature.get('schoolData');
     if (schoolData && onPainelOpen) {
-      console.log('[OpenLayersMarkers] Marcador clicado:', schoolData.titulo);
+      logger.debug('[OpenLayersMarkers] Marcador clicado:', schoolData.titulo);
       onPainelOpen(schoolData);
     }
   }, [onPainelOpen]);
@@ -141,14 +139,14 @@ const OpenLayersMarkers = ({
   const updateMarkers = useCallback(() => {
     if (!vectorSourceRef.current || !dataPoints) return;
 
-    console.log('[OpenLayersMarkers] Atualizando marcadores...', dataPoints.length, 'showMarcadores:', showMarcadores);
+    logger.debug('[OpenLayersMarkers] Atualizando marcadores...', dataPoints.length, 'showMarcadores:', showMarcadores);
 
     // Limpar marcadores existentes
     vectorSourceRef.current.clear();
     
     // Se showMarcadores for false, não adicionar marcadores
     if (!showMarcadores) {
-      console.log('[OpenLayersMarkers] Marcadores desabilitados, removendo todos');
+      logger.debug('[OpenLayersMarkers] Marcadores desabilitados, removendo todos');
       return;
     }
     
@@ -162,7 +160,7 @@ const OpenLayersMarkers = ({
              lng >= -180 && lng <= 180;
     });
 
-    console.log('[OpenLayersMarkers] Pontos válidos:', pontosValidos.length);
+    logger.debug('[OpenLayersMarkers] Pontos válidos:', pontosValidos.length);
 
     // Adicionar novos marcadores INDIVIDUAIS
     pontosValidos.forEach((point, index) => {
@@ -176,18 +174,11 @@ const OpenLayersMarkers = ({
         feature.set('markerId', `marker_${index}`);
         feature.set('type', 'marker');
         
-        // Debug: verificar dados do tooltip
-        console.log(`[OpenLayersMarkers] Marcador ${index}:`, {
-          titulo: point.titulo,
-          municipio: point.municipio || point.Municipio,
-          uf: point.uf || point.UF
-        });
-        
         vectorSourceRef.current.addFeature(feature);
       }
     });
 
-    console.log(`[OpenLayersMarkers] ${pontosValidos.length} marcadores individuais adicionados`);
+    logger.debug(`[OpenLayersMarkers] ${pontosValidos.length} marcadores individuais adicionados`);
 
   }, [dataPoints, showMarcadores]);
 

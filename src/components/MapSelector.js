@@ -3,6 +3,8 @@ import OpenLayersMap from './OpenLayersMap';
 import { useGeoJSONCache } from '../hooks/useGeoJSONCache';
 import { MAP_CONFIG } from '../utils/mapConfig';
 import { ResponsiveIcon } from '../hooks/useResponsiveIcon';
+import { useBreakpoint } from '../hooks/responsive/useBreakpoint';
+import logger from '../utils/logger';
 
 const MapSelector = ({ 
   dataPoints, 
@@ -22,77 +24,38 @@ const MapSelector = ({
   // Estado para controlar visibilidade dos marcadores
   const [showMarcadores, setShowMarcadores] = useState(true);
 
-  // Estados para responsividade
-  const [isMobile, setIsMobile] = useState(false);
+  // Estados para responsividade - usando hook centralizado
+  const { isMobile } = useBreakpoint();
   const [isMinimized, setIsMinimized] = useState(false);
-
-  // Função para verificar se é mobile
-  const checkMobile = useCallback(() => {
-    setIsMobile(window.innerWidth <= 768);
-  }, []);
-
-  useEffect(() => {
-    // Verifica no carregamento inicial
-    checkMobile();
-    
-    // Adiciona listener de resize
-    window.addEventListener("resize", checkMobile);
-    
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-    };
-  }, [checkMobile]);
 
   // Handler para minimizar/expandir
   const handleMinimize = useCallback(() => setIsMinimized(prev => !prev), []);
 
-  // Log de status das camadas
+  // Log de status das camadas (apenas em desenvolvimento)
   useEffect(() => {
-    console.log('MapSelector: Status das camadas GeoJSON:', {
+    logger.debug('MapSelector: Status das camadas GeoJSON:', {
       terrasIndigenas: {
         loading: terrasLoading,
         error: terrasError,
         hasData: !!terrasIndigenasData,
         features: terrasIndigenasData?.features?.length || 0,
-        type: terrasIndigenasData?.type,
-        firstFeature: terrasIndigenasData?.features?.[0] ? {
-          type: terrasIndigenasData.features[0].type,
-          properties: terrasIndigenasData.features[0].properties ? Object.keys(terrasIndigenasData.features[0].properties) : 'Sem propriedades'
-        } : 'Nenhum feature'
       },
       estadoSP: {
         loading: estadoLoading,
         error: estadoError,
         hasData: !!estadoSPData,
         features: estadoSPData?.features?.length || 0,
-        type: estadoSPData?.type,
-        firstFeature: estadoSPData?.features?.[0] ? {
-          type: estadoSPData.features[0].type,
-          properties: estadoSPData.features[0].properties ? Object.keys(estadoSPData.features[0].properties) : 'Sem propriedades'
-        } : 'Nenhum feature'
       }
     });
   }, [terrasIndigenasData, estadoSPData, terrasLoading, estadoLoading, terrasError, estadoError]);
 
+  // Reativar marcadores quando painel fecha em mobile
   useEffect(() => {
-    console.log('MapSelector: useEffect painelAberto mudou:', {
-      painelAberto,
-      isMobile,
-      showMarcadores,
-      shouldReactivate: !painelAberto && isMobile
-    });
-    
     if (!painelAberto && isMobile) {
-      console.log('MapSelector: Painel fechado em mobile, reativando marcadores');
+      logger.debug('MapSelector: Painel fechado em mobile, reativando marcadores');
       setShowMarcadores(true);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [painelAberto, isMobile]);
-
-  // Log para monitorar mudanças no showMarcadores
-  useEffect(() => {
-    console.log('MapSelector: showMarcadores mudou para:', showMarcadores);
-  }, [showMarcadores]);
 
     // Componente para o cabeçalho do menu
   const CabecalhoMenu = ({ onMinimize, isMobile, isMinimized }) => (
@@ -216,15 +179,10 @@ const MapSelector = ({
   const mapCenter = isMobile ? MAP_CONFIG.mobile.center : MAP_CONFIG.center;
   const mapZoom = isMobile ? MAP_CONFIG.mobile.zoom : MAP_CONFIG.zoom;
 
-  // Log para debug do zoom
-  console.log('MapSelector - Debug zoom:', {
+  logger.debug('MapSelector - Configuração do mapa:', {
     isMobile,
-    mobileZoom: MAP_CONFIG.mobile.zoom,
-    desktopZoom: MAP_CONFIG.zoom,
-    selectedZoom: mapZoom,
-    mobileCenter: MAP_CONFIG.mobile.center,
-    desktopCenter: MAP_CONFIG.center,
-    selectedCenter: mapCenter
+    zoom: mapZoom,
+    center: mapCenter
   });
 
   return (
@@ -336,4 +294,4 @@ const MapSelector = ({
   );
 };
 
-export default MapSelector; ; 
+export default React.memo(MapSelector); 

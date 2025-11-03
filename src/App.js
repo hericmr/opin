@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from "react";
+import React, { useState, Suspense, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { SearchProvider } from "./contexts/SearchContext";
@@ -13,6 +13,8 @@ import { SkipLink } from './components/Accessibility';
 import WelcomeModal from './components/WelcomeModal';
 import { useEscolasData } from './hooks/useEscolasData';
 import { MetaTagsDetector } from './components/MetaTags';
+import TutorialMapa from './components/TutorialMapa';
+import { useTutorial } from './hooks/useTutorial';
 
 // Lazy loading dos componentes
 const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));
@@ -141,6 +143,7 @@ const AppContent = () => {
 
 function AppRoutes() {
   const location = useLocation();
+  const { isTutorialRunning, completeTutorial, skipTutorial, startTutorial } = useTutorial();
   
   // Verificar se há parâmetro 'panel' na URL (Slugify)
   const urlParams = new URLSearchParams(location.search);
@@ -156,10 +159,23 @@ function AppRoutes() {
   // 2. Algum slug da lista for prefixo do path
   const hideWelcomeModal = hasPanelParam || slugsSemModal.some(slug => location.pathname.startsWith(slug));
 
+  // Expor função para iniciar tutorial (usado pela Navbar e WelcomeModal)
+  useEffect(() => {
+    window.startTutorial = startTutorial;
+    return () => {
+      delete window.startTutorial;
+    };
+  }, [startTutorial]);
+
   return (
     <>
       <SkipLink targetId="main-content" />
-      {!hideWelcomeModal && <WelcomeModal />}
+      {!hideWelcomeModal && <WelcomeModal onStartTutorial={startTutorial} />}
+      <TutorialMapa 
+        isRunning={isTutorialRunning} 
+        onComplete={completeTutorial}
+        onSkip={skipTutorial}
+      />
       <AppContent />
     </>
   );

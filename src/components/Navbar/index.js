@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Leaf, Shield } from 'lucide-react';
 import { useSearch } from '../../contexts/SearchContext';
 import { useAuth } from '../../hooks/useAuth';
+import { useBreakpoint } from '../../hooks/responsive/useBreakpoint';
 import MobileToggle from './MobileToggle';
 import MobileMenu from './MobileMenu';
 import SearchBar from './SearchBar';
@@ -11,24 +12,18 @@ import MinimalLoginModal from '../Auth/MinimalLoginModal';
 
 const Navbar = ({ dataPoints, openPainelFunction }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isMobileLandscape, setIsMobileLandscape] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { setSearch } = useSearch();
   const { isAuthenticated, user, logout } = useAuth();
+  const { width } = useBreakpoint();
   const searchBarRef = useRef(null);
 
-  // Detectar se é mobile na horizontal
-  useEffect(() => {
-    const checkMobileLandscape = () => {
-      setIsMobileLandscape(window.innerWidth <= 1024 && window.innerWidth > window.innerHeight);
-    };
-
-    checkMobileLandscape();
-    window.addEventListener('resize', checkMobileLandscape);
-    return () => window.removeEventListener('resize', checkMobileLandscape);
-  }, []);
+  // Calcular se é mobile landscape baseado na largura e orientação
+  const isMobileLandscape = useMemo(() => {
+    return width <= 1024 && width > window.innerHeight;
+  }, [width]);
 
   // Atalho de teclado Ctrl+K / Cmd+K para busca
   useEffect(() => {
@@ -62,12 +57,20 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
     navigate('/admin');
   };
 
-  const isConteudoPage = location.pathname === '/conteudo';
-  const isSearchPage = location.pathname === '/search';
-  const isAdminPage = location.pathname === '/admin';
-  const isPainelPage = location.pathname === '/dashboard' || location.pathname === '/painel-dados' || location.pathname === '/dados-escolas-indigenas';
+  // Memoizar cálculos de rotas para evitar recálculos desnecessários
+  const isConteudoPage = useMemo(() => location.pathname === '/conteudo', [location.pathname]);
+  const isSearchPage = useMemo(() => location.pathname === '/search', [location.pathname]);
+  const isAdminPage = useMemo(() => location.pathname === '/admin', [location.pathname]);
+  const isPainelPage = useMemo(() => 
+    location.pathname === '/dashboard' || 
+    location.pathname === '/painel-dados' || 
+    location.pathname === '/dados-escolas-indigenas',
+    [location.pathname]
+  );
   
-  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+  const toggleMobileMenu = React.useCallback(() => {
+    setMobileMenuOpen(prev => !prev);
+  }, []);
   
   const handleNavigation = (path) => {
     navigate(path);

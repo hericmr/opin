@@ -1,39 +1,41 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { BookOpen, Search, Home } from 'lucide-react';
+import { BookOpen, Search, Home, BarChart3 } from 'lucide-react';
 
-const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isMobileLandscape }) => {
+const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, isMobileLandscape }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isActive = (path) => location.pathname === path;
-
-  const getButtonStyle = (active) => `
-    px-3 xl:px-4 py-2 text-sm font-medium text-white 
-    ${active 
-      ? 'bg-amber-600/80 border-amber-400/60' 
-      : 'bg-[#215A36]/60 hover:bg-amber-700/60'
+  const isActive = (path) => {
+    if (path === '/') return location.pathname === '/';
+    if (path === '/dashboard') {
+      return location.pathname === '/dashboard' || 
+             location.pathname === '/painel-dados' || 
+             location.pathname === '/dados-escolas-indigenas';
     }
-    transition-all duration-200 rounded-lg hover:shadow-md active:scale-95
-    focus:outline-none focus:ring-2 focus:ring-amber-400 flex items-center gap-2
-    border-2 ${active ? 'border-amber-400/60' : 'border-transparent'}
-  `;
+    return location.pathname === path;
+  };
+
+  const getButtonStyle = (active) => {
+    const baseStyle = 'px-3 xl:px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-md active:scale-95 focus:outline-none flex items-center gap-2 relative';
+    const activeStyle = 'bg-green-600 text-white shadow-md';
+    const inactiveStyle = 'text-white hover:bg-green-700/20';
+    
+    return `${baseStyle} ${active ? activeStyle : inactiveStyle}`;
+  };
 
   return (
-    <div className="flex items-center space-x-2">
+    <nav className="flex items-center space-x-2" role="navigation" aria-label="Navegação principal">
       {/* Botão Home/Mapa */}
       <button
         onClick={() => navigate('/')}
         className={getButtonStyle(isActive('/'))}
         title="Voltar ao mapa das escolas indígenas"
+        aria-label="Ir para o mapa das escolas indígenas"
+        aria-current={isActive('/') ? 'page' : undefined}
       >
-        <Home className="w-5 h-5" />
-        <span className="hidden xl:inline">
-          {isActive('/') ? 'Mapa Ativo' : 'Mapa das Escolas'}
-        </span>
-        <span className="xl:hidden">
-          Mapa
-        </span>
+        <Home className="w-4 h-4" />
+        <span className="hidden xl:inline">Mapa</span>
       </button>
 
       {/* Botão Materiais Didáticos */}
@@ -41,33 +43,25 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isMobileLandsca
         onClick={() => navigate('/conteudo')}
         className={getButtonStyle(isActive('/conteudo'))}
         title="Ver materiais didáticos indígenas"
+        aria-label="Ver materiais didáticos indígenas"
+        aria-current={isActive('/conteudo') ? 'page' : undefined}
       >
-        <BookOpen className="w-5 h-5" />
-        <span className="hidden xl:inline">
-          {isActive('/conteudo') ? 'Materiais Ativos' : 'Materiais Didáticos'}
-        </span>
-        <span className="xl:hidden">
-          Materiais
-        </span>
+        <BookOpen className="w-4 h-4" />
+        <span className="hidden xl:inline">Materiais</span>
       </button>
 
-      {/* Botão Busca (apenas se estivermos na página de busca) */}
-      {isSearchPage && (
-        <button
-          onClick={() => navigate('/search')}
-          className={getButtonStyle(true)}
-          title="Resultados da busca"
-        >
-          <Search className="w-5 h-5" />
-          <span className="hidden xl:inline">
-            Resultados da Busca
-          </span>
-          <span className="xl:hidden">
-            Busca
-          </span>
-        </button>
-      )}
-    </div>
+      {/* Botão Alguns dados */}
+      <button
+        onClick={() => navigate('/dashboard')}
+        className={getButtonStyle(isActive('/dashboard'))}
+        title="Ver dados das escolas indígenas"
+        aria-label="Ver dados das escolas indígenas"
+        aria-current={isActive('/dashboard') ? 'page' : undefined}
+      >
+        <BarChart3 className="w-4 h-4" />
+        <span className="hidden xl:inline">Alguns dados</span>
+      </button>
+    </nav>
   );
 };
 
