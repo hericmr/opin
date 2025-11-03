@@ -40,7 +40,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
     list.push({ key: 'depoimentos', label: 'Depoimentos' });
     if (painelInfo && painelInfo.link_para_videos) list.push({ key: 'videos', label: 'Vídeos' });
     return list;
-  }, [painelInfo?.link_para_videos]);
+  }, [painelInfo]);
 
   useEffect(() => {
     const el = contentRef.current;
