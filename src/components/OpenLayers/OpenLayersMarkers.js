@@ -9,6 +9,7 @@ import {
   applyHoverStyle
 } from '../../utils/openlayers/markerStyles';
 import { createMarkerInteractions } from '../../utils/openlayers/interactions';
+import { flyToAtFractionX, showClickPulse } from '../../utils/openlayers/effects';
 import logger from '../../utils/logger';
 
 /**
@@ -93,6 +94,12 @@ const OpenLayersMarkers = ({
     // Usar schoolData em vez de markerData para consistência com o sistema de interações
     const schoolData = feature.get('schoolData');
     if (schoolData && onPainelOpen) {
+      const coord = feature.getGeometry()?.getCoordinates();
+      if (map && coord) {
+        // Posicionar o ponto a 25% da largura do mapa (metade da primeira metade)
+        flyToAtFractionX(map, coord, { durationMs: 550, fractionX: 0.25 });
+        showClickPulse(map, coord);
+      }
       logger.debug('[OpenLayersMarkers] Marcador clicado:', schoolData.titulo);
       onPainelOpen(schoolData);
     }

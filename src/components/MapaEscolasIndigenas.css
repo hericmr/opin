@@ -247,3 +247,28 @@
   font-size: 14px;
   line-height: 1.4;
 }
+
+/* Animação de pulso para clique no mapa */
+.ol-click-pulse {
+  position: absolute;
+  border-radius: 9999px;
+  box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+  background: rgba(59, 130, 246, 0.2);
+  pointer-events: none;
+  animation: olPulse 0.9s ease-out forwards;
+}
+
+@keyframes olPulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(1.4);
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}

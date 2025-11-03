@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from 'react';
+import { showClickPulse, flyTo } from '../../utils/openlayers/effects';
 
 /**
  * Hook para gerenciar interações com marcadores
@@ -14,6 +15,11 @@ export const useMarkerInteractions = ({ onPainelOpen, map, isMobileDevice }) => 
     if (event && event.stopPropagation) event.stopPropagation();
     const schoolData = feature.get('schoolData');
     if (schoolData) {
+      const coord = feature.getGeometry()?.getCoordinates();
+      if (map && coord) {
+        flyTo(map, coord, { durationMs: 350 });
+        showClickPulse(map, coord);
+      }
       onPainelOpen?.(schoolData);
     }
   }, [onPainelOpen]);
