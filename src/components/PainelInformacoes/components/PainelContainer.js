@@ -11,7 +11,9 @@ const PainelContainer = ({
   closePainel, 
   children,
   isMaximized,
-  onToggleMaximize
+  onToggleMaximize,
+  contentRef,
+  rightNav
 }) => {
   const { isVisible, isMobile } = usePainelVisibility(painelInfo);
   const painelDimensions = usePainelDimensions(isMobile, isMaximized);
@@ -57,6 +59,7 @@ const PainelContainer = ({
         top: isMobile ? `${navbarHeight}px` : 72,
         display: "flex",
         flexDirection: "column",
+        position: 'fixed',
         ...(isMobile && {
           borderRadius: painelDimensions.isMobileLandscape ? '0' : '1rem 1rem 0 0',
           boxShadow: painelDimensions.isMobileLandscape 
@@ -73,7 +76,14 @@ const PainelContainer = ({
         imagemHeader={painelInfo.imagem_header}
       />
       
-      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-green-600/40 scrollbar-track-green-50/20 mj-panel-content">
+      {/* Navegação fixa à direita do painel */}
+      {rightNav && (
+        <div className="hidden sm:flex flex-col gap-1 absolute right-0 top-1/2 -translate-y-1/2 z-[10000]">
+          {rightNav}
+        </div>
+      )}
+
+      <div ref={contentRef} className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-green-600/40 scrollbar-track-green-50/20 mj-panel-content">
         {/* Imagem do header que rola com a página */}
         {painelInfo.imagem_header && (
           <EscolaHeaderImage 
