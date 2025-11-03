@@ -149,9 +149,10 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
             exit={{ opacity: 0, scale: 0.9 }}
             onClick={() => setIsExpanded(true)}
             className={`p-2 rounded hover:bg-[#215A36] transition-colors 
-                     focus:outline-none focus:ring-2 focus:ring-amber-400
+                     focus:outline-none
                      ${isMobileLandscape ? 'p-1.5' : ''}`}
-            aria-label="Buscar"
+            aria-label="Buscar (Ctrl+K ou Cmd+K)"
+            title="Buscar (Ctrl+K ou Cmd+K)"
           >
             <Search className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
           </motion.button>
