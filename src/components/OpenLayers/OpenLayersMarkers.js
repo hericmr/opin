@@ -103,7 +103,7 @@ const OpenLayersMarkers = ({
       logger.debug('[OpenLayersMarkers] Marcador clicado:', schoolData.titulo);
       onPainelOpen(schoolData);
     }
-  }, [onPainelOpen]);
+  }, [onPainelOpen, map]);
 
   /**
    * Handler para hover em marcador

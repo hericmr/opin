@@ -11,18 +11,7 @@ const TutorialMapa = ({ isRunning, onComplete, onSkip }) => {
   const [steps, setSteps] = useState([]);
   const [run, setRun] = useState(false);
 
-  // Verificar se é mobile
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  // (Removido) Estado isMobile não utilizado
 
   // Configurar os passos do tutorial baseado no dispositivo
   useEffect(() => {
