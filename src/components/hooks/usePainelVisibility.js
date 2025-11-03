@@ -1,52 +1,34 @@
 import { useState, useEffect } from "react";
+import { useBreakpoint } from "../../hooks/responsive/useBreakpoint";
+import logger from "../../utils/logger";
 
+/**
+ * Hook para controlar visibilidade do painel
+ * 
+ * @param {Object|null} painelInfo - Informações do painel a ser exibido
+ * @returns {Object} Objeto com isVisible e isMobile
+ */
 const usePainelVisibility = (painelInfo) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-  console.log("usePainelVisibility - painelInfo:", painelInfo);
+  const { isMobile } = useBreakpoint();
 
   useEffect(() => {
-    const checkMobile = () => {
-      const isMobileWidth = window.innerWidth <= 768;
-      const isMobileLandscape = window.innerWidth > window.innerHeight && window.innerWidth <= 1024;
-      setIsMobile(isMobileWidth || isMobileLandscape);
-    };
-    
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    window.addEventListener("orientationchange", checkMobile);
-    
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-      window.removeEventListener("orientationchange", checkMobile);
-    };
-  }, []);
-
-  useEffect(() => {
-    console.group("usePainelVisibility - Effect");
-    console.log("painelInfo recebido:", painelInfo);
+    logger.debug("usePainelVisibility - painelInfo mudou:", painelInfo);
     
     if (painelInfo && typeof painelInfo === 'object') {
-      console.log("painelInfo válido, definindo visibilidade como true");
+      logger.debug("usePainelVisibility: Definindo visibilidade como true");
       setIsVisible(true);
       document.body.style.overflow = "hidden";
     } else {
-      console.log("painelInfo inválido ou undefined, definindo visibilidade como false");
+      logger.debug("usePainelVisibility: Definindo visibilidade como false");
       setIsVisible(false);
       document.body.style.overflow = "";
     }
 
-    console.log("Estado atual:", { isVisible, isMobile });
-    console.groupEnd();
-
     return () => {
       document.body.style.overflow = "";
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [painelInfo]);
-
-  console.log("usePainelVisibility - returning state:", { isVisible, isMobile });
 
   return { isVisible, isMobile };
 };
