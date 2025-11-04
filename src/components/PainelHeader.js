@@ -33,9 +33,11 @@ const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagem
   const isMobileLandscape = isMobile && window.innerWidth > window.innerHeight;
   const isVerySmallLandscape = isMobileLandscape && window.innerWidth <= 850;
 
+  const headerHalfClass = (!isMobile && isMaximized) ? 'mj-header-half-right' : '';
+
   return (
     <header className={`relative border-b border-green-100 ${isMobileLandscape ? 'min-h-[60px]' : ''}`}>
-      <div className="px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-2 md:py-3">
+      <div className={`px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-2 md:py-3 ${headerHalfClass}`}>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pr-12">
           <div className="space-y-1">
             <h2 
