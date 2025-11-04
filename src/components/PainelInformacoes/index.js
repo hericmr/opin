@@ -148,45 +148,8 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
         isMaximized={isMaximized}
         onToggleMaximize={toggleMaximize}
         contentRef={contentRef}
-        rightNav={sections.length > 1 ? (
-          <div className="navDotsInner" role="navigation" aria-label="Story sections">
-            <div className="bg-green-100 rounded-lg px-1 py-1 shadow flex flex-col items-center gap-1" style={{ WebkitTapHighlightColor: 'transparent' }}>
-              <div
-                className="navDotsNav navDotsUp w-5 h-5 rounded-full border border-green-300 bg-green-100 hover:bg-green-200 text-green-700 flex items-center justify-center outline-none focus:outline-none focus-visible:outline-none ring-0 focus:ring-0"
-                role="button"
-                tabIndex={0}
-                aria-label="Previous section"
-                onClick={prevSection}
-                onKeyDown={(e) => handleKeyActivate(e, prevSection)}
-              />
-              <div className="navGroups navGroupUp disabled text-green-700" />
-              <div className="dots flex flex-col items-center gap-1">
-                {sections.map((s, idx) => (
-                  <div
-                    key={s.key}
-                    role="button"
-                    tabIndex={0}
-                    className={`dot w-2 h-2 rounded-full border ${idx === activeIndex ? 'bg-green-600 border-green-600' : 'bg-white border-green-300 hover:border-green-400'} outline-none focus:outline-none focus-visible:outline-none ring-0 focus:ring-0`}
-                    title={s.label}
-                    data-index={idx}
-                    aria-label={`Go to section ${idx + 1}: ${s.label}`}
-                    onClick={() => scrollToSection(idx)}
-                    onKeyDown={(e) => handleKeyActivate(e, () => scrollToSection(idx))}
-                  />
-                ))}
-              </div>
-              <div className="navGroups navGroupDown disabled text-green-700" />
-              <div
-                className="navDotsNav navDotsDown w-5 h-5 rounded-full border border-green-300 bg-green-100 hover:bg-green-200 text-green-700 flex items-center justify-center outline-none focus:outline-none focus-visible:outline-none ring-0 focus:ring-0"
-                role="button"
-                tabIndex={0}
-                aria-label="Next section"
-                onClick={nextSection}
-                onKeyDown={(e) => handleKeyActivate(e, nextSection)}
-              />
-            </div>
-          </div>
-        ) : null}
+        refreshKey={refreshKey}
+        rightNav={null}
       >
         {renderContent()}
         <ShareSection 

@@ -35,6 +35,11 @@ code {
 @tailwind components;
 @tailwind utilities;
 
+/* Fonte do logotipo (Papakilo) como classe utilitária */
+.font-papakilo {
+  font-family: 'PapakiloDecorative', 'PapakiloLight', 'Nunito', sans-serif;
+}
+
 /* Classe personalizada para o título OPIN com conotação indígena */
 .opin-title {
   font-family: 'Caveat', 'Indie Flower', 'Kalam', 'Brush Script MT', 'Segoe Script', cursive;

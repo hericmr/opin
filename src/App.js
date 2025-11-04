@@ -18,6 +18,7 @@ import { useTutorial } from './hooks/useTutorial';
 
 // Lazy loading dos componentes
 const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));
+const Homepage = React.lazy(() => import("./components/Homepage"));
 const MateriaisDidáticos = React.lazy(() => import("./components/MateriaisDidáticos/MateriaisDidáticos"));
 const AdminPanel = React.lazy(() => import("./components/AdminPanel"));
 const SearchResults = React.lazy(() => import("./components/SearchResults"));
@@ -28,6 +29,8 @@ const AppContent = () => {
   const { dataPoints, loading, error } = useEscolasData();
   const [openPainelFunction, setOpenPainelFunction] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isMapRoute = location?.pathname?.includes('/mapa');
 
   const handlePainelOpenFunction = (openPainelFn) => {
     setOpenPainelFunction(() => openPainelFn);
@@ -63,7 +66,9 @@ const AppContent = () => {
       {/* Meta tags automáticas para escolas específicas */}
       <MetaTagsDetector dataPoints={dataPoints} />
       
-      <Navbar onConteudoClick={() => navigate('/conteudo')} dataPoints={dataPoints} openPainelFunction={openPainelFunction} />
+      {!isMapRoute && (
+        <Navbar onConteudoClick={() => navigate('/conteudo')} dataPoints={dataPoints} openPainelFunction={openPainelFunction} />
+      )}
       <Suspense fallback={
         loading ? null : (
           <div className="flex items-center justify-center p-8 bg-green-50">
@@ -76,6 +81,14 @@ const AppContent = () => {
         <Routes>
           <Route 
             path="/" 
+            element={
+              <main id="main-content" className="flex-grow">
+                <Homepage />
+              </main>
+            } 
+          />
+          <Route 
+            path="/mapa" 
             element={
               <main id="main-content" className="flex-grow">
                 <MapaEscolasIndigenas 
