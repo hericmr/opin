@@ -8,7 +8,7 @@
  */
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import MapSelector from "./MapSelector";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import PainelInformacoes from "./PainelInformacoes";
 import "./MapaEscolasIndigenas.css";
 import { criarSlug } from '../utils/slug';
@@ -27,16 +27,23 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
   } : 'Nenhum dataPoint');
 
   const { refreshKey } = useRefresh();
+  const location = useLocation();
 
   const urlParams = useMemo(() => new URLSearchParams(window.location.search), []);
   const panel = urlParams.get('panel');
   const initialPanel = useMemo(() => {
+    // Primeiro verificar se há dados da escola no navigation state
+    if (location.state?.schoolData) {
+      return location.state.schoolData;
+    }
+    
+    // Depois verificar URL params
     if (panel && panel !== '' && dataPoints && dataPoints.length > 0) {
       const pointFound = dataPoints.find((item) => criarSlug(item.titulo) === panel);
       return pointFound || null;
     }
     return null;
-  }, [panel, dataPoints]);
+  }, [panel, dataPoints, location.state]);
 
   const [painelInfo, setPainelInfo] = useState(initialPanel);
   const [initialPanelOpened, setInitialPanelOpened] = useState(!!initialPanel);
@@ -61,12 +68,25 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
 
   // Abrir painel automaticamente quando initialPanel for encontrado (apenas uma vez)
   useEffect(() => {
-    if (initialPanel && !painelInfo && !initialPanelOpened) {
+    if (initialPanel && !initialPanelOpened) {
       logger.debug('MapaEscolasIndigenas: Abrindo painel automaticamente para:', initialPanel.titulo);
       setPainelInfo(initialPanel);
       setInitialPanelOpened(true);
     }
-  }, [initialPanel, painelInfo, initialPanelOpened]);
+  }, [initialPanel, initialPanelOpened]);
+
+  // Abrir painel quando navigation state mudar (quando vem da busca)
+  useEffect(() => {
+    if (location.state?.schoolData) {
+      const schoolData = location.state.schoolData;
+      // Verificar se é uma escola diferente da atual
+      const isDifferentSchool = !painelInfo || painelInfo.id !== schoolData.id;
+      if (isDifferentSchool) {
+        logger.debug('MapaEscolasIndigenas: Abrindo painel a partir do navigation state:', schoolData.titulo);
+        setPainelInfo(schoolData);
+      }
+    }
+  }, [location.state?.schoolData?.id, painelInfo?.id]);
 
   // Expor a função abrirPainel e refreshPainel para componentes externos
   useEffect(() => {
@@ -102,10 +122,10 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
           refreshKey={refreshKey}
         />
       )}
-      <div className="fixed bottom-4 left-4 z-30 pointer-events-auto">
+      <div className="fixed top-1/2 -translate-y-1/2 left-4 z-30 pointer-events-auto">
         <Link
           to="/"
-          className="block rounded-full border border-green-100 bg-green-900/90 p-2.5 cursor-pointer hover:bg-green-800"
+          className="block rounded-xl bg-green-900/90 hover:bg-green-800 p-2.5 cursor-pointer transition-all duration-200"
           aria-label="Sair do mapa e voltar para a página inicial"
           title="Sair do mapa"
         >

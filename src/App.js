@@ -80,7 +80,7 @@ const AppContent = () => {
             path="/" 
             element={
               <main id="main-content" className="flex-grow">
-                <Homepage />
+                <Homepage dataPoints={dataPoints} />
               </main>
             } 
           />
