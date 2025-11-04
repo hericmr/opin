@@ -26,11 +26,10 @@ export const usePainelDimensions = (isMobile, isMaximized) => {
 
   // Calcular dimensões base
   const dimensions = useMemo(() => {
-    // Determinar altura da navbar baseada na orientação
+    // Determinar orientação para alguns comportamentos de layout
     const isMobileLandscape = isMobile && windowWidth > windowHeight;
-    const navbarHeight = isMobileLandscape ? 48 : isMobile ? 56 : 72;
-    const baseHeight = `calc(100vh - ${navbarHeight}px)`;
-    const baseMaxHeight = isMobile ? "96vh" : "92vh";
+    const baseHeight = '100vh';
+    const baseMaxHeight = '100vh';
 
     // Determinar se está em modo desktop
     const isDesktop = windowWidth >= breakpoints.md;

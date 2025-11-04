@@ -44,6 +44,8 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Texto: controles movidos para o menu de camadas
+
   const handleAdminClick = () => {
     if (isAuthenticated) {
       navigate('/admin');
@@ -81,7 +83,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
     if (coordinates) {
       // Se temos coordenadas, navegar para o mapa e centralizar
       setSearch(searchTerm, coordinates, searchTerm);
-      navigate('/', { 
+      navigate('/mapa', { 
         state: { 
           searchTerm, 
           coordinates,
@@ -101,13 +103,13 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
       // Abrir o painel de informações com os dados da escola
       openPainelFunction(result.data);
       // Navegar para o mapa se não estivermos lá
-      if (location.pathname !== '/') {
-        navigate('/');
+      if (location.pathname !== '/mapa') {
+        navigate('/mapa');
       }
     } else if (result.coordinates) {
       // Fallback: navegar para o mapa e centralizar no ponto
       setSearch(result.title, result.coordinates, result.title);
-      navigate('/', { 
+      navigate('/mapa', { 
         state: { 
           searchTerm: result.title, 
           coordinates: result.coordinates,

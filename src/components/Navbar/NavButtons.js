@@ -7,7 +7,7 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
   const location = useLocation();
 
   const isActive = (path) => {
-    if (path === '/') return location.pathname === '/';
+    if (path === '/mapa') return location.pathname === '/mapa';
     if (path === '/dashboard') {
       return location.pathname === '/dashboard' || 
              location.pathname === '/painel-dados' || 
@@ -28,11 +28,11 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
     <nav className="flex items-center space-x-2" role="navigation" aria-label="Navegação principal">
       {/* Botão Home/Mapa */}
       <button
-        onClick={() => navigate('/')}
-        className={getButtonStyle(isActive('/'))}
-        title="Voltar ao mapa das escolas indígenas"
+        onClick={() => navigate('/mapa')}
+        className={getButtonStyle(isActive('/mapa'))}
+        title="Ir para o mapa das escolas indígenas"
         aria-label="Ir para o mapa das escolas indígenas"
-        aria-current={isActive('/') ? 'page' : undefined}
+        aria-current={isActive('/mapa') ? 'page' : undefined}
       >
         <Home className="w-4 h-4" />
         <span className="hidden xl:inline">Mapa</span>
