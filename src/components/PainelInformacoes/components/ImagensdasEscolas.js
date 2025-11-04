@@ -8,7 +8,7 @@ import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 import '../../ReusableImageZoom.css';
 
-const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
+const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false }) => {
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [imagemZoom, setImagemZoom] = useState(null);
@@ -178,6 +178,11 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0 }) => {
         </button>
       </div>
     );
+  }
+
+  // Don't show thumbnails when maximized (images are shown in sidebar)
+  if (isMaximized) {
+    return null;
   }
 
   return (

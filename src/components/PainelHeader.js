@@ -39,6 +39,7 @@ const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagem
     <header className={`relative border-b border-green-100 ${isMobileLandscape ? 'min-h-[60px]' : ''}`}>
       <div className={`px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-2 md:py-3 ${headerHalfClass}`}>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pr-12">
+          {/* School title - occupies only right half when maximized */}
           <div className="space-y-1">
             <h2 
               id="painel-titulo"
