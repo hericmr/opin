@@ -117,11 +117,23 @@
 
 /* Split view for maximized desktop mode */
 @media (min-width: 1024px) {
+  /* When maximized, header should only occupy the right half */
+  .mj-panel.mj-maximized header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    background: #ffffff;
+    z-index: 10;
+    border-bottom: 1px solid rgba(5, 150, 105, 0.1);
+  }
+  
   /* When maximized, constrain header content to the text half (right side in our layout) */
   .mj-panel.mj-maximized .mj-header-half-right {
-    max-width: 50%;
-    margin-left: auto; /* push to right half */
+    max-width: 100%;
+    margin-left: 0;
   }
+  
   .mj-split {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -137,6 +149,7 @@
     background: #ffffff;
     overflow: hidden; /* media fills and handles own overflow */
     position: relative;
+    width: 100%;
   }
 
   .mj-split-right {
@@ -144,6 +157,38 @@
     background: #fafafa;
     padding: 0;
     /* do not force overflow hidden; content div controls scrolling */
+    padding-top: 0; /* Header is absolutely positioned, so no padding needed */
+  }
+  
+  /* Add padding to content area to account for absolutely positioned header */
+  .mj-panel.mj-maximized .mj-split-right.mj-panel-content {
+    padding-top: 80px; /* Adjust based on header height */
+  }
+  
+  /* Ensure images on the left take full width */
+  .mj-split-left img,
+  .mj-split-left .w-full {
+    width: 100% !important;
+  }
+  
+  /* Ensure teachers' testimony appears only in right half, no grid */
+  .mj-panel.mj-maximized .mj-split-right .historia-professor-header {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    grid-column: none !important;
+    position: relative !important;
+    z-index: 1 !important; /* Lower than panel header (z-index: 10) */
+  }
+  
+  /* Ensure the testimony container doesn't create grid */
+  .mj-panel.mj-maximized .mj-split-right > div > div:last-child {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   /* Desktop-only custom scrollbar for panel content (green tones) */

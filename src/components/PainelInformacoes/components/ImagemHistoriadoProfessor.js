@@ -7,7 +7,7 @@ import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 import '../../ReusableImageZoom.css';
 
-const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
+const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = false }) => {
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -118,6 +118,11 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0 }) => {
   }
 
   if (!imagens.length) {
+    return null;
+  }
+
+  // Don't show thumbnails when maximized (images are shown in sidebar)
+  if (isMaximized) {
     return null;
   }
 

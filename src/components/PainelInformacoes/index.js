@@ -120,6 +120,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
           shouldUseGrid={true}
           refreshKey={refreshKey}
           sectionRefs={sectionRefs.current}
+          isMaximized={isMaximized}
         />
         {documentos && documentos.length > 0 && (
           <DocumentViewer 

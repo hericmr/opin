@@ -5,7 +5,7 @@ import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
 import FotoProfessor from '../FotoProfessor';
 import './HistoriadoProfessor.css';
 
-const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
+const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false }) => {
   const [historias, setHistorias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -104,9 +104,9 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
   const hasMultipleHistorias = historias.length > 1;
 
   return (
-    <div className="mt-8 mb-12 flex flex-col items-center">
-      {/* Header externo ao card */}
-      <header className="mb-6 sm:mb-8 max-w-4xl mx-auto w-full">
+    <div className="mt-8 mb-12 flex flex-col w-full">
+      {/* Header externo ao card - apenas na direita quando maximizado */}
+      <header className={`historia-professor-header mb-6 sm:mb-8 w-full ${isMaximized ? '' : 'max-w-4xl'}`}>
         <div className="flex items-center justify-between mb-3 sm:mb-4">
           <div className="flex items-center gap-3">
             <span className="bg-green-200 rounded-full flex items-center justify-center w-16 h-16 sm:w-28 sm:h-28">
@@ -139,17 +139,18 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
         <div className="h-1 w-20 sm:w-24 bg-green-300 rounded-full" />
       </header>
 
-      {/* Card com conteúdo centralizado */}
+      {/* Card com conteúdo */}
       <article
-        className="
+        className={`
           px-4 sm:px-6 md:px-8 py-6
           bg-white rounded-2xl shadow-lg
           prose prose-sm sm:prose-base md:prose-lg lg:prose-xl
           prose-headings:text-green-900 prose-p:text-black prose-p:leading-relaxed prose-p:text-justify
           prose-img:rounded-xl prose-img:shadow-lg
           prose-a:text-green-700 prose-a:no-underline prose-a:border-b-2 prose-a:border-green-100 hover:prose-a:border-green-600
-          max-w-4xl mx-auto w-full
-        "
+          w-full
+          ${isMaximized ? '' : 'max-w-4xl'}
+        `}
       >
 
       {/* Conteúdo da história atual */}
@@ -273,7 +274,7 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0 }) => {
         </div>
       )}
 
-        <ImagemHistoriadoProfessor escola_id={escola.id} refreshKey={refreshKey} />
+        <ImagemHistoriadoProfessor escola_id={escola.id} refreshKey={refreshKey} isMaximized={isMaximized} />
       </article>
     </div>
   );

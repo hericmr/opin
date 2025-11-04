@@ -29,8 +29,22 @@ const BREAKPOINTS = {
 };
 
 export const useBreakpoint = () => {
-  const [breakpoint, setBreakpoint] = useState('desktop');
-  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+  // Calcular breakpoint inicial baseado na largura real
+  const getInitialBreakpoint = () => {
+    if (typeof window === 'undefined') return 'desktop';
+    const width = window.innerWidth;
+    if (width <= BREAKPOINTS.mobile) return 'mobile';
+    if (width <= BREAKPOINTS.tablet) return 'tablet';
+    return 'desktop';
+  };
+
+  const getInitialWidth = () => {
+    if (typeof window === 'undefined') return 1024;
+    return window.innerWidth;
+  };
+
+  const [breakpoint, setBreakpoint] = useState(getInitialBreakpoint);
+  const [width, setWidth] = useState(getInitialWidth);
 
   useEffect(() => {
     const updateBreakpoint = () => {
@@ -46,14 +60,18 @@ export const useBreakpoint = () => {
       }
     };
 
-    // Verificar no mount
+    // Verificar imediatamente no mount
     updateBreakpoint();
+
+    // Verificar também após um pequeno delay para garantir que o DOM está pronto
+    const timeoutId = setTimeout(updateBreakpoint, 0);
 
     // Adicionar listener
     window.addEventListener('resize', updateBreakpoint);
     
     // Cleanup
     return () => {
+      clearTimeout(timeoutId);
       window.removeEventListener('resize', updateBreakpoint);
     };
   }, []);
@@ -68,6 +86,7 @@ export const useBreakpoint = () => {
 };
 
 export default useBreakpoint;
+
 
 
 

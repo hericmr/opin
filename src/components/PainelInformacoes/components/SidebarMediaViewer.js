@@ -5,7 +5,7 @@ import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService'
 import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 
-const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, showSchool = true, scrollProgress, headerUrl }) => {
+const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, showSchool = true, scrollProgress, headerUrl, onCurrentItemChange }) => {
   const [items, setItems] = useState([]);
   const [current, setCurrent] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -96,6 +96,13 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
   const hasItems = items.length > 0;
   const currentItem = useMemo(() => (hasItems ? items[current] : null), [items, current, hasItems]);
 
+  // Notify parent when current item changes
+  useEffect(() => {
+    if (onCurrentItemChange && currentItem) {
+      onCurrentItemChange(currentItem);
+    }
+  }, [currentItem, onCurrentItemChange]);
+
   // Sync current image to scroll progress
   useEffect(() => {
     if (!hasItems || typeof scrollProgress !== 'number') return;
@@ -159,6 +166,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
           />
         </div>
 
+        {/* Caption at bottom with black background */}
         <div className="absolute bottom-3 left-3 right-3 z-10 flex">
           <div
             className="text-white px-3 py-2"
