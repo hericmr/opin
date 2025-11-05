@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import { useShare } from "../hooks/useShare";
 import { useDynamicURL } from "../hooks/useDynamicURL";
 import { useClickOutside } from "../hooks/useClickOutside";
@@ -7,7 +8,6 @@ import useDocumentosEscola from "../hooks/useDocumentosEscola";
 // Import modular components
 import EscolaInfo from "./components/EscolaInfo";
 import TerraIndigenaInfo from "./TerraIndigenaInfo";
-import ShareSection from "./ShareSection";
 import IntroPanel from "./IntroPanel";
 import PainelContainer from "./components/PainelContainer";
 import DocumentViewer from "./components/DocumentViewer";
@@ -17,13 +17,29 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
   const painelRef = useRef(null);
   const contentRef = useRef(null);
   const sectionRefs = useRef({});
+  const location = useLocation();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isMaximized, setIsMaximized] = useState(false);
   
-  const { gerarLinkCustomizado, copiarLink, compartilhar } = useShare(painelInfo);
+  // Verificar se o painel foi aberto via URL (link compartilhado)
+  const openedFromUrl = useMemo(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.has('panel');
+  }, []);
+  
+  // Iniciar maximizado por padrão, especialmente se foi aberto via URL
+  const [isMaximized, setIsMaximized] = useState(true);
+  
+  const { gerarLinkCustomizado } = useShare(painelInfo);
   const { documentos } = useDocumentosEscola(painelInfo?.id);
   
   const toggleMaximize = () => setIsMaximized(prev => !prev);
+  
+  // Garantir que painel abre maximizado quando aberto via URL (link compartilhado)
+  useEffect(() => {
+    if (openedFromUrl && painelInfo) {
+      setIsMaximized(true);
+    }
+  }, [openedFromUrl, painelInfo]);
   
   useDynamicURL(painelInfo, gerarLinkCustomizado);
   useClickOutside(painelRef, closePainel);
@@ -141,6 +157,9 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
     );
   };
 
+  // Generate share URL
+  const shareUrl = painelInfo ? gerarLinkCustomizado() : '';
+
   return (
     <div ref={painelRef}>
       <PainelContainer
@@ -151,13 +170,10 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
         contentRef={contentRef}
         refreshKey={refreshKey}
         rightNav={null}
+        shareUrl={shareUrl}
+        shareTitle={painelInfo?.titulo}
       >
         {renderContent()}
-        <ShareSection 
-          copiarLink={copiarLink} 
-          compartilhar={compartilhar} 
-          painelInfo={painelInfo}
-        />
       </PainelContainer>
     </div>
   );

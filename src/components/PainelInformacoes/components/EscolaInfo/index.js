@@ -89,7 +89,7 @@ const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0, sectio
 
       {/* História da Escola em destaque */}
       <div ref={(el) => sectionRefs && (sectionRefs.historia = el)}>
-        <HistoriaEscola escola={escola} refreshKey={refreshKey} />
+        <HistoriaEscola escola={escola} refreshKey={refreshKey} isMaximized={isMaximized} />
       </div>
       
       {/* Imagens da escola, agora renderizadas independentemente da história */}

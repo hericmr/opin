@@ -140,4 +140,5 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
   );
 };
 
-export default React.memo(MapaEscolasIndigenas);
+// Export directly - React.lazy handles code splitting
+export default MapaEscolasIndigenas;

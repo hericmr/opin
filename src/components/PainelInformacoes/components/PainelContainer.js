@@ -15,7 +15,9 @@ const PainelContainer = ({
   onToggleMaximize,
   contentRef,
   rightNav,
-  refreshKey
+  refreshKey,
+  shareUrl,
+  shareTitle
 }) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [currentImageCaption, setCurrentImageCaption] = useState(null);
@@ -24,6 +26,33 @@ const PainelContainer = ({
   
   // Hook de preload de imagens
   const { isImagePreloaded } = useImagePreloader(painelInfo?.id, true);
+
+  // Preload header image immediately when panel becomes visible
+  // This ensures the image is cached before user maximizes the panel
+  useEffect(() => {
+    if (painelInfo?.imagem_header && isVisible) {
+      // Method 1: Create Image object to trigger browser cache
+      const img = new Image();
+      img.src = painelInfo.imagem_header;
+      
+      // Method 2: Use link preload for better browser support
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = painelInfo.imagem_header;
+      if ('fetchPriority' in link) {
+        link.fetchPriority = 'high';
+      }
+      document.head.appendChild(link);
+      
+      return () => {
+        // Clean up link element when component unmounts or image changes
+        if (link.parentNode === document.head) {
+          document.head.removeChild(link);
+        }
+      };
+    }
+  }, [painelInfo?.imagem_header, isVisible]);
 
   if (!painelInfo) return null;
 
@@ -76,6 +105,8 @@ const PainelContainer = ({
         toggleMaximize={onToggleMaximize}
         isMaximized={isMaximized}
         imagemHeader={painelInfo.imagem_header}
+        shareUrl={shareUrl}
+        shareTitle={shareTitle}
       />
       
       {/* Navegação fixa à direita do painel */}

@@ -109,13 +109,12 @@ const OpenLayersMarkers = ({
    * Handler para hover em marcador
    */
   const handleMarkerHover = useCallback((feature, event) => {
-    // IMPORTANTE: Não desabilitar hover em mobile
-    // O sistema de interações precisa do hover para funcionar corretamente
-    // O hover é usado para mostrar tooltips e aplicar estilos visuais
+    // IMPORTANTE: O hover deve funcionar no desktop
+    // No mobile, o hover também é usado para mostrar tooltips
     
     setHoveredMarker(feature);
     
-    // Aplicar estilo de hover
+    // Aplicar estilo de hover (anel branco de seleção)
     if (vectorLayerRef.current) {
       vectorLayerRef.current.setStyle((f) => {
         if (f === feature) {

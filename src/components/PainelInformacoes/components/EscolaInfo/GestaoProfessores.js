@@ -10,43 +10,9 @@ import {
   Check,
   X,
 } from 'lucide-react';
+// Import Check from lucide-react for boolean status rendering
 import InfoSection from '../InfoSection';
-
-const MiniCard = ({ icon: Icon, label, value, description, type = 'text' }) => {
-  const renderValue = () => {
-    if (type === 'number') {
-      return (
-        <div className="text-center w-full flex items-center justify-center h-full">
-          <div className="text-3xl font-medium text-green-800" style={{fontSize: '1.875rem', fontWeight: '500', color: '#166534'}}>
-            {value || '0'}
-          </div>
-        </div>
-      );
-    }
-    return (
-      <div className="text-sm text-gray-800 font-medium mb-2 break-words text-center w-full">{value}</div>
-    );
-  };
-
-  return (
-    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-2 sm:p-3 transition-all duration-200 hover:shadow-sm h-[120px] flex flex-col">
-      {/* Header com ícone e label */}
-      <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2 sm:mb-3 flex-shrink-0 h-[40px]">
-        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 flex-shrink-0" />
-        <span className="text-xs text-gray-600 font-medium leading-tight">{label}</span>
-      </div>
-      {/* Conteúdo do valor */}
-      <div className="flex-1 flex items-center justify-center">
-        {renderValue()}
-      </div>
-      {description && (
-        <div className="text-xs text-gray-600 whitespace-pre-line leading-relaxed break-words mt-2">
-          {description}
-        </div>
-      )}
-    </div>
-  );
-};
+import NativeLandCard from '../NativeLandCard';
 
 // const formatarNomeProfessor = (nome) => { // Removido - não utilizado
 //   if (!nome) return nome;
@@ -123,55 +89,72 @@ const GestaoProfessores = memo(({ escola }) => {
     <InfoSection title="Gestores" icon={UsersRound}>
       <div className="space-y-4 mt-1">
         {/* Cards em grid de 2 colunas em mobile, 3 em desktop */}
-        <div className="grid grid-cols-3 lg:grid-cols-3 gap-0.5 sm:gap-1 items-stretch">
-          <MiniCard
+        <div className="grid grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-3 items-stretch overflow-visible" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+          <NativeLandCard
             icon={UserCheck}
             label="Professores Indígenas"
             value={escola.professores_indigenas}
             type="number"
+            showIconCircle={true}
           />
-          <MiniCard
+          <NativeLandCard
             icon={UserMinus}
             label="Professores Não Indígenas"
             value={escola.professores_nao_indigenas}
             type="number"
+            showIconCircle={true}
           />
-          <MiniCard
+          <NativeLandCard
             icon={MessageCircle}
             label="Professores que falam língua indígena"
             value={renderBooleanStatus(escola.professores_falam_lingua)}
+            showIconCircle={true}
           />
         </div>
         
         {/* Card de Formação em linha inteira */}
         {formacao?.status && (
-          <MiniCard
-            icon={Star}
-            label="Formação dos Professores"
-            value={renderBooleanStatus(formacao.status)}
-            description={formacao.descricao}
-          />
+          <div style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+            <NativeLandCard
+              icon={Star}
+              label="Formação dos Professores"
+              value={renderBooleanStatus(formacao.status)}
+              description={formacao.descricao}
+              showIconCircle={true}
+              className="h-auto min-h-[140px]"
+            />
+          </div>
         )}
       </div>
 
       <div className="space-y-4 mt-4">
-        <MiniCard
-          icon={User}
-          label="Gestão/Nome"
-          value={escola.gestao}
-        />
-        <MiniCard
-          icon={UsersRound}
-          label="Outros Funcionários"
-          value={escola.outros_funcionarios}
-        />
-        {continuada?.status && (
-          <MiniCard
-            icon={NotebookPen}
-            label="Visitas de Supervisores e Formação Continuada"
-            value={renderBooleanStatus(continuada.status)}
-            description={continuada.descricao}
+        <div style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+          <NativeLandCard
+            icon={User}
+            label="Gestão/Nome"
+            value={escola.gestao}
+            showIconCircle={true}
           />
+        </div>
+        <div style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+          <NativeLandCard
+            icon={UsersRound}
+            label="Outros Funcionários"
+            value={escola.outros_funcionarios}
+            showIconCircle={true}
+          />
+        </div>
+        {continuada?.status && (
+          <div style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+            <NativeLandCard
+              icon={NotebookPen}
+              label="Visitas de Supervisores e Formação Continuada"
+              value={renderBooleanStatus(continuada.status)}
+              description={continuada.descricao}
+              showIconCircle={true}
+              className="h-auto min-h-[140px]"
+            />
+          </div>
         )}
       </div>
     </InfoSection>

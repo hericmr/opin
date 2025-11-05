@@ -6,12 +6,25 @@ import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 
 const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, showSchool = true, scrollProgress, headerUrl, onCurrentItemChange }) => {
-  const [items, setItems] = useState([]);
+  // Initialize with header image if available to show it immediately
+  const initialHeaderItem = headerUrl ? [{
+    id: `header-${escolaId || 'temp'}`,
+    url: headerUrl,
+    titulo: '',
+    descricao: '',
+    autor: '',
+    dataFoto: '',
+    origem: 'capa',
+  }] : [];
+  
+  const [items, setItems] = useState(initialHeaderItem);
   const [current, setCurrent] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { isImagePreloaded } = useImagePreloader(escolaId, true);
   const [manualOverrideUntil, setManualOverrideUntil] = useState(0);
+  // Track image aspect ratios to determine if image is tall/narrow
+  const [imageAspectRatios, setImageAspectRatios] = useState(new Map());
 
   const fetchBucketList = useCallback(async (bucket, categoria) => {
     const { data: files, error: listErr } = await supabase.storage.from(bucket).list(`${escolaId}/`);
@@ -43,15 +56,42 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
     return mapped;
   }, [escolaId]);
 
+  // Update items immediately when headerUrl changes to show image instantly
+  useEffect(() => {
+    if (headerUrl) {
+      const headerItem = {
+        id: `header-${escolaId || 'temp'}`,
+        url: headerUrl,
+        titulo: '',
+        descricao: '',
+        autor: '',
+        dataFoto: '',
+        origem: 'capa',
+      };
+      setItems(prev => {
+        // Check if header already exists
+        const exists = prev.some(i => i.origem === 'capa' && i.url === headerUrl);
+        if (exists) return prev;
+        // Replace existing header or add new one at the beginning
+        const withoutHeader = prev.filter(i => i.origem !== 'capa');
+        return [headerItem, ...withoutHeader];
+      });
+    }
+  }, [headerUrl, escolaId]);
+
   useEffect(() => {
     let mounted = true;
     if (!escolaId) {
-      setItems([]);
+      // If no escolaId but we have headerUrl, keep it (already handled by above effect)
       setLoading(false);
       return;
     }
     setLoading(true);
     setError('');
+    
+    // Show header image immediately if available (already in items state)
+    // This prevents the delay when maximizing the panel
+    
     (async () => {
       try {
         const promises = [];
@@ -91,10 +131,31 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
       }
     })();
     return () => { mounted = false; };
-  }, [escolaId, refreshKey, fetchBucketList, showSchool, showTeacher]);
+  }, [escolaId, refreshKey, fetchBucketList, showSchool, showTeacher, headerUrl]);
 
   const hasItems = items.length > 0;
-  const currentItem = useMemo(() => (hasItems ? items[current] : null), [items, current, hasItems]);
+  const currentItem = useMemo(() => {
+    if (!hasItems || current < 0 || current >= items.length) return null;
+    return items[current] || null;
+  }, [items, current, hasItems]);
+  
+  // Detect if current image is tall/narrow (portrait orientation)
+  const isTallImage = useMemo(() => {
+    if (!currentItem || !currentItem.url) return false;
+    const aspectRatio = imageAspectRatios.get(currentItem.url);
+    // If height > width, it's a tall image (aspect ratio < 1 means portrait)
+    return aspectRatio !== undefined && aspectRatio < 1;
+  }, [currentItem, imageAspectRatios]);
+  
+  // Handler to detect image dimensions when image loads
+  const handleImageLoad = useCallback((e) => {
+    if (!currentItem || !currentItem.url) return;
+    const img = e.target || e.currentTarget;
+    if (img && img.naturalWidth && img.naturalHeight) {
+      const aspectRatio = img.naturalWidth / img.naturalHeight;
+      setImageAspectRatios(prev => new Map(prev).set(currentItem.url, aspectRatio));
+    }
+  }, [currentItem]);
 
   // Notify parent when current item changes
   useEffect(() => {
@@ -126,73 +187,125 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
     setManualOverrideUntil(Date.now() + 1200);
   }, [hasItems, items.length]);
 
-  if (loading) {
-    return <div className="text-gray-500">Carregando imagens...</div>;
-  }
-  if (error) {
+  // Show error only if there's an error and no items to display
+  if (error && !hasItems) {
     return <div className="text-red-600">{error}</div>;
   }
-  if (!hasItems) {
+  
+  // Show "no items" only if not loading and no items
+  if (!loading && !hasItems) {
     return <div className="text-gray-600">Nenhuma imagem disponível.</div>;
   }
+  
+  // If loading but we have items (e.g., header image), show the viewer with loading indicator
 
   return (
     <div className="h-full w-full relative">
       <div className="absolute inset-0">
-        <button
-          type="button"
-          className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow"
-          onClick={prev}
-          aria-label="Imagem anterior"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button
-          type="button"
-          className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow"
-          onClick={next}
-          aria-label="Próxima imagem"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
+        {hasItems && items.length > 1 && (
+          <>
+            <button
+              type="button"
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow"
+              onClick={prev}
+              aria-label="Imagem anterior"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow"
+              onClick={next}
+              aria-label="Próxima imagem"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </>
+        )}
 
-        <div className="w-full h-full bg-black/5 overflow-hidden">
-          <OptimizedImage
-            src={currentItem.url}
-            alt={currentItem.titulo || 'Imagem'}
-            className="w-full h-full object-cover"
-            isPreloaded={isImagePreloaded(currentItem.url)}
-            style={{ maxHeight: '100%', maxWidth: '100%' }}
-          />
+        <div className="w-full h-full bg-black/5 overflow-y-auto overflow-x-hidden flex items-start justify-center">
+          {currentItem && (
+            <>
+              {/* Use regular img with smart object-fit: contain for tall images, cover for wide images */}
+              {currentItem.origem === 'capa' ? (
+                <img
+                  src={currentItem.url}
+                  alt={currentItem.titulo || 'Imagem'}
+                  className={isTallImage ? 'w-full object-contain' : 'w-full h-full object-cover'}
+                  style={{ 
+                    maxHeight: isTallImage ? 'none' : '100%',
+                    minHeight: isTallImage ? '100%' : 'auto',
+                    maxWidth: '100%', 
+                    display: 'block',
+                    objectPosition: isTallImage ? 'top center' : 'center center'
+                  }}
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  onLoad={handleImageLoad}
+                />
+              ) : (
+                <OptimizedImage
+                  src={currentItem.url}
+                  alt={currentItem.titulo || 'Imagem'}
+                  className={isTallImage ? 'w-full object-contain' : 'w-full h-full object-cover'}
+                  isPreloaded={isImagePreloaded(currentItem.url)}
+                  priority="high"
+                  style={{ 
+                    maxHeight: isTallImage ? 'none' : '100%',
+                    minHeight: isTallImage ? '100%' : 'auto',
+                    maxWidth: '100%',
+                    objectPosition: isTallImage ? 'top center' : 'center center'
+                  }}
+                  onLoad={(e) => {
+                    // OptimizedImage passes the event, but we need the actual img element
+                    if (!currentItem || !currentItem.url) return;
+                    const img = e?.target || document.querySelector(`img[src="${currentItem.url}"]`);
+                    if (img && img.naturalWidth && img.naturalHeight) {
+                      const aspectRatio = img.naturalWidth / img.naturalHeight;
+                      setImageAspectRatios(prev => new Map(prev).set(currentItem.url, aspectRatio));
+                    }
+                  }}
+                />
+              )}
+            </>
+          )}
+          {loading && hasItems && (
+            <div className="absolute top-4 right-4 z-20 bg-white/90 px-3 py-1.5 rounded-full text-xs text-gray-600 shadow">
+              Carregando mais imagens...
+            </div>
+          )}
         </div>
 
         {/* Caption at bottom with black background */}
-        <div className="absolute bottom-3 left-3 right-3 z-10 flex">
-          <div
-            className="text-white px-3 py-2"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.88)',
-              borderRadius: '8px',
-              maxWidth: '80%',
-            }}
-          >
-            {currentItem.titulo && (
-              <h4 className="text-sm font-semibold m-0">{currentItem.titulo}</h4>
-            )}
-            <div className="text-[11px] mt-0.5 space-x-2">
-              {currentItem.origem && <span className="capitalize">{currentItem.origem}</span>}
-              {currentItem.autor && <span>Por: {currentItem.autor}</span>}
-              {currentItem.dataFoto && (
-                <span>{new Date(currentItem.dataFoto).toLocaleDateString('pt-BR')}</span>
+        {currentItem && (
+          <div className="absolute bottom-3 left-3 right-3 z-10 flex">
+            <div
+              className="text-white px-3 py-2"
+              style={{
+                backgroundColor: 'rgba(0,0,0,0.88)',
+                borderRadius: '8px',
+                maxWidth: '80%',
+              }}
+            >
+              {currentItem.titulo && (
+                <h4 className="text-sm font-semibold m-0">{currentItem.titulo}</h4>
+              )}
+              <div className="text-[11px] mt-0.5 space-x-2">
+                {currentItem.origem && <span className="capitalize">{currentItem.origem}</span>}
+                {currentItem.autor && <span>Por: {currentItem.autor}</span>}
+                {currentItem.dataFoto && (
+                  <span>{new Date(currentItem.dataFoto).toLocaleDateString('pt-BR')}</span>
+                )}
+              </div>
+              {currentItem.descricao && (
+                <p className="text-xs mt-1 m-0">
+                  {currentItem.descricao}
+                </p>
               )}
             </div>
-            {currentItem.descricao && (
-              <p className="text-xs mt-1 m-0">
-                {currentItem.descricao}
-              </p>
-            )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -124,8 +124,27 @@
     right: 0;
     width: 50%;
     background: #ffffff;
-    z-index: 10;
+    z-index: 1000;
     border-bottom: 1px solid rgba(5, 150, 105, 0.1);
+  }
+  
+  /* Ensure header container and its content are above everything */
+  .mj-panel.mj-maximized header .mj-header-half-right {
+    z-index: 1000;
+  }
+  
+  /* Ensure title has higher z-index than share buttons */
+  .mj-panel.mj-maximized header h2,
+  .mj-panel.mj-maximized header .space-y-1 {
+    position: relative;
+    z-index: 1015;
+  }
+  
+  /* Share buttons should be below title but still above other page elements */
+  .mj-panel.mj-maximized header .linkSocialContainer,
+  .mj-panel.mj-maximized header .absolute.top-2,
+  .mj-panel.mj-maximized header .absolute.top-4 {
+    z-index: 1005;
   }
   
   /* When maximized, constrain header content to the text half (right side in our layout) */
@@ -133,7 +152,7 @@
     max-width: 100%;
     margin-left: 0;
   }
-  
+
   .mj-split {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -147,7 +166,8 @@
 
   .mj-split-left {
     background: #ffffff;
-    overflow: hidden; /* media fills and handles own overflow */
+    overflow-y: auto; /* Allow scrolling for tall images */
+    overflow-x: hidden;
     position: relative;
     width: 100%;
   }
@@ -173,6 +193,18 @@
   
   /* Ensure teachers' testimony appears only in right half, no grid */
   .mj-panel.mj-maximized .mj-split-right .historia-professor-header {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    grid-column: none !important;
+    position: relative !important;
+    z-index: 1 !important; /* Lower than panel header (z-index: 10) */
+  }
+  
+  /* Ensure school history appears only in right half, no grid - same format as teachers' testimony */
+  .mj-panel.mj-maximized .mj-split-right .historia-escola-header {
     display: block !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -222,4 +254,28 @@
   }
 }
 
+/* General z-index rules for all panel states - ensure header is above everything */
+.mj-panel header {
+  z-index: 1000;
+}
+
+.mj-panel header .mj-header-half-right,
+.mj-panel header > div:first-child {
+  position: relative;
+  z-index: 1000;
+}
+
+/* Title should be above share buttons */
+.mj-panel header h2,
+.mj-panel header .space-y-1 {
+  position: relative;
+  z-index: 1015;
+}
+
+/* Share buttons should be below title but still above other page elements */
+.mj-panel header .linkSocialContainer,
+.mj-panel header .absolute.top-2,
+.mj-panel header .absolute.top-4 {
+  z-index: 1005;
+}
 

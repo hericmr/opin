@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { showClickPulse, flyTo } from '../utils/openlayers/effects';
-import { createTooltipHTML, createClusterTooltipHTML } from '../utils/mapUtils';
 
 export const useMapEvents = (map, mapContainer, onPainelOpen) => {
   const tooltipElement = useRef(null);
@@ -139,27 +138,34 @@ export const useMapEvents = (map, mapContainer, onPainelOpen) => {
   const createTooltipElement = (event, schoolData, container) => {
     const element = document.createElement('div');
     element.className = 'ol-tooltip';
-    element.textContent = createTooltipHTML(schoolData);
+    // Mostrar apenas o nome da escola
+    const schoolName = schoolData?.titulo || 'Escola Indígena';
+    element.textContent = schoolName;
+    
+    // Estilo minimalista e claro que combina com o design do site
     element.style.position = 'absolute';
-    element.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-    element.style.color = 'white';
+    element.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+    element.style.color = '#4B5563'; // Texto mais claro, não preto
     element.style.padding = '6px 10px';
-    element.style.borderRadius = '4px';
-    element.style.fontSize = '13px';
-    element.style.fontFamily = 'Arial, sans-serif';
-    element.style.fontWeight = 'normal';
-    element.style.maxWidth = '200px';
+    element.style.borderRadius = '6px';
+    element.style.fontSize = '12px';
+    element.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+    element.style.fontWeight = '400'; // Peso mais leve, não bold
+    element.style.maxWidth = '250px';
     element.style.whiteSpace = 'nowrap';
     element.style.overflow = 'hidden';
     element.style.textOverflow = 'ellipsis';
     element.style.zIndex = '1000';
     element.style.pointerEvents = 'none';
-    element.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.2)';
+    element.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)';
+    element.style.border = '1px solid rgba(5, 150, 105, 0.15)';
+    element.style.transition = 'all 0.2s ease';
+    element.style.backdropFilter = 'blur(8px)';
     
     const coordinate = event.coordinate;
     const pixel = map.getPixelFromCoordinate(coordinate);
-    element.style.left = (pixel[0] + 10) + 'px';
-    element.style.top = (pixel[1] - 10) + 'px';
+    element.style.left = (pixel[0] + 15) + 'px';
+    element.style.top = (pixel[1] - 45) + 'px';
     
     container.appendChild(element);
     return element;
@@ -169,27 +175,32 @@ export const useMapEvents = (map, mapContainer, onPainelOpen) => {
   const createClusterTooltipElement = (event, count, container) => {
     const element = document.createElement('div');
     element.className = 'ol-tooltip';
-    element.textContent = createClusterTooltipHTML(count);
+    element.textContent = `${count} escolas`;
+    
+    // Estilo minimalista e claro que combina com o design do site
     element.style.position = 'absolute';
-    element.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-    element.style.color = 'white';
+    element.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+    element.style.color = '#4B5563'; // Texto mais claro, não preto
     element.style.padding = '6px 10px';
-    element.style.borderRadius = '4px';
-    element.style.fontSize = '13px';
-    element.style.fontFamily = 'Arial, sans-serif';
-    element.style.fontWeight = 'normal';
+    element.style.borderRadius = '6px';
+    element.style.fontSize = '12px';
+    element.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+    element.style.fontWeight = '400'; // Peso mais leve, não bold
     element.style.maxWidth = '200px';
     element.style.whiteSpace = 'nowrap';
     element.style.overflow = 'hidden';
     element.style.textOverflow = 'ellipsis';
     element.style.zIndex = '1000';
     element.style.pointerEvents = 'none';
-    element.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.2)';
+    element.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)';
+    element.style.border = '1px solid rgba(5, 150, 105, 0.15)';
+    element.style.transition = 'all 0.2s ease';
+    element.style.backdropFilter = 'blur(8px)';
     
     const coordinate = event.coordinate;
     const pixel = map.getPixelFromCoordinate(coordinate);
-    element.style.left = (pixel[0] + 10) + 'px';
-    element.style.top = (pixel[1] - 10) + 'px';
+    element.style.left = (pixel[0] + 15) + 'px';
+    element.style.top = (pixel[1] - 45) + 'px';
     
     container.appendChild(element);
     return element;
