@@ -5,36 +5,9 @@ import {
   GraduationCap,
   Users,
   Heart,
-  X,
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
-
-const ProjectCard = ({ icon: Icon, label, value }) => {
-  const isNegative = value?.trim().toLowerCase() === 'não';
-
-  return (
-    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-5 transition-all duration-200 hover:shadow-sm min-h-[120px] flex flex-col">
-      <div className="flex items-start gap-4 flex-1">
-        <Icon className="w-5 h-5 text-gray-700 mt-0.5 flex-shrink-0" />
-        <div className="flex-1 min-w-0 flex flex-col space-y-4">
-          <div className="text-sm font-medium text-gray-700 flex-shrink-0">{label}</div>
-          <div className="flex-1 flex items-start">
-            {isNegative ? (
-              <div className="text-sm text-gray-500 flex items-center gap-1">
-                <X className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                Não
-              </div>
-            ) : (
-              <div className="text-sm text-gray-800 leading-relaxed break-words">
-                {value}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import NativeLandCard from '../NativeLandCard';
 
 const ProjetosParcerias = memo(({ escola }) => {
   if (!escola) return null;
@@ -75,15 +48,23 @@ const ProjetosParcerias = memo(({ escola }) => {
 
   return (
     <InfoSection title="Projetos e Parcerias" icon={Target}>
-      <div className="grid grid-cols-1 gap-6 items-stretch">
-        {availableProjects.map((project) => (
-          <ProjectCard
-            key={project.field}
-            icon={project.icon}
-            label={project.label}
-            value={escola[project.field]}
-          />
-        ))}
+      <div className="grid grid-cols-1 gap-4 items-stretch overflow-visible" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+        {availableProjects.map((project) => {
+          const value = escola[project.field];
+          const isNegative = value?.trim().toLowerCase() === 'não';
+          
+          return (
+            <NativeLandCard
+              key={project.field}
+              icon={project.icon}
+              label={project.label}
+              value={isNegative ? 'Não' : value}
+              layout="vertical"
+              showIconCircle={true}
+              className="h-auto"
+            />
+          );
+        })}
       </div>
     </InfoSection>
   );

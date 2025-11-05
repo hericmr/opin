@@ -200,7 +200,7 @@ const InfoSection = memo(({
       {!isCollapsed && (
         <div 
           id={`${title}-content`}
-          className="space-y-4"
+          className="space-y-4 overflow-visible"
           role="region"
           aria-labelledby={`${title}-button`}
         >

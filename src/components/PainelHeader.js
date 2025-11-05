@@ -1,6 +1,7 @@
 import React from "react";
 import { X, Maximize2, Minimize2, MapPin } from "lucide-react";
 import { capitalizeWords } from "../utils/textFormatting";
+import MinimalShareButtons from "./MinimalShareButtons";
 
 // Função para formatar o título da escola
 const formatarTituloEscola = (titulo) => {
@@ -28,19 +29,22 @@ const formatarTituloEscola = (titulo) => {
   return capitalizeWords(titulo);
 };
 
-const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagemHeader }) => {
+const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagemHeader, shareUrl, shareTitle }) => {
   const isMobile = window.innerWidth <= 768;
   const isMobileLandscape = isMobile && window.innerWidth > window.innerHeight;
   const isVerySmallLandscape = isMobileLandscape && window.innerWidth <= 850;
 
   const headerHalfClass = (!isMobile && isMaximized) ? 'mj-header-half-right' : '';
 
+  // Ensure component props are valid
+  if (!titulo) return null;
+
   return (
-    <header className={`relative border-b border-green-100 ${isMobileLandscape ? 'min-h-[60px]' : ''}`}>
-      <div className={`px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-2 md:py-3 ${headerHalfClass}`}>
+    <header className={`relative border-b border-green-100 ${isMobileLandscape ? 'min-h-[60px]' : ''}`} style={{ zIndex: 1000 }}>
+      <div className={`px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-2 md:py-3 ${headerHalfClass}`} style={{ position: 'relative', zIndex: 1000 }}>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pr-12">
           {/* School title - occupies only right half when maximized */}
-          <div className="space-y-1">
+          <div className="space-y-1" style={{ position: 'relative', zIndex: 1015 }}>
             <h2 
               id="painel-titulo"
               className={`font-bold text-gray-900 leading-tight tracking-tight break-words ${
@@ -66,13 +70,21 @@ const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagem
         </div>
       </div>
 
-      <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex items-center gap-2">
+      <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex items-center gap-3" style={{ zIndex: 1005 }}>
+        {/* Sharing buttons - ArcGIS style */}
+        {shareUrl && (
+          <div className="linkSocialContainer" style={{ zIndex: 1005 }}>
+            <MinimalShareButtons url={shareUrl} title={shareTitle || titulo} />
+          </div>
+        )}
+        
         {!isMobile && (
           <button
             onClick={toggleMaximize}
             className="p-2 text-green-700 hover:text-green-900 hover:bg-green-100 transition-colors duration-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
             aria-label={isMaximized ? "Restaurar painel" : "Maximizar painel"}
             title={isMaximized ? "Restaurar" : "Maximizar"}
+            style={{ zIndex: 1005 }}
           >
             {isMaximized ? (
               <Minimize2 size={18} className="stroke-2" aria-hidden="true" />
@@ -88,6 +100,7 @@ const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagem
             isMobileLandscape ? 'p-1.5' : 'p-2'
           }`}
           aria-label="Fechar painel"
+          style={{ zIndex: 1005 }}
         >
           <X 
             size={isMobileLandscape ? 18 : 20} 

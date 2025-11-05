@@ -7,58 +7,14 @@ import {
   Link as LinkIcon,
   ExternalLink,
   ChevronRight,
-  Check,
-  X,
   Navigation,
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
+import NativeLandCard from '../NativeLandCard';
 
 const capitalize = (str) => {
   if (!str) return '';
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-};
-
-const CompactCard = ({ icon: Icon, label, value, type = 'text' }) => {
-  const renderValue = () => {
-    switch (type) {
-      case 'boolean':
-        return value ? (
-          <span className="flex items-center gap-1 text-green-600 text-sm">
-            <Check className="w-4 h-4 flex-shrink-0" />
-            Sim
-          </span>
-        ) : (
-          <span className="flex items-center gap-1 text-red-500 text-sm">
-            <X className="w-4 h-4 flex-shrink-0" />
-            Não
-          </span>
-        );
-      case 'number':
-        return (
-          <div className="text-center w-full flex items-center justify-center h-full">
-            <div className="text-3xl font-medium text-green-800" style={{fontSize: '1.875rem', fontWeight: '500', color: '#166534'}}>
-              {value || '0'}
-            </div>
-          </div>
-        );
-      default:
-        return <span className="text-sm text-gray-800 break-words text-center w-full">{value}</span>;
-    }
-  };
-
-  return (
-    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-2 sm:p-3 transition-all duration-200 hover:shadow-sm h-[120px] flex flex-col">
-      {/* Header com ícone e label */}
-      <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2 sm:mb-3 flex-shrink-0 h-[40px]">
-        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 flex-shrink-0" />
-        <span className="text-xs text-gray-600 font-medium leading-tight">{label}</span>
-      </div>
-      {/* Conteúdo do valor */}
-      <div className="flex-1 flex items-center justify-center">
-        {renderValue()}
-      </div>
-    </div>
-  );
 };
 
 // const InfoBlock = ({ icon: Icon, label, value }) => ( // Removido - não utilizado
@@ -224,17 +180,18 @@ const BasicInfo = memo(({ escola }) => {
         </div>
       )}
       <InfoSection title="Localização" icon={MapPin}>
-        {/* Cards informativos básicos - Layout otimizado */}
-        <div className="grid grid-cols-3 lg:grid-cols-3 gap-0.5 sm:gap-1 mb-4 items-stretch">
+        {/* Cards informativos básicos - Layout inspirado no native-land.ca */}
+        <div className="grid grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-3 mb-4 items-stretch overflow-visible" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
           {basicInfoCards.map((item, index) => (
-            <CompactCard key={index} {...item} />
+            <NativeLandCard key={index} {...item} showIconCircle={true} />
           ))}
           {/* Diretoria de ensino como card */}
           {escola.diretoria_ensino && (
-            <CompactCard 
+            <NativeLandCard 
               icon={Building}
               label="Diretoria de ensino"
               value={escola.diretoria_ensino}
+              showIconCircle={true}
             />
           )}
         </div>

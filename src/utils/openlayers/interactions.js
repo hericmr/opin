@@ -384,32 +384,34 @@ export class OpenLayersInteractions {
       const clickableContent = `<span class="tooltip-clickable">${content}</span>`;
       element.innerHTML = clickableContent;
       
-      // Configurar estilos para mobile
+      // Configurar estilos para mobile - design minimalista e claro
       const tooltipStyles = isTerraIndigena ? {
-        backgroundColor: '#fef2f2', // Fundo vermelho claro
-        borderColor: 'rgba(239, 68, 68, 0.3)' // Borda vermelha
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderColor: 'rgba(239, 68, 68, 0.15)' // Borda vermelha mais sutil para terras indígenas
       } : {
-        backgroundColor: '#bbf7d0', // Fundo verde
-        borderColor: 'rgba(34, 197, 94, 0.3)' // Borda verde
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderColor: 'rgba(5, 150, 105, 0.15)' // Borda verde mais sutil para escolas
       };
       
       Object.assign(element.style, {
         position: 'absolute',
-        padding: '8px 12px',
-        borderRadius: '8px',
-        fontSize: '14px',
+        padding: '6px 10px',
+        borderRadius: '6px',
+        fontSize: '13px',
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-        fontWeight: '700',
-        color: '#000000',
+        fontWeight: '400', // Peso mais leve, não bold
+        color: '#4B5563', // Texto mais claro, não preto
         pointerEvents: 'auto', // IMPORTANTE: Permitir eventos de clique no mobile
         zIndex: '1000',
         maxWidth: '250px',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-        border: `2px solid ${tooltipStyles.borderColor}`,
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)',
+        border: `1px solid ${tooltipStyles.borderColor}`,
         cursor: 'default',
+        transition: 'all 0.2s ease',
+        backdropFilter: 'blur(8px)',
         ...tooltipStyles
       });
       
@@ -455,11 +457,13 @@ export class OpenLayersInteractions {
       // Desktop: tooltip normal (não clicável)
       element.innerHTML = content;
       
-      // Estilos do tooltip para desktop
+      // Estilos do tooltip para desktop - design minimalista e claro
       const tooltipStyles = isTerraIndigena ? {
-        backgroundColor: '#fef2f2' // Fundo vermelho claro
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderColor: 'rgba(239, 68, 68, 0.15)' // Borda vermelha mais sutil para terras indígenas
       } : {
-        backgroundColor: '#bbf7d0' // Fundo verde
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderColor: 'rgba(5, 150, 105, 0.15)' // Borda verde mais sutil para escolas
       };
       
       Object.assign(element.style, {
@@ -468,15 +472,18 @@ export class OpenLayersInteractions {
         borderRadius: '6px',
         fontSize: '12px',
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-        fontWeight: '700',
-        color: '#000000',
+        fontWeight: '400', // Peso mais leve, não bold
+        color: '#4B5563', // Texto mais claro, não preto
         pointerEvents: 'none',
         zIndex: '1000',
-        maxWidth: '200px',
+        maxWidth: '250px',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)',
+        border: `1px solid ${tooltipStyles.borderColor}`,
+        transition: 'all 0.2s ease',
+        backdropFilter: 'blur(8px)',
         ...tooltipStyles
       });
     }
