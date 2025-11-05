@@ -1,0 +1,21 @@
+# Build outputs
+build/
+dist/
+
+# Dependencies
+node_modules/
+
+# Mirrored sites (not part of the project)
+site_mirror_arcgis/
+native-land.ca/
+
+# Coverage reports
+coverage/
+
+# Public assets
+public/
+
+# Backup files
+*.bak
+*.backup
+
