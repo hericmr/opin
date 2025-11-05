@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { showClickPulse, flyTo } from '../../utils/openlayers/effects';
+import { showClickPulse, flyToAtFractionX } from '../../utils/openlayers/effects';
 
 /**
  * Hook para gerenciar interações com marcadores
@@ -17,7 +17,13 @@ export const useMarkerInteractions = ({ onPainelOpen, map, isMobileDevice }) => 
     if (schoolData) {
       const coord = feature.getGeometry()?.getCoordinates();
       if (map && coord) {
-        flyTo(map, coord, { durationMs: 350 });
+        let fractionX = 0.25; // regra: 25% por padrão
+        try {
+          const panelEl = document.querySelector('.mj-panel');
+          const isPanelMaximized = panelEl?.classList?.contains('mj-maximized');
+          if (isPanelMaximized) fractionX = 0.5;
+        } catch {}
+        flyToAtFractionX(map, coord, { durationMs: 350, fractionX });
         showClickPulse(map, coord);
       }
       onPainelOpen?.(schoolData);

@@ -96,8 +96,17 @@ const OpenLayersMarkers = ({
     if (schoolData && onPainelOpen) {
       const coord = feature.getGeometry()?.getCoordinates();
       if (map && coord) {
-        // Posicionar o ponto a 25% da largura do mapa (metade da primeira metade)
-        flyToAtFractionX(map, coord, { durationMs: 550, fractionX: 0.25 });
+        // Ajustar a posição do alvo conforme o estado do painel de informações:
+        // - Se houver painel não maximizado (ocupando metade da tela), usar 25%
+        // - Caso contrário (sem painel ou maximizado), centralizar em 50%
+        let fractionX = 0.25; // regra: 25% por padrão
+        try {
+          const panelEl = document.querySelector('.mj-panel');
+          const isPanelMaximized = panelEl?.classList?.contains('mj-maximized');
+          if (isPanelMaximized) fractionX = 0.5;
+        } catch {}
+
+        flyToAtFractionX(map, coord, { durationMs: 550, fractionX });
         showClickPulse(map, coord);
       }
       logger.debug('[OpenLayersMarkers] Marcador clicado:', schoolData.titulo);

@@ -6,7 +6,7 @@ const NavLogos = ({ isMobileLandscape }) => {
     <div className="flex flex-col items-center">
       <div className="flex items-center space-x-3 relative">
         <a 
-          href="https://www.unifesp.br/" 
+          href="https://unifesp.br/" 
           target="_blank" 
           rel="noopener noreferrer"
           className="flex flex-col items-center group transition-transform duration-200 hover:scale-105"
@@ -20,7 +20,7 @@ const NavLogos = ({ isMobileLandscape }) => {
           />
         </a>
         <a 
-          href="https://www.unifesp.br/lindi" 
+          href="https://unifesp.br/campus/san7/graduacao/cursos/licenciatura-intercultural-indigena" 
           target="_blank" 
           rel="noopener noreferrer" 
           className="group transition-transform duration-200 hover:scale-105"

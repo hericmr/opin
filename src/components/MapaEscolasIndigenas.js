@@ -125,7 +125,7 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
       <div className="fixed top-1/2 -translate-y-1/2 left-4 z-30 pointer-events-auto">
         <Link
           to="/"
-          className="block rounded-xl bg-green-900/90 hover:bg-green-800 p-2.5 cursor-pointer transition-all duration-200"
+          className="block rounded-full bg-green-900/90 hover:bg-green-800 p-3 shadow-lg cursor-pointer transition-all duration-200"
           aria-label="Sair do mapa e voltar para a página inicial"
           title="Sair do mapa"
         >
