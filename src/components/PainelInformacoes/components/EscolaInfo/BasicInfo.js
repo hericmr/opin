@@ -30,7 +30,7 @@ const AddressDetails = ({ escola }) => {
   
   if (!hasDetailedAddress) {
     return (
-      <div className="mt-2 p-2 bg-green-100 rounded-md">
+      <div className="p-2 bg-green-100 rounded-md">
         <p className="text-xs text-gray-700 leading-snug">
           {capitalize(escola.endereco)}
         </p>
@@ -46,7 +46,7 @@ const AddressDetails = ({ escola }) => {
   ];
 
   return (
-    <div className="mt-2 space-y-1">
+    <div className="space-y-1">
       {addressFields.map(({ field, label }) => 
         escola[field] && (
           <div key={field} className="flex items-start gap-2 p-1.5 bg-green-100 rounded-md">
@@ -86,7 +86,7 @@ const MapButton = ({ escola }) => {
   return (
     <button
       onClick={openMap}
-      className="mt-2 w-full flex items-center justify-center gap-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors text-xs font-medium"
+      className="w-full flex items-center justify-center gap-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors text-xs font-medium"
     >
       <Navigation className="w-5 h-5" />
       Ver no Google Maps

@@ -54,15 +54,16 @@ const ProjetosParcerias = memo(({ escola }) => {
           const isNegative = value?.trim().toLowerCase() === 'não';
           
           return (
-            <NativeLandCard
-              key={project.field}
-              icon={project.icon}
-              label={project.label}
-              value={isNegative ? 'Não' : value}
-              layout="vertical"
-              showIconCircle={true}
-              className="h-auto"
-            />
+            <div key={project.field} className="relative mt-3">
+              <NativeLandCard
+                icon={project.icon}
+                label={project.label}
+                value={isNegative ? 'Não' : value}
+                layout="vertical"
+                showIconCircle={true}
+                className="h-auto"
+              />
+            </div>
           );
         })}
       </div>

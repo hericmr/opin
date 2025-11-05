@@ -90,7 +90,7 @@ const Modalidades = memo(({ escola }) => {
     <>
       <InfoSection>
         {/* Modalidade de Ensino em linha inteira */}
-        <div className="mb-4 bg-green-50 rounded-lg p-4">
+        <div className="mb-4 rounded-lg p-4" style={{ backgroundColor: '#D1FAE5' }}>
           <div className="flex items-start gap-3 mb-2">
             <Sparkles className="w-5 h-5 text-gray-700 mt-0.5 flex-shrink-0" />
             <span className="text-sm font-medium text-gray-700">Modalidade de Ensino</span>
