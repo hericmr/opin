@@ -3,17 +3,21 @@ import HistoriaEscolaContent from './HistoriaEscolaContent';
 import HistoriaEscolaHeader from './HistoriaEscolaHeader';
 import './HistoriaEscola.css';
 
-const HistoriaEscola = memo(({ escola, refreshKey = 0 }) => {
+const HistoriaEscola = memo(({ escola, refreshKey = 0, isMaximized = false }) => {
   if (!escola?.historia_da_escola) return null;
 
   // Usar o HTML diretamente, igual à história dos professores
   const htmlContent = escola.historia_da_escola;
 
   return (
-    <div className="mt-8 mb-12 flex flex-col items-center">
-      <HistoriaEscolaHeader />
+    <div className="mt-8 mb-12 flex flex-col items-center w-full">
+      {/* Header externo ao card - mantém largura máxima sempre */}
+      <header className="historia-escola-header mb-6 sm:mb-8 w-full max-w-4xl mx-auto">
+        <HistoriaEscolaHeader />
+        <div className="h-1 w-20 sm:w-24 bg-green-300 rounded-full" />
+      </header>
 
-      {/* Card com conteúdo centralizado */}
+      {/* Card com conteúdo - mantém largura máxima sempre */}
       <article
         className="
           px-4 sm:px-6 md:px-8 py-6
@@ -26,8 +30,6 @@ const HistoriaEscola = memo(({ escola, refreshKey = 0 }) => {
         "
       >
         <HistoriaEscolaContent htmlContent={htmlContent} />
-
-        
       </article>
     </div>
   );

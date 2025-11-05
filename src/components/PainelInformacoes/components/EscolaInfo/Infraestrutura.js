@@ -12,20 +12,7 @@ import {
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import BooleanValue from '../BooleanValue';
-
-const MiniCard = ({ icon: Icon, label, value }) => (
-  <div className="bg-green-50 hover:bg-green-100 rounded-lg p-2 sm:p-3 transition-all duration-200 hover:shadow-sm h-[120px] flex flex-col">
-    {/* Header com ícone e label */}
-    <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2 sm:mb-3 flex-shrink-0 h-[40px]">
-      <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 flex-shrink-0" />
-      <span className="text-xs text-gray-600 font-medium leading-tight">{label}</span>
-    </div>
-    {/* Conteúdo do valor */}
-    <div className="flex-1 flex items-center justify-center">
-      <div className="text-sm text-gray-800 font-medium break-words text-center w-full">{value}</div>
-    </div>
-  </div>
-);
+import NativeLandCard from '../NativeLandCard';
 
 const Infraestrutura = memo(({ escola }) => {
   if (!escola) return null;
@@ -80,13 +67,14 @@ const Infraestrutura = memo(({ escola }) => {
           {escola.espaco_escolar}
         </div>
       )}
-      <div className="grid grid-cols-3 lg:grid-cols-3 gap-0.5 sm:gap-1 mt-3 items-stretch">
+      <div className="grid grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-3 mt-3 items-stretch overflow-visible" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
         {items.map((item, idx) => (
-          <MiniCard
+          <NativeLandCard
             key={idx}
             icon={item.icon}
             label={item.label}
             value={item.value}
+            showIconCircle={true}
           />
         ))}
       </div>

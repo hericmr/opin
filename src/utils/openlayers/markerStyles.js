@@ -1,4 +1,4 @@
-import { Style, Fill, Stroke, Text, Icon } from 'ol/style';
+import { Style, Fill, Stroke, Text, Icon, Circle as CircleStyle } from 'ol/style';
 import { Point } from 'ol/geom';
 
 // Caminho para o marcador SVG
@@ -240,7 +240,7 @@ export const createMarkerWithTooltipStyle = (feature, tooltipText) => {
 };
 
 /**
- * Aplica estilo de hover ao marcador
+ * Aplica estilo de hover ao marcador com anel branco de seleção que segue o contorno
  * @param {Object} feature - Feature do marcador
  * @param {Style} baseStyle - Estilo base do marcador
  * @returns {Style} Estilo com efeito hover
@@ -248,18 +248,45 @@ export const createMarkerWithTooltipStyle = (feature, tooltipText) => {
 export const applyHoverStyle = (feature, baseStyle) => {
   if (!baseStyle) return null;
 
+  const geometry = feature.getGeometry();
+  
+  // Criar anel branco que segue aproximadamente o contorno do marcador
+  // O marcador SVG tem aproximadamente 24px de altura, então criamos um círculo
+  // que se ajusta ao formato do marcador (mais alto que largo)
+  const whiteOutline = new Style({
+    image: new CircleStyle({
+      radius: 12, // Raio ajustado para seguir o contorno do marcador
+      fill: new Fill({
+        color: 'transparent'
+      }),
+      stroke: new Stroke({
+        color: '#ffffff',
+        width: 3,
+        lineCap: 'round',
+        lineJoin: 'round'
+      })
+    }),
+    geometry: geometry
+  });
+
+  // Escalar ligeiramente o marcador no hover para melhor feedback visual
   const hoverStyle = new Style({
     image: new Icon({
       src: MARKER_SVG_PATH,
-      scale: 1.3,
+      scale: 1.1, // Escala ligeiramente maior no hover
       anchor: [0.5, 0.5],
       anchorXUnits: 'fraction',
       anchorYUnits: 'fraction'
     }),
-    geometry: feature.getGeometry()
+    geometry: geometry
   });
 
-  return Array.isArray(baseStyle) ? [...baseStyle, hoverStyle] : [baseStyle, hoverStyle];
+  // Retornar baseStyle + outline branco + hover
+  // O outline branco fica por trás, depois o marcador normal por cima
+  if (Array.isArray(baseStyle)) {
+    return [whiteOutline, ...baseStyle, hoverStyle];
+  }
+  return [whiteOutline, baseStyle, hoverStyle];
 };
 
 /**

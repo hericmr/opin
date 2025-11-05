@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Sparkles, BookOpen, Users, MessageCircle, Clock } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import BooleanValue from '../../components/BooleanValue';
+import NativeLandCard from '../NativeLandCard';
 
 // Função utilitária para transformar o texto em lista
 function parseModalidadeEnsino(text) {
@@ -31,37 +32,7 @@ const ExpandableList = ({ items, maxVisible = 3 }) => {
   );
 };
 
-// MiniCard padronizado
-const MiniCard = ({ icon: Icon, label, value, type = 'text' }) => {
-  const renderValue = () => {
-    if (type === 'number') {
-      return (
-        <div className="text-center w-full flex items-center justify-center h-full">
-          <div className="text-3xl font-medium text-green-800" style={{fontSize: '1.875rem', fontWeight: '500', color: '#166534'}}>
-            {value || '0'}
-          </div>
-        </div>
-      );
-    }
-    return (
-      <div className="text-sm text-gray-800 font-medium break-words text-center w-full">{value}</div>
-    );
-  };
-
-  return (
-    <div className="bg-green-50 hover:bg-green-100 rounded-lg p-2 sm:p-3 transition-all duration-200 hover:shadow-sm h-[120px] flex flex-col">
-      {/* Header com ícone e label */}
-      <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2 sm:mb-3 flex-shrink-0 h-[40px]">
-        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 flex-shrink-0" />
-        <span className="text-xs text-gray-600 font-medium leading-tight">{label}</span>
-      </div>
-      {/* Conteúdo do valor */}
-      <div className="flex-1 flex items-center justify-center">
-        {renderValue()}
-      </div>
-    </div>
-  );
-};
+// Usando NativeLandCard em vez de MiniCard customizado
 
 const Modalidades = memo(({ escola }) => {
   if (!escola) return null;
@@ -129,10 +100,10 @@ const Modalidades = memo(({ escola }) => {
           </div>
         </div>
         
-        {/* Grid com os outros cards */}
-        <div className="grid grid-cols-3 lg:grid-cols-3 gap-0.5 sm:gap-1 mt-1 items-stretch">
+        {/* Grid com os outros cards - estilo native-land.ca */}
+        <div className="grid grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-3 mt-1 items-stretch overflow-visible" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
           {gridItems.map((item, idx) => (
-            <MiniCard key={idx} icon={item.icon} label={item.label} value={item.value} type={item.type} />
+            <NativeLandCard key={idx} icon={item.icon} label={item.label} value={item.value} type={item.type} showIconCircle={true} />
           ))}
         </div>
       </InfoSection>
@@ -143,11 +114,12 @@ const Modalidades = memo(({ escola }) => {
         description="Diferenciados e não diferenciados, produzidos dentro e fora da comunidade."
       >
         {/* Primeiro card em linha inteira */}
-        <div className="mb-3">
-          <MiniCard 
+        <div className="mb-3 overflow-visible" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+          <NativeLandCard 
             icon={materiaisItems[0].icon} 
             label={materiaisItems[0].label} 
             value={materiaisItems[0].value} 
+            showIconCircle={true}
           />
         </div>
         
@@ -166,20 +138,22 @@ const Modalidades = memo(({ escola }) => {
               return groups.map((group, groupIdx) => (
                 <div 
                   key={groupIdx}
-                  className={`grid gap-0.5 sm:gap-1 items-stretch ${
+                  className={`grid gap-2 sm:gap-3 items-stretch overflow-visible ${
                     group.length === 3 
                       ? 'grid-cols-3' 
                       : group.length === 2 
                         ? 'grid-cols-2' 
                         : 'grid-cols-1'
                   }`}
+                  style={{ paddingTop: '12px', paddingLeft: '12px' }}
                 >
                   {group.map((item, idx) => (
-                    <MiniCard 
+                    <NativeLandCard 
                       key={`${groupIdx}-${idx}`} 
                       icon={item.icon} 
                       label={item.label} 
                       value={item.value} 
+                      showIconCircle={true}
                     />
                   ))}
                 </div>

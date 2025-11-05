@@ -104,9 +104,9 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false 
   const hasMultipleHistorias = historias.length > 1;
 
   return (
-    <div className="mt-8 mb-12 flex flex-col w-full">
-      {/* Header externo ao card - apenas na direita quando maximizado */}
-      <header className={`historia-professor-header mb-6 sm:mb-8 w-full ${isMaximized ? '' : 'max-w-4xl'}`}>
+    <div className="mt-8 mb-12 flex flex-col items-center w-full">
+      {/* Header externo ao card - mantém largura máxima sempre */}
+      <header className="historia-professor-header mb-6 sm:mb-8 w-full max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-3 sm:mb-4">
           <div className="flex items-center gap-3">
             <span className="bg-green-200 rounded-full flex items-center justify-center w-16 h-16 sm:w-28 sm:h-28">
@@ -139,18 +139,17 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false 
         <div className="h-1 w-20 sm:w-24 bg-green-300 rounded-full" />
       </header>
 
-      {/* Card com conteúdo */}
+      {/* Card com conteúdo - mantém largura máxima sempre */}
       <article
-        className={`
+        className="
           px-4 sm:px-6 md:px-8 py-6
           bg-white rounded-2xl shadow-lg
           prose prose-sm sm:prose-base md:prose-lg lg:prose-xl
           prose-headings:text-green-900 prose-p:text-black prose-p:leading-relaxed prose-p:text-justify
           prose-img:rounded-xl prose-img:shadow-lg
           prose-a:text-green-700 prose-a:no-underline prose-a:border-b-2 prose-a:border-green-100 hover:prose-a:border-green-600
-          w-full
-          ${isMaximized ? '' : 'max-w-4xl'}
-        `}
+          max-w-4xl mx-auto w-full
+        "
       >
 
       {/* Conteúdo da história atual */}
