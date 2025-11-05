@@ -277,10 +277,14 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     try {
       await deleteImage(imageId, filePath, 'imagens-das-escolas');
       
-      // Atualizar lista
-      setExistingImages(prev => prev.filter(img => img.id !== imageId));
-      
+      // Se a imagem excluída era a do header, remover referência
+      const deletedImage = existingImages.find(img => img.id === imageId);
+      if (deletedImage && deletedImage.publicUrl && deletedImage.publicUrl === imagemHeaderAtual) {
+        try { await removerImagemHeader(); } catch (_) {}
+      }
 
+      // Recarregar lista a partir do storage para refletir estado real
+      await fetchExistingImages();
 
       setSuccess('Imagem excluída com sucesso!');
 

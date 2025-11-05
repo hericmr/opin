@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect, useMemo } from "react";
-import { useLocation } from "react-router-dom";
 import { useShare } from "../hooks/useShare";
 import { useDynamicURL } from "../hooks/useDynamicURL";
 import { useClickOutside } from "../hooks/useClickOutside";
@@ -12,19 +11,15 @@ import IntroPanel from "./IntroPanel";
 import PainelContainer from "./components/PainelContainer";
 import DocumentViewer from "./components/DocumentViewer";
 import VideoPlayer from "./components/VideoPlayer";
+import { getVideosEscola } from "../../services/videoService";
 
 const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 }) => {
   const painelRef = useRef(null);
   const contentRef = useRef(null);
   const sectionRefs = useRef({});
-  const location = useLocation();
   const [activeIndex, setActiveIndex] = useState(0);
   
-  // Verificar se o painel foi aberto via URL (link compartilhado)
-  const openedFromUrl = useMemo(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.has('panel');
-  }, []);
+  // Removido cálculo openedFromUrl não utilizado
   
   // Persistir estado de maximização entre aberturas
   const [isMaximized, setIsMaximized] = useState(() => {
@@ -38,6 +33,8 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
   
   const { gerarLinkCustomizado } = useShare(painelInfo);
   const { documentos } = useDocumentosEscola(painelInfo?.id);
+  const [hasVideos, setHasVideos] = useState(false);
+  const [firstVideoUrl, setFirstVideoUrl] = useState("");
   
   const toggleMaximize = () => {
     setIsMaximized(prev => {
@@ -71,9 +68,9 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
     list.push({ key: 'dados', label: 'Dados' });
     list.push({ key: 'historia', label: 'História' });
     list.push({ key: 'depoimentos', label: 'Depoimentos' });
-    if (painelInfo && painelInfo.link_para_videos) list.push({ key: 'videos', label: 'Vídeos' });
+    if ((painelInfo && painelInfo.link_para_videos) || hasVideos) list.push({ key: 'videos', label: 'Vídeos' });
     return list;
-  }, [painelInfo]);
+  }, [painelInfo, hasVideos]);
 
   useEffect(() => {
     const el = contentRef.current;
@@ -111,23 +108,33 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
     el.scrollTo({ top: scrollBy, behavior: 'smooth' });
   };
 
-  const prevSection = () => {
-    const nextIdx = activeIndex > 0 ? activeIndex - 1 : 0;
-    scrollToSection(nextIdx);
-  };
+  // Removidas funções não utilizadas: prevSection, nextSection, handleKeyActivate
 
-  const nextSection = () => {
-    const last = sections.length - 1;
-    const nextIdx = activeIndex < last ? activeIndex + 1 : last;
-    scrollToSection(nextIdx);
-  };
-
-  const handleKeyActivate = (e, action) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      action();
+  // Load videos presence independently of other sections
+  useEffect(() => {
+    let mounted = true;
+    async function loadVideos() {
+      try {
+        setHasVideos(false);
+        setFirstVideoUrl("");
+        const escolaId = painelInfo?.id;
+        if (!escolaId) return;
+        const data = await getVideosEscola(escolaId);
+        if (!mounted) return;
+        if (Array.isArray(data) && data.length > 0) {
+          setHasVideos(true);
+          // prefer first active video url
+          setFirstVideoUrl(data[0]?.video_url || "");
+        }
+      } catch (_) {
+        if (!mounted) return;
+        setHasVideos(false);
+        setFirstVideoUrl("");
+      }
     }
-  };
+    loadVideos();
+    return () => { mounted = false; };
+  }, [painelInfo?.id, refreshKey]);
 
   if (!painelInfo) {
     return null;
@@ -161,10 +168,10 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
             title="Produções e materiais da escola"
           />
         )}
-        {painelInfo.link_para_videos && (
+        {((painelInfo.link_para_videos) || hasVideos) && (
           <div ref={(el) => (sectionRefs.current['videos'] = el)}>
             <VideoPlayer 
-              videoUrl={painelInfo.link_para_videos}
+              videoUrl={painelInfo.link_para_videos || firstVideoUrl}
               title={<span style={{ fontSize: '0.75em' }}>{`Produções audiovisuais realizadas na ${painelInfo.titulo}`}</span>}
               escolaId={painelInfo.id}
             />

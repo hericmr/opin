@@ -20,7 +20,6 @@ const PainelContainer = ({
   shareTitle
 }) => {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [currentImageCaption, setCurrentImageCaption] = useState(null);
   const { isVisible, isMobile } = usePainelVisibility(painelInfo);
   const painelDimensions = usePainelDimensions(isMobile, isMaximized);
   
@@ -124,7 +123,7 @@ const PainelContainer = ({
               refreshKey={refreshKey || 0}
               scrollProgress={scrollProgress}
               headerUrl={painelInfo.imagem_header}
-              onCurrentItemChange={setCurrentImageCaption}
+              
             />
           </aside>
           <div

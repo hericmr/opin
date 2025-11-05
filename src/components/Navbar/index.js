@@ -140,7 +140,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
               aria-label="Ir para página inicial - OPIN"
             >
               <div className="flex items-center space-x-1 sm:space-x-2">
-                <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl uppercase leading-none whitespace-nowrap" style={{fontFamily: 'PapakiloDecorative, sans-serif'}}>
+                <h1 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl uppercase leading-none whitespace-nowrap" style={{fontFamily: 'PapakiloDecorative, sans-serif'}}>
                   OPIN
                 </h1>
                 <div className="hidden sm:block w-px h-4 sm:h-6 md:h-8 bg-white/30 flex-shrink-0"></div>
@@ -178,45 +178,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
               />
             </div>
             
-            {/* Admin */}
-            <div className="flex items-center space-x-2">
-              
-              {/* Admin Panel */}
-              {!isAuthenticated ? (
-              <button
-                onClick={handleAdminClick}
-                className="p-2 rounded hover:bg-green-700/20 transition-colors focus:outline-none"
-                title="Acesso administrativo"
-                aria-label="Acesso administrativo"
-              >
-                  <Leaf className="w-5 h-5" />
-                </button>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-white/80 hidden xl:inline" aria-live="polite">
-                    Olá, {user?.username}
-                  </span>
-                  <button
-                    onClick={() => navigate('/admin')}
-                    className="flex items-center gap-1 px-2 py-1 text-xs font-medium bg-green-600 text-white rounded hover:bg-green-700 transition-colors focus:outline-none"
-                    aria-label="Painel administrativo"
-                  >
-                    <Shield className="w-3 h-3" />
-                    <span className="hidden lg:inline">Admin</span>
-                  </button>
-                  <button
-                    onClick={logout}
-                    className="px-2 py-1 text-xs font-medium bg-red-600 text-white rounded hover:bg-red-700 transition-colors focus:outline-none"
-                    title="Sair"
-                    aria-label="Sair da conta"
-                  >
-                    Sair
-                  </button>
-                </div>
-              )}
-            </div>
-            
-            {/* Logos - Por último */}
+            {/* Logos */}
             <div className="hidden lg:flex items-center space-x-2 xl:space-x-4">
               <a 
                 href="https://unifesp.br/campus/san7/graduacao/cursos/licenciatura-intercultural-indigena" 
@@ -243,6 +205,44 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                   className="h-8 xl:h-12 w-auto"
                 />
               </a>
+            </div>
+            
+            {/* Admin - Far right */}
+            <div className="flex items-center space-x-2">
+              
+              {/* Admin Panel */}
+              {!isAuthenticated ? (
+              <button
+                onClick={handleAdminClick}
+                className="p-1.5 rounded hover:bg-green-700/20 transition-colors focus:outline-none"
+                title="Acesso administrativo"
+                aria-label="Acesso administrativo"
+              >
+                  <Leaf className="w-4 h-4" />
+                </button>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-white/80 hidden xl:inline" aria-live="polite">
+                    Olá, {user?.username}
+                  </span>
+                  <button
+                    onClick={() => navigate('/admin')}
+                    className="flex items-center gap-1 px-2 py-1 text-xs font-medium bg-green-600 text-white rounded hover:bg-green-700 transition-colors focus:outline-none"
+                    aria-label="Painel administrativo"
+                  >
+                    <Shield className="w-2.5 h-2.5" />
+                    <span className="hidden lg:inline">Admin</span>
+                  </button>
+                  <button
+                    onClick={logout}
+                    className="px-2 py-1 text-xs font-medium bg-red-600 text-white rounded hover:bg-red-700 transition-colors focus:outline-none"
+                    title="Sair"
+                    aria-label="Sair da conta"
+                  >
+                    Sair
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
