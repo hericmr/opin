@@ -82,13 +82,16 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
               console.warn('Erro ao buscar legenda:', error);
             }
 
+            const legendaFinal = legenda?.legenda || null;
+
             return {
               id: idx + 1,
               publicURL: publicUrl,
               genero,
               nome: file.name,
               created_at: file.created_at || '',
-              legenda: legenda?.legenda || `Imagem do ${genero}`,
+              legenda: legendaFinal,
+              descricao: legendaFinal,
               descricaoDetalhada: legenda?.descricao_detalhada,
               autor: legenda?.autor_foto,
               dataFoto: legenda?.data_foto,

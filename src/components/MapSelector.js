@@ -50,8 +50,7 @@ const MapSelector = ({
     } catch {}
   }, [textScale]);
 
-  const decreaseText = () => setTextScale((v) => Math.max(0.9, Math.round((v - 0.1) * 10) / 10));
-  const increaseText = () => setTextScale((v) => Math.min(1.3, Math.round((v + 0.1) * 10) / 10));
+  // Removed unused helpers decreaseText/increaseText
 
   // Log de status das camadas (apenas em desenvolvimento)
   useEffect(() => {

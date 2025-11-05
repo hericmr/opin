@@ -248,6 +248,19 @@ export const deleteImage = async (imageId, filePath, bucketName) => {
       throw new Error(`Erro ao deletar arquivo: ${storageError.message}`);
     }
 
+    // Verificar se o arquivo realmente saiu da lista
+    const directory = filePath.includes('/') ? filePath.split('/')[0] + '/' : '';
+    const { data: files, error: listError } = await supabase.storage
+      .from(bucketName)
+      .list(directory);
+    if (listError) {
+      // Não bloquear, mas logar
+      console.warn('Aviso: falha ao listar após deleção:', listError);
+    } else if (files && files.some(f => `${directory}${f.name}` === filePath)) {
+      throw new Error('Arquivo ainda presente no bucket após tentativa de exclusão. Verifique permissões do bucket.');
+    }
+
+    return true;
   } catch (error) {
     console.error('Erro ao deletar imagem:', error);
     throw error;

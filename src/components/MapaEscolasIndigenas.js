@@ -29,8 +29,11 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
   const { refreshKey } = useRefresh();
   const location = useLocation();
 
-  const urlParams = useMemo(() => new URLSearchParams(window.location.search), []);
-  const panel = urlParams.get('panel');
+  // Ler panel da URL sempre que location mudar
+  const panel = useMemo(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('panel');
+  }, [location.search]);
   const initialPanel = useMemo(() => {
     // Primeiro verificar se há dados da escola no navigation state
     if (location.state?.schoolData) {
@@ -68,12 +71,17 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
 
   // Abrir painel automaticamente quando initialPanel for encontrado (apenas uma vez)
   useEffect(() => {
-    if (initialPanel && !initialPanelOpened) {
+    // Só abrir se há um panel na URL E o painel não está aberto
+    if (initialPanel && !initialPanelOpened && panel) {
       logger.debug('MapaEscolasIndigenas: Abrindo painel automaticamente para:', initialPanel.titulo);
       setPainelInfo(initialPanel);
       setInitialPanelOpened(true);
     }
-  }, [initialPanel, initialPanelOpened]);
+    // Se não há panel na URL, resetar o estado
+    if (!panel && initialPanelOpened) {
+      setInitialPanelOpened(false);
+    }
+  }, [initialPanel, initialPanelOpened, panel]);
 
   // Abrir painel quando navigation state mudar (quando vem da busca)
   useEffect(() => {
@@ -86,7 +94,7 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
         setPainelInfo(schoolData);
       }
     }
-  }, [location.state?.schoolData?.id, painelInfo?.id]);
+  }, [location.state?.schoolData, painelInfo]);
 
   // Expor a função abrirPainel e refreshPainel para componentes externos
   useEffect(() => {
@@ -101,6 +109,12 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
   // Otimizar a função de fechar painel
   const fecharPainel = useCallback(() => {
     setPainelInfo(null);
+    setInitialPanelOpened(false);
+    // Remover parâmetro panel da URL quando fechar
+    const url = new URL(window.location.href);
+    url.searchParams.delete('panel');
+    const newUrl = url.pathname + (url.search ? url.search : '') + (url.hash ? url.hash : '');
+    window.history.replaceState({}, '', newUrl);
   }, []);
 
   return (

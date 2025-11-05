@@ -5,23 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import useSearch from '../../hooks/useSearch';
 import { useSearch as useSearchContext } from '../../contexts/SearchContext';
 
-const Stat = ({ value, label }) => (
-  <div className="text-center">
-    <div className="text-3xl md:text-4xl font-bold text-green-900">{value}</div>
-    <div className="text-sm md:text-base text-green-800/80">{label}</div>
-  </div>
-);
-
-const Section = ({ title, children, className = "" }) => (
-  <section className={`py-12 md:py-16 ${className}`}>
-    <div className="max-w-7xl mx-auto px-4 lg:px-16">
-      {title && (
-        <h2 className="text-3xl md:text-4xl font-bold text-green-900 mb-6 md:mb-8">{title}</h2>
-      )}
-      {children}
-    </div>
-  </section>
-);
+// Removed unused components Stat and Section
 
 const HomepageSearch = ({ dataPoints }) => {
   const [localSearchTerm, setLocalSearchTerm] = useState('');
@@ -231,8 +215,14 @@ export default function Homepage({ dataPoints = [] }) {
         <div className="absolute inset-0 bg-green-950/40" />
         <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-start lg:items-center h-full px-4 lg:px-12">
           <div className="pt-28 lg:pt-0 text-white">
-            <h1 className="text-7xl md:text-9xl lg:text-[12rem] leading-tight mt-2 font-papakilo">OPIN</h1>
-            <p className="uppercase tracking-wide text-green-100 text-sm">Observatório dos Professores Indígenas do estado de São Paulo</p>
+            {/* Logo OPIN maior */}
+            <h1 className="text-8xl md:text-[10rem] lg:text-[14rem] xl:text-[16rem] leading-none font-papakilo">OPIN</h1>
+            
+            {/* Slogan abaixo do logo */}
+            <div className="mt-0.5">
+              <p className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg" style={{fontFamily: 'Cinzel, serif'}}>Observatório dos Professores Indígenas</p>
+              <p className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg" style={{fontFamily: 'Cinzel, serif'}}>do Estado de São Paulo</p>
+            </div>
             <p className="mt-4 text-green-100/90 text-lg max-w-2xl">
               Um espaço de memória, território e educação. Histórias, escolas e experiências narradas pelos próprios professores e comunidades indígenas do Estado de São Paulo.
             </p>

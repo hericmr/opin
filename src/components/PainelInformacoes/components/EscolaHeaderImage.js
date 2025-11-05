@@ -26,6 +26,7 @@ const EscolaHeaderImage = ({ imagemUrl, className = '', isPreloaded = false }) =
           src={imagemUrl}
           alt="Imagem da escola"
           className="w-full h-full object-cover transition-all duration-700 ease-out"
+          style={{ filter: 'saturate(1.3)' }}
           isPreloaded={isPreloaded}
           onLoad={handleImageLoad}
           onError={handleImageError}

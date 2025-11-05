@@ -21,9 +21,6 @@ export const isMobile = () => {
   // Verificar orientação (mobile geralmente tem orientação variável)
   const isMobileOrientation = window.orientation !== undefined;
   
-  // Verificar se tem capacidades de toque (menos confiável em desktop touch)
-  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  
   // Se a largura é mobile E tem user agent mobile OU orientação mobile, é mobile
   // Touch sozinho não é suficiente (desktops também podem ter touch)
   if (isMobileWidth && (isMobileUserAgent || isMobileOrientation)) {

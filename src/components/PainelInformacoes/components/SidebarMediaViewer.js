@@ -237,7 +237,8 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
                     minHeight: isTallImage ? '100%' : 'auto',
                     maxWidth: '100%', 
                     display: 'block',
-                    objectPosition: isTallImage ? 'top center' : 'center center'
+                    objectPosition: isTallImage ? 'top center' : 'center center',
+                    filter: 'saturate(1.3)'
                   }}
                   loading="eager"
                   fetchPriority="high"
