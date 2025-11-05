@@ -1,4 +1,4 @@
-import React, { useState, Suspense, useEffect } from "react";
+import React, { useState, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { SearchProvider } from "./contexts/SearchContext";
@@ -12,6 +12,9 @@ import ToastProvider from './components/Toast';
 import { SkipLink } from './components/Accessibility';
 import { useEscolasData } from './hooks/useEscolasData';
 import { MetaTagsDetector } from './components/MetaTags';
+
+// Expose dev helpers in browser console (no UI impact)
+// (dev helpers removed)
 
 // Lazy loading dos componentes
 const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));

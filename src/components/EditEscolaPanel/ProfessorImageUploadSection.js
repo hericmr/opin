@@ -211,10 +211,8 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     try {
       await deleteImage(imageId, filePath, 'imagens-professores');
       
-      // Atualizar lista
-      setExistingImages(prev => prev.filter(img => img.id !== imageId));
-      
-
+      // Recarregar lista a partir do storage para refletir estado real
+      await fetchExistingImages();
 
       setSuccess('Imagem do professor excluída com sucesso!');
 
