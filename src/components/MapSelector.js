@@ -209,7 +209,7 @@ const MapSelector = ({
         </div>
       ) : (
         // Menu desktop - fixo no topo esquerdo
-        <div className="fixed top-16 left-4 w-72 bg-green-900/30 backdrop-blur-md rounded-2xl shadow-2xl z-20 overflow-hidden text-white">
+        <div className="fixed top-20 left-4 w-72 bg-green-900/30 backdrop-blur-md rounded-2xl shadow-2xl z-20 overflow-hidden text-white">
           <CabecalhoMenu
             onMinimize={handleMinimize}
             isMobile={false}
@@ -251,7 +251,7 @@ const MapSelector = ({
         <button
           type="button"
           onClick={() => setTextScale((v) => (v >= 1.3 ? 1.0 : Math.round((v + 0.15) * 100) / 100))}
-          className="fixed top-[calc(50%-5rem)] left-4 z-30 rounded-xl bg-green-900/90 hover:bg-green-800 p-2.5 flex items-center cursor-pointer pointer-events-auto transition-all duration-200"
+          className="fixed top-4 left-4 z-30 rounded-full bg-green-900/90 hover:bg-green-800 p-3 shadow-lg flex items-center justify-center cursor-pointer pointer-events-auto transition-all duration-200"
           aria-label="Ajustar tamanho do texto"
           title={`Tamanho do texto: ${Math.round(textScale * 100)}% (toque para alterar)`}
         >
@@ -265,7 +265,7 @@ const MapSelector = ({
         <button
           type="button"
           onClick={() => setTextScale((v) => (v >= 1.3 ? 1.0 : Math.round((v + 0.15) * 100) / 100))}
-          className="fixed top-[calc(50%-5rem)] left-4 z-30 rounded-xl bg-green-900/90 hover:bg-green-800 p-2.5 flex items-center cursor-pointer pointer-events-auto transition-all duration-200"
+          className="fixed top-4 left-4 z-30 rounded-full bg-green-900/90 hover:bg-green-800 p-3 shadow-lg flex items-center justify-center cursor-pointer pointer-events-auto transition-all duration-200"
           aria-label="Ajustar tamanho do texto"
           title={`Tamanho do texto: ${Math.round(textScale * 100)}% (clique para alterar)`}
         >

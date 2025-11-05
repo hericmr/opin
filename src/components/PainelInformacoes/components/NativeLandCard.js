@@ -80,14 +80,13 @@ const NativeLandCard = memo(({
     return (
       <div 
         className={`
-          bg-gray-50
           rounded-xl p-4 
           overflow-visible
           card-container
-          relative
+          relative isolate
           ${className}
         `}
-        style={{ border: 'none', outline: 'none' }}
+        style={{ border: 'none', outline: 'none', backgroundColor: colors.bg }}
       >
         {/* Ícone FORA do card, no canto superior esquerdo */}
         {Icon && (
@@ -119,7 +118,7 @@ const NativeLandCard = memo(({
           </div>
         )}
 
-        <div className="flex items-center">
+        <div className="flex items-center relative z-20">
           {/* Textos empilhados - agora com mais espaço já que o ícone está fora */}
           <div className="flex-1 min-w-0">
             {/* Categoria em uppercase e teal (se fornecido) */}
@@ -164,15 +163,14 @@ const NativeLandCard = memo(({
   return (
     <div 
       className={`
-        bg-gray-50
         rounded-xl p-4 
         h-[140px] flex flex-col
         overflow-visible
         card-container
-        relative
+        relative isolate
         ${className}
       `}
-      style={{ border: 'none', outline: 'none' }}
+      style={{ border: 'none', outline: 'none', backgroundColor: colors.bg }}
     >
       {/* Ícone FORA do card, no canto superior esquerdo */}
       {Icon && (
@@ -205,10 +203,12 @@ const NativeLandCard = memo(({
       )}
 
       {/* Conteúdo interno do card - com overflow hidden para não vazar */}
-      <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex flex-col h-full overflow-hidden relative z-20">
         {/* Título centralizado - aproveitando melhor o espaço */}
         <div className="flex items-center justify-center mb-2 sm:mb-3 flex-shrink-0 min-h-[32px] pt-1">
-          <div className="text-xs text-gray-600 font-semibold leading-tight text-center uppercase tracking-wide break-words px-2">
+          <div 
+            className="text-xs text-gray-600 font-semibold leading-tight text-center uppercase tracking-wide break-words px-2"
+          >
             {label}
           </div>
         </div>

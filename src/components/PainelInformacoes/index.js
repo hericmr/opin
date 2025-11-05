@@ -26,20 +26,37 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
     return urlParams.has('panel');
   }, []);
   
-  // Iniciar maximizado por padrão, especialmente se foi aberto via URL
-  const [isMaximized, setIsMaximized] = useState(true);
+  // Persistir estado de maximização entre aberturas
+  const [isMaximized, setIsMaximized] = useState(() => {
+    try {
+      const stored = localStorage.getItem('opin:painelIsMaximized');
+      if (stored === 'true') return true;
+      if (stored === 'false') return false;
+    } catch {}
+    return true; // padrão: maximizado
+  });
   
   const { gerarLinkCustomizado } = useShare(painelInfo);
   const { documentos } = useDocumentosEscola(painelInfo?.id);
   
-  const toggleMaximize = () => setIsMaximized(prev => !prev);
+  const toggleMaximize = () => {
+    setIsMaximized(prev => {
+      const next = !prev;
+      try { localStorage.setItem('opin:painelIsMaximized', String(next)); } catch {}
+      return next;
+    });
+  };
   
-  // Garantir que painel abre maximizado quando aberto via URL (link compartilhado)
+  // Ao abrir um novo painel, respeitar o estado salvo anteriormente
   useEffect(() => {
-    if (openedFromUrl && painelInfo) {
-      setIsMaximized(true);
+    if (painelInfo) {
+      try {
+        const stored = localStorage.getItem('opin:painelIsMaximized');
+        if (stored === 'true') setIsMaximized(true);
+        else if (stored === 'false') setIsMaximized(false);
+      } catch {}
     }
-  }, [openedFromUrl, painelInfo]);
+  }, [painelInfo]);
   
   useDynamicURL(painelInfo, gerarLinkCustomizado);
   useClickOutside(painelRef, closePainel);

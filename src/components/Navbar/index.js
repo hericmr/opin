@@ -219,7 +219,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
             {/* Logos - Por último */}
             <div className="hidden lg:flex items-center space-x-2 xl:space-x-4">
               <a 
-                href="https://www.unifesp.br/lindi" 
+                href="https://unifesp.br/campus/san7/graduacao/cursos/licenciatura-intercultural-indigena" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="flex items-center hover:opacity-80 transition-opacity"
@@ -232,7 +232,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
               </a>
               
               <a 
-                href="https://www.unifesp.br" 
+                href="https://unifesp.br" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="flex items-center hover:opacity-80 transition-opacity"

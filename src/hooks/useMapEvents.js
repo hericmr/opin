@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { showClickPulse, flyTo } from '../utils/openlayers/effects';
+import { showClickPulse, flyToAtFractionX } from '../utils/openlayers/effects';
 
 export const useMapEvents = (map, mapContainer, onPainelOpen) => {
   const tooltipElement = useRef(null);
@@ -20,7 +20,13 @@ export const useMapEvents = (map, mapContainer, onPainelOpen) => {
             if (schoolData && onPainelOpen) {
               const coord = features[0].getGeometry()?.getCoordinates();
               if (coord) {
-                flyTo(map, coord, { durationMs: 350 });
+                let fractionX = 0.25; // regra: 25% por padrão
+                try {
+                  const panelEl = document.querySelector('.mj-panel');
+                  const isPanelMaximized = panelEl?.classList?.contains('mj-maximized');
+                  if (isPanelMaximized) fractionX = 0.5;
+                } catch {}
+                flyToAtFractionX(map, coord, { durationMs: 350, fractionX });
                 showClickPulse(map, coord);
               }
               onPainelOpen(schoolData);
@@ -68,7 +74,13 @@ export const useMapEvents = (map, mapContainer, onPainelOpen) => {
           if (schoolData && onPainelOpen) {
             const coord = feature.getGeometry()?.getCoordinates();
             if (coord) {
-              flyTo(map, coord, { durationMs: 350 });
+              let fractionX = 0.25; // regra: 25% por padrão
+              try {
+                const panelEl = document.querySelector('.mj-panel');
+                const isPanelMaximized = panelEl?.classList?.contains('mj-maximized');
+                if (isPanelMaximized) fractionX = 0.5;
+              } catch {}
+              flyToAtFractionX(map, coord, { durationMs: 350, fractionX });
               showClickPulse(map, coord);
             }
             onPainelOpen(schoolData);
