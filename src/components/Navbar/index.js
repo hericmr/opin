@@ -140,9 +140,12 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
               aria-label="Ir para página inicial - OPIN"
             >
               <div className="flex items-center space-x-1 sm:space-x-2">
-                <h1 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl uppercase leading-none whitespace-nowrap" style={{fontFamily: 'PapakiloDecorative, sans-serif'}}>
-                  OPIN
-                </h1>
+                <img 
+                  src={`${process.env.PUBLIC_URL || ''}/logo_index.png`}
+                  alt="OPIN - Observatório dos Professores Indígenas"
+                  className="h-6 sm:h-7 md:h-8 lg:h-10 xl:h-12 w-auto object-contain object-left"
+                  style={{ display: 'block' }}
+                />
                 <div className="hidden sm:block w-px h-4 sm:h-6 md:h-8 bg-white/30 flex-shrink-0"></div>
                 <div className="hidden md:flex flex-col justify-center min-w-0">
                   <span className="text-white text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl capitalize truncate" style={{fontFamily: 'Cinzel, serif'}}>
