@@ -301,6 +301,102 @@ export const getTituloByVideoUrl = async (videoUrl, escolaId) => {
   }
 };
 
+/**
+ * Atualizar ordem de uma imagem
+ * @param {string} imageUrl - URL da imagem
+ * @param {number} escolaId - ID da escola
+ * @param {number} ordem - Nova ordem
+ * @returns {Promise<Object>} Legenda atualizada
+ */
+export const updateImageOrder = async (imageUrl, escolaId, ordem) => {
+  try {
+    // Primeiro, buscar a legenda existente
+    const legenda = await getLegendaByImageUrl(imageUrl, escolaId, { ativo: false });
+    
+    if (legenda) {
+      // Se existe, atualizar
+      const { data, error } = await supabase
+        .from('legendas_fotos')
+        .update({ ordem, updated_at: new Date().toISOString() })
+        .eq('id', legenda.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } else {
+      // Se não existe, criar uma entrada básica com ordem
+      const { data, error } = await supabase
+        .from('legendas_fotos')
+        .insert([{
+          escola_id: escolaId,
+          imagem_url: imageUrl,
+          ordem,
+          ativo: true,
+          tipo_foto: 'escola',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    }
+  } catch (error) {
+    console.error('Erro ao atualizar ordem da imagem:', error);
+    throw error;
+  }
+};
+
+/**
+ * Atualizar ordem de múltiplas imagens
+ * @param {Array} imageOrders - Array de objetos { imageUrl, ordem }
+ * @param {number} escolaId - ID da escola
+ * @returns {Promise<Array>} Legendas atualizadas
+ */
+export const updateMultipleImageOrders = async (imageOrders, escolaId) => {
+  try {
+    const updates = await Promise.all(
+      imageOrders.map(({ imageUrl, ordem }) => 
+        updateImageOrder(imageUrl, escolaId, ordem)
+      )
+    );
+    return updates;
+  } catch (error) {
+    console.error('Erro ao atualizar ordens das imagens:', error);
+    throw error;
+  }
+};
+
+/**
+ * Buscar todas as legendas de uma escola ordenadas por ordem
+ * @param {number} escolaId - ID da escola
+ * @param {string} tipoFoto - Tipo da foto (opcional, default: 'escola')
+ * @returns {Promise<Array>} Lista de legendas ordenadas
+ */
+export const getLegendasByEscolaOrdered = async (escolaId, tipoFoto = 'escola') => {
+  try {
+    const { data, error } = await supabase
+      .from('legendas_fotos')
+      .select('*')
+      .eq('escola_id', escolaId)
+      .eq('tipo_foto', tipoFoto)
+      .eq('ativo', true)
+      .order('ordem', { ascending: true, nullsFirst: false })
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      throw error;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Erro ao buscar legendas ordenadas da escola:', error);
+    throw error;
+  }
+};
+
 const LegendasService = {
   testLegendasTable,
   getLegendaByImageUrl,
@@ -310,7 +406,10 @@ const LegendasService = {
   updateLegendaFoto,
   deleteLegendaFoto,
   getLegendasByEscola,
-  getTituloByVideoUrl
+  getTituloByVideoUrl,
+  updateImageOrder,
+  updateMultipleImageOrders,
+  getLegendasByEscolaOrdered
 };
 
 export default LegendasService;

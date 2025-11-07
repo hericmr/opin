@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Upload, X, Image as ImageIcon, Trash2, Check, AlertCircle, Save, RefreshCw } from 'lucide-react';
+import { Upload, X, Image as ImageIcon, Trash2, Check, AlertCircle, Save, RefreshCw, GripVertical } from 'lucide-react';
 import { 
   uploadEscolaImage, 
   getEscolaImages, 
@@ -11,9 +11,11 @@ import {
   getLegendaByImageUrl, 
   addLegendaFoto, 
   updateLegendaFoto,
-  testLegendasTable
+  testLegendasTable,
+  updateMultipleImageOrders
 } from '../../services/legendasService';
 import { HeaderImageService } from '../../services/headerImageService';
+import { supabase } from '../../supabaseClient';
 
 const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -34,6 +36,10 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   // Estados para imagem do header
   const [imagemHeaderAtual, setImagemHeaderAtual] = useState(null);
   const [loadingHeader, setLoadingHeader] = useState(false);
+  
+  // Estados para drag and drop
+  const [draggedImage, setDraggedImage] = useState(null);
+  const [dragOverIndex, setDragOverIndex] = useState(null);
 
   // Buscar imagem atual do header
   const fetchImagemHeader = useCallback(async () => {
@@ -91,6 +97,69 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     }
   };
 
+  // Carregar ordem do banco de dados e ordenar imagens
+  const loadImageOrder = useCallback(async (images) => {
+    if (!escolaId || !images || images.length === 0) return images;
+    
+    try {
+      // Buscar todas as legendas da escola para obter a ordem
+      const { data: legendas, error } = await supabase
+        .from('legendas_fotos')
+        .select('imagem_url, ordem')
+        .eq('escola_id', escolaId)
+        .eq('tipo_foto', 'escola')
+        .eq('ativo', true);
+      
+      if (error) {
+        console.warn('Erro ao buscar ordem das imagens:', error);
+        return images;
+      }
+      
+      if (!legendas || legendas.length === 0) {
+        return images;
+      }
+      
+      // Criar um mapa de URLs para ordem
+      const orderMap = new Map();
+      legendas.forEach(legenda => {
+        if (legenda.ordem !== null && legenda.ordem !== undefined) {
+          orderMap.set(legenda.imagem_url, legenda.ordem);
+        }
+      });
+      
+      // Ordenar imagens baseado na ordem do banco
+      const sortedImages = [...images].sort((a, b) => {
+        const orderA = orderMap.has(a.url) ? orderMap.get(a.url) : Infinity;
+        const orderB = orderMap.has(b.url) ? orderMap.get(b.url) : Infinity;
+        return orderA - orderB;
+      });
+      
+      return sortedImages;
+    } catch (err) {
+      console.warn('Erro ao carregar ordem das imagens:', err);
+      return images;
+    }
+  }, [escolaId]);
+
+  // Salvar ordem no banco de dados
+  const saveImageOrder = useCallback(async (images) => {
+    if (!escolaId || !images || images.length === 0) return;
+    
+    try {
+      // Preparar array de ordens
+      const imageOrders = images.map((img, index) => ({
+        imageUrl: img.url,
+        ordem: index + 1
+      }));
+      
+      // Atualizar ordens no banco
+      await updateMultipleImageOrders(imageOrders, escolaId);
+    } catch (err) {
+      console.error('Erro ao salvar ordem das imagens no banco:', err);
+      setError('Erro ao salvar ordem das imagens. Tente novamente.');
+    }
+  }, [escolaId]);
+
   // Buscar imagens existentes
   const fetchExistingImages = useCallback(async () => {
     if (!escolaId) return;
@@ -98,14 +167,15 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     try {
       setLoading(true);
       const images = await getEscolaImages(escolaId, 'imagens-das-escolas');
-      setExistingImages(images);
+      const orderedImages = await loadImageOrder(images);
+      setExistingImages(orderedImages);
     } catch (err) {
       console.error('Erro ao buscar imagens:', err);
       setError('Erro ao carregar imagens existentes');
     } finally {
       setLoading(false);
     }
-  }, [escolaId]);
+  }, [escolaId, loadImageOrder]);
 
   useEffect(() => {
     fetchExistingImages();
@@ -204,8 +274,8 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     }
   };
 
-  // Handler para drag & drop
-  const handleDrop = useCallback((event) => {
+  // Handler para drag & drop de arquivos
+  const handleFileDrop = useCallback((event) => {
     event.preventDefault();
     const files = Array.from(event.dataTransfer.files);
     
@@ -219,7 +289,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     }
   }, []);
 
-  const handleDragOver = useCallback((event) => {
+  const handleFileDragOver = useCallback((event) => {
     event.preventDefault();
   }, []);
 
@@ -249,7 +319,9 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       }
 
       // Atualizar lista de imagens
-      setExistingImages(prev => [...prev, ...uploadedImages]);
+      const newImages = [...existingImages, ...uploadedImages];
+      setExistingImages(newImages);
+      await saveImageOrder(newImages);
       setSelectedFiles([]);
       setUploadProgress(0);
       setSuccess(`${uploadedImages.length} imagem(ns) carregada(s) com sucesso!`);
@@ -285,6 +357,10 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
 
       // Recarregar lista a partir do storage para refletir estado real
       await fetchExistingImages();
+      
+      // Atualizar ordem após deletar
+      const remainingImages = existingImages.filter(img => img.id !== imageId);
+      await saveImageOrder(remainingImages);
 
       setSuccess('Imagem excluída com sucesso!');
 
@@ -320,9 +396,11 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       );
 
       // Atualizar lista de imagens
-      setExistingImages(prev => prev.map(img => 
+      const updatedImages = existingImages.map(img => 
         img.id === imageId ? newImage : img
-      ));
+      );
+      setExistingImages(updatedImages);
+      await saveImageOrder(updatedImages);
 
       // Limpar estados
       setReplacingImage(null);
@@ -509,6 +587,55 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     }
   };
 
+  // Handlers para drag and drop de reordenação de imagens
+  const handleImageDragStart = (e, index) => {
+    setDraggedImage(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.target);
+  };
+
+  const handleImageDragOver = (e, index) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverIndex(index);
+  };
+
+  const handleImageDragLeave = () => {
+    setDragOverIndex(null);
+  };
+
+  const handleImageDrop = async (e, dropIndex) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (draggedImage === null || draggedImage === dropIndex) {
+      setDraggedImage(null);
+      setDragOverIndex(null);
+      return;
+    }
+
+    const newImages = [...existingImages];
+    const draggedItem = newImages[draggedImage];
+    
+    // Remover item da posição original
+    newImages.splice(draggedImage, 1);
+    
+    // Inserir na nova posição
+    newImages.splice(dropIndex, 0, draggedItem);
+    
+    setExistingImages(newImages);
+    await saveImageOrder(newImages);
+    setDraggedImage(null);
+    setDragOverIndex(null);
+    setSuccess('Ordem das imagens atualizada!');
+    setTimeout(() => setSuccess(''), 3000);
+  };
+
+  const handleImageDragEnd = () => {
+    setDraggedImage(null);
+    setDragOverIndex(null);
+  };
+
   if (loading) {
     return (
       <div className="p-6 bg-gray-800/30 rounded-lg">
@@ -556,8 +683,8 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                 ? 'border-gray-600 bg-gray-800/50' 
                 : 'border-gray-600 bg-gray-800/50 hover:border-blue-400 hover:bg-gray-700/50'
             }`}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
+            onDrop={handleFileDrop}
+            onDragOver={handleFileDragOver}
           >
             <Upload className="w-8 h-8 text-blue-400 mx-auto mb-2" />
             <p className="text-gray-300 mb-2">
@@ -633,12 +760,32 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       {/* Imagens Existentes */}
       {existingImages.length > 0 && (
         <div className="space-y-4">
-          <h4 className="font-medium text-gray-100">Imagens da Escola ({existingImages.length})</h4>
+          <div className="flex items-center justify-between">
+            <h4 className="font-medium text-gray-100">Imagens da Escola ({existingImages.length})</h4>
+            <p className="text-sm text-gray-400">Arraste as imagens para reordenar</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {existingImages.map((image) => (
-              <div key={image.id} className={`bg-gray-800/50 border border-gray-700/50 rounded-lg overflow-hidden shadow-sm ${
-                imagemHeaderAtual === image.publicUrl ? 'ring-2 ring-blue-400' : ''
-              }`}>
+            {existingImages.map((image, index) => (
+              <div 
+                key={image.id} 
+                draggable
+                onDragStart={(e) => handleImageDragStart(e, index)}
+                onDragOver={(e) => handleImageDragOver(e, index)}
+                onDragLeave={handleImageDragLeave}
+                onDrop={(e) => handleImageDrop(e, index)}
+                onDragEnd={handleImageDragEnd}
+                className={`bg-gray-800/50 border border-gray-700/50 rounded-lg overflow-hidden shadow-sm transition-all cursor-move ${
+                  imagemHeaderAtual === image.publicUrl ? 'ring-2 ring-blue-400' : ''
+                } ${
+                  draggedImage === index ? 'opacity-50 scale-95' : ''
+                } ${
+                  dragOverIndex === index ? 'ring-2 ring-blue-500 scale-105' : ''
+                }`}
+              >
+                {/* Handle de arrastar */}
+                <div className="absolute top-2 right-2 z-10 bg-gray-900/80 p-1 rounded cursor-grab active:cursor-grabbing">
+                  <GripVertical className="w-4 h-4 text-gray-400" />
+                </div>
                 {/* Imagem */}
                 <div className="relative group">
                 <img
