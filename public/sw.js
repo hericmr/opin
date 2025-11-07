@@ -44,8 +44,9 @@ self.addEventListener('activate', (event) => {
 
 // Função para verificar se é um arquivo com hash (JS, CSS com hash no nome)
 function isHashedAsset(url) {
-  // Arquivos JavaScript e CSS com hash no nome (ex: main.abc123.js)
-  return /\.(js|css)$/.test(url) && /\.\w{8,}\.(js|css)$/.test(url);
+  // Arquivos JavaScript e CSS com hash no nome (ex: main.abc123.js ou main.16666c3d.js)
+  // Padrão: nome.8ouMaisCaracteres.js ou nome.8ouMaisCaracteres.css
+  return /\/static\/(js|css)\/.+\.\w{8,}\.(js|css)$/.test(url);
 }
 
 // Função para verificar se é um arquivo estático que pode ser cacheado
