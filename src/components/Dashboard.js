@@ -26,6 +26,7 @@ const Dashboard = () => {
     tiposEnsino: []
   });
   const [headerImages, setHeaderImages] = useState([]);
+  const [imagesPreloaded, setImagesPreloaded] = useState(false);
 
   // Breadcrumbs de Navegação
   const breadcrumbs = [
@@ -33,7 +34,100 @@ const Dashboard = () => {
     { label: 'Alguns dados', path: '/dashboard', active: true }
   ];
 
-  // Carregar dados dos gráficos
+  // Função para pré-carregar imagens com alta prioridade
+  const preloadImage = (url) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(url);
+      img.onerror = () => reject(new Error(`Failed to preload: ${url}`));
+      // Forçar carregamento imediato com alta prioridade (se suportado)
+      if ('fetchPriority' in img) {
+        img.fetchPriority = 'high';
+      }
+      img.src = url;
+    });
+  };
+
+  // Carregar imagens de header COM PRIORIDADE - antes dos dados dos gráficos
+  useEffect(() => {
+    const loadHeaderImages = async () => {
+      try {
+        const { data: escolasData, error: escolasError } = await supabase
+          .from('escolas_completa')
+          .select('id, Escola, imagem_header')
+          .not('imagem_header', 'is', null)
+          .neq('imagem_header', '')
+          .limit(100);
+
+        if (!escolasError && escolasData && escolasData.length > 0) {
+          // Remover duplicatas baseado na URL da imagem
+          const uniqueImages = [];
+          const seenUrls = new Set();
+          
+          escolasData.forEach(escola => {
+            if (escola.imagem_header && !seenUrls.has(escola.imagem_header)) {
+              seenUrls.add(escola.imagem_header);
+              uniqueImages.push(escola);
+            }
+          });
+
+          // Selecionar aleatoriamente algumas imagens únicas (máximo 5)
+          const shuffled = [...uniqueImages].sort(() => 0.5 - Math.random());
+          const selected = shuffled.slice(0, Math.min(5, shuffled.length));
+          
+          // PRÉ-CARREGAR imagens antes de setar no estado
+          const imageUrls = selected.map(img => img.imagem_header).filter(Boolean);
+          
+          // Pré-carregar todas as imagens em paralelo com alta prioridade
+          try {
+            await Promise.allSettled(
+              imageUrls.map(url => preloadImage(url).catch(err => {
+                console.warn('Erro ao pré-carregar imagem:', url, err);
+                return null;
+              }))
+            );
+            
+            // Adicionar link rel="preload" no head para as primeiras imagens críticas
+            if (typeof document !== 'undefined' && imageUrls.length > 0) {
+              // Remover preloads anteriores se existirem
+              const existingPreloads = document.querySelectorAll('link[rel="preload"][as="image"]');
+              existingPreloads.forEach(link => {
+                if (link.href.includes('supabase') || link.href.includes('imagem_header')) {
+                  link.remove();
+                }
+              });
+              
+              // Adicionar preload para as primeiras 2 imagens (mais críticas)
+              imageUrls.slice(0, 2).forEach((url, index) => {
+                const link = document.createElement('link');
+                link.rel = 'preload';
+                link.as = 'image';
+                link.href = url;
+                link.fetchPriority = 'high';
+                document.head.appendChild(link);
+              });
+            }
+            
+            setImagesPreloaded(true);
+          } catch (preloadError) {
+            console.warn('Algumas imagens falharam no pré-carregamento:', preloadError);
+            setImagesPreloaded(true); // Continua mesmo se algumas falharem
+          }
+          
+          // Setar imagens no estado após pré-carregamento
+          setHeaderImages(selected);
+        }
+      } catch (err) {
+        console.error('Erro ao carregar imagens de header:', err);
+        setImagesPreloaded(true); // Continua mesmo se falhar
+      }
+    };
+
+    // Carregar imagens PRIMEIRO, antes dos dados dos gráficos
+    loadHeaderImages();
+  }, []);
+
+  // Carregar dados dos gráficos (pode ser em paralelo, mas imagens têm prioridade)
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -91,43 +185,6 @@ const Dashboard = () => {
     };
 
     loadData();
-  }, []);
-
-  // Carregar imagens de header de forma independente e assíncrona
-  useEffect(() => {
-    const loadHeaderImages = async () => {
-      try {
-        const { data: escolasData, error: escolasError } = await supabase
-          .from('escolas_completa')
-          .select('id, Escola, imagem_header')
-          .not('imagem_header', 'is', null)
-          .neq('imagem_header', '')
-          .limit(100); // Limitar para performance
-
-        if (!escolasError && escolasData && escolasData.length > 0) {
-          // Remover duplicatas baseado na URL da imagem
-          const uniqueImages = [];
-          const seenUrls = new Set();
-          
-          escolasData.forEach(escola => {
-            if (escola.imagem_header && !seenUrls.has(escola.imagem_header)) {
-              seenUrls.add(escola.imagem_header);
-              uniqueImages.push(escola);
-            }
-          });
-
-          // Selecionar aleatoriamente algumas imagens únicas (máximo 5 para incluir a primeira após o header)
-          const shuffled = [...uniqueImages].sort(() => 0.5 - Math.random());
-          const selected = shuffled.slice(0, Math.min(5, shuffled.length));
-          setHeaderImages(selected);
-        }
-      } catch (err) {
-        console.error('Erro ao carregar imagens de header:', err);
-        // Não falha o carregamento se não conseguir buscar imagens
-      }
-    };
-
-    loadHeaderImages();
   }, []);
 
   if (loading) {
@@ -208,6 +265,7 @@ const Dashboard = () => {
             alt={headerImages[0].Escola || 'Imagem da escola'}
             className="w-full h-full object-cover"
             style={{ filter: 'saturate(1.1)' }}
+            priority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
@@ -237,6 +295,7 @@ const Dashboard = () => {
               alt={headerImages[1].Escola || 'Imagem da escola'}
               className="w-full h-full object-cover"
               style={{ filter: 'saturate(1.1)' }}
+              priority="high"
             />
             <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
@@ -264,6 +323,7 @@ const Dashboard = () => {
               alt={headerImages[2].Escola || 'Imagem da escola'}
               className="w-full h-full object-cover"
               style={{ filter: 'saturate(1.1)' }}
+              priority="normal"
             />
             <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
@@ -294,6 +354,7 @@ const Dashboard = () => {
               alt={headerImages[3].Escola || 'Imagem da escola'}
               className="w-full h-full object-cover"
               style={{ filter: 'saturate(1.1)' }}
+              priority="normal"
             />
             <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
@@ -321,6 +382,7 @@ const Dashboard = () => {
               alt={headerImages[4].Escola || 'Imagem da escola'}
               className="w-full h-full object-cover"
               style={{ filter: 'saturate(1.1)' }}
+              priority="normal"
             />
             <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />

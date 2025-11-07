@@ -84,6 +84,7 @@ const OptimizedImage = ({
           src={getImageSrc()}
           alt={alt}
           loading={loading}
+          fetchPriority={priority === 'high' ? 'high' : 'auto'}
           className={`w-full h-full object-cover transition-opacity duration-150 ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
