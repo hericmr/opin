@@ -35,6 +35,15 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
     }
   }, [refreshKey, limparCacheERecarregar]);
 
+  // Adicionar timestamp ao cache key para invalidar quando necessário
+  // Isso garante que mudanças na ordem sejam refletidas
+  useEffect(() => {
+    // Invalidar cache periodicamente ou quando refreshKey muda
+    if (refreshKey > 0) {
+      setCacheVersion(prev => prev + 1);
+    }
+  }, [refreshKey]);
+
   const fecharZoom = useCallback(() => {
     setImagemZoom(null);
     setCurrentImageIndex(0);
@@ -57,19 +66,34 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
       return;
     }
 
-    // Verificar se há cache válido (com versão)
-    const cacheKey = `${escola_id}_v${cacheVersion}`;
-    if (cacheRef.current[cacheKey]) {
-      console.log('Usando cache para escola', escola_id);
-      setImagens(cacheRef.current[cacheKey]);
-      setLoading(false);
-      return;
-    }
+    // Sempre buscar ordem do banco para garantir que está atualizada
+    // Não usar cache para ordem, apenas para otimização de performance
+    const cacheKey = `${escola_id}_v${cacheVersion}_rk${refreshKey}`;
 
     const buscarImagens = async () => {
-      console.log('Buscando imagens para escola', escola_id);
+      console.log('Buscando imagens para escola', escola_id, 'refreshKey:', refreshKey);
       
       try {
+        // Primeiro, buscar todas as legendas da escola ordenadas por ordem
+        const { data: legendas, error: legendasError } = await supabase
+          .from('legendas_fotos')
+          .select('*')
+          .eq('escola_id', escola_id)
+          .eq('tipo_foto', 'escola')
+          .eq('ativo', true)
+          .order('ordem', { ascending: true, nullsFirst: false })
+          .order('created_at', { ascending: true });
+
+        // Criar mapa de filePath para legenda
+        const legendasMap = new Map();
+        if (legendas && !legendasError) {
+          legendas.forEach(legenda => {
+            // Normalizar o caminho para fazer match
+            const path = legenda.imagem_url;
+            legendasMap.set(path, legenda);
+          });
+        }
+
         // Usar a mesma abordagem do painel de edição: listar arquivos do bucket
         const { data: files, error } = await supabase.storage
           .from('imagens-das-escolas')
@@ -96,17 +120,20 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
               .from('imagens-das-escolas')
               .getPublicUrl(filePath);
 
-            // Buscar legenda da nova tabela (busca flexível)
-            let legenda = null;
-            try {
-              console.log('Buscando legenda para:', filePath);
-              legenda = await getLegendaByImageUrlFlexivel(filePath, escola_id, {
-                categoria: 'escola',
-                tipo_foto: 'escola'
-              });
-              console.log('Legenda encontrada:', legenda);
-            } catch (error) {
-              console.warn('Erro ao buscar legenda para', filePath, ':', error);
+            // Buscar legenda do mapa primeiro, depois tentar busca flexível se não encontrar
+            let legenda = legendasMap.get(filePath);
+            
+            if (!legenda) {
+              try {
+                console.log('Buscando legenda para:', filePath);
+                legenda = await getLegendaByImageUrlFlexivel(filePath, escola_id, {
+                  categoria: 'escola',
+                  tipo_foto: 'escola'
+                });
+                console.log('Legenda encontrada:', legenda);
+              } catch (error) {
+                console.warn('Erro ao buscar legenda para', filePath, ':', error);
+              }
             }
 
             return {
@@ -118,7 +145,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
               autor: legenda?.autor_foto,
               dataFoto: legenda?.data_foto,
               categoria: legenda?.categoria,
-              ordem: legenda?.ordem || Infinity, // Usar Infinity se não tiver ordem
+              ordem: legenda?.ordem !== null && legenda?.ordem !== undefined ? legenda.ordem : Infinity,
               urlError: null,
             };
           })
@@ -130,11 +157,12 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
           if (a.ordem !== b.ordem) {
             return a.ordem - b.ordem;
           }
-          // Se ordem for igual ou não existir, manter ordem original
+          // Se ordem for igual ou não existir, manter ordem original (por nome do arquivo)
           return 0;
         });
 
         console.log('Imagens processadas e ordenadas:', imagensEncontradas.length);
+        console.log('Ordem das imagens:', imagensEncontradas.map(img => ({ file: img.filePath.split('/').pop(), ordem: img.ordem })));
         
         // Salvar no cache com versão
         cacheRef.current[cacheKey] = imagensEncontradas;
@@ -152,7 +180,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
     };
 
     buscarImagens();
-  }, [escola_id, cacheVersion]);
+  }, [escola_id, cacheVersion, refreshKey]);
 
   if (loading) {
     return (
