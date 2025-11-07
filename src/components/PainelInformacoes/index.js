@@ -20,8 +20,25 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
   
   // Removido cálculo openedFromUrl não utilizado
   
+  // Verificar se o painel foi aberto via URL
+  const openedFromUrl = useRef(false);
+  useEffect(() => {
+    if (painelInfo) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const panelParam = urlParams.get('panel');
+      if (panelParam) {
+        openedFromUrl.current = true;
+      }
+    }
+  }, [painelInfo]);
+  
   // Persistir estado de maximização entre aberturas
   const [isMaximized, setIsMaximized] = useState(() => {
+    // Se foi aberto da URL, sempre maximizar
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('panel')) {
+      return true;
+    }
     try {
       const stored = localStorage.getItem('opin:painelIsMaximized');
       if (stored === 'true') return true;
@@ -43,14 +60,26 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
     });
   };
   
-  // Ao abrir um novo painel, respeitar o estado salvo anteriormente
+  // Ao abrir um novo painel, verificar se veio da URL
   useEffect(() => {
     if (painelInfo) {
-      try {
-        const stored = localStorage.getItem('opin:painelIsMaximized');
-        if (stored === 'true') setIsMaximized(true);
-        else if (stored === 'false') setIsMaximized(false);
-      } catch {}
+      const urlParams = new URLSearchParams(window.location.search);
+      const panelParam = urlParams.get('panel');
+      
+      // Se veio da URL, sempre maximizar
+      if (panelParam) {
+        setIsMaximized(true);
+        try {
+          localStorage.setItem('opin:painelIsMaximized', 'true');
+        } catch {}
+      } else {
+        // Caso contrário, respeitar o estado salvo
+        try {
+          const stored = localStorage.getItem('opin:painelIsMaximized');
+          if (stored === 'true') setIsMaximized(true);
+          else if (stored === 'false') setIsMaximized(false);
+        } catch {}
+      }
     }
   }, [painelInfo]);
   
