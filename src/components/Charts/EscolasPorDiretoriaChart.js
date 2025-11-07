@@ -18,7 +18,7 @@ const EscolasPorDiretoriaChart = ({ data }) => {
   // Se não há dados, mostra mensagem
   if (!data || data.length === 0) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-lg">
+      <div className="p-6">
         <h3 className="text-xl font-bold mb-4 text-gray-800">
           Número de Escolas por Diretoria de Ensino
         </h3>
@@ -33,9 +33,9 @@ const EscolasPorDiretoriaChart = ({ data }) => {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="p-6">
       
-      <h3 className="text-xl font-bold mb-4 text-gray-800 text-center">
+      <h3 className="text-xl sm:text-2xl font-bold mb-4 text-gray-800 text-center">
         Número de Escolas por Diretoria de Ensino
       </h3>
       <div className="h-96">
@@ -62,15 +62,16 @@ const EscolasPorDiretoriaChart = ({ data }) => {
               label={{ value: 'Número de Escolas', angle: -90, position: 'insideLeft' }}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="quantidade" fill="#15803d">
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill="#15803d" />
-              ))}
+            <Bar dataKey="quantidade">
+              {data.map((entry, index) => {
+                const colors = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#a855f7', '#14b8a6', '#ec4899', '#6366f1'];
+                return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
+              })}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <p className="text-sm text-gray-500 mt-2 text-center">
+      <p className="text-sm text-gray-600 mt-2 text-center">
         Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2025
       </p>
     </div>

@@ -153,8 +153,9 @@ export class AuthService {
    */
   static logout() {
     localStorage.removeItem('opin_admin_token');
-    // Redirecionar para página inicial
-    window.location.href = '/';
+    // Redirecionar para página inicial (respeitando o basename)
+    const basename = '/opin';
+    window.location.href = `${basename}/`;
   }
 
   /**
