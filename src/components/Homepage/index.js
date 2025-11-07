@@ -216,7 +216,14 @@ export default function Homepage({ dataPoints = [] }) {
         <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-start lg:items-center h-full px-4 lg:px-12">
           <div className="pt-28 lg:pt-0 text-white">
             {/* Logo OPIN maior */}
-            <h1 className="text-8xl md:text-[10rem] lg:text-[14rem] xl:text-[16rem] leading-none font-papakilo">OPIN</h1>
+            <div className="mb-2">
+              <img 
+                src={`${process.env.PUBLIC_URL || ''}/logo_index.png`}
+                alt="OPIN - Observatório dos Professores Indígenas"
+                className="h-32 md:h-48 lg:h-64 xl:h-80 w-auto object-contain"
+                style={{ maxWidth: '100%' }}
+              />
+            </div>
             
             {/* Slogan abaixo do logo */}
             <div className="mt-0.5">
