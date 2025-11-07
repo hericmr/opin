@@ -49,8 +49,8 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
     return null;
   }, [panel, dataPoints, location.state]);
 
-  const [painelInfo, setPainelInfo] = useState(initialPanel);
-  const [initialPanelOpened, setInitialPanelOpened] = useState(!!initialPanel);
+  const [painelInfo, setPainelInfo] = useState(null);
+  const [initialPanelOpened, setInitialPanelOpened] = useState(false);
   
   // Memoize escolasVisiveis para evitar recálculos desnecessários
   const escolasVisiveis = useMemo(() => 
@@ -70,13 +70,19 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
     // O refresh será disparado pelo contexto
   }, []);
 
-  // Abrir painel automaticamente quando initialPanel for encontrado (apenas uma vez)
+  // Abrir painel automaticamente quando initialPanel for encontrado na URL (apenas uma vez)
   useEffect(() => {
-    // Só abrir se há um panel na URL E o painel não está aberto
+    // Se há um panel na URL e ainda não foi aberto, abrir o painel
     if (initialPanel && !initialPanelOpened && panel) {
-      logger.debug('MapaEscolasIndigenas: Abrindo painel automaticamente para:', initialPanel.titulo);
+      logger.debug('MapaEscolasIndigenas: Abrindo painel automaticamente da URL para:', initialPanel.titulo);
       setPainelInfo(initialPanel);
       setInitialPanelOpened(true);
+      // Forçar painel maximizado quando vem da URL
+      try {
+        localStorage.setItem('opin:painelIsMaximized', 'true');
+      } catch (e) {
+        console.warn('Erro ao salvar estado de maximização:', e);
+      }
     }
     // Se não há panel na URL, resetar o estado
     if (!panel && initialPanelOpened) {
