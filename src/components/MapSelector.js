@@ -247,7 +247,7 @@ const MapSelector = ({
       )}
 
       {/* Controles flutuantes superiores */}
-      <div className="fixed top-4 left-4 z-30 flex flex-col sm:flex-row items-start sm:items-center gap-3 pointer-events-auto">
+      <div className="fixed top-4 right-4 z-30 flex flex-col sm:flex-row items-end sm:items-center gap-3 pointer-events-auto">
         {/* Botão de tamanho do texto */}
         <button
           type="button"
@@ -266,7 +266,7 @@ const MapSelector = ({
         {/* Botão "Sair do mapa" */}
         <Link
           to="/"
-          className="rounded-full bg-green-900/90 hover:bg-green-800 p-3 shadow-lg flex items-center justify-center cursor-pointer transition-all duration-200 backdrop-blur-md"
+          className="rounded-full bg-green-900/90 hover:bg-green-800 px-4 py-2 shadow-lg flex items-center justify-center cursor-pointer transition-all duration-200 backdrop-blur-md"
           aria-label="Sair do mapa e voltar para a página inicial"
           title="Sair do mapa"
         >
