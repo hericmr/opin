@@ -2,20 +2,27 @@
 <html lang="pt-br">
   <head>
     <meta charset="utf-8" />
+    <base href="%PUBLIC_URL%/">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https:; frame-src 'self' https://drive.google.com https://docs.google.com https://www.youtube.com https://youtube.com;" />
-    <link rel="icon" href="/opin/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
     <meta name="theme-color" content="#000000" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <meta
       name="description"
-      content="OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) - Alguns dados das escolas indígenas no estado de São Paulo."
+      content="OPIN (Observatório dos Professores Indígenas no Estado de São Paulo) - Alguns dados das escolas indígenas no estado de São Paulo. Informações sobre número de estudantes e docentes, infraestrutura disponível, distribuição geográfica por Diretorias de Ensino e modalidades de ensino oferecidas."
     />
-    <link rel="apple-touch-icon" href="/opin/onça.svg"/>
-    <link rel="manifest" href="/opin/manifest.json" />
+    <meta property="og:title" content="OPIN - Alguns dados" />
+    <meta property="og:description" content="Informações sobre as escolas indígenas do estado de São Paulo, apresentando indicadores como número de estudantes e docentes, infraestrutura disponível, distribuição geográfica por Diretorias de Ensino e modalidades de ensino oferecidas." />
+    <meta property="og:type" content="website" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/onca.svg"/>
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>OPIN - Alguns dados</title>
+    <title>OPIN - Alguns dados | Observatório dos Professores Indígenas</title>
     <style>
       /* Critical CSS */
       #root {
@@ -65,26 +72,33 @@
     <noscript>
       Você precisa ativar o JavaScript para visualizar este aplicativo.
       <div>
-        <h1>OPIN (Observatório dos Professores Indígenas no Estado de São Paulo)</h1>
+        <h1>OPIN - Alguns dados</h1>
         <div>
           <p>
-            Esta plataforma interativa é um observatório que busca mapear
-            as escolas indígenas no estado de São Paulo, destacando suas
-            características, desafios e conquistas.
+            Este espaço reúne informações sobre as escolas indígenas do estado de São Paulo, 
+            apresentando indicadores como número de estudantes e docentes, infraestrutura 
+            disponível, distribuição geográfica por Diretorias de Ensino e modalidades de 
+            ensino oferecidas.
           </p>
           <br>
           <p>
-            O mapa destaca a presença de escolas indígenas, suas localizações,
-            características educacionais, infraestrutura, e outros aspectos
-            relevantes para o entendimento da educação indígena no estado.
+            Os dados foram fornecidos pela Secretaria da Educação do Estado de São Paulo 
+            (SEDUC) e referem-se ao ano de 2025. A base completa pode ser acessada em: 
+            <a href="https://dados.educacao.sp.gov.br/" target="_blank" rel="noopener noreferrer">
+              dados.educacao.sp.gov.br
+            </a>
           </p>
           <br>
           <p>
-            Entre os elementos mapeados, estão informações sobre os povos
-            indígenas atendidos, línguas faladas, modalidades de ensino,
-            e outros aspectos importantes para a compreensão da educação
-            indígena na região.
+            Entre os gráficos disponíveis, estão informações sobre:
           </p>
+          <ul>
+            <li>Distribuição de alunos por modalidade de ensino</li>
+            <li>Tipos de ensino oferecidos pelas escolas</li>
+            <li>Distribuição de escolas e alunos por escola</li>
+            <li>Equipamentos disponíveis nas escolas</li>
+            <li>Distribuição de escolas por Diretoria de Ensino</li>
+          </ul>
           <br>
           <p>
             Os materiais cartográficos e textuais disponíveis aqui foram
@@ -93,6 +107,7 @@
           </p>
         </div>
         <p><a href="/opin/">Clique aqui para acessar a página principal</a></p>
+        <p><a href="/opin/mapa">Clique aqui para acessar o mapa interativo</a></p>
       </div>
     </noscript>
     <div id="root">
