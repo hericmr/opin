@@ -242,8 +242,8 @@ export default function Homepage({ dataPoints = [] }) {
               <img 
                 src={`${process.env.PUBLIC_URL || ''}/logo_index.png`}
                 alt="OPIN - Observatório dos Professores Indígenas"
-                className="h-20 md:h-28 lg:h-36 xl:h-44 object-contain"
-                style={{ width: logoWidth ? `${logoWidth}px` : 'auto', maxWidth: '100%', display: 'block', marginLeft: 0, paddingLeft: 0, marginRight: 'auto' }}
+                className="h-20 md:h-28 lg:h-36 xl:h-44 object-contain object-left"
+                style={{ width: logoWidth ? `${logoWidth}px` : 'auto', maxWidth: '100%', display: 'block', marginLeft: 0, paddingLeft: 0, marginRight: 'auto', objectPosition: 'left' }}
               />
             </div>
             
