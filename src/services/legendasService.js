@@ -314,7 +314,7 @@ export const updateImageOrder = async (imageUrl, escolaId, ordem) => {
     const legenda = await getLegendaByImageUrl(imageUrl, escolaId, { ativo: false });
     
     if (legenda) {
-      // Se existe, atualizar
+      // Se existe, atualizar apenas a ordem
       const { data, error } = await supabase
         .from('legendas_fotos')
         .update({ ordem, updated_at: new Date().toISOString() })
@@ -326,14 +326,20 @@ export const updateImageOrder = async (imageUrl, escolaId, ordem) => {
       return data;
     } else {
       // Se não existe, criar uma entrada básica com ordem
+      // Extrair nome do arquivo para usar como legenda padrão
+      const fileName = imageUrl.split('/').pop() || 'Imagem';
+      const legendaPadrao = fileName.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ') || 'Imagem';
+      
       const { data, error } = await supabase
         .from('legendas_fotos')
         .insert([{
           escola_id: escolaId,
           imagem_url: imageUrl,
+          legenda: legendaPadrao, // Valor padrão obrigatório
           ordem,
           ativo: true,
           tipo_foto: 'escola',
+          categoria: 'geral',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         }])
