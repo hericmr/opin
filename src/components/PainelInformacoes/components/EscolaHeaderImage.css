@@ -133,9 +133,3 @@
   }
 }
 
-/* Modo escuro */
-@media (prefers-color-scheme: dark) {
-  .escola-header-image {
-    filter: brightness(0.9) contrast(1.1);
-  }
-}
