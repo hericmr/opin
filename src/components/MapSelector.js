@@ -5,6 +5,7 @@ import { MAP_CONFIG } from '../utils/mapConfig';
 import { ResponsiveIcon } from '../hooks/useResponsiveIcon';
 import { useBreakpoint } from '../hooks/responsive/useBreakpoint';
 import logger from '../utils/logger';
+import { Link } from 'react-router-dom';
 
 const MapSelector = ({ 
   dataPoints, 
@@ -245,26 +246,13 @@ const MapSelector = ({
         </div>
       )}
 
-      {/* Botão flutuante de tamanho do texto (fora do menu, estilo Native Land) */}
-      {isMobile ? (
+      {/* Controles flutuantes superiores */}
+      <div className="fixed top-4 left-4 z-30 flex flex-col sm:flex-row items-start sm:items-center gap-3 pointer-events-auto">
+        {/* Botão de tamanho do texto */}
         <button
           type="button"
           onClick={() => setTextScale((v) => (v >= 1.3 ? 1.0 : Math.round((v + 0.15) * 100) / 100))}
-          className="fixed top-4 left-4 z-30 rounded-full bg-green-900/90 hover:bg-green-800 p-3 shadow-lg flex items-center justify-center cursor-pointer pointer-events-auto transition-all duration-200"
-          aria-label="Ajustar tamanho do texto"
-          title={`Tamanho do texto: ${Math.round(textScale * 100)}% (toque para alterar)`}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path fillRule="evenodd" clipRule="evenodd" d="M6.6117 5.00684C6.86862 5.02589 7.11696 5.11134 7.3324 5.25488C7.57862 5.41908 7.77125 5.65263 7.88514 5.92578L11.9232 15.6162C12.1352 16.1258 11.8947 16.7115 11.3851 16.9238C10.8755 17.1362 10.2901 16.8942 10.0775 16.3848L9.08338 14H3.91736L2.92322 16.3857C2.71049 16.8948 2.12502 17.1359 1.6156 16.9238C1.10605 16.7114 0.865522 16.1258 1.07752 15.6162L5.11658 5.92578L5.16248 5.8252C5.27895 5.59518 5.45376 5.39859 5.66932 5.25488L5.76307 5.19727C5.98766 5.07035 6.24213 5.00195 6.50135 5.00195L6.6117 5.00684ZM4.75135 12H8.25037L6.50037 7.80176L4.75135 12Z" fill="#CDE8CF"></path>
-            <path d="M18.0209 6.00098C18.0385 6.00133 18.0561 6.00165 18.0736 6.00293C18.0913 6.00421 18.1089 6.00562 18.1263 6.00781C18.1434 6.00996 18.1602 6.01358 18.1771 6.0166C18.1869 6.01835 18.1968 6.01946 18.2064 6.02148C18.234 6.02726 18.2614 6.03388 18.2885 6.04199C18.2921 6.04309 18.2956 6.04476 18.2992 6.0459C18.317 6.05145 18.3344 6.05789 18.3519 6.06445C18.368 6.07049 18.3841 6.07618 18.3998 6.08301C18.5114 6.13159 18.6161 6.20168 18.7074 6.29297L22.7074 10.293C23.0977 10.6835 23.0979 11.3166 22.7074 11.707C22.3169 12.0975 21.6839 12.0973 21.2933 11.707L19.0004 9.41406V16C19.0004 16.5522 18.5526 16.9999 18.0004 17C17.4481 17 17.0004 16.5523 17.0004 16V9.41406L14.7074 11.707C14.3169 12.0975 13.6839 12.0973 13.2933 11.707C12.9028 11.3165 12.9028 10.6835 13.2933 10.293L17.2933 6.29297C17.3386 6.2477 17.3876 6.20587 17.4408 6.16992C17.4934 6.13439 17.5488 6.10452 17.6058 6.08008C17.6512 6.06059 17.6989 6.04587 17.7474 6.0332C17.7614 6.02955 17.7753 6.0255 17.7894 6.02246C17.8033 6.01948 17.8173 6.01704 17.8314 6.01465C17.847 6.01199 17.8626 6.00973 17.8783 6.00781C17.8961 6.00565 17.914 6.00415 17.932 6.00293C17.948 6.00184 17.9639 6.00131 17.9799 6.00098C17.9866 6.00084 17.9936 6 18.0004 6C18.0072 6 18.0141 6.00084 18.0209 6.00098Z" fill="#CDE8CF"></path>
-          </svg>
-          <div className="hidden lg:block ml-2 text-green-100 text-sm">Tamanho do texto</div>
-        </button>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setTextScale((v) => (v >= 1.3 ? 1.0 : Math.round((v + 0.15) * 100) / 100))}
-          className="fixed top-4 left-4 z-30 rounded-full bg-green-900/90 hover:bg-green-800 p-3 shadow-lg flex items-center justify-center cursor-pointer pointer-events-auto transition-all duration-200"
+          className="rounded-full bg-green-900/90 hover:bg-green-800 p-3 shadow-lg flex items-center justify-center cursor-pointer transition-all duration-200 backdrop-blur-md"
           aria-label="Ajustar tamanho do texto"
           title={`Tamanho do texto: ${Math.round(textScale * 100)}% (clique para alterar)`}
         >
@@ -274,7 +262,23 @@ const MapSelector = ({
           </svg>
           <div className="hidden lg:block ml-2 text-green-100 text-sm">Tamanho do texto</div>
         </button>
-      )}
+
+        {/* Botão "Sair do mapa" */}
+        <Link
+          to="/"
+          className="rounded-full bg-green-900/90 hover:bg-green-800 p-3 shadow-lg flex items-center justify-center cursor-pointer transition-all duration-200 backdrop-blur-md"
+          aria-label="Sair do mapa e voltar para a página inicial"
+          title="Sair do mapa"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M16 17L21 12L16 7" stroke="#CDE8CF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M21 12H9" stroke="#CDE8CF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="#CDE8CF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+          </svg>
+          <span className="hidden lg:inline-block ml-2 text-green-100 text-sm font-medium">Sair do mapa</span>
+        </Link>
+      </div>
+
       {/* Mapa OpenLayers unificado */}
       <OpenLayersMap
         dataPoints={showMarcadores ? dataPoints : []}
