@@ -112,17 +112,29 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
             return {
               id: `${escola_id}-${file.name}`,
               publicURL: publicUrl,
+              filePath: filePath,
               descricao: legenda?.legenda || `Imagem ${index + 1}`,
               descricaoDetalhada: legenda?.descricao_detalhada,
               autor: legenda?.autor_foto,
               dataFoto: legenda?.data_foto,
               categoria: legenda?.categoria,
+              ordem: legenda?.ordem || Infinity, // Usar Infinity se não tiver ordem
               urlError: null,
             };
           })
         );
 
-        console.log('Imagens processadas:', imagensEncontradas.length);
+        // Ordenar imagens por ordem (do banco de dados)
+        imagensEncontradas.sort((a, b) => {
+          // Primeiro ordenar por ordem (menor primeiro)
+          if (a.ordem !== b.ordem) {
+            return a.ordem - b.ordem;
+          }
+          // Se ordem for igual ou não existir, manter ordem original
+          return 0;
+        });
+
+        console.log('Imagens processadas e ordenadas:', imagensEncontradas.length);
         
         // Salvar no cache com versão
         cacheRef.current[cacheKey] = imagensEncontradas;
