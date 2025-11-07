@@ -16,7 +16,6 @@ import OpenLayersMarkers from './OpenLayers/OpenLayersMarkers';
 import OpenLayersLayers from './OpenLayers/OpenLayersLayers';
 
 // Componentes responsivos
-import ResponsiveZoomControls from './map/ResponsiveZoomControls';
 
 // Configurações e utilitários
 import { MAP_CONFIG, BASE_LAYER_CONFIG } from '../utils/mapConfig';
@@ -40,7 +39,8 @@ const OpenLayersMap = ({
   showEstadoSP = true,
   // Props para marcadores
   showMarcadores = true,
-  showNomesEscolas = false
+  showNomesEscolas = false,
+  onMapReady = null
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -97,7 +97,9 @@ const OpenLayersMap = ({
         minZoom: MAP_CONFIG.minZoom,
         enableRotation: false // Desabilitar rotação
       }),
-      controls: defaultControls(),
+      controls: defaultControls({
+        zoom: false,
+      }),
       // Remover interações padrão para evitar conflitos
       // interactions: defaultInteractions({
       //   dragRotate: false, // Desabilitar rotação com arraste
@@ -120,7 +122,11 @@ const OpenLayersMap = ({
 
     console.log('[OpenLayersMap] Mapa inicializado com sucesso');
 
-  }, [initialCenter, initialZoom, createBaseLayers]);
+    if (typeof onMapReady === 'function') {
+      onMapReady(map.current);
+    }
+
+  }, [initialCenter, initialZoom, createBaseLayers, onMapReady]);
 
   /**
    * Atualiza configurações do mapa quando props mudarem
@@ -150,10 +156,13 @@ const OpenLayersMap = ({
     return () => {
       if (map.current) {
         map.current.setTarget(undefined);
+        if (typeof onMapReady === 'function') {
+          onMapReady(null);
+        }
         map.current = null;
       }
     };
-  }, [initializeMap]);
+  }, [initializeMap, onMapReady]);
 
   // Atualizar configurações quando props mudarem
   useEffect(() => {
@@ -184,8 +193,6 @@ const OpenLayersMap = ({
             map={map.current}
           />
 
-          {/* Controles de zoom responsivos */}
-          <ResponsiveZoomControls mapRef={map} />
         </>
       )}
     </MapWrapper>
