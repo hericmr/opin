@@ -8,7 +8,7 @@ import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 import '../../ReusableImageZoom.css';
 
-const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false }) => {
+const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hideInlineMedia = false }) => {
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [imagemZoom, setImagemZoom] = useState(null);
@@ -180,8 +180,8 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false }) =
     );
   }
 
-  // Don't show thumbnails when maximized (images are shown in sidebar)
-  if (isMaximized) {
+  // Don't show thumbnails when media is handled by sidebar layout
+  if (hideInlineMedia) {
     return null;
   }
 
@@ -263,6 +263,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false }) =
 ImagensdasEscolas.propTypes = {
   escola_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   refreshKey: PropTypes.number,
+  hideInlineMedia: PropTypes.bool,
 };
 
 export default React.memo(ImagensdasEscolas);
