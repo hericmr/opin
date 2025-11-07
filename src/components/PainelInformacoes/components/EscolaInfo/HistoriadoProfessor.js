@@ -5,7 +5,7 @@ import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
 import FotoProfessor from '../FotoProfessor';
 import './HistoriadoProfessor.css';
 
-const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false }) => {
+const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false, shouldHideInlineMedia = false }) => {
   const [historias, setHistorias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -273,7 +273,12 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false 
         </div>
       )}
 
-        <ImagemHistoriadoProfessor escola_id={escola.id} refreshKey={refreshKey} isMaximized={isMaximized} />
+        <ImagemHistoriadoProfessor 
+          escola_id={escola.id} 
+          refreshKey={refreshKey} 
+          isMaximized={isMaximized}
+          hideInlineMedia={shouldHideInlineMedia}
+        />
       </article>
     </div>
   );

@@ -8,7 +8,7 @@
  */
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import MapSelector from "./MapSelector";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import PainelInformacoes from "./PainelInformacoes";
 import "./MapaEscolasIndigenas.css";
 import { criarSlug } from '../utils/slug';
@@ -28,6 +28,7 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
 
   const { refreshKey } = useRefresh();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Ler panel da URL sempre que location mudar
   const panel = useMemo(() => {
@@ -110,12 +111,23 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
   const fecharPainel = useCallback(() => {
     setPainelInfo(null);
     setInitialPanelOpened(false);
-    // Remover parâmetro panel da URL quando fechar
-    const url = new URL(window.location.href);
-    url.searchParams.delete('panel');
-    const newUrl = url.pathname + (url.search ? url.search : '') + (url.hash ? url.hash : '');
-    window.history.replaceState({}, '', newUrl);
-  }, []);
+
+    const params = new URLSearchParams(location.search);
+    if (params.has('panel')) {
+      params.delete('panel');
+    }
+
+    const search = params.toString();
+    const nextPath = `${location.pathname}${search ? `?${search}` : ''}${location.hash || ''}`;
+
+    let nextState = location.state || null;
+    if (nextState && typeof nextState === 'object' && 'schoolData' in nextState) {
+      const { schoolData, ...restState } = nextState;
+      nextState = Object.keys(restState).length > 0 ? restState : null;
+    }
+
+    navigate(nextPath, { replace: true, state: nextState });
+  }, [location.hash, location.pathname, location.search, location.state, navigate]);
 
   return (
     <div className="relative h-screen w-full overflow-hidden">

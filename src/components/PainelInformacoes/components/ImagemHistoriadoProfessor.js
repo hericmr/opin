@@ -7,7 +7,7 @@ import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 import '../../ReusableImageZoom.css';
 
-const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = false }) => {
+const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = false, hideInlineMedia = false }) => {
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -124,8 +124,8 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
     return null;
   }
 
-  // Don't show thumbnails when maximized (images are shown in sidebar)
-  if (isMaximized) {
+  // Don't show thumbnails when media is handled by sidebar layout
+  if (hideInlineMedia) {
     return null;
   }
 
@@ -206,6 +206,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
 ImagemHistoriadoProfessor.propTypes = {
   escola_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   refreshKey: PropTypes.number,
+  hideInlineMedia: PropTypes.bool,
 };
 
 export default React.memo(ImagemHistoriadoProfessor);

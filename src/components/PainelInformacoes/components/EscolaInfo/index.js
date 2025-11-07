@@ -58,7 +58,7 @@ const GridLayoutWrapper = memo(({ children, shouldUseGrid }) => {
   );
 });
 
-const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0, sectionRefs, isMaximized = false }) => {
+const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0, sectionRefs, isMaximized = false, shouldHideInlineMedia = false }) => {
   console.log("EscolaInfo recebeu:", escola);
   
   if (!escola) {
@@ -93,10 +93,20 @@ const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0, sectio
       </div>
       
       {/* Imagens da escola, agora renderizadas independentemente da história */}
-      <ImagensdasEscolas escola_id={escola.id} refreshKey={refreshKey} isMaximized={isMaximized} />
+      <ImagensdasEscolas 
+        escola_id={escola.id} 
+        refreshKey={refreshKey} 
+        isMaximized={isMaximized}
+        hideInlineMedia={shouldHideInlineMedia}
+      />
 
       <div ref={(el) => sectionRefs && (sectionRefs.depoimentos = el)}>
-        <HistoriadoProfessor escola={escola} refreshKey={refreshKey} isMaximized={isMaximized} />
+        <HistoriadoProfessor 
+          escola={escola} 
+          refreshKey={refreshKey} 
+          isMaximized={isMaximized}
+          shouldHideInlineMedia={shouldHideInlineMedia}
+        />
       </div>
     </div>
   );

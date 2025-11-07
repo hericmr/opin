@@ -22,6 +22,10 @@ const PainelContainer = ({
   const [scrollProgress, setScrollProgress] = useState(0);
   const { isVisible, isMobile } = usePainelVisibility(painelInfo);
   const painelDimensions = usePainelDimensions(isMobile, isMaximized);
+  const isMobileLandscape = painelDimensions.isMobileLandscape;
+  const isMobilePortrait = isMobile && !isMobileLandscape;
+  const shouldUseDesktopLayout = !isMobilePortrait;
+  const useSplitLayout = shouldUseDesktopLayout && (isMaximized || isMobileLandscape);
   
   // Hook de preload de imagens
   const { isImagePreloaded } = useImagePreloader(painelInfo?.id, true);
@@ -59,8 +63,8 @@ const PainelContainer = ({
 
   const baseClasses = `
     fixed
-    ${isMobile 
-      ? `inset-x-0 top-0 w-full h-full` 
+    ${isMobilePortrait
+      ? `inset-x-0 top-0 w-full h-full`
       : 'top-0 bottom-0 right-0 w-full sm:w-3/4 lg:w-[49%] h-auto'
     }
     rounded-t-xl shadow-xl z-[9999] transform transition-all duration-500 ease-in-out
@@ -75,22 +79,32 @@ const PainelContainer = ({
       ? "translate-y-full opacity-0" 
       : "translate-y-full opacity-0";
 
+  const layoutInfo = {
+    isMobile,
+    isMobilePortrait,
+    isMobileLandscape,
+    shouldUseDesktopLayout,
+    useSplitLayout
+  };
+
+  const content = typeof children === 'function' ? children(layoutInfo) : children;
+
   return (
     <div
       role="dialog"
       aria-labelledby="painel-titulo"
       aria-describedby="painel-descricao"
       aria-modal="true"
-      className={`${baseClasses} ${visibilityClasses}${isMobile ? ' painel-informacoes-mobile' : ''}${!isMobile && isMaximized ? ' mj-maximized' : ''}`}
+      className={`${baseClasses} ${visibilityClasses}${isMobilePortrait ? ' painel-informacoes-mobile' : ''}${useSplitLayout ? ' mj-maximized' : ''}${useSplitLayout && isMobileLandscape ? ' mj-mobile-landscape' : ''}`}
       style={{
         height: painelDimensions.height,
         maxHeight: painelDimensions.maxHeight,
-        width: isMobile ? '100%' : painelDimensions.width,
+        width: isMobilePortrait ? '100%' : painelDimensions.width,
         top: 0,
         display: "flex",
         flexDirection: "column",
         position: 'fixed',
-        ...(isMobile && {
+        ...(isMobilePortrait && {
           borderRadius: painelDimensions.isMobileLandscape ? '0' : '1rem 1rem 0 0',
           boxShadow: painelDimensions.isMobileLandscape 
             ? '0 0 0 0' 
@@ -114,8 +128,7 @@ const PainelContainer = ({
           {rightNav}
         </div>
       )}
-
-      {isMaximized && !isMobile ? (
+      {useSplitLayout ? (
         <div className="flex-1 mj-split">
           <aside className="mj-split-left">
             <SidebarMediaViewer
@@ -136,9 +149,9 @@ const PainelContainer = ({
               setScrollProgress(Math.min(1, Math.max(0, ratio)));
             }}
           >
-            <div className={`${isMobile ? 'p-3 sm:p-4' : 'p-6'} space-y-4 sm:space-y-5`}>
+            <div className={`${isMobilePortrait ? 'p-3 sm:p-4' : 'p-6'} space-y-4 sm:space-y-5`}>
               <div className="prose prose-sm sm:prose-base md:prose-lg lg:prose-xl max-w-none mj-prose">
-                {children}
+                {content}
               </div>
             </div>
           </div>
@@ -152,9 +165,9 @@ const PainelContainer = ({
               isPreloaded={isImagePreloaded(painelInfo.imagem_header)}
             />
           )}
-          <div className={`${isMobile ? 'p-3 sm:p-4' : 'p-6'} space-y-4 sm:space-y-5 -mt-2`}>
+          <div className={`${isMobilePortrait ? 'p-3 sm:p-4' : 'p-6'} space-y-4 sm:space-y-5 -mt-2`}>
             <div className="prose prose-sm sm:prose-base md:prose-lg lg:prose-xl max-w-none mj-prose">
-              {children}
+              {content}
             </div>
           </div>
         </div>
