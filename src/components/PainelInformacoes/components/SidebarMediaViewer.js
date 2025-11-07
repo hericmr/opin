@@ -45,14 +45,27 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
         return {
           id: `${bucket}-${file.name}`,
           url: publicUrl,
+          filePath: filePath,
           titulo: legenda?.legenda || `Imagem ${index + 1}`,
           descricao: legenda?.descricao_detalhada || '',
           autor: legenda?.autor_foto || '',
           dataFoto: legenda?.data_foto || '',
           origem: categoria,
+          ordem: legenda?.ordem || Infinity, // Usar Infinity se não tiver ordem
         };
       })
     );
+    
+    // Ordenar por ordem (do banco de dados)
+    mapped.sort((a, b) => {
+      // Primeiro ordenar por ordem (menor primeiro)
+      if (a.ordem !== b.ordem) {
+        return a.ordem - b.ordem;
+      }
+      // Se ordem for igual ou não existir, manter ordem original
+      return 0;
+    });
+    
     return mapped;
   }, [escolaId]);
 
