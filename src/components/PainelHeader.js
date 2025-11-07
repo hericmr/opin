@@ -32,52 +32,61 @@ const formatarTituloEscola = (titulo) => {
 const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagemHeader, shareUrl, shareTitle }) => {
   const isMobile = window.innerWidth <= 768;
   const isMobileLandscape = isMobile && window.innerWidth > window.innerHeight;
-  const isVerySmallLandscape = isMobileLandscape && window.innerWidth <= 850;
 
-  const headerHalfClass = (!isMobile && isMaximized) ? 'mj-header-half-right' : '';
+  const shouldUseHalfHeader = isMaximized && (!isMobile || isMobileLandscape);
+  const headerHalfClass = shouldUseHalfHeader ? 'mj-header-half-right' : '';
+  const headerStyle = shouldUseHalfHeader ? {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: '50%',
+    background: '#ffffff',
+    borderBottom: '1px solid rgba(5, 150, 105, 0.1)',
+    zIndex: 1000
+  } : {};
+  const containerPaddingClasses = isMobileLandscape
+    ? 'px-3 py-2'
+    : 'px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-2 md:py-3';
+  const innerLayoutClasses = isMobileLandscape
+    ? 'flex flex-row items-center justify-between gap-2 pr-2'
+    : 'flex flex-col sm:flex-row items-start sm:items-center justify-between pr-12';
+  const titleWrapperClasses = isMobileLandscape
+    ? 'flex-1 min-w-0'
+    : 'space-y-1';
+  const titleClassName = isMobileLandscape
+    ? 'font-bold text-gray-900 leading-tight tracking-tight break-words text-[clamp(1.05rem,3.4vw,1.6rem)]'
+    : 'font-bold text-gray-900 leading-tight tracking-tight break-words text-2xl sm:text-3xl md:text-4xl';
+  const subtitleTextClass = isMobileLandscape ? 'text-[11px] font-medium' : 'text-xs sm:text-sm font-medium';
+  const subtitleIconClass = 'w-3 h-3';
 
-  // Ensure component props are valid
-  if (!titulo) return null;
-
-  return (
-    <header className={`relative border-b border-green-100 ${isMobileLandscape ? 'min-h-[60px]' : ''}`} style={{ zIndex: 1000 }}>
-      <div className={`px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-2 md:py-3 ${headerHalfClass}`} style={{ position: 'relative', zIndex: 1000 }}>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pr-12">
-          {/* School title - occupies only right half when maximized */}
-          <div className="space-y-1" style={{ position: 'relative', zIndex: 1015 }}>
-            <h2 
-              id="painel-titulo"
-              className={`font-bold text-gray-900 leading-tight tracking-tight break-words ${
-                isVerySmallLandscape
-                  ? 'text-lg' // Aumentado de text-base
-                  : isMobileLandscape 
-                    ? 'text-xl sm:text-2xl' // Aumentado de text-lg sm:text-xl
-                    : 'text-2xl sm:text-3xl md:text-4xl' // Aumentado de text-xl sm:text-2xl md:text-3xl
-              }`}
-              style={isVerySmallLandscape ? { fontSize: 'clamp(1.125rem, 4.5vw, 1.5rem)' } : {}}
-            >
-              {formatarTituloEscola(titulo)}
-            </h2>
-            
-            {/* Subtítulo decorativo */}
-            <div className="flex items-center space-x-2 text-gray-600">
-              <MapPin className="w-3 h-3" /> {/* Diminuído de w-4 h-4 */}
-              <span className="text-xs sm:text-sm font-medium"> {/* Diminuído de text-sm sm:text-base */}
-                Escola Estadual Indígena
-              </span>
+  const renderActions = () => {
+    if (isMobileLandscape) {
+      return (
+        <div className="flex items-center gap-1 ml-2" style={{ zIndex: 1005 }}>
+          {shareUrl && (
+            <div className="linkSocialContainer scale-90 origin-right" style={{ zIndex: 1005 }}>
+              <MinimalShareButtons url={shareUrl} title={shareTitle || titulo} />
             </div>
-          </div>
+          )}
+          <button
+            onClick={closePainel}
+            className="p-1.5 text-gray-700 hover:text-gray-900 hover:bg-green-100 transition-colors duration-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            aria-label="Fechar painel"
+            style={{ zIndex: 1005 }}
+          >
+            <X size={18} aria-hidden="true" className="stroke-2" />
+          </button>
         </div>
-      </div>
+      );
+    }
 
+    return (
       <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex items-center gap-3" style={{ zIndex: 1005 }}>
-        {/* Sharing buttons - ArcGIS style */}
         {shareUrl && (
           <div className="linkSocialContainer" style={{ zIndex: 1005 }}>
             <MinimalShareButtons url={shareUrl} title={shareTitle || titulo} />
           </div>
         )}
-        
         {!isMobile && (
           <button
             onClick={toggleMaximize}
@@ -93,22 +102,52 @@ const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagem
             )}
           </button>
         )}
-
         <button
           onClick={closePainel}
-          className={`text-gray-700 hover:text-gray-900 hover:bg-green-100 transition-colors duration-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
-            isMobileLandscape ? 'p-1.5' : 'p-2'
-          }`}
+          className="p-2 text-gray-700 hover:text-gray-900 hover:bg-green-100 transition-colors duration-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           aria-label="Fechar painel"
           style={{ zIndex: 1005 }}
         >
           <X 
-            size={isMobileLandscape ? 18 : 20} 
+            size={20} 
             aria-hidden="true"
             className="stroke-2"
           />
         </button>
       </div>
+    );
+  };
+
+  // Ensure component props are valid
+  if (!titulo) return null;
+
+  return (
+    <header className={`relative border-b border-green-100 ${isMobileLandscape ? 'min-h-[60px]' : ''}`} style={{ zIndex: 1000, ...headerStyle }}>
+      <div className={`${containerPaddingClasses} ${headerHalfClass}`} style={{ position: 'relative', zIndex: 1000 }}>
+        <div className={innerLayoutClasses}>
+          {/* School title - occupies only right half when maximized */}
+          <div className={titleWrapperClasses} style={{ position: 'relative', zIndex: 1015 }}>
+            <h2 
+              id="painel-titulo"
+              className={titleClassName}
+            >
+              {formatarTituloEscola(titulo)}
+            </h2>
+            
+            {/* Subtítulo decorativo */}
+            <div className="flex items-center space-x-2 text-gray-600">
+              <MapPin className={subtitleIconClass} aria-hidden="true" />
+              <span className={subtitleTextClass}>
+                Escola Estadual Indígena
+              </span>
+            </div>
+          </div>
+
+          {isMobileLandscape && renderActions()}
+        </div>
+      </div>
+
+      {!isMobileLandscape && renderActions()}
     </header>
   );
 };

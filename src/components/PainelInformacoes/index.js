@@ -56,7 +56,12 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
   }, [painelInfo]);
   
   useDynamicURL(painelInfo, gerarLinkCustomizado);
-  useClickOutside(painelRef, closePainel);
+  useClickOutside(painelRef, () => {
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
+    closePainel();
+  });
 
   // Forçar re-renderização quando refreshKey mudar
   useEffect(() => {
@@ -144,7 +149,9 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
   const isTerraIndigena = painelInfo.tipo === 'terra_indigena';
   const isIntro = painelInfo.titulo === 'Sobre o site';
 
-  const renderContent = () => {
+  const renderContent = (layoutInfo = {}) => {
+    const { shouldUseDesktopLayout = false, isMobilePortrait = false, useSplitLayout = false } = layoutInfo;
+
     if (isIntro) {
       return <IntroPanel painelInfo={painelInfo} />;
     }
@@ -161,6 +168,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
           refreshKey={refreshKey}
           sectionRefs={sectionRefs.current}
           isMaximized={isMaximized}
+          shouldHideInlineMedia={useSplitLayout}
         />
         {documentos && documentos.length > 0 && (
           <DocumentViewer 
@@ -197,7 +205,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
         shareUrl={shareUrl}
         shareTitle={painelInfo?.titulo}
       >
-        {renderContent()}
+        {(layoutInfo) => renderContent(layoutInfo)}
       </PainelContainer>
     </div>
   );
