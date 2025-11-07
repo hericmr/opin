@@ -3,7 +3,8 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Ba
 import ScrollAnimatedWrapper from '../ScrollAnimatedWrapper';
 
 const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaData }) => {
-  const NATURAL_GREEN_COLORS = ['#22c55e', '#16a34a', '#15803d', '#166534', '#14532d', '#365314', '#3f6212', '#4ade80'];
+  // Paleta de cores variada e harmoniosa
+  const CHART_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#a855f7', '#14b8a6', '#ec4899', '#6366f1'];
 
   // Função para normalizar nomes das escolas
   const normalizeSchoolName = (name) => {
@@ -87,17 +88,25 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
   const dataWithTotal = distribuicaoData.map(item => ({ ...item, total }));
 
   return (
-    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg">
+    <div className="p-4 sm:p-6">
       {/* Título principal */}
       <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800">
         Distribuição de Escolas por Número de Alunos
       </h3>
 
       {/* Texto introdutório */}
-      <div className="mb-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
-        <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
-          As EEIs, em sua grande parte, funcionam com turmas de número reduzido a moderado, o que garante um cuidado individualizado e um acompanhamento pedagógico mais próximo dos estudantes. Dez escolas (24,4%) possuem até 10 alunos, 11 escolas (26,8%) atendem entre 11 e 25 alunos, e 12 escolas (29,3%) concentram de 26 a 50 alunos. Juntas, essas pequenas unidades representam 80,5% da rede, evidenciando o predomínio de escolas de porte reduzido. Em contraste, apenas quatro escolas (9,8%) atendem entre 51 e 100 alunos, e outras quatro (9,8%) possuem mais de 100 alunos, indicando que poucas unidades concentram grandes contingentes estudantis.
-        </p>
+      <div className="mb-6 p-3 sm:p-4">
+        <div className="max-w-3xl mx-auto">
+          <p className="text-gray-800 leading-loose text-sm sm:text-base text-left mb-4">
+            As EEIs, em sua grande parte, funcionam com turmas de número reduzido a moderado, o que garante um cuidado individualizado e um acompanhamento pedagógico mais próximo dos estudantes.
+          </p>
+          <p className="text-gray-800 leading-loose text-sm sm:text-base text-left mb-4">
+            Dez escolas (24,4%) possuem até 10 alunos, 11 escolas (26,8%) atendem entre 11 e 25 alunos, e 12 escolas (29,3%) concentram de 26 a 50 alunos. Juntas, essas pequenas unidades representam 80,5% da rede, evidenciando o predomínio de escolas de porte reduzido.
+          </p>
+          <p className="text-gray-800 leading-loose text-sm sm:text-base text-left">
+            Em contraste, apenas quatro escolas (9,8%) atendem entre 51 e 100 alunos, e outras quatro (9,8%) possuem mais de 100 alunos, indicando que poucas unidades concentram grandes contingentes estudantis.
+          </p>
+        </div>
       </div>
 
       {/* Primeiro gráfico - Distribuição Geral (Pizza) */}
@@ -119,9 +128,9 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {dataWithTotal.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={NATURAL_GREEN_COLORS[index % NATURAL_GREEN_COLORS.length]} />
-                  ))}
+                    {dataWithTotal.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                    ))}
                 </Pie>
                 <Tooltip content={<PieTooltip />} />
                 <Legend />
@@ -132,10 +141,15 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
       </div>
 
       {/* Texto adicional */}
-      <div className="mb-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
-          <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
-            Entre as escolas de maior porte, destacam-se a Indígena Guarani Gwyra Pepo, com 296 alunos, a E.E.I. Djekupe Amba Arandy, com 249 alunos, a E.E.I. Txeru Ba'e Kua-i, com 111 alunos, e a CECI Krukutu, com 101 alunos. No extremo oposto, algumas escolas atendem menos de 10 alunos, como a Aldeia Uru'ity, com 4 estudantes, e a Aldeia Santa Cruz, com apenas 3.
+      <div className="mb-6 p-3 sm:p-4">
+        <div className="max-w-3xl mx-auto">
+          <p className="text-gray-800 leading-loose text-sm sm:text-base text-left mb-4">
+            Entre as escolas de maior porte, destacam-se a Indígena Guarani Gwyra Pepo, com 296 alunos, a E.E.I. Djekupe Amba Arandy, com 249 alunos, e a E.E.I. Txeru Ba'e Kua-i, com 111 alunos.
           </p>
+          <p className="text-gray-800 leading-loose text-sm sm:text-base text-left">
+            No extremo oposto, algumas escolas atendem menos de 10 alunos, como a Aldeia Uru'ity, com 4 estudantes, e a Aldeia Santa Cruz, com apenas 3.
+          </p>
+        </div>
       </div>
 
       {/* Segundo gráfico - Detalhamento por Escola (Barras) */}
@@ -168,7 +182,11 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
                   label={{ value: 'Número de Alunos', angle: -90, position: 'insideLeft' }}
                 />
                 <Tooltip content={<BarTooltip />} />
-                <Bar dataKey="alunos" fill="#22c55e" />
+                <Bar dataKey="alunos">
+                  {normalizedAlunosData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

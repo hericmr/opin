@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const TiposEnsinoChart = ({ data }) => {
   const CustomTooltip = ({ active, payload }) => {
@@ -16,9 +16,9 @@ const TiposEnsinoChart = ({ data }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="p-6">
       
-      <h3 className="text-xl font-bold mb-4 text-gray-800">
+      <h3 className="text-xl sm:text-2xl font-bold mb-4 text-gray-800">
         Número de Escolas por Tipo de Ensino Oferecido
       </h3>
       <div className="h-96">
@@ -44,11 +44,16 @@ const TiposEnsinoChart = ({ data }) => {
               label={{ value: 'Número de Escolas', angle: -90, position: 'insideLeft' }}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="quantidade" fill="#166534" />
+            <Bar dataKey="quantidade">
+              {data.map((entry, index) => {
+                const colors = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#a855f7', '#14b8a6'];
+                return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
+              })}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <p className="text-sm text-gray-500 mt-2 text-center">
+      <p className="text-sm text-gray-600 mt-2 text-center">
         Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2025
       </p>
     </div>
