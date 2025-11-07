@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useMemo } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useShare } from "../hooks/useShare";
 import { useDynamicURL } from "../hooks/useDynamicURL";
 import { useClickOutside } from "../hooks/useClickOutside";
@@ -17,7 +17,6 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
   const painelRef = useRef(null);
   const contentRef = useRef(null);
   const sectionRefs = useRef({});
-  const [activeIndex, setActiveIndex] = useState(0);
   
   // Removido cálculo openedFromUrl não utilizado
   
@@ -68,53 +67,6 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
     console.log('PainelInformacoes: refreshKey mudou para', refreshKey);
   }, [refreshKey]);
 
-  const sections = useMemo(() => {
-    const list = [];
-    list.push({ key: 'dados', label: 'Dados' });
-    list.push({ key: 'historia', label: 'História' });
-    list.push({ key: 'depoimentos', label: 'Depoimentos' });
-    if ((painelInfo && painelInfo.link_para_videos) || hasVideos) list.push({ key: 'videos', label: 'Vídeos' });
-    return list;
-  }, [painelInfo, hasVideos]);
-
-  useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    const handleScroll = () => {
-      const containerRect = el.getBoundingClientRect();
-      let bestIndex = 0;
-      let bestDelta = Infinity;
-      sections.forEach((s, idx) => {
-        const sec = sectionRefs.current[s.key];
-        if (!sec) return;
-        const r = sec.getBoundingClientRect();
-        const delta = Math.abs(r.top - containerRect.top - 80);
-        if (delta < bestDelta) {
-          bestDelta = delta;
-          bestIndex = idx;
-        }
-      });
-      setActiveIndex(bestIndex);
-    };
-    el.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => el.removeEventListener('scroll', handleScroll);
-  }, [sections]);
-
-  const scrollToSection = (idx) => {
-    const el = contentRef.current;
-    if (!el) return;
-    const key = sections[idx]?.key;
-    const target = key ? sectionRefs.current[key] : null;
-    if (!target) return;
-    const containerTop = el.getBoundingClientRect().top;
-    const targetTop = target.getBoundingClientRect().top;
-    const scrollBy = targetTop - containerTop + el.scrollTop - 72; // pequeno offset sob header
-    el.scrollTo({ top: scrollBy, behavior: 'smooth' });
-  };
-
-  // Removidas funções não utilizadas: prevSection, nextSection, handleKeyActivate
-
   // Load videos presence independently of other sections
   useEffect(() => {
     let mounted = true;
@@ -150,7 +102,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
   const isIntro = painelInfo.titulo === 'Sobre o site';
 
   const renderContent = (layoutInfo = {}) => {
-    const { shouldUseDesktopLayout = false, isMobilePortrait = false, useSplitLayout = false } = layoutInfo;
+    const { useSplitLayout = false } = layoutInfo;
 
     if (isIntro) {
       return <IntroPanel painelInfo={painelInfo} />;

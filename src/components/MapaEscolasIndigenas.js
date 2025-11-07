@@ -32,7 +32,7 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
 
   // Ler panel da URL sempre que location mudar
   const panel = useMemo(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search || '');
     return params.get('panel');
   }, [location.search]);
   const initialPanel = useMemo(() => {
