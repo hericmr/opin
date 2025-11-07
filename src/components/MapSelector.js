@@ -265,7 +265,20 @@ const MapSelector = ({
 
       {/* Controles flutuantes superiores */}
       <div className="fixed top-4 left-4 z-30 flex flex-col sm:flex-row items-start sm:items-center gap-3 pointer-events-auto">
-        {/* Botão de tamanho do texto */}
+        <Link
+          to="/"
+          className="rounded-full bg-green-900/90 hover:bg-green-800 p-3 shadow-lg flex items-center justify-center cursor-pointer transition-all duration-200 backdrop-blur-md"
+          aria-label="Sair do mapa e voltar para a página inicial"
+          title="Sair do mapa"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M16 17L21 12L16 7" stroke="#CDE8CF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M21 12H9" stroke="#CDE8CF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="#CDE8CF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+          </svg>
+          <span className="sr-only">Sair do mapa</span>
+        </Link>
+
         <button
           type="button"
           onClick={() => setTextScale((v) => (v >= 1.3 ? 1.0 : Math.round((v + 0.15) * 100) / 100))}
@@ -300,21 +313,6 @@ const MapSelector = ({
             <span className="text-green-100 text-lg font-semibold leading-none">&minus;</span>
           </button>
         </div>
-
-        {/* Botão "Sair do mapa" */}
-        <Link
-          to="/"
-          className="rounded-full bg-green-900/90 hover:bg-green-800 p-3 shadow-lg flex items-center justify-center cursor-pointer transition-all duration-200 backdrop-blur-md"
-          aria-label="Sair do mapa e voltar para a página inicial"
-          title="Sair do mapa"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M16 17L21 12L16 7" stroke="#CDE8CF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M21 12H9" stroke="#CDE8CF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-          <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="#CDE8CF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-          </svg>
-          <span className="sr-only">Sair do mapa</span>
-        </Link>
       </div>
 
       {/* Mapa OpenLayers unificado */}

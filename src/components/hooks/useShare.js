@@ -2,12 +2,19 @@ import { criarSlug } from '../../utils/slug';
 
 export const useShare = (painelInfo) => {
   const gerarLinkCustomizado = () => {
-    return (
-      window.location.origin +
-      window.location.pathname +
-      "?panel=" +
-      criarSlug(painelInfo.titulo)
-    );
+    const slug = criarSlug(painelInfo?.titulo || "");
+    const pathname = window.location.pathname;
+    let basePath;
+
+    if (pathname.includes('/mapa')) {
+      basePath = pathname.split('?')[0];
+    } else if (pathname.includes('/opin')) {
+      basePath = '/opin/mapa';
+    } else {
+      basePath = '/mapa';
+    }
+
+    return `${window.location.origin}${basePath}?panel=${slug}`;
   };
 
   const copiarLink = async () => {

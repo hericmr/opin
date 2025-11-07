@@ -28,7 +28,3 @@ yarn-error.log*
 .vscode/
 *.swp
 *.swo
-
-# Mirrored sites (not part of the project)
-site_mirror_arcgis/
-native-land.ca/

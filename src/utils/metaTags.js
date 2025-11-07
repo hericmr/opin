@@ -28,7 +28,7 @@ export const gerarUrlEscola = (escola) => {
   if (!escola?.titulo) return DEFAULT_META_CONFIG.siteUrl;
   
   const slug = criarSlug(escola.titulo);
-  return `${DEFAULT_META_CONFIG.siteUrl}/?panel=${slug}`;
+  return `${DEFAULT_META_CONFIG.siteUrl}/mapa?panel=${slug}`;
 };
 
 /**
