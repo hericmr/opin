@@ -236,23 +236,23 @@ export default function Homepage({ dataPoints = [] }) {
       <section className="relative min-h-screen h-screen w-full bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url('${bgUrl}')` }}>
         <div className="absolute inset-0 bg-green-950/40" />
         <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-start lg:items-center h-full px-4 lg:px-12">
-          <div className="pt-28 lg:pt-0 text-white">
+          <div className="pt-28 lg:pt-0 text-white" style={{ textAlign: 'left' }}>
             {/* Logo OPIN maior */}
-            <div className="mb-2 flex justify-start items-start" style={{ width: logoWidth ? `${logoWidth}px` : 'auto', marginLeft: 0, paddingLeft: 0 }}>
+            <div className="mb-2" style={{ width: logoWidth ? `${logoWidth}px` : 'auto', marginLeft: 0, paddingLeft: 0, textAlign: 'left' }}>
               <img 
                 src={`${process.env.PUBLIC_URL || ''}/logo_index.png`}
                 alt="OPIN - Observatório dos Professores Indígenas"
                 className="h-20 md:h-28 lg:h-36 xl:h-44 object-contain"
-                style={{ width: logoWidth ? `${logoWidth}px` : 'auto', maxWidth: '100%', display: 'block', marginLeft: 0, paddingLeft: 0 }}
+                style={{ width: logoWidth ? `${logoWidth}px` : 'auto', maxWidth: '100%', display: 'block', marginLeft: 0, paddingLeft: 0, marginRight: 'auto' }}
               />
             </div>
             
             {/* Slogan abaixo do logo */}
-            <div className="mt-0.5" style={{ marginLeft: 0, paddingLeft: 0 }}>
+            <div className="mt-0.5" style={{ marginLeft: 0, paddingLeft: 0, textAlign: 'left' }}>
               <p 
                 ref={textRef}
                 className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg" 
-                style={{fontFamily: 'Cinzel, serif', marginLeft: 0, paddingLeft: 0}}
+                style={{fontFamily: 'Cinzel, serif', marginLeft: 0, paddingLeft: 0, textAlign: 'left'}}
               >
                 Observatório dos Professores Indígenas
               </p>
