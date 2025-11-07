@@ -1,7 +1,7 @@
 // Service Worker básico para PWA
 // Versão atualizada para evitar problemas de cache com arquivos JavaScript
-const CACHE_NAME = 'opin-pwa-v2';
-const STATIC_CACHE_NAME = 'opin-static-v2';
+const CACHE_NAME = 'opin-pwa-v3';
+const STATIC_CACHE_NAME = 'opin-static-v3';
 
 // URLs estáticas que podem ser cacheadas
 const urlsToCache = [
@@ -29,17 +29,21 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          // Remove todos os caches antigos
+          // Remove todos os caches antigos (incluindo versões anteriores)
           if (cacheName !== CACHE_NAME && cacheName !== STATIC_CACHE_NAME) {
             console.log('Service Worker: Removendo cache antigo', cacheName);
             return caches.delete(cacheName);
           }
         })
-      );
+      ).then(() => {
+        // Limpa também todos os caches de recursos com hash antigos
+        // Isso força o navegador a buscar novos arquivos
+        console.log('Service Worker: Limpeza de cache concluída');
+      });
     })
   );
   // Assume controle imediato de todas as páginas
-  return self.clients.claim();
+  self.clients.claim();
 });
 
 // Função para verificar se é um arquivo com hash (JS, CSS com hash no nome)
@@ -65,20 +69,31 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Para arquivos com hash (JS/CSS), sempre buscar da rede primeiro
+  // NÃO cachear esses arquivos porque o hash muda a cada build
   if (isHashedAsset(url.pathname)) {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
-          // Se a rede funcionou, retorna a resposta
+          // Se a rede funcionou, retorna a resposta (sem cachear)
           if (response && response.status === 200) {
             return response;
           }
-          // Se falhou, tenta do cache como fallback
-          return caches.match(event.request);
+          // Se falhou (404, etc), retorna erro diretamente
+          return new Response('Resource not found', { 
+            status: response?.status || 404,
+            statusText: 'Not Found',
+            headers: { 'Content-Type': 'text/plain' }
+          });
         })
-        .catch(() => {
-          // Se a rede falhou completamente, tenta do cache
-          return caches.match(event.request);
+        .catch((error) => {
+          // Se a rede falhou completamente, retorna erro
+          // Não tenta cache porque arquivos com hash mudam a cada build
+          console.error('Service Worker: Erro ao buscar recurso com hash:', url.pathname, error);
+          return new Response('Network error', { 
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: { 'Content-Type': 'text/plain' }
+          });
         })
     );
     return;
@@ -99,7 +114,13 @@ self.addEventListener('fetch', (event) => {
                 cache.put(event.request, responseToCache);
               });
             }
-            return response;
+            return response || new Response('Resource not found', { status: 404 });
+          }).catch(() => {
+            return new Response('Resource not found', { 
+              status: 404,
+              statusText: 'Not Found',
+              headers: { 'Content-Type': 'text/plain' }
+            });
           });
         })
     );
@@ -131,10 +152,19 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        return response;
+        return response || new Response('Resource not found', { status: 404 });
       })
       .catch(() => {
-        return caches.match(event.request);
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          return new Response('Resource not found', { 
+            status: 404,
+            statusText: 'Not Found',
+            headers: { 'Content-Type': 'text/plain' }
+          });
+        });
       })
   );
 });
