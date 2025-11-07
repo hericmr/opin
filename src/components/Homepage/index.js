@@ -208,6 +208,28 @@ const HomepageSearch = ({ dataPoints }) => {
 
 export default function Homepage({ dataPoints = [] }) {
   const bgUrl = (process.env.PUBLIC_URL || '') + '/site_bg.png';
+  const textRef = useRef(null);
+  const [logoWidth, setLogoWidth] = useState(null);
+
+  useEffect(() => {
+    const updateLogoWidth = () => {
+      if (textRef.current) {
+        setLogoWidth(textRef.current.offsetWidth);
+      }
+    };
+
+    // Use requestAnimationFrame to ensure measurement happens after layout
+    const rafId = requestAnimationFrame(() => {
+      updateLogoWidth();
+    });
+
+    window.addEventListener('resize', updateLogoWidth);
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', updateLogoWidth);
+    };
+  }, []);
+
   return (
     <div className="flex-1 overflow-auto bg-white text-green-900">
       {/* Hero inspirado no native-land: fundo, título, busca/CTA */}
@@ -216,18 +238,24 @@ export default function Homepage({ dataPoints = [] }) {
         <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-start lg:items-center h-full px-4 lg:px-12">
           <div className="pt-28 lg:pt-0 text-white">
             {/* Logo OPIN maior */}
-            <div className="mb-2">
+            <div className="mb-2" style={{ width: logoWidth ? `${logoWidth}px` : 'auto' }}>
               <img 
                 src={`${process.env.PUBLIC_URL || ''}/logo_index.png`}
                 alt="OPIN - Observatório dos Professores Indígenas"
-                className="h-32 md:h-48 lg:h-64 xl:h-80 w-auto object-contain"
+                className="h-32 md:h-48 lg:h-64 xl:h-80 w-full object-contain"
                 style={{ maxWidth: '100%' }}
               />
             </div>
             
             {/* Slogan abaixo do logo */}
             <div className="mt-0.5">
-              <p className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg" style={{fontFamily: 'Cinzel, serif'}}>Observatório dos Professores Indígenas</p>
+              <p 
+                ref={textRef}
+                className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg" 
+                style={{fontFamily: 'Cinzel, serif'}}
+              >
+                Observatório dos Professores Indígenas
+              </p>
               <p className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg" style={{fontFamily: 'Cinzel, serif'}}>do Estado de São Paulo</p>
             </div>
             <p className="mt-4 text-green-100/90 text-lg max-w-2xl">
