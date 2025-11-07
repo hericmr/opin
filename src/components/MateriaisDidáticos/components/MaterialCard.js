@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight, Users, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { TIPOS_MATERIAL } from '../../../constants/materiaisConstants';
+import { criarSlug } from '../../../../utils/slug';
 
 const MaterialCard = ({ material, onClick }) => {
   const getTipoInfo = (tipo) => {
@@ -19,9 +20,9 @@ const MaterialCard = ({ material, onClick }) => {
       onClick(material);
     } else {
       // Navegação padrão para o painel da escola
-      const slug = material.titulo?.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
-      const basePath = window.location.pathname.includes('/opin') ? '/opin' : '';
-      window.location.href = `${basePath}/?panel=${slug}`;
+      const slug = criarSlug(material.titulo || '');
+      const basePath = window.location.pathname.includes('/opin') ? '/opin/mapa' : '/mapa';
+      window.location.href = `${basePath}?panel=${slug}`;
     }
   };
 
