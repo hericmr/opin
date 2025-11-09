@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../../supabaseClient';
+import { VersionamentoService } from '../../../services/versionamentoService';
 
 export const useEscolas = () => {
   const [escolas, setEscolas] = useState([]);
@@ -79,7 +80,7 @@ export const useEscolas = () => {
   }, [escolas]);
 
   // Salvar escola no Supabase
-  const saveEscola = useCallback(async (escolaData) => {
+  const saveEscola = useCallback(async (escolaData, metadados = null) => {
     try {
       setError(null);
       
@@ -148,6 +149,21 @@ export const useEscolas = () => {
         
         // Atualizar na lista local
         updateEscolaInList(escolaData.id, data[0]);
+        
+        // Registrar versão de dados (não bloqueia se falhar)
+        try {
+          await VersionamentoService.registrarVersaoDados({
+            nomeTabela: 'escolas_completa',
+            chaveLinha: escolaData.id.toString(),
+            fonteId: metadados?.fonte_id || null,
+            autor: metadados?.autor || null,
+            observacoes: metadados?.observacoes || null
+          });
+        } catch (versionError) {
+          // Log do erro mas não falha a operação principal
+          console.warn('Erro ao registrar versão de dados (não crítico):', versionError);
+        }
+        
         return { success: true, data: data[0] };
       } else {
         // Criar nova escola
@@ -213,6 +229,21 @@ export const useEscolas = () => {
         
         // Adicionar à lista local
         addEscolaToList(data[0]);
+        
+        // Registrar versão de dados (não bloqueia se falhar)
+        try {
+          await VersionamentoService.registrarVersaoDados({
+            nomeTabela: 'escolas_completa',
+            chaveLinha: data[0].id.toString(),
+            fonteId: metadados?.fonte_id || null,
+            autor: metadados?.autor || null,
+            observacoes: metadados?.observacoes || null
+          });
+        } catch (versionError) {
+          // Log do erro mas não falha a operação principal
+          console.warn('Erro ao registrar versão de dados (não crítico):', versionError);
+        }
+        
         return { success: true, data: data[0] };
       }
     } catch (err) {

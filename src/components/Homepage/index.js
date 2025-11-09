@@ -265,9 +265,12 @@ export default function Homepage({ dataPoints = [] }) {
               <div className="col-span-1 lg:col-span-4">
                 <HomepageSearch dataPoints={dataPoints} />
               </div>
-              <div className="col-span-1 lg:col-span-2">
+              <div className="col-span-1 lg:col-span-2 flex flex-col gap-3">
                 <Link to="/mapa" className="block rounded-full bg-green-500 text-green-950 font-semibold px-4 py-2.5 text-center hover:bg-green-400 transition">
                   Explorar Mapa
+                </Link>
+                <Link to="/dashboard" className="block rounded-full bg-green-600 text-white font-semibold px-4 py-2.5 text-center hover:bg-green-500 transition">
+                  Alguns dados
                 </Link>
               </div>
             </div>

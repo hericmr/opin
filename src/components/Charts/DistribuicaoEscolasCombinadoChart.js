@@ -36,10 +36,12 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white p-3 border border-gray-300 rounded shadow-lg">
-          <p className="font-semibold">{data.name}</p>
-          <p className="text-sm">Escolas: {data.value}</p>
-          <p className="text-sm">Percentual: {((data.value / data.total) * 100).toFixed(1)}%</p>
+        <div className="bg-white p-4 border border-gray-300 rounded shadow-lg" style={{
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        }}>
+          <p className="font-semibold mb-1" style={{ fontSize: '1rem', lineHeight: '1.5', color: '#111827' }}>{data.name}</p>
+          <p style={{ fontSize: '0.9375rem', lineHeight: '1.5', color: '#374151' }}>Escolas: {data.value}</p>
+          <p style={{ fontSize: '0.9375rem', lineHeight: '1.5', color: '#374151' }}>Percentual: {((data.value / data.total) * 100).toFixed(1)}%</p>
         </div>
       );
     }
@@ -51,10 +53,12 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white p-3 border border-gray-300 rounded shadow-lg">
-          <p className="font-semibold">{data.nome}</p>
-          <p className="text-sm text-gray-600">CIE: {data.cie}</p>
-          <p className="text-sm">Alunos: {data.alunos}</p>
+        <div className="bg-white p-4 border border-gray-300 rounded shadow-lg" style={{
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        }}>
+          <p className="font-semibold mb-1" style={{ fontSize: '1rem', lineHeight: '1.5', color: '#111827' }}>{data.nome}</p>
+          <p style={{ fontSize: '0.9375rem', lineHeight: '1.5', color: '#374151' }}>CIE: {data.cie}</p>
+          <p style={{ fontSize: '0.9375rem', lineHeight: '1.5', color: '#374151' }}>Alunos: {data.alunos}</p>
         </div>
       );
     }
@@ -90,20 +94,43 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
   return (
     <div className="p-4 sm:p-6">
       {/* Título principal */}
-      <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800">
+      <h3 className="font-bold mb-6 text-gray-800" style={{
+        fontSize: '1.5rem',
+        lineHeight: '1.75',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        letterSpacing: '-0.01em'
+      }}>
         Distribuição de Escolas por Número de Alunos
       </h3>
 
       {/* Texto introdutório */}
-      <div className="mb-6 p-3 sm:p-4">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-gray-800 leading-loose text-sm sm:text-base text-left mb-4">
+      <div className="mb-6 p-4 sm:p-6">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-gray-800 text-left mb-5" style={{
+            fontSize: '1.125rem',
+            lineHeight: '1.75',
+            color: '#374151',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            letterSpacing: '0.01em'
+          }}>
             As EEIs, em sua grande parte, funcionam com turmas de número reduzido a moderado, o que garante um cuidado individualizado e um acompanhamento pedagógico mais próximo dos estudantes.
           </p>
-          <p className="text-gray-800 leading-loose text-sm sm:text-base text-left mb-4">
+          <p className="text-gray-800 text-left mb-5" style={{
+            fontSize: '1.125rem',
+            lineHeight: '1.75',
+            color: '#374151',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            letterSpacing: '0.01em'
+          }}>
             Dez escolas (24,4%) possuem até 10 alunos, 11 escolas (26,8%) atendem entre 11 e 25 alunos, e 12 escolas (29,3%) concentram de 26 a 50 alunos. Juntas, essas pequenas unidades representam 80,5% da rede, evidenciando o predomínio de escolas de porte reduzido.
           </p>
-          <p className="text-gray-800 leading-loose text-sm sm:text-base text-left">
+          <p className="text-gray-800 text-left" style={{
+            fontSize: '1.125rem',
+            lineHeight: '1.75',
+            color: '#374151',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            letterSpacing: '0.01em'
+          }}>
             Em contraste, apenas quatro escolas (9,8%) atendem entre 51 e 100 alunos, e outras quatro (9,8%) possuem mais de 100 alunos, indicando que poucas unidades concentram grandes contingentes estudantis.
           </p>
         </div>
@@ -111,7 +138,11 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
 
       {/* Primeiro gráfico - Distribuição Geral (Pizza) */}
       <div className="mb-6 sm:mb-8">
-        <h4 className="text-lg font-semibold mb-3 sm:mb-4 text-gray-700 text-center">
+        <h4 className="font-semibold mb-4 text-gray-700 text-center" style={{
+          fontSize: '1.125rem',
+          lineHeight: '1.75',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        }}>
           Visão Geral da Distribuição
         </h4>
         <ScrollAnimatedWrapper animationType="scaleIn" delay={0.2}>
@@ -154,7 +185,11 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
 
       {/* Segundo gráfico - Detalhamento por Escola (Barras) */}
       <div className="mb-6">
-        <h4 className="text-lg font-semibold mb-3 sm:mb-4 text-gray-700 text-center">
+        <h4 className="font-semibold mb-4 text-gray-700 text-center" style={{
+          fontSize: '1.125rem',
+          lineHeight: '1.75',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        }}>
           Detalhamento por Escola Indígena
         </h4>
 
@@ -177,9 +212,11 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
                   textAnchor="end"
                   height={100}
                   interval={0}
+                  tick={{ fontSize: 12, fill: '#374151' }}
                 />
                 <YAxis 
-                  label={{ value: 'Número de Alunos', angle: -90, position: 'insideLeft' }}
+                  label={{ value: 'Número de Alunos', angle: -90, position: 'insideLeft', style: { fontSize: '0.875rem', fill: '#374151' } }}
+                  tick={{ fontSize: 12, fill: '#374151' }}
                 />
                 <Tooltip content={<BarTooltip />} />
                 <Bar dataKey="alunos">
@@ -194,7 +231,12 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
       </div>
 
       {/* Fonte */}
-      <p className="text-sm text-gray-500 mt-4 text-center">
+      <p className="mt-4 text-center" style={{
+        fontSize: '0.9375rem',
+        lineHeight: '1.5',
+        color: '#4b5563',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+      }}>
         Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2025
       </p>
     </div>

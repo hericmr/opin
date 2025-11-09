@@ -30,7 +30,124 @@ const AppContent = () => {
   const [openPainelFunction, setOpenPainelFunction] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const isMapRoute = location?.pathname?.includes('/mapa');
+  const [forceUpdate, setForceUpdate] = useState(0);
+  
+  // Verificação inicial síncrona da URL para evitar flash da navbar
+  // Isso é crítico para quando a página é acessada diretamente pela URL
+  const initialIsDashboardRoute = React.useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    
+    // Verifica a URL atual da janela imediatamente
+    const windowPath = window.location.pathname;
+    const normalizedWindowPath = windowPath.replace(/^\/opin/, '').replace(/\/$/, '');
+    
+    // Verifica se é uma rota de dashboard
+    if (normalizedWindowPath === '/dashboard' || 
+        normalizedWindowPath === '/painel-dados' || 
+        normalizedWindowPath === '/dados-escolas-indigenas' ||
+        normalizedWindowPath.startsWith('/dashboard/') ||
+        windowPath.includes('/dashboard/')) {
+      return true;
+    }
+    
+    // Verifica se há uma rota inicial definida
+    if (window.__INITIAL_ROUTE__) {
+      const initialRoute = window.__INITIAL_ROUTE__.replace(/\/$/, '');
+      if (initialRoute === '/dashboard' || 
+          initialRoute === '/painel-dados' || 
+          initialRoute === '/dados-escolas-indigenas') {
+        return true;
+      }
+    }
+    
+    return false;
+  }, []); // Sem dependências - calcula apenas uma vez no mount
+  
+  // Força atualização quando a página carrega para detectar rotas corretamente
+  React.useEffect(() => {
+    // Pequeno delay para garantir que window.location está disponível
+    const timer = setTimeout(() => {
+      setForceUpdate(prev => prev + 1);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+  
+  // Verificação mais robusta de rotas do dashboard
+  // Combina verificação inicial com verificação dinâmica
+  // IMPORTANTE: Verifica PRIMEIRO a URL da janela para evitar flash da navbar
+  const isDashboardRoute = React.useMemo(() => {
+    // Se a verificação inicial já detectou dashboard, retorna true imediatamente
+    if (initialIsDashboardRoute) {
+      return true;
+    }
+    // PRIORIDADE 1: Verifica a URL atual da janela (mais confiável no carregamento inicial)
+    // Isso é crítico para evitar que a navbar apareça quando acessado diretamente pela URL
+    if (typeof window !== 'undefined' && window.location) {
+      const windowPath = window.location.pathname;
+      // Remove o basename se presente e normaliza
+      const normalizedWindowPath = windowPath.replace(/^\/opin/, '').replace(/\/$/, '');
+      
+      // Verifica se a URL contém dashboard (incluindo /dashboard/ para páginas estáticas)
+      if (normalizedWindowPath === '/dashboard' || 
+          normalizedWindowPath === '/painel-dados' || 
+          normalizedWindowPath === '/dados-escolas-indigenas' ||
+          normalizedWindowPath.startsWith('/dashboard/') ||
+          windowPath.includes('/dashboard/')) {
+        return true;
+      }
+    }
+    
+    // PRIORIDADE 2: Verifica se há uma rota inicial definida (para página estática)
+    if (typeof window !== 'undefined' && window.__INITIAL_ROUTE__) {
+      const initialRoute = window.__INITIAL_ROUTE__.replace(/\/$/, '');
+      if (initialRoute === '/dashboard' || 
+          initialRoute === '/painel-dados' || 
+          initialRoute === '/dados-escolas-indigenas') {
+        return true;
+      }
+    }
+    
+    // PRIORIDADE 3: Verifica o pathname do React Router (quando disponível)
+    const routerPath = location?.pathname?.replace(/\/$/, '') || '';
+    
+    // Verifica rotas diretas do dashboard
+    if (routerPath === '/dashboard' || 
+        routerPath === '/painel-dados' || 
+        routerPath === '/dados-escolas-indigenas' ||
+        routerPath.startsWith('/dashboard/')) {
+      return true;
+    }
+    
+    return false;
+  }, [location?.pathname, forceUpdate]);
+  
+  const isMapRoute = React.useMemo(() => {
+    const routerPath = location?.pathname?.replace(/\/$/, '') || '';
+    return routerPath.includes('/mapa');
+  }, [location?.pathname]);
+
+  // Verifica se há uma rota inicial definida (para o dashboard estático)
+  React.useEffect(() => {
+    if (window.__INITIAL_ROUTE__) {
+      const initialRoute = window.__INITIAL_ROUTE__;
+      // Limpa a variável global
+      delete window.__INITIAL_ROUTE__;
+      
+      // Aguarda um pouco para garantir que o Router esteja totalmente inicializado
+      const timer = setTimeout(() => {
+        // Verifica se já estamos na rota correta
+        const currentPath = location.pathname.replace(/\/$/, ''); // Remove barra final
+        const targetPath = initialRoute.replace(/\/$/, ''); // Remove barra final
+        
+        if (currentPath !== targetPath && !currentPath.includes(targetPath)) {
+          // Navega para a rota inicial usando React Router (sem reload)
+          navigate(initialRoute, { replace: true });
+        }
+      }, 50);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [navigate, location.pathname]);
 
   const handlePainelOpenFunction = (openPainelFn) => {
     setOpenPainelFunction(() => openPainelFn);
@@ -66,8 +183,14 @@ const AppContent = () => {
       {/* Meta tags automáticas para escolas específicas */}
       <MetaTagsDetector dataPoints={dataPoints} />
       
-      {!isMapRoute && (
-        <Navbar onConteudoClick={() => navigate('/conteudo')} dataPoints={dataPoints} openPainelFunction={openPainelFunction} />
+      {/* Navbar só aparece se NÃO for rota de mapa E NÃO for rota de dashboard */}
+      {/* Verificação dupla para garantir que não apareça quando acessado diretamente */}
+      {!isMapRoute && !isDashboardRoute && (
+        <Navbar 
+          onConteudoClick={() => navigate('/conteudo')} 
+          dataPoints={dataPoints} 
+          openPainelFunction={openPainelFunction} 
+        />
       )}
       <Suspense fallback={
         loading ? null : (
@@ -164,20 +287,6 @@ function AppRoutes() {
 }
 
 const App = () => {
-  // Verifica se há uma rota inicial definida (para o dashboard)
-  React.useEffect(() => {
-    if (window.__INITIAL_ROUTE__) {
-      const initialRoute = window.__INITIAL_ROUTE__;
-      // Limpa a variável global
-      delete window.__INITIAL_ROUTE__;
-      // Navega para a rota inicial após um pequeno delay para garantir que o router esteja pronto
-      setTimeout(() => {
-        window.history.replaceState({}, '', `/opin${initialRoute}`);
-        window.location.reload();
-      }, 100);
-    }
-  }, []);
-
   return (
     <HelmetProvider>
       <ToastProvider>

@@ -3,6 +3,7 @@ import { ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import csvDataService from '../services/csvDataService';
 import { supabase } from '../supabaseClient';
+import { useEscolasData } from '../hooks/useEscolasData';
 import PageHeader from './PageHeader';
 import OptimizedImage from './OptimizedImage';
 import {
@@ -15,6 +16,7 @@ import {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { dataPoints } = useEscolasData();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [data, setData] = useState({
@@ -27,6 +29,14 @@ const Dashboard = () => {
   });
   const [headerImages, setHeaderImages] = useState([]);
   const [imagesPreloaded, setImagesPreloaded] = useState(false);
+  const [descriptionImage, setDescriptionImage] = useState(null);
+  const [imagesReady, setImagesReady] = useState(false);
+
+  // Estilo padronizado para imagens - melhores práticas de contraste e saturação
+  const imageStyle = {
+    filter: 'saturate(1.25) contrast(1.1) brightness(1.05)',
+    transition: 'filter 0.3s ease-in-out'
+  };
 
   // Breadcrumbs de Navegação
   const breadcrumbs = [
@@ -51,15 +61,74 @@ const Dashboard = () => {
   // Carregar imagens de header COM PRIORIDADE - antes dos dados dos gráficos
   useEffect(() => {
     const loadHeaderImages = async () => {
+      // Timeout de segurança: garantir que a página não trave
+      const timeoutId = setTimeout(() => {
+        console.warn('Timeout no carregamento de imagens. Continuando sem imagens.');
+        setImagesPreloaded(true);
+        setImagesReady(true);
+      }, 10000); // 10 segundos de timeout máximo
+
       try {
-        const { data: escolasData, error: escolasError } = await supabase
+        // Aguardar um pouco para garantir que o Supabase esteja inicializado
+        // Especialmente importante quando acessado diretamente pela URL
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // Verificar se o Supabase está disponível
+        if (!supabase) {
+          console.warn('Supabase client não está disponível. Pulando carregamento de imagens.');
+          clearTimeout(timeoutId);
+          setImagesPreloaded(true);
+          setImagesReady(true);
+          return;
+        }
+
+        // Verificar se as credenciais do Supabase estão configuradas
+        const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+        const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+        
+        if (!supabaseUrl || !supabaseKey || 
+            supabaseUrl.includes('seu-projeto') || 
+            supabaseKey.includes('sua_chave_anonima')) {
+          console.warn('Credenciais do Supabase não configuradas. Pulando carregamento de imagens.');
+          clearTimeout(timeoutId);
+          setImagesPreloaded(true);
+          setImagesReady(true);
+          return;
+        }
+
+        // Fazer query com timeout individual
+        const queryPromise = supabase
           .from('escolas_completa')
           .select('id, Escola, imagem_header')
           .not('imagem_header', 'is', null)
           .neq('imagem_header', '')
           .limit(100);
 
-        if (!escolasError && escolasData && escolasData.length > 0) {
+        const queryTimeout = new Promise((resolve) => 
+          setTimeout(() => resolve({ data: null, error: new Error('Query timeout') }), 5000)
+        );
+
+        // Usar Promise.race para aplicar timeout na query
+        const result = await Promise.race([
+          queryPromise.then(result => result),
+          queryTimeout
+        ]).catch(err => {
+          console.warn('Erro na query do Supabase:', err.message || err);
+          return { data: null, error: err };
+        });
+
+        const { data: escolasData, error: escolasError } = result;
+
+        clearTimeout(timeoutId);
+
+        if (escolasError) {
+          console.warn('Erro ao carregar imagens de header do Supabase:', escolasError.message || escolasError);
+          setImagesPreloaded(true);
+          setImagesReady(true);
+          return;
+        }
+
+        if (escolasData && escolasData.length > 0) {
           // Remover duplicatas baseado na URL da imagem
           const uniqueImages = [];
           const seenUrls = new Set();
@@ -71,59 +140,111 @@ const Dashboard = () => {
             }
           });
 
-          // Selecionar aleatoriamente algumas imagens únicas (máximo 5)
+          // Selecionar aleatoriamente algumas imagens únicas (máximo 6 para garantir variedade)
           const shuffled = [...uniqueImages].sort(() => 0.5 - Math.random());
-          const selected = shuffled.slice(0, Math.min(5, shuffled.length));
+          const selected = shuffled.slice(0, Math.min(6, shuffled.length));
           
-          // PRÉ-CARREGAR imagens antes de setar no estado
-          const imageUrls = selected.map(img => img.imagem_header).filter(Boolean);
+          // Garantir que não há duplicatas na seleção final
+          const finalSelected = [];
+          const finalSeenUrls = new Set();
+          selected.forEach(img => {
+            if (!finalSeenUrls.has(img.imagem_header)) {
+              finalSeenUrls.add(img.imagem_header);
+              finalSelected.push(img);
+            }
+          });
           
-          // Pré-carregar todas as imagens em paralelo com alta prioridade
-          try {
-            await Promise.allSettled(
-              imageUrls.map(url => preloadImage(url).catch(err => {
-                console.warn('Erro ao pré-carregar imagem:', url, err);
-                return null;
-              }))
-            );
-            
-            // Adicionar link rel="preload" no head para as primeiras imagens críticas
-            if (typeof document !== 'undefined' && imageUrls.length > 0) {
-              // Remover preloads anteriores se existirem
-              const existingPreloads = document.querySelectorAll('link[rel="preload"][as="image"]');
-              existingPreloads.forEach(link => {
-                if (link.href.includes('supabase') || link.href.includes('imagem_header')) {
-                  link.remove();
-                }
-              });
-              
-              // Adicionar preload para as primeiras 2 imagens (mais críticas)
-              imageUrls.slice(0, 2).forEach((url, index) => {
+          // Setar imagens no estado IMEDIATAMENTE (antes do pré-carregamento)
+          // Isso permite que a página renderize mesmo se o pré-carregamento demorar
+          const headerImagesForDisplay = finalSelected.slice(0, 5);
+          const headerImageUrls = new Set(headerImagesForDisplay.map(img => img.imagem_header));
+          
+          setHeaderImages(headerImagesForDisplay);
+          
+          // Selecionar uma imagem aleatória para exibir após a descrição
+          const availableForDescription = finalSelected.filter(img => 
+            !headerImageUrls.has(img.imagem_header)
+          );
+          
+          if (availableForDescription.length > 0) {
+            const randomIndex = Math.floor(Math.random() * availableForDescription.length);
+            setDescriptionImage(availableForDescription[randomIndex]);
+          } else if (finalSelected.length > 5) {
+            const extraImages = finalSelected.slice(5);
+            const randomIndex = Math.floor(Math.random() * extraImages.length);
+            setDescriptionImage(extraImages[randomIndex]);
+          } else if (finalSelected.length > 1) {
+            const candidates = finalSelected.slice(1);
+            const randomIndex = Math.floor(Math.random() * candidates.length);
+            setDescriptionImage(candidates[randomIndex]);
+          }
+
+          // Marcar como pronto para renderizar IMEDIATAMENTE
+          setImagesPreloaded(true);
+          setImagesReady(true);
+          
+          // PRÉ-CARREGAR imagens em background (não bloqueante)
+          const imageUrls = finalSelected.map(img => img.imagem_header).filter(Boolean);
+          
+          // Pré-carregar imagens de forma não-bloqueante
+          if (typeof document !== 'undefined' && imageUrls.length > 0) {
+            // Método 1: Preload links no head (mais rápido)
+            imageUrls.forEach((url) => {
+              try {
                 const link = document.createElement('link');
                 link.rel = 'preload';
                 link.as = 'image';
                 link.href = url;
-                link.fetchPriority = 'high';
+                if ('fetchPriority' in link) {
+                  link.fetchPriority = 'high';
+                }
                 document.head.appendChild(link);
-              });
-            }
+              } catch (e) {
+                // Ignorar erros de preload
+              }
+            });
             
-            setImagesPreloaded(true);
-          } catch (preloadError) {
-            console.warn('Algumas imagens falharam no pré-carregamento:', preloadError);
-            setImagesPreloaded(true); // Continua mesmo se algumas falharem
+            // Método 2: Pré-carregar via Image objects em paralelo (não bloqueante)
+            // Usar Promise.allSettled para não travar se alguma falhar
+            Promise.allSettled(
+              imageUrls.map(url => {
+                return new Promise((resolve) => {
+                  const img = new Image();
+                  const timeout = setTimeout(() => resolve(url), 3000); // Timeout de 3s por imagem
+                  
+                  img.onload = () => {
+                    clearTimeout(timeout);
+                    resolve(url);
+                  };
+                  img.onerror = () => {
+                    clearTimeout(timeout);
+                    resolve(url); // Continua mesmo se falhar
+                  };
+                  
+                  if ('fetchPriority' in img) {
+                    img.fetchPriority = 'high';
+                  }
+                  img.src = url;
+                });
+              })
+            ).catch(() => {
+              // Ignorar erros - já marcamos como ready
+            });
           }
-          
-          // Setar imagens no estado após pré-carregamento
-          setHeaderImages(selected);
+        } else {
+          console.warn('Nenhuma imagem de header encontrada no Supabase.');
+          setImagesPreloaded(true);
+          setImagesReady(true);
         }
       } catch (err) {
-        console.error('Erro ao carregar imagens de header:', err);
-        setImagesPreloaded(true); // Continua mesmo se falhar
+        clearTimeout(timeoutId);
+        console.warn('Erro ao carregar imagens de header (não crítico):', err.message || err);
+        setImagesPreloaded(true);
+        setImagesReady(true); // Continua mesmo se falhar
       }
     };
 
-    // Carregar imagens PRIMEIRO, antes dos dados dos gráficos
+    // Carregar imagens de forma não-bloqueante
     loadHeaderImages();
   }, []);
 
@@ -191,7 +312,13 @@ const Dashboard = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="mt-4 text-lg text-gray-600">Carregando dados dos gráficos...</p>
+          <p className="mt-4 text-xl text-gray-700" style={{
+            fontSize: '1.25rem',
+            lineHeight: '1.75',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+          }}>
+            Carregando dados dos gráficos...
+          </p>
         </div>
       </div>
     );
@@ -211,72 +338,99 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen pt-16 sm:pt-20 dashboard-scroll">
-      {/* Breadcrumbs de Navegação */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <nav className="flex items-center space-x-2 text-sm">
-            {breadcrumbs.map((crumb, index) => (
-              <div key={index} className="flex items-center">
-                {index > 0 && (
-                  <ChevronRight className="w-4 h-4 text-gray-400 mx-2" />
-                )}
-                {crumb.path ? (
-                  <button
-                    onClick={() => navigate(crumb.path)}
-                    className="text-gray-600 hover:text-green-700 transition-colors"
-                  >
-                    {crumb.label}
-                  </button>
-                ) : (
-                  <span className={`font-medium ${crumb.active ? 'text-green-700' : 'text-gray-900'}`}>
-                    {crumb.label}
-                  </span>
-                )}
-              </div>
-            ))}
-          </nav>
-        </div>
-      </div>
-
-      {/* Cabeçalho com design indígena */}
+    <div className="min-h-screen dashboard-scroll relative">
+      {/* Cabeçalho com design indígena - Hero image começa do topo */}
       <PageHeader
         title="Alguns dados"
-        description={
-          <>
-            Este espaço reúne informações sobre as escolas indígenas do estado de São Paulo, apresentando indicadores como número de estudantes e docentes, infraestrutura disponível, distribuição geográfica por Diretorias de Ensino e modalidades de ensino oferecidas. Os dados foram fornecidos pela Secretaria da Educação do Estado de São Paulo (SEDUC) e referem-se ao ano de 2025. A base completa pode ser acessada em:{' '}
-            <a 
-              href="https://dados.educacao.sp.gov.br/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-white hover:text-green-100 underline font-medium"
-            >
-              dados.educacao.sp.gov.br
-            </a>
-          </>
-        }
-      />
-
-      {/* Imagem de Header - Logo após o cabeçalho verde */}
-      {headerImages.length > 0 && (
-        <section className="w-full h-64 sm:h-80 md:h-96 lg:h-[28rem] relative overflow-hidden">
-          <OptimizedImage
-            src={headerImages[0].imagem_header}
-            alt={headerImages[0].Escola || 'Imagem da escola'}
-            className="w-full h-full object-cover"
-            style={{ filter: 'saturate(1.1)' }}
-            priority="high"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-          {/* Legenda no canto inferior */}
-          {headerImages[0].Escola && (
-            <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1.5 rounded-md text-sm font-medium">
-              {headerImages[0].Escola}
+        showNavbar={true}
+        dataPoints={dataPoints || []}
+      >
+        {/* Breadcrumbs no hero - Estilo Native Land Digital */}
+        <nav className="flex items-center justify-center space-x-2 text-base sm:text-lg text-white/90" style={{
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          letterSpacing: '0.01em'
+        }}>
+          {breadcrumbs.map((crumb, index) => (
+            <div key={index} className="flex items-center">
+              {index > 0 && (
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 mx-2" />
+              )}
+              {crumb.path ? (
+                <button
+                  onClick={() => navigate(crumb.path)}
+                  className="hover:text-white transition-colors font-normal"
+                  style={{ textDecoration: 'underline', textUnderlineOffset: '2px' }}
+                >
+                  {crumb.label}
+                </button>
+              ) : (
+                <span className="font-medium text-white">
+                  {crumb.label}
+                </span>
+              )}
             </div>
-          )}
-        </section>
-      )}
+          ))}
+        </nav>
+      </PageHeader>
+      
+      {/* Conteúdo principal com espaçamento para o hero - será ajustado dinamicamente */}
+      <div className="relative z-10 hero-content-spacer" style={{ marginTop: '300px' }}>
+        {/* Descrição da página - Abaixo do hero, estilo Native Land Digital */}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+          <div className="prose prose-lg sm:prose-xl max-w-none" style={{
+            fontSize: '1.125rem',
+            lineHeight: '1.75',
+            color: '#374151',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+          }}>
+            <p className="mb-6" style={{
+              fontSize: '1.125rem',
+              lineHeight: '1.75',
+              color: '#374151',
+              letterSpacing: '0.01em'
+            }}>
+              Este espaço reúne informações sobre as escolas indígenas do estado de São Paulo, apresentando indicadores como número de estudantes e docentes, infraestrutura disponível, distribuição geográfica por Diretorias de Ensino e modalidades de ensino oferecidas. Os dados foram fornecidos pela Secretaria da Educação do Estado de São Paulo (SEDUC) e referem-se ao ano de 2025. A base completa pode ser acessada em:{' '}
+              <a 
+                href="https://dados.educacao.sp.gov.br/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-green-700 hover:text-green-800 underline font-medium transition-colors"
+                style={{
+                  color: '#15803d',
+                  textDecorationThickness: '1.5px',
+                  textUnderlineOffset: '2px'
+                }}
+              >
+                dados.educacao.sp.gov.br
+              </a>
+            </p>
+          </div>
+        </div>
+
+        {/* Imagem aleatória de escola após a descrição */}
+        {imagesReady && descriptionImage && (
+          <section className="w-full h-64 sm:h-80 md:h-96 lg:h-[28rem] relative overflow-hidden mt-6">
+            <OptimizedImage
+              src={descriptionImage.imagem_header}
+              alt={descriptionImage.Escola || 'Imagem da escola'}
+              className="w-full h-full object-cover"
+              style={imageStyle}
+              priority="normal"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+            {/* Legenda no canto inferior */}
+            {descriptionImage.Escola && (
+              <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-md text-base font-medium shadow-lg" style={{
+                fontSize: '0.9375rem',
+                lineHeight: '1.5',
+                letterSpacing: '0.01em'
+              }}>
+                {descriptionImage.Escola}
+              </div>
+            )}
+          </section>
+        )}
 
       {/* Seções com cores que mudam conforme o scroll */}
       <div className="w-full">
@@ -288,20 +442,24 @@ const Dashboard = () => {
         </section>
 
         {/* Imagem de Header - Full Width */}
-        {headerImages[1] && (
+        {imagesReady && headerImages[1] && (
           <section className="w-full h-64 sm:h-80 md:h-96 lg:h-[28rem] relative overflow-hidden">
             <OptimizedImage
               src={headerImages[1].imagem_header}
               alt={headerImages[1].Escola || 'Imagem da escola'}
               className="w-full h-full object-cover"
-              style={{ filter: 'saturate(1.1)' }}
+              style={imageStyle}
               priority="high"
             />
             <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
             {/* Legenda no canto inferior */}
             {headerImages[1].Escola && (
-              <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1.5 rounded-md text-sm font-medium">
+              <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-md text-base font-medium shadow-lg" style={{
+                fontSize: '0.9375rem',
+                lineHeight: '1.5',
+                letterSpacing: '0.01em'
+              }}>
                 {headerImages[1].Escola}
               </div>
             )}
@@ -316,20 +474,24 @@ const Dashboard = () => {
         </section>
 
         {/* Imagem de Header - Full Width */}
-        {headerImages[2] && (
+        {imagesReady && headerImages[2] && (
           <section className="w-full h-64 sm:h-80 md:h-96 lg:h-[28rem] relative overflow-hidden">
             <OptimizedImage
               src={headerImages[2].imagem_header}
               alt={headerImages[2].Escola || 'Imagem da escola'}
               className="w-full h-full object-cover"
-              style={{ filter: 'saturate(1.1)' }}
+              style={imageStyle}
               priority="normal"
             />
             <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
             {/* Legenda no canto inferior */}
             {headerImages[2].Escola && (
-              <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1.5 rounded-md text-sm font-medium">
+              <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-md text-base font-medium shadow-lg" style={{
+                fontSize: '0.9375rem',
+                lineHeight: '1.5',
+                letterSpacing: '0.01em'
+              }}>
                 {headerImages[2].Escola}
               </div>
             )}
@@ -347,20 +509,24 @@ const Dashboard = () => {
         </section>
 
         {/* Imagem de Header - Full Width */}
-        {headerImages[3] && (
+        {imagesReady && headerImages[3] && (
           <section className="w-full h-64 sm:h-80 md:h-96 lg:h-[28rem] relative overflow-hidden">
             <OptimizedImage
               src={headerImages[3].imagem_header}
               alt={headerImages[3].Escola || 'Imagem da escola'}
               className="w-full h-full object-cover"
-              style={{ filter: 'saturate(1.1)' }}
+              style={imageStyle}
               priority="normal"
             />
             <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
             {/* Legenda no canto inferior */}
             {headerImages[3].Escola && (
-              <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1.5 rounded-md text-sm font-medium">
+              <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-md text-base font-medium shadow-lg" style={{
+                fontSize: '0.9375rem',
+                lineHeight: '1.5',
+                letterSpacing: '0.01em'
+              }}>
                 {headerImages[3].Escola}
               </div>
             )}
@@ -375,20 +541,24 @@ const Dashboard = () => {
         </section>
 
         {/* Imagem de Header - Full Width */}
-        {headerImages[4] && (
+        {imagesReady && headerImages[4] && (
           <section className="w-full h-64 sm:h-80 md:h-96 lg:h-[28rem] relative overflow-hidden">
             <OptimizedImage
               src={headerImages[4].imagem_header}
               alt={headerImages[4].Escola || 'Imagem da escola'}
               className="w-full h-full object-cover"
-              style={{ filter: 'saturate(1.1)' }}
+              style={imageStyle}
               priority="normal"
             />
             <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
             {/* Legenda no canto inferior */}
             {headerImages[4].Escola && (
-              <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1.5 rounded-md text-sm font-medium">
+              <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-md text-base font-medium shadow-lg" style={{
+                fontSize: '0.9375rem',
+                lineHeight: '1.5',
+                letterSpacing: '0.01em'
+              }}>
                 {headerImages[4].Escola}
               </div>
             )}
@@ -401,6 +571,7 @@ const Dashboard = () => {
             <EscolasPorDiretoriaChart data={data.escolasPorDiretoria} />
           </div>
         </section>
+      </div>
       </div>
     </div>
   );
