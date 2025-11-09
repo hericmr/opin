@@ -150,18 +150,21 @@ export const useEscolas = () => {
         // Atualizar na lista local
         updateEscolaInList(escolaData.id, data[0]);
         
-        // Registrar versão de dados (não bloqueia se falhar)
-        try {
-          await VersionamentoService.registrarVersaoDados({
-            nomeTabela: 'escolas_completa',
-            chaveLinha: escolaData.id.toString(),
-            fonteId: metadados?.fonte_id || null,
-            autor: metadados?.autor || null,
-            observacoes: metadados?.observacoes || null
-          });
-        } catch (versionError) {
-          // Log do erro mas não falha a operação principal
-          console.warn('Erro ao registrar versão de dados (não crítico):', versionError);
+        // Registrar versão de dados apenas se metadados foram fornecidos
+        // Se metadados for null, o modal será responsável por registrar depois
+        if (metadados !== null) {
+          try {
+            await VersionamentoService.registrarVersaoDados({
+              nomeTabela: 'escolas_completa',
+              chaveLinha: escolaData.id.toString(),
+              fonteId: metadados?.fonte_id || null,
+              autor: metadados?.autor || null,
+              observacoes: metadados?.observacoes || null
+            });
+          } catch (versionError) {
+            // Log do erro mas não falha a operação principal
+            console.warn('Erro ao registrar versão de dados (não crítico):', versionError);
+          }
         }
         
         return { success: true, data: data[0] };
@@ -230,18 +233,21 @@ export const useEscolas = () => {
         // Adicionar à lista local
         addEscolaToList(data[0]);
         
-        // Registrar versão de dados (não bloqueia se falhar)
-        try {
-          await VersionamentoService.registrarVersaoDados({
-            nomeTabela: 'escolas_completa',
-            chaveLinha: data[0].id.toString(),
-            fonteId: metadados?.fonte_id || null,
-            autor: metadados?.autor || null,
-            observacoes: metadados?.observacoes || null
-          });
-        } catch (versionError) {
-          // Log do erro mas não falha a operação principal
-          console.warn('Erro ao registrar versão de dados (não crítico):', versionError);
+        // Registrar versão de dados apenas se metadados foram fornecidos
+        // Se metadados for null, o modal será responsável por registrar depois
+        if (metadados !== null) {
+          try {
+            await VersionamentoService.registrarVersaoDados({
+              nomeTabela: 'escolas_completa',
+              chaveLinha: data[0].id.toString(),
+              fonteId: metadados?.fonte_id || null,
+              autor: metadados?.autor || null,
+              observacoes: metadados?.observacoes || null
+            });
+          } catch (versionError) {
+            // Log do erro mas não falha a operação principal
+            console.warn('Erro ao registrar versão de dados (não crítico):', versionError);
+          }
         }
         
         return { success: true, data: data[0] };
