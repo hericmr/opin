@@ -1,7 +1,8 @@
 import React from 'react';
 import ProfessorImageUploadSection from '../../EditEscolaPanel/ProfessorImageUploadSection';
+import logger from '../../../utils/logger';
 
-const ImagensProfessoresTab = ({ editingLocation }) => {
+const ImagensProfessoresTab = ({ editingLocation, setEditingLocation }) => {
   const escolaId = editingLocation?.id;
 
   if (!escolaId) {
@@ -13,13 +14,15 @@ const ImagensProfessoresTab = ({ editingLocation }) => {
   }
 
   return (
-    <ProfessorImageUploadSection 
+    <div className="space-y-6">
+      <ProfessorImageUploadSection 
       escolaId={escolaId}
       onImagesUpdate={() => {
         // Callback para atualizar dados se necessário
-        console.log('Imagens dos professores atualizadas');
+        logger.debug('Imagens dos professores atualizadas');
       }}
     />
+    </div>
   );
 };
 

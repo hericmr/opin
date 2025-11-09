@@ -1,5 +1,6 @@
 import { supabase } from '../supabaseClient';
 import { AuthService } from './authService';
+import logger from '../utils/logger';
 
 /**
  * Serviço para gerenciar versionamento de metadados
@@ -20,7 +21,7 @@ export class VersionamentoService {
       const currentUser = await AuthService.getCurrentUser();
       return currentUser?.username || 'admin';
     } catch (error) {
-      console.warn('Erro ao obter autor atual:', error);
+      logger.warn('Erro ao obter autor atual:', error);
       return null;
     }
   }
@@ -89,7 +90,7 @@ export class VersionamentoService {
         .single();
 
       if (error) {
-        console.error('Erro ao registrar versão de dados:', error);
+        logger.error('Erro ao registrar versão de dados:', error);
         throw error;
       }
 
@@ -98,7 +99,7 @@ export class VersionamentoService {
         data: data
       };
     } catch (error) {
-      console.error('Erro no serviço de versionamento:', error);
+      logger.error('Erro no serviço de versionamento:', error);
       return {
         success: false,
         error: error.message || 'Erro ao registrar versão de dados'
@@ -126,7 +127,7 @@ export class VersionamentoService {
         data: data || []
       };
     } catch (error) {
-      console.error('Erro ao buscar fontes de dados:', error);
+      logger.error('Erro ao buscar fontes de dados:', error);
       return {
         success: false,
         error: error.message || 'Erro ao buscar fontes de dados',
@@ -169,7 +170,7 @@ export class VersionamentoService {
         data: data || []
       };
     } catch (error) {
-      console.error('Erro ao buscar versões:', error);
+      logger.error('Erro ao buscar versões:', error);
       return {
         success: false,
         error: error.message || 'Erro ao buscar versões',

@@ -3,8 +3,6 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import { fromLonLat } from 'ol/proj';
 import { defaults as defaultControls } from 'ol/control';
-// Remover import das interações padrão para evitar conflitos
-// import { defaults as defaultInteractions } from 'ol/interaction';
 
 /**
  * Hook para inicializar o mapa OpenLayers

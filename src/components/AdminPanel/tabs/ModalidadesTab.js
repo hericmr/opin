@@ -1,6 +1,7 @@
 import React from 'react';
 import { useModalidades } from '../hooks/useModalidades';
 import { MODALIDADES_OPTIONS, MODALIDADES_CATEGORIAS } from '../utils/modalidadesOptions';
+import CardVisibilityToggle from '../components/CardVisibilityToggle';
 
 const ModalidadesTab = ({ 
   editingLocation, 
@@ -27,6 +28,14 @@ const ModalidadesTab = ({
 
   return (
     <div className="space-y-6">
+      {/* Toggle de Visibilidade */}
+      <CardVisibilityToggle
+        cardId="modalidades"
+        editingLocation={editingLocation}
+        setEditingLocation={setEditingLocation}
+        label="Visibilidade do Card: Modalidades de Ensino"
+      />
+      
       {/* Modalidades de Ensino */}
       <div className="md:col-span-2">
         <label className="block text-sm font-medium text-gray-200 mb-4 text-base">

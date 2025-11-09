@@ -4,6 +4,8 @@
  * re-enter the same metadata repeatedly when adding multiple data entries.
  */
 
+import logger from '../utils/logger';
+
 const STORAGE_KEY = 'opin:metadataMemory';
 
 /**
@@ -17,7 +19,7 @@ export const getMetadataMemory = () => {
       return JSON.parse(stored);
     }
   } catch (error) {
-    console.warn('Error reading metadata memory:', error);
+    logger.warn('Error reading metadata memory:', error);
   }
   return null;
 };
@@ -49,7 +51,7 @@ export const saveMetadataMemory = (metadata) => {
       clearMetadataMemory();
     }
   } catch (error) {
-    console.warn('Error saving metadata memory:', error);
+    logger.warn('Error saving metadata memory:', error);
   }
 };
 
@@ -60,7 +62,7 @@ export const clearMetadataMemory = () => {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    console.warn('Error clearing metadata memory:', error);
+    logger.warn('Error clearing metadata memory:', error);
   }
 };
 
