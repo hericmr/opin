@@ -29,10 +29,12 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white p-4 border border-gray-300 rounded-lg shadow-lg">
-          <p className="font-semibold text-gray-800">{data.name}</p>
-          <p className="text-sm text-gray-600">Alunos: {data.value.toLocaleString()}</p>
-          <p className="text-sm text-gray-600">Percentual: {data.percentual}%</p>
+        <div className="bg-white p-4 border border-gray-300 rounded-lg shadow-lg" style={{
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        }}>
+          <p className="font-semibold mb-1" style={{ fontSize: '1rem', lineHeight: '1.5', color: '#111827' }}>{data.name}</p>
+          <p style={{ fontSize: '0.9375rem', lineHeight: '1.5', color: '#374151' }}>Alunos: {data.value.toLocaleString()}</p>
+          <p style={{ fontSize: '0.9375rem', lineHeight: '1.5', color: '#374151' }}>Percentual: {data.percentual}%</p>
         </div>
       );
     }
@@ -43,10 +45,12 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white p-4 border border-gray-300 rounded-lg shadow-lg">
-          <p className="font-semibold text-gray-800">{data.name}</p>
-          <p className="text-sm text-gray-600">Alunos: {data.value.toLocaleString()}</p>
-          <p className="text-sm text-gray-600">Percentual: {data.percentual}%</p>
+        <div className="bg-white p-4 border border-gray-300 rounded-lg shadow-lg" style={{
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        }}>
+          <p className="font-semibold mb-1" style={{ fontSize: '1rem', lineHeight: '1.5', color: '#111827' }}>{data.name}</p>
+          <p style={{ fontSize: '0.9375rem', lineHeight: '1.5', color: '#374151' }}>Alunos: {data.value.toLocaleString()}</p>
+          <p style={{ fontSize: '0.9375rem', lineHeight: '1.5', color: '#374151' }}>Percentual: {data.percentual}%</p>
         </div>
       );
     }
@@ -99,17 +103,34 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
 
   return (
     <div className="p-4 sm:p-6">
-      <h3 className="text-xl sm:text-2xl font-bold mb-4 text-gray-800">
+      <h3 className="font-bold mb-6 text-gray-800" style={{
+        fontSize: '1.5rem',
+        lineHeight: '1.75',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        letterSpacing: '-0.01em'
+      }}>
         Distribuição de Alunos por Modalidade de Ensino
       </h3>
       
       {/* Texto introdutório */}
-      <div className="mb-6 p-3 sm:p-4">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-gray-800 leading-loose text-sm sm:text-base text-left">
+      <div className="mb-6 p-4 sm:p-6">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-gray-800 text-left mb-5" style={{
+            fontSize: '1.125rem',
+            lineHeight: '1.75',
+            color: '#374151',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            letterSpacing: '0.01em'
+          }}>
             Existem 42 Escolas Estaduais Indígenas no estado de São Paulo, distribuídas entre a capital, o interior e o litoral, atendendo {total.toLocaleString()} estudantes. Essas escolas oferecem os anos iniciais e finais do Ensino Fundamental, o Ensino Médio e a Educação de Jovens e Adultos (EJA).
           </p>
-          <p className="text-gray-800 leading-loose text-sm sm:text-base text-left mt-4">
+          <p className="text-gray-800 text-left" style={{
+            fontSize: '1.125rem',
+            lineHeight: '1.75',
+            color: '#374151',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            letterSpacing: '0.01em'
+          }}>
             {totalFundamental > 0 && (
               <>
                 A maior parte das matrículas está no Ensino Fundamental, que reúne {percentualFundamental}% dos alunos. Os anos iniciais concentram {anosIniciais.toLocaleString()} estudantes ({percentualAnosIniciais}%), seguidos pelos anos finais, com {anosFinais.toLocaleString()} alunos ({percentualAnosFinais}%).
@@ -128,10 +149,19 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
       {/* Informações gerais */}
       <div className="mb-6 p-4">
         <div className="text-center">
-          <p className="text-lg font-semibold text-gray-800">
+          <p className="font-semibold text-gray-800" style={{
+            fontSize: '1.25rem',
+            lineHeight: '1.75',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+          }}>
             Total de Alunos: <span className="text-teal-700">{total.toLocaleString()}</span>
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="mt-2" style={{
+            fontSize: '0.9375rem',
+            lineHeight: '1.5',
+            color: '#4b5563',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+          }}>
             Escolas Indígenas do Estado de São Paulo
           </p>
         </div>
@@ -142,7 +172,11 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
         
         {/* Gráfico de Barras */}
         <div>
-          <h4 className="text-lg font-semibold mb-3 text-gray-700 text-center">
+          <h4 className="font-semibold mb-4 text-gray-700 text-center" style={{
+            fontSize: '1.125rem',
+            lineHeight: '1.75',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+          }}>
             Distribuição por Quantidade
           </h4>
           <ScrollAnimatedWrapper animationType="fadeInLeft" delay={0.2}>
@@ -167,8 +201,8 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
                     interval={0}
                   />
                   <YAxis 
-                    tick={{ fontSize: 12 }}
-                    label={{ value: 'Número de Alunos', angle: -90, position: 'insideLeft' }}
+                    tick={{ fontSize: 12, fill: '#374151' }}
+                    label={{ value: 'Número de Alunos', angle: -90, position: 'insideLeft', style: { fontSize: '0.875rem', fill: '#374151' } }}
                   />
                   <Tooltip content={<CustomTooltip />} />
                   <Bar 
@@ -194,7 +228,11 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
 
         {/* Gráfico de Pizza */}
         <div>
-          <h4 className="text-lg font-semibold mb-3 text-gray-700 text-center">
+          <h4 className="font-semibold mb-4 text-gray-700 text-center" style={{
+            fontSize: '1.125rem',
+            lineHeight: '1.75',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+          }}>
             Distribuição Percentual
           </h4>
           <ScrollAnimatedWrapper animationType="fadeInRight" delay={0.4}>
@@ -245,17 +283,22 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
               className="w-4 h-4 rounded-full mx-auto mb-2 border-2 border-white" 
               style={{ backgroundColor: getColorForModalidade(item.name, index) }}
             ></div>
-            <p className="font-semibold text-xs sm:text-sm text-gray-800">{item.name}</p>
-            <p className="text-base sm:text-lg font-bold text-gray-800">
+            <p className="font-semibold text-gray-800" style={{ fontSize: '0.875rem', lineHeight: '1.5' }}>{item.name}</p>
+            <p className="font-bold text-gray-800" style={{ fontSize: '1rem', lineHeight: '1.5' }}>
               {item.value.toLocaleString()}
             </p>
-            <p className="text-xs text-gray-700">{item.percentual}%</p>
+            <p style={{ fontSize: '0.8125rem', lineHeight: '1.5', color: '#4b5563' }}>{item.percentual}%</p>
           </div>
         ))}
       </div>
 
 
-      <p className="text-sm text-gray-600 mt-4 text-center">
+      <p className="mt-4 text-center" style={{
+        fontSize: '0.9375rem',
+        lineHeight: '1.5',
+        color: '#4b5563',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+      }}>
         Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2025
       </p>
     </div>
