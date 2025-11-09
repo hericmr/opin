@@ -3,6 +3,8 @@ import { getHistoriasProfessor, createHistoriaProfessor, updateHistoriaProfessor
 import FotoProfessorService from '../../../services/fotoProfessorService';
 import RichTextEditor from './RichTextEditor';
 import { Upload, X, User, AlertCircle } from 'lucide-react';
+import CardVisibilityToggle from '../components/CardVisibilityToggle';
+import logger from '../../../utils/logger';
 
 const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
   const [historias, setHistorias] = useState([]);
@@ -21,7 +23,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
       const data = await getHistoriasProfessor(editingLocation.id);
       setHistorias(data || []);
     } catch (error) {
-      console.error('Erro ao carregar histórias:', error);
+      logger.error('Erro ao carregar histórias:', error);
     } finally {
       setLoading(false);
     }
@@ -56,7 +58,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
       setEditingHistoria(null);
       setIsCreating(false);
     } catch (error) {
-      console.error('Erro ao salvar história:', error);
+      logger.error('Erro ao salvar história:', error);
       alert('Erro ao salvar história: ' + error.message);
     }
   };
@@ -68,7 +70,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
       await deleteHistoriaProfessor(historiaId);
       await loadHistorias();
     } catch (error) {
-      console.error('Erro ao deletar história:', error);
+      logger.error('Erro ao deletar história:', error);
       alert('Erro ao deletar história: ' + error.message);
     }
   };
@@ -118,10 +120,10 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
       setPhotoSuccess('');
 
       // Fazer upload da foto
-      console.log('=== HistoriaProfessoresTab.handlePhotoUpload ===');
-      console.log('Arquivo:', file.name);
-      console.log('Nome Professor:', editingHistoria?.nome_professor || 'professor');
-      console.log('Escola ID:', editingLocation.id);
+      logger.debug('=== HistoriaProfessoresTab.handlePhotoUpload ===');
+      logger.debug('Arquivo:', file.name);
+      logger.debug('Nome Professor:', editingHistoria?.nome_professor || 'professor');
+      logger.debug('Escola ID:', editingLocation.id);
       
       const result = await FotoProfessorService.uploadFotoProfessor(
         file, 
@@ -129,14 +131,14 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
         editingLocation.id
       );
 
-      console.log('Resultado do upload:', result);
+      logger.debug('Resultado do upload:', result);
       
       if (result.success) {
-        console.log('Atualizando editingHistoria com URL:', result.url);
-        console.log('Estado atual editingHistoria:', editingHistoria);
+        logger.debug('Atualizando editingHistoria com URL:', result.url);
+        logger.debug('Estado atual editingHistoria:', editingHistoria);
         
         const novoEstado = { ...editingHistoria, foto_rosto: result.url };
-        console.log('Novo estado que será definido:', novoEstado);
+        logger.debug('Novo estado que será definido:', novoEstado);
         
         // Atualizar editingHistoria com a URL da foto
         setEditingHistoria(novoEstado);
@@ -144,7 +146,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
         
         // Verificar se o estado foi atualizado
         setTimeout(() => {
-          console.log('Estado após atualização (deve mostrar foto_rosto):', editingHistoria);
+          logger.debug('Estado após atualização (deve mostrar foto_rosto):', editingHistoria);
         }, 100);
         
         // Limpar mensagem de sucesso após 3 segundos
@@ -153,7 +155,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
         setPhotoError(result.error || 'Erro ao fazer upload da foto');
       }
     } catch (error) {
-      console.error('Erro no upload da foto:', error);
+      logger.error('Erro no upload da foto:', error);
       setPhotoError('Erro inesperado ao fazer upload da foto');
     } finally {
       setUploadingPhoto(false);
@@ -177,6 +179,14 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
 
   return (
     <div className="space-y-6">
+      {/* Toggle de Visibilidade */}
+      <CardVisibilityToggle
+        cardId="historiaProfessor"
+        editingLocation={editingLocation}
+        setEditingLocation={setEditingLocation}
+        label="Visibilidade do Card: História dos Professores"
+      />
+      
       {/* Cabeçalho */}
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-200">Depoimentos dos Professores</h3>

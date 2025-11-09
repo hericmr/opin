@@ -1,8 +1,17 @@
 import React from 'react';
+import CardVisibilityToggle from '../components/CardVisibilityToggle';
 
 const DadosBasicosTab = ({ editingLocation, setEditingLocation }) => {
   return (
     <div className="space-y-8">
+      {/* Toggle de Visibilidade */}
+      <CardVisibilityToggle
+        cardId="basicInfo"
+        editingLocation={editingLocation}
+        setEditingLocation={setEditingLocation}
+        label="Visibilidade do Card: Informações Básicas"
+      />
+      
       {/* Seção: Informações Principais */}
       <div className="bg-gray-800/30 rounded-xl p-6 border border-gray-700/30">
         <h3 className="text-lg font-semibold text-gray-100 mb-6 flex items-center gap-2">

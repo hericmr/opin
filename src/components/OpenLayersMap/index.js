@@ -9,7 +9,6 @@ import { useMapMarkers } from '../../hooks/useMapMarkers';
 import { useMapLayers } from '../../hooks/useMapLayers';
 
 // Componentes
-// import MapInfo from './MapInfo'; // Removido - não utilizado
 import MapContainer from './MapContainer';
 
 // Configurações

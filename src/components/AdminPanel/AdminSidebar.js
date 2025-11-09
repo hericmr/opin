@@ -1,6 +1,5 @@
 import React from 'react';
 import { Menu, Search, X } from 'lucide-react';
-import { useEscolas } from './hooks/useEscolas';
 import { UI_CONFIG } from './constants/adminConstants';
 
 const AdminSidebar = ({ 
@@ -8,13 +7,11 @@ const AdminSidebar = ({
   sidebarOpen, 
   setSidebarOpen, 
   editingLocation, 
-  onEscolaSelect 
+  onEscolaSelect,
+  searchTerm,
+  setSearchTerm,
+  filteredEscolas
 }) => {
-  const { 
-    searchTerm, 
-    setSearchTerm, 
-    filteredEscolas 
-  } = useEscolas();
 
   return (
     <>

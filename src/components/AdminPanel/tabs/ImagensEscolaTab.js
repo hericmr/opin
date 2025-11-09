@@ -1,7 +1,9 @@
 import React from 'react';
 import ImageUploadSection from '../../EditEscolaPanel/ImageUploadSection';
+import CardVisibilityToggle from '../components/CardVisibilityToggle';
+import logger from '../../../utils/logger';
 
-const ImagensEscolaTab = ({ editingLocation }) => {
+const ImagensEscolaTab = ({ editingLocation, setEditingLocation }) => {
   const escolaId = editingLocation?.id;
 
   if (!escolaId) {
@@ -13,13 +15,23 @@ const ImagensEscolaTab = ({ editingLocation }) => {
   }
 
   return (
-    <ImageUploadSection 
+    <div className="space-y-6">
+      {/* Toggle de Visibilidade */}
+      <CardVisibilityToggle
+        cardId="imagensEscola"
+        editingLocation={editingLocation}
+        setEditingLocation={setEditingLocation}
+        label="Visibilidade do Card: Imagens da Escola"
+      />
+      
+      <ImageUploadSection 
       escolaId={escolaId}
       onImagesUpdate={() => {
         // Callback para atualizar dados se necessário
-        console.log('Imagens da escola atualizadas');
+        logger.debug('Imagens da escola atualizadas');
       }}
     />
+    </div>
   );
 };
 

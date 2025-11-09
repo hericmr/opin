@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../../supabaseClient';
 import { VersionamentoService } from '../../../services/versionamentoService';
+import logger from '../../../utils/logger';
 
 export const useEscolas = () => {
   const [escolas, setEscolas] = useState([]);
@@ -36,19 +37,14 @@ export const useEscolas = () => {
       
       setEscolas(escolasMapeadas);
     } catch (err) {
-      console.error('Erro ao buscar escolas:', err);
+      logger.error('Erro ao buscar escolas:', err);
       setError(err.message);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Filtrar escolas baseado no termo de busca
-  const filteredEscolas = useCallback(() => {
-    return escolas.filter(escola => 
-      escola.Escola?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [escolas, searchTerm]);
+  // Nota: Lógica de filtros movida para useAdminFilters.js
 
   // Atualizar escola na lista local
   const updateEscolaInList = useCallback((escolaId, updatedData) => {
@@ -140,7 +136,8 @@ export const useEscolas = () => {
             'Cozinha': escolaData['cozinha'],
             'Merenda_escolar': escolaData['merenda_escolar'],
             'diferenciada': escolaData['diferenciada'],
-            'imagem_header': escolaData['imagem_header']
+            'imagem_header': escolaData['imagem_header'],
+            'cards_visibilidade': escolaData['cards_visibilidade'] || null
           })
           .eq('id', escolaData.id)
           .select();
@@ -163,7 +160,7 @@ export const useEscolas = () => {
             });
           } catch (versionError) {
             // Log do erro mas não falha a operação principal
-            console.warn('Erro ao registrar versão de dados (não crítico):', versionError);
+            logger.warn('Erro ao registrar versão de dados (não crítico):', versionError);
           }
         }
         
@@ -224,7 +221,8 @@ export const useEscolas = () => {
             'Cozinha': escolaData['cozinha'],
             'Merenda_escolar': escolaData['merenda_escolar'],
             'diferenciada': escolaData['diferenciada'],
-            'imagem_header': escolaData['imagem_header']
+            'imagem_header': escolaData['imagem_header'],
+            'cards_visibilidade': escolaData['cards_visibilidade'] || null
           })
           .select();
 
@@ -246,14 +244,14 @@ export const useEscolas = () => {
             });
           } catch (versionError) {
             // Log do erro mas não falha a operação principal
-            console.warn('Erro ao registrar versão de dados (não crítico):', versionError);
+            logger.warn('Erro ao registrar versão de dados (não crítico):', versionError);
           }
         }
         
         return { success: true, data: data[0] };
       }
     } catch (err) {
-      console.error('Erro ao salvar escola:', err);
+      logger.error('Erro ao salvar escola:', err);
       setError(err.message);
       return { success: false, error: err.message };
     }
@@ -275,7 +273,7 @@ export const useEscolas = () => {
       removeEscolaFromList(escolaId);
       return { success: true };
     } catch (err) {
-      console.error('Erro ao deletar escola:', err);
+      logger.error('Erro ao deletar escola:', err);
       setError(err.message);
       return { success: false, error: err.message };
     }
@@ -305,7 +303,6 @@ export const useEscolas = () => {
     deleteEscola,
     
     // Utilitários
-    filteredEscolas: filteredEscolas(),
     getEscolaById,
     getEscolaByName,
   };

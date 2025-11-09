@@ -1,4 +1,5 @@
 // Utility functions for mobile detection and interaction
+import { BREAKPOINTS } from '../constants/breakpoints';
 
 /**
  * Detecta se é um dispositivo mobile baseado em múltiplos critérios
@@ -6,14 +7,14 @@
  */
 export const isMobile = () => {
   // PRIORIDADE: Largura da tela é o critério principal
-  // Se a largura for maior que 768px, NUNCA é mobile (mesmo com touch)
+  // Se a largura for maior que o breakpoint mobile, NUNCA é mobile (mesmo com touch)
   const width = window.innerWidth;
-  if (width > 768) {
+  if (width > BREAKPOINTS.mobile) {
     return false; // Desktop - nunca mobile, mesmo com touch
   }
   
-  // Para telas menores ou igual a 768px, verificar outros critérios
-  const isMobileWidth = width <= 768;
+  // Para telas menores ou igual ao breakpoint mobile, verificar outros critérios
+  const isMobileWidth = width <= BREAKPOINTS.mobile;
   
   // Verificar se é um dispositivo móvel baseado no user agent
   const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

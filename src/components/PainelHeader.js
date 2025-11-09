@@ -2,6 +2,7 @@ import React from "react";
 import { X, Maximize2, Minimize2, MapPin } from "lucide-react";
 import { capitalizeWords } from "../utils/textFormatting";
 import MinimalShareButtons from "./MinimalShareButtons";
+import { BREAKPOINTS } from '../constants/breakpoints';
 
 // Função para formatar o título da escola
 const formatarTituloEscola = (titulo) => {
@@ -30,7 +31,7 @@ const formatarTituloEscola = (titulo) => {
 };
 
 const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagemHeader, shareUrl, shareTitle }) => {
-  const isMobile = window.innerWidth <= 768;
+  const isMobile = window.innerWidth <= BREAKPOINTS.mobile;
   const isMobileLandscape = isMobile && window.innerWidth > window.innerHeight;
 
   const shouldUseHalfHeader = isMaximized && (!isMobile || isMobileLandscape);

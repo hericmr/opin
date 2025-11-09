@@ -8,6 +8,7 @@ import {
   deleteHistoriaProfessorImage,
   escolaTemHistoriasProfessor
 } from '../services/historiaProfessorService';
+import logger from '../utils/logger';
 
 /**
  * Hook personalizado para gerenciar histórias do professor
@@ -36,7 +37,7 @@ export const useHistoriasProfessor = (escolaId) => {
       setHistorias(data);
       setTemHistorias(data.length > 0);
     } catch (err) {
-      console.error('Erro ao carregar histórias do professor:', err);
+      logger.error('Erro ao carregar histórias do professor:', err);
       setError(err.message);
       setHistorias([]);
       setTemHistorias(false);
@@ -56,7 +57,7 @@ export const useHistoriasProfessor = (escolaId) => {
       const tem = await escolaTemHistoriasProfessor(escolaId);
       setTemHistorias(tem);
     } catch (err) {
-      console.error('Erro ao verificar histórias:', err);
+      logger.error('Erro ao verificar histórias:', err);
       setTemHistorias(false);
     }
   }, [escolaId]);

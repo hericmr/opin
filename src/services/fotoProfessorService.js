@@ -1,4 +1,5 @@
 import { supabase } from '../supabaseClient';
+import logger from '../utils/logger';
 
 /**
  * Serviço para gerenciar fotos dos professores
@@ -58,7 +59,7 @@ export class FotoProfessorService {
         throw new Error('Nome do arquivo inválido gerado');
       }
 
-      console.log('Upload da foto:', {
+      logger.debug('Upload da foto:', {
         nomeOriginal: arquivo.name,
         nomeSanitizado,
         nomeArquivo,
@@ -91,7 +92,7 @@ export class FotoProfessorService {
       };
 
     } catch (error) {
-      console.error('Erro no upload da foto:', error);
+      logger.error('Erro no upload da foto:', error);
       return {
         success: false,
         error: error.message
@@ -119,7 +120,7 @@ export class FotoProfessorService {
       return { success: true };
 
     } catch (error) {
-      console.error('Erro ao atualizar foto do professor:', error);
+      logger.error('Erro ao atualizar foto do professor:', error);
       return {
         success: false,
         error: error.message
@@ -141,7 +142,7 @@ export class FotoProfessorService {
         .remove([caminhoArquivo]);
 
       if (storageError) {
-        console.warn('Erro ao remover arquivo do storage:', storageError);
+        logger.warn('Erro ao remover arquivo do storage:', storageError);
       }
 
       // Atualizar tabela (remover URL)
@@ -157,7 +158,7 @@ export class FotoProfessorService {
       return { success: true };
 
     } catch (error) {
-      console.error('Erro ao remover foto do professor:', error);
+      logger.error('Erro ao remover foto do professor:', error);
       return {
         success: false,
         error: error.message
@@ -188,7 +189,7 @@ export class FotoProfessorService {
       };
 
     } catch (error) {
-      console.error('Erro ao buscar foto do professor:', error);
+      logger.error('Erro ao buscar foto do professor:', error);
       return {
         success: false,
         error: error.message
@@ -231,7 +232,7 @@ export class FotoProfessorService {
       };
 
     } catch (error) {
-      console.error('Erro ao listar fotos dos professores:', error);
+      logger.error('Erro ao listar fotos dos professores:', error);
       return {
         success: false,
         error: error.message

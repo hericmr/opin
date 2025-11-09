@@ -7,28 +7,15 @@ import { criarSlug } from './slug';
 import { META_TAGS_CONFIG } from '../config/metaTagsConfig';
 
 /**
- * Configurações padrão para meta tags (legado - usar META_TAGS_CONFIG)
- * @deprecated Use META_TAGS_CONFIG from '../config/metaTagsConfig'
- */
-export const DEFAULT_META_CONFIG = {
-  siteName: META_TAGS_CONFIG.site.name,
-  siteUrl: META_TAGS_CONFIG.site.url,
-  defaultImage: META_TAGS_CONFIG.images.default,
-  defaultDescription: META_TAGS_CONFIG.site.description,
-  twitterHandle: META_TAGS_CONFIG.social.twitter.handle,
-  locale: META_TAGS_CONFIG.site.locale
-};
-
-/**
  * Gera URL completa para uma escola específica
  * @param {Object} escola - Dados da escola
  * @returns {string} URL completa
  */
 export const gerarUrlEscola = (escola) => {
-  if (!escola?.titulo) return DEFAULT_META_CONFIG.siteUrl;
+  if (!escola?.titulo) return META_TAGS_CONFIG.site.url;
   
   const slug = criarSlug(escola.titulo);
-  return `${DEFAULT_META_CONFIG.siteUrl}/mapa?panel=${slug}`;
+  return `${META_TAGS_CONFIG.site.url}/mapa?panel=${slug}`;
 };
 
 /**
@@ -37,7 +24,7 @@ export const gerarUrlEscola = (escola) => {
  * @returns {string} Título otimizado
  */
 export const gerarTituloEscola = (escola) => {
-  if (!escola?.titulo) return DEFAULT_META_CONFIG.siteName;
+  if (!escola?.titulo) return META_TAGS_CONFIG.site.name;
   
   return `${escola.titulo} - Escola Indígena`;
 };
@@ -48,7 +35,7 @@ export const gerarTituloEscola = (escola) => {
  * @returns {string} Descrição otimizada
  */
 export const gerarDescricaoEscola = (escola) => {
-  if (!escola) return DEFAULT_META_CONFIG.defaultDescription;
+  if (!escola) return META_TAGS_CONFIG.site.description;
   
   let descricao = `Escola Indígena: ${escola.titulo}`;
   
@@ -122,7 +109,7 @@ export const gerarKeywordsEscola = (escola) => {
 export const gerarImagemEscola = (escola) => {
   // TODO: Implementar lógica para buscar imagem específica da escola
   // Por enquanto, usar imagem padrão
-  return `${DEFAULT_META_CONFIG.siteUrl}${DEFAULT_META_CONFIG.defaultImage}`;
+  return `${META_TAGS_CONFIG.site.url}${META_TAGS_CONFIG.images.default}`;
 };
 
 /**
@@ -154,8 +141,8 @@ export const gerarStructuredData = (escola) => {
     "numberOfStudents": escola['Numero de alunos'] || '',
     "provider": {
       "@type": "Organization",
-      "name": DEFAULT_META_CONFIG.siteName,
-      "url": DEFAULT_META_CONFIG.siteUrl
+      "name": META_TAGS_CONFIG.site.name,
+      "url": META_TAGS_CONFIG.site.url
     }
   };
 };
