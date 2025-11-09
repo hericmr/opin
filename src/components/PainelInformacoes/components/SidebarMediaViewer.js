@@ -254,7 +254,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
                     filter: 'saturate(1.3)'
                   }}
                   loading="eager"
-                  fetchPriority="high"
+                  fetchpriority="high"
                   decoding="async"
                   onLoad={handleImageLoad}
                 />
