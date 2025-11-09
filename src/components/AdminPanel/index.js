@@ -23,6 +23,7 @@ import CoordenadasTab from './tabs/CoordenadasTab';
 import TabelasIntegraisTab from './tabs/TabelasIntegraisTab';
 import TabelaEditavelTab from './tabs/TabelaEditavelTab';
 import CompletenessDashboard from './components/CompletenessDashboard';
+import MetadadosForm from './components/MetadadosForm';
 
 // Imports condicionais para evitar problemas de hot reload
 let ImagensEscolaTab = null;
@@ -61,6 +62,7 @@ const AdminPanelContent = () => {
   const [escolaToDelete, setEscolaToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showCompletenessDashboard, setShowCompletenessDashboard] = useState(false);
+  const [metadados, setMetadados] = useState({ fonte_id: null, observacoes: '', autor: null });
 
   // Detectar se é mobile
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= UI_CONFIG.MOBILE_BREAKPOINT;
@@ -399,12 +401,16 @@ const AdminPanelContent = () => {
     setSaveSuccess(false);
 
     try {
-      const result = await saveEscola(editingLocation);
+      // Passar metadados junto com os dados da escola
+      const result = await saveEscola(editingLocation, metadados);
       
       if (result.success) {
         setSaveSuccess(true);
         // Atualizar o editingLocation com os dados salvos
         setEditingLocation(result.data);
+        
+        // Limpar metadados após salvar (opcional - pode manter se quiser)
+        // setMetadados({ fonte_id: null, observacoes: '', autor: null });
         
         // Limpar mensagem de sucesso após 3 segundos
         setTimeout(() => {
@@ -739,6 +745,14 @@ const AdminPanelContent = () => {
             {/* Conteúdo da aba ativa */}
             <div className="scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
               {renderActiveTab()}
+            </div>
+
+            {/* Formulário de Metadados */}
+            <div className="mt-6">
+              <MetadadosForm 
+                onMetadadosChange={setMetadados}
+                initialMetadados={metadados}
+              />
             </div>
           </div>
         )}
