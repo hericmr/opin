@@ -14,6 +14,38 @@ import InfoSection from '../InfoSection';
 import BooleanValue from '../BooleanValue';
 import NativeLandCard from '../NativeLandCard';
 
+// Helper function to check if a value is empty
+const isEmptyValue = (value) => {
+  if (value === null || value === undefined) return true;
+  if (typeof value === 'string' && value.trim() === '') return true;
+  if (typeof value === 'number' && isNaN(value)) return true;
+  // Keep 0, false, and React elements as valid
+  if (typeof value === 'number') return false;
+  if (typeof value === 'boolean') return false;
+  if (React.isValidElement(value)) return false;
+  return false;
+};
+
+// Helper function to check if a card has long content
+const hasLongContent = (value) => {
+  if (!value) return false;
+  if (React.isValidElement(value)) return false; // React elements are not long text
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    // Verifica se tem mais de 30 caracteres OU se tem vírgulas (lista de itens)
+    return trimmed.length > 30 || (trimmed.includes(',') && trimmed.length > 20);
+  }
+  return false;
+};
+
+// Helper function to get grid columns based on item count
+const getGridCols = (count) => {
+  if (count === 0) return 'grid-cols-1';
+  if (count === 1) return 'grid-cols-1';
+  if (count === 2) return 'grid-cols-2';
+  return 'grid-cols-3 lg:grid-cols-3';
+};
+
 const Infraestrutura = memo(({ escola }) => {
   if (!escola) return null;
 
@@ -58,26 +90,51 @@ const Infraestrutura = memo(({ escola }) => {
       label: 'Merenda Diferenciada',
       value: <BooleanValue value={escola.diferenciada} />,
     },
-  ];
+  ].filter(item => !isEmptyValue(item.value));
+
+  if (items.length === 0) return null;
+
+  // Separar cards com muito conteúdo dos cards normais
+  const longContentCards = items.filter(item => hasLongContent(item.value));
+  const normalCards = items.filter(item => !hasLongContent(item.value));
 
   return (
     <InfoSection title="Infraestrutura" icon={Home}>
       {escola.espaco_escolar && (
-        <div className="p-2 text-sm text-gray-800 border-b border-gray-200 whitespace-pre-wrap">
+        <div className="p-3 text-sm text-gray-700 border-b border-gray-200 whitespace-pre-wrap leading-relaxed mb-4" style={{ lineHeight: '1.7' }}>
           {escola.espaco_escolar}
         </div>
       )}
-      <div className="grid grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-3 mt-3 items-stretch overflow-visible" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
-        {items.map((item, idx) => (
-          <NativeLandCard
-            key={idx}
-            icon={item.icon}
-            label={item.label}
-            value={item.value}
-            showIconCircle={true}
-          />
-        ))}
-      </div>
+      
+      {/* Cards com muito conteúdo - linha inteira (1 coluna) */}
+      {longContentCards.length > 0 && (
+        <div className="space-y-3 mt-3" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+          {longContentCards.map((item, idx) => (
+            <NativeLandCard
+              key={`long-${idx}`}
+              icon={item.icon}
+              label={item.label}
+              value={item.value}
+              showIconCircle={true}
+            />
+          ))}
+        </div>
+      )}
+      
+      {/* Cards normais - grid de 3 colunas */}
+      {normalCards.length > 0 && (
+        <div className={`grid ${getGridCols(normalCards.length)} gap-2 sm:gap-3 ${longContentCards.length > 0 ? 'mt-3' : 'mt-3'} items-stretch overflow-visible`} style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+          {normalCards.map((item, idx) => (
+            <NativeLandCard
+              key={`normal-${idx}`}
+              icon={item.icon}
+              label={item.label}
+              value={item.value}
+              showIconCircle={true}
+            />
+          ))}
+        </div>
+      )}
     </InfoSection>
   );
 });

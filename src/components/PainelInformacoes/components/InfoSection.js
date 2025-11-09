@@ -172,41 +172,56 @@ const InfoSection = memo(({
     }
   };
 
+  // Se não há título, não mostrar botão de collapse - conteúdo sempre visível
+  const hasTitle = title && title.trim() !== '';
+
   return (
     <section 
       className={`
-        bg-white rounded-2xl p-5 
+        bg-white rounded-2xl p-5
         shadow-sm transition-all duration-200
         ${className}
       `}
     >
-      <button
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        className="
-          w-full flex items-center justify-between 
-          text-base font-semibold
-          mb-4 text-gray-900 hover:text-gray-800 
-          transition-colors focus:outline-none
-        "
-        aria-expanded={!isCollapsed}
-        aria-controls={`${title}-content`}
-      >
-        <div className="flex items-center gap-2">
-          {Icon && <Icon className="w-5 h-5 text-gray-700" />}
-          <span className="tracking-wide">{title}</span>
-        </div>
-      </button>
+      {hasTitle && (
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="
+            w-full flex items-center justify-between 
+            text-base sm:text-lg font-semibold
+            mb-4 sm:mb-5 text-gray-900 hover:text-green-800 
+            transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded-md p-1 -m-1
+          "
+          aria-expanded={!isCollapsed}
+          aria-controls={`${title}-content`}
+          id={`${title}-button`}
+        >
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            {Icon && <Icon className="w-5 h-5 text-green-700 flex-shrink-0" />}
+            <span className="tracking-tight leading-tight">{title}</span>
+          </div>
+          <svg 
+            className={`w-5 h-5 text-gray-500 transition-transform duration-200 flex-shrink-0 ${isCollapsed ? '' : 'rotate-180'}`}
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      )}
       
-      {!isCollapsed && (
+      {(!hasTitle || !isCollapsed) && (
         <div 
-          id={`${title}-content`}
-          className="space-y-4 overflow-visible"
-          role="region"
-          aria-labelledby={`${title}-button`}
+          id={hasTitle ? `${title}-content` : undefined}
+          className="space-y-4 sm:space-y-5 overflow-visible"
+          role={hasTitle ? "region" : undefined}
+          aria-labelledby={hasTitle ? `${title}-button` : undefined}
         >
           {description && (
-            <div className="bg-green-100 rounded-lg p-4">
-              <p className="text-gray-700 text-sm leading-relaxed">
+            <div className="bg-green-50 border border-green-100 rounded-lg p-4">
+              <p className="text-gray-700 text-sm leading-relaxed" style={{ lineHeight: '1.7' }}>
                 {description}
               </p>
             </div>
