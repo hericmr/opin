@@ -20,7 +20,7 @@ const TiposEnsinoChart = ({ data }) => {
   return (
     <div className="p-6">
       
-      <h3 className="font-bold mb-6 text-gray-800" style={{
+      <h3 className="font-bold mb-6 text-gray-800 text-center" style={{
         fontSize: '1.5rem',
         lineHeight: '1.75',
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',

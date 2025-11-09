@@ -54,7 +54,7 @@ const AlunosPorEscolaChart = ({ data }) => {
         </p>
         
         <p className="text-gray-700 leading-relaxed mt-4 text-justify">
-          Entre as escolas de maior porte, destacam-se a Indígena Guarani Gwyra Pepo, com 296 alunos, a E.E.I. Djekupe Amba Arandy, com 249 alunos, e a E.E.I. Txeru Ba'e Kua-i, com 111 alunos. No extremo oposto, algumas escolas atendem menos de 10 alunos, como a Aldeia Uru'ity, com 4 estudantes, e a Aldeia Santa Cruz, com apenas 3. Essa distribuição evidencia a grande heterogeneidade no tamanho das turmas, o que impacta diretamente a gestão, a oferta de recursos e a qualidade do ensino.
+          Entre as escolas de maior porte, destacam-se a EEI Guarani Gwyra Pepo, com 296 alunos, a EEI Djekupe Amba Arandy, com 249 alunos, e a EEI Txeru Ba'e Kua-i, com 111 alunos. No extremo oposto, algumas escolas atendem menos de 10 alunos, como a Aldeia Uru'ity, com 4 estudantes, e a Aldeia Santa Cruz, com apenas 3. Essa distribuição evidencia a grande heterogeneidade no tamanho das turmas, o que impacta diretamente a gestão, a oferta de recursos e a qualidade do ensino.
         </p>
       </div>
       <div className="h-96">

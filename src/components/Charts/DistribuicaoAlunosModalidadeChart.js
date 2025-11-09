@@ -103,7 +103,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
 
   return (
     <div className="p-4 sm:p-6">
-      <h3 className="font-bold mb-6 text-gray-800" style={{
+      <h3 className="font-bold mb-6 text-gray-800 text-center" style={{
         fontSize: '1.5rem',
         lineHeight: '1.75',
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
@@ -122,7 +122,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
             letterSpacing: '0.01em'
           }}>
-            Existem 42 Escolas Estaduais Indígenas no estado de São Paulo, distribuídas entre a capital, o interior e o litoral, atendendo {total.toLocaleString()} estudantes. Essas escolas oferecem os anos iniciais e finais do Ensino Fundamental, o Ensino Médio e a Educação de Jovens e Adultos (EJA).
+            Segundo os dados da SEDUC, em 2025, existem 42 escolas estaduais indígenas no estado de São Paulo, distribuídas entre a capital, o interior e o litoral, atendendo {total.toLocaleString()} estudantes. Essas escolas oferecem os anos iniciais e finais do Ensino Fundamental, o Ensino Médio e a Educação de Jovens e Adultos (EJA).
           </p>
           <p className="text-gray-800 text-left" style={{
             fontSize: '1.125rem',

@@ -359,7 +359,6 @@ const Dashboard = () => {
                 <button
                   onClick={() => navigate(crumb.path)}
                   className="hover:text-white transition-colors font-normal"
-                  style={{ textDecoration: 'underline', textUnderlineOffset: '2px' }}
                 >
                   {crumb.label}
                 </button>
