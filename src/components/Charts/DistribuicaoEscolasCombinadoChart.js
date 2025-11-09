@@ -94,7 +94,7 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
   return (
     <div className="p-4 sm:p-6">
       {/* Título principal */}
-      <h3 className="font-bold mb-6 text-gray-800" style={{
+      <h3 className="font-bold mb-6 text-gray-800 text-center" style={{
         fontSize: '1.5rem',
         lineHeight: '1.75',
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
@@ -172,12 +172,24 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
       </div>
 
       {/* Texto adicional */}
-      <div className="mb-6 p-3 sm:p-4">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-gray-800 leading-loose text-sm sm:text-base text-left mb-4">
-            Entre as escolas de maior porte, destacam-se a Indígena Guarani Gwyra Pepo, com 296 alunos, a E.E.I. Djekupe Amba Arandy, com 249 alunos, e a E.E.I. Txeru Ba'e Kua-i, com 111 alunos.
+      <div className="mb-6 p-4 sm:p-6">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-gray-800 text-left mb-4" style={{
+            fontSize: '1.125rem',
+            lineHeight: '1.75',
+            color: '#374151',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            letterSpacing: '0.01em'
+          }}>
+            Entre as escolas de maior porte estão a EEI Guarani Gwyra Pepo, com 296 alunos, e a EEI Djekupe Amba Arandy, com 249 alunos. Ambas ficam na capital de São Paulo. Já a EEI Txeru Ba'e Kua-i, no litoral de São Paulo, na cidade de Bertioga, atende 111 alunos.
           </p>
-          <p className="text-gray-800 leading-loose text-sm sm:text-base text-left">
+          <p className="text-gray-800 text-left" style={{
+            fontSize: '1.125rem',
+            lineHeight: '1.75',
+            color: '#374151',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            letterSpacing: '0.01em'
+          }}>
             No extremo oposto, algumas escolas atendem menos de 10 alunos, como a Aldeia Uru'ity, com 4 estudantes, e a Aldeia Santa Cruz, com apenas 3.
           </p>
         </div>
