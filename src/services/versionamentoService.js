@@ -30,6 +30,7 @@ export class VersionamentoService {
    * @param {Object} params - Parâmetros da versão
    * @param {string} params.nomeTabela - Nome da tabela onde ocorreu a alteração
    * @param {string} params.chaveLinha - Chave primária da linha afetada (convertida para string)
+   * @param {string|null} params.nomeCampo - Nome do campo específico alterado (opcional)
    * @param {string|null} params.fonteId - ID da fonte de dados (opcional)
    * @param {string|null} params.autor - Nome do autor (opcional, será obtido automaticamente se não fornecido)
    * @param {string|null} params.observacoes - Observações sobre a alteração (opcional)
@@ -38,6 +39,7 @@ export class VersionamentoService {
   static async registrarVersaoDados({
     nomeTabela,
     chaveLinha,
+    nomeCampo = null,
     fonteId = null,
     autor = null,
     observacoes = null
@@ -67,6 +69,10 @@ export class VersionamentoService {
       };
 
       // Adicionar campos opcionais se fornecidos
+      if (nomeCampo && nomeCampo.trim() !== '') {
+        dadosVersao.nome_campo = nomeCampo.trim();
+      }
+
       if (fonteId) {
         dadosVersao.fonte_id = fonteId;
       }
