@@ -119,7 +119,7 @@ const AppContent = () => {
     }
     
     return false;
-  }, [location?.pathname, forceUpdate]);
+  }, [location?.pathname, initialIsDashboardRoute]);
   
   const isMapRoute = React.useMemo(() => {
     const routerPath = location?.pathname?.replace(/\/$/, '') || '';

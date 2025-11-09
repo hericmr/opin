@@ -6,6 +6,7 @@ import {
   generateUniqueFileName,
   getFileType 
 } from '../config/storage';
+import logger from '../utils/logger';
 
 /**
  * Uploads a file to the specified bucket
@@ -45,7 +46,7 @@ export const uploadFile = async (file, bucket = STORAGE_BUCKETS.PDFS) => {
 
     return publicUrl;
   } catch (error) {
-    console.error('Erro ao fazer upload:', error);
+    logger.error('Erro ao fazer upload:', error);
     throw error;
   }
 };
@@ -93,7 +94,7 @@ export const deleteFile = async (filePath, bucket = STORAGE_BUCKETS.PDFS) => {
       throw error;
     }
   } catch (error) {
-    console.error('Erro ao deletar arquivo:', error);
+    logger.error('Erro ao deletar arquivo:', error);
     throw error;
   }
 }; 

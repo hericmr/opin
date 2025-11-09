@@ -1,14 +1,14 @@
 import React, { memo } from 'react';
+import { isCardVisible } from '../../../../components/AdminPanel/constants/cardVisibilityConfig';
+import { useGlobalCardVisibility } from '../../../../hooks/useGlobalCardVisibility';
 
 // Import all section components
 import BasicInfo from './BasicInfo';
 import HistoriaEscola from './HistoriaEscola';
-// import PovosLinguas from './PovosLinguas';
 import Modalidades from './Modalidades';
 import Infraestrutura from './Infraestrutura';
 import GestaoProfessores from './GestaoProfessores';
 import ProjetosParcerias from './ProjetosParcerias';
-// import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
 import HistoriadoProfessor from './HistoriadoProfessor';
 import ImagensdasEscolas from '../ImagensdasEscolas';
 
@@ -61,53 +61,68 @@ const GridLayoutWrapper = memo(({ children, shouldUseGrid }) => {
 const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0, sectionRefs, isMaximized = false, shouldHideInlineMedia = false }) => {
   console.log("EscolaInfo recebeu:", escola);
   
+  // Buscar configuração global
+  const { globalVisibility } = useGlobalCardVisibility();
+  
   if (!escola) {
     console.log("EscolaInfo: escola é null ou undefined");
     return null;
   }
 
-  // Componentes que serão renderizados no grid
+  // Obter configuração de visibilidade
+  const cardsVisibilidade = escola.cards_visibilidade;
+
+  // Componentes que serão renderizados no grid (com filtro de visibilidade)
   const gridSections = [
-    { Component: BasicInfo, props: { escola } },
-    // { Component: PovosLinguas, props: { escola } },
-    { Component: Modalidades, props: { escola } },
-    { Component: Infraestrutura, props: { escola } },
-    { Component: GestaoProfessores, props: { escola } },
-    { Component: ProjetosParcerias, props: { escola } }
-  ];
+    { Component: BasicInfo, props: { escola }, id: 'basicInfo' },
+    // { Component: PovosLinguas, props: { escola }, id: 'povosLinguas' },
+    { Component: Modalidades, props: { escola }, id: 'modalidades' },
+    { Component: Infraestrutura, props: { escola }, id: 'infraestrutura' },
+    { Component: GestaoProfessores, props: { escola }, id: 'gestaoProfessores' },
+    { Component: ProjetosParcerias, props: { escola }, id: 'projetosParcerias' }
+  ].filter(({ id }) => isCardVisible(cardsVisibilidade, id, globalVisibility));
 
   return (
     <div className="space-y-8">
       {/* Grid de cards */}
-      <div ref={(el) => sectionRefs && (sectionRefs.dados = el)}>
-        <GridLayoutWrapper shouldUseGrid={shouldUseGrid}>
-          {gridSections.map(({ Component, props }, index) => (
-            <Component key={index} {...props} />
-          ))}
-        </GridLayoutWrapper>
-      </div>
+      {gridSections.length > 0 && (
+        <div ref={(el) => sectionRefs && (sectionRefs.dados = el)}>
+          <GridLayoutWrapper shouldUseGrid={shouldUseGrid}>
+            {gridSections.map(({ Component, props }, index) => (
+              <Component key={index} {...props} />
+            ))}
+          </GridLayoutWrapper>
+        </div>
+      )}
 
       {/* História da Escola em destaque */}
-      <div ref={(el) => sectionRefs && (sectionRefs.historia = el)}>
-        <HistoriaEscola escola={escola} refreshKey={refreshKey} isMaximized={isMaximized} />
-      </div>
+      {isCardVisible(cardsVisibilidade, 'historiaEscola', globalVisibility) && (
+        <div ref={(el) => sectionRefs && (sectionRefs.historia = el)}>
+          <HistoriaEscola escola={escola} refreshKey={refreshKey} isMaximized={isMaximized} />
+        </div>
+      )}
       
       {/* Imagens da escola, agora renderizadas independentemente da história */}
-      <ImagensdasEscolas 
-        escola_id={escola.id} 
-        refreshKey={refreshKey} 
-        isMaximized={isMaximized}
-        hideInlineMedia={shouldHideInlineMedia}
-      />
-
-      <div ref={(el) => sectionRefs && (sectionRefs.depoimentos = el)}>
-        <HistoriadoProfessor 
-          escola={escola} 
+      {isCardVisible(cardsVisibilidade, 'imagensEscola', globalVisibility) && (
+        <ImagensdasEscolas 
+          escola_id={escola.id} 
           refreshKey={refreshKey} 
           isMaximized={isMaximized}
-          shouldHideInlineMedia={shouldHideInlineMedia}
+          hideInlineMedia={shouldHideInlineMedia}
         />
-      </div>
+      )}
+
+      {/* História dos Professores */}
+      {isCardVisible(cardsVisibilidade, 'historiaProfessor', globalVisibility) && (
+        <div ref={(el) => sectionRefs && (sectionRefs.depoimentos = el)}>
+          <HistoriadoProfessor 
+            escola={escola} 
+            refreshKey={refreshKey} 
+            isMaximized={isMaximized}
+            shouldHideInlineMedia={shouldHideInlineMedia}
+          />
+        </div>
+      )}
     </div>
   );
 });

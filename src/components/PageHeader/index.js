@@ -4,7 +4,6 @@ import { useSearch } from '../../contexts/SearchContext';
 import { useAuth } from '../../hooks/useAuth';
 import { useBreakpoint } from '../../hooks/responsive/useBreakpoint';
 import { Leaf, Shield } from 'lucide-react';
-import MinimalShareButtons from '../MinimalShareButtons';
 import NavButtons from '../Navbar/NavButtons';
 import SearchBar from '../Navbar/SearchBar';
 import MinimalLoginModal from '../Auth/MinimalLoginModal';

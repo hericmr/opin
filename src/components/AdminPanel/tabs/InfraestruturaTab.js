@@ -1,8 +1,17 @@
 import React from 'react';
+import CardVisibilityToggle from '../components/CardVisibilityToggle';
 
 const InfraestruturaTab = ({ editingLocation, setEditingLocation }) => {
   return (
     <div className="space-y-6">
+      {/* Toggle de Visibilidade */}
+      <CardVisibilityToggle
+        cardId="infraestrutura"
+        editingLocation={editingLocation}
+        setEditingLocation={setEditingLocation}
+        label="Visibilidade do Card: Infraestrutura"
+      />
+      
       {/* Acesso à Água */}
       <div>
         <label className="block text-sm font-medium text-gray-200 mb-2 text-base">

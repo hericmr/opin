@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Info, X, History, Trash2 } from 'lucide-react';
 import { VersionamentoService } from '../../../services/versionamentoService';
 import { getMetadataMemory, saveMetadataMemory, clearMetadataMemory } from '../../../services/metadataMemoryService';
+import logger from '../../../utils/logger';
 
 const MetadadosModal = ({ 
   isOpen, 
@@ -113,11 +114,11 @@ const MetadadosModal = ({
         onClose();
       } else {
         const erros = resultados.filter(r => !r.success).map(r => r.error);
-        console.error('Erro ao salvar alguns metadados:', erros);
+        logger.error('Erro ao salvar alguns metadados:', erros);
         alert('Alguns metadados não puderam ser salvos. Verifique o console para mais detalhes.');
       }
     } catch (error) {
-      console.error('Erro ao salvar metadados:', error);
+      logger.error('Erro ao salvar metadados:', error);
       alert('Erro ao salvar metadados: ' + error.message);
     } finally {
       setSaving(false);
@@ -168,11 +169,11 @@ const MetadadosModal = ({
         onClose();
       } else {
         const erros = resultados.filter(r => !r.success).map(r => r.error);
-        console.error('Erro ao salvar alguns metadados:', erros);
+        logger.error('Erro ao salvar alguns metadados:', erros);
         alert('Alguns metadados não puderam ser salvos. Verifique o console para mais detalhes.');
       }
     } catch (error) {
-      console.error('Erro ao salvar metadados:', error);
+      logger.error('Erro ao salvar metadados:', error);
       alert('Erro ao salvar metadados: ' + error.message);
     } finally {
       setSaving(false);

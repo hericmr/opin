@@ -5,8 +5,6 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import { defaults as defaultControls } from 'ol/control';
-// Remover import das interações padrão para evitar conflitos
-// import { defaults as defaultInteractions } from 'ol/interaction';
 import { register } from 'ol/proj/proj4';
 import proj4 from 'proj4';
 import 'ol/ol.css';

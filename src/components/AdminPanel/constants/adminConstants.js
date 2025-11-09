@@ -1,3 +1,5 @@
+import { BREAKPOINTS } from '../../../constants/breakpoints';
+
 // Configuração das abas do painel de administração
 export const ADMIN_TABS = [
   { id: 'dados-basicos', label: 'Dados Básicos' },
@@ -20,7 +22,7 @@ export const ADMIN_TABS = [
 
 // Configurações de UI
 export const UI_CONFIG = {
-  MOBILE_BREAKPOINT: 768,
+  MOBILE_BREAKPOINT: BREAKPOINTS.mobile,
   SIDEBAR_WIDTH: 'w-64',
   SIDEBAR_WIDTH_MOBILE: 'max-w-[80vw]',
   SIDEBAR_TOP_OFFSET: 72,

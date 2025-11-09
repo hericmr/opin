@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { showClickPulse, flyToAtFractionX } from '../utils/openlayers/effects';
+import logger from '../utils/logger';
+import { BREAKPOINTS } from '../constants/breakpoints';
 
 export const useMapEvents = (map, mapContainer, onPainelOpen) => {
   const tooltipElement = useRef(null);
@@ -33,7 +35,7 @@ export const useMapEvents = (map, mapContainer, onPainelOpen) => {
             }
           } else {
             // Cluster com múltiplos marcadores, fazer zoom inteligente
-            console.log(`useMapEvents: Cluster clicado com ${features.length} escolas`);
+            logger.debug(`useMapEvents: Cluster clicado com ${features.length} escolas`);
             
             // Calcular a extensão específica do cluster clicado
             const clusterExtent = feature.getGeometry().getExtent();
@@ -56,7 +58,7 @@ export const useMapEvents = (map, mapContainer, onPainelOpen) => {
             // Garantir que o zoom não seja menor que o atual (evitar zoom out)
             targetZoom = Math.max(targetZoom, currentZoom + 1);
             
-            console.log(`useMapEvents: Fazendo zoom de ${currentZoom} para ${targetZoom}`);
+            logger.debug(`useMapEvents: Fazendo zoom de ${currentZoom} para ${targetZoom}`);
             
             // Fazer zoom suave para a extensão do cluster
             map.getView().fit(clusterExtent, {
@@ -64,7 +66,7 @@ export const useMapEvents = (map, mapContainer, onPainelOpen) => {
               padding: [80, 80, 80, 80], // Padding maior para melhor visualização
               maxZoom: targetZoom, // Limitar o zoom máximo
               callback: () => {
-                console.log(`useMapEvents: Zoom concluído para cluster com ${features.length} escolas`);
+                logger.debug(`useMapEvents: Zoom concluído para cluster com ${features.length} escolas`);
               }
             });
           }
@@ -101,7 +103,7 @@ export const useMapEvents = (map, mapContainer, onPainelOpen) => {
     if (!map || !mapContainer) return;
 
     // Desabilitar hover automático em mobile - deixar o sistema de interações gerenciar
-    if (window.innerWidth <= 768) return;
+    if (typeof window !== 'undefined' && window.innerWidth <= BREAKPOINTS.mobile) return;
 
     const handlePointerMove = (event) => {
       if (tooltipElement.current) {

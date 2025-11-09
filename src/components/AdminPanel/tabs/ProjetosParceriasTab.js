@@ -1,8 +1,17 @@
 import React from 'react';
+import CardVisibilityToggle from '../components/CardVisibilityToggle';
 
 const ProjetosParceriasTab = ({ editingLocation, setEditingLocation }) => {
   return (
     <div className="space-y-6">
+      {/* Toggle de Visibilidade */}
+      <CardVisibilityToggle
+        cardId="projetosParcerias"
+        editingLocation={editingLocation}
+        setEditingLocation={setEditingLocation}
+        label="Visibilidade do Card: Projetos e Parcerias"
+      />
+      
       {/* Projetos em Andamento */}
       <div>
         <label className="block text-sm font-medium text-gray-200 mb-2 text-base">

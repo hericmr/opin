@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Upload, X, User, AlertCircle } from 'lucide-react';
 import FotoProfessorService from '../../services/fotoProfessorService';
+import logger from '../../utils/logger';
 
 const HistoriaProfessorForm = ({
   formData,
@@ -60,7 +61,7 @@ const HistoriaProfessorForm = ({
         setPhotoError(result.error || 'Erro ao fazer upload da foto');
       }
     } catch (error) {
-      console.error('Erro no upload da foto:', error);
+      logger.error('Erro no upload da foto:', error);
       setPhotoError('Erro inesperado ao fazer upload da foto');
     } finally {
       setUploadingPhoto(false);
