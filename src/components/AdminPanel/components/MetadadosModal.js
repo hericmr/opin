@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Info, AlertCircle, CheckCircle, X } from 'lucide-react';
+import { Info, AlertCircle, X } from 'lucide-react';
 import { VersionamentoService } from '../../../services/versionamentoService';
 
 const MetadadosModal = ({ 
