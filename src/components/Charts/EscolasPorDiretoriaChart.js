@@ -45,8 +45,8 @@ const EscolasPorDiretoriaChart = ({ data }) => {
       }}>
         Número de Escolas por Diretoria de Ensino
       </h3>
-      <div className="h-96">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="h-96" style={{ minWidth: '300px', minHeight: '384px', width: '100%', height: '100%' }}>
+        <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={384}>
           <BarChart
             data={data}
             margin={{

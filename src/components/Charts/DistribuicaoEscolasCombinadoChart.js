@@ -146,8 +146,8 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
           Visão Geral da Distribuição
         </h4>
         <ScrollAnimatedWrapper animationType="scaleIn" delay={0.2}>
-          <div className="h-96 w-full">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-96 w-full" style={{ minWidth: '300px', minHeight: '384px', width: '100%', height: '100%' }}>
+            <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={384}>
               <PieChart>
                 <Pie
                   data={dataWithTotal}
@@ -206,8 +206,8 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
         </h4>
 
         <ScrollAnimatedWrapper animationType="fadeInUp" delay={0.4}>
-          <div className="h-96 w-full">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-96 w-full" style={{ minWidth: '300px', minHeight: '384px', width: '100%', height: '100%' }}>
+            <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={384}>
               <BarChart
                 data={normalizedAlunosData}
                 margin={{
