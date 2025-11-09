@@ -23,7 +23,8 @@ import CoordenadasTab from './tabs/CoordenadasTab';
 import TabelasIntegraisTab from './tabs/TabelasIntegraisTab';
 import TabelaEditavelTab from './tabs/TabelaEditavelTab';
 import CompletenessDashboard from './components/CompletenessDashboard';
-import MetadadosForm from './components/MetadadosForm';
+import MetadadosModal from './components/MetadadosModal';
+import { identificarCamposAlterados } from '../../utils/campoComparator';
 
 // Imports condicionais para evitar problemas de hot reload
 let ImagensEscolaTab = null;
@@ -62,7 +63,11 @@ const AdminPanelContent = () => {
   const [escolaToDelete, setEscolaToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showCompletenessDashboard, setShowCompletenessDashboard] = useState(false);
-  const [metadados, setMetadados] = useState({ fonte_id: null, observacoes: '', autor: null });
+  const [showMetadadosModal, setShowMetadadosModal] = useState(false);
+  const [escolaSalvaId, setEscolaSalvaId] = useState(null);
+  const [escolaSalvaNome, setEscolaSalvaNome] = useState(null);
+  const [camposAlterados, setCamposAlterados] = useState([]);
+  const [dadosOriginais, setDadosOriginais] = useState(null);
 
   // Detectar se é mobile
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= UI_CONFIG.MOBILE_BREAKPOINT;
@@ -153,6 +158,8 @@ const AdminPanelContent = () => {
       activeTab: FORM_CONFIG.DEFAULT_ACTIVE_TAB
     };
     
+    // Salvar dados originais para comparação posterior
+    setDadosOriginais({ ...escolaOriginal });
     setEditingLocation(escolaOriginal);
   };
 
@@ -401,16 +408,43 @@ const AdminPanelContent = () => {
     setSaveSuccess(false);
 
     try {
-      // Passar metadados junto com os dados da escola
-      const result = await saveEscola(editingLocation, metadados);
+      // Identificar campos alterados ANTES de salvar
+      let camposModificados = [];
+      if (editingLocation.id && dadosOriginais) {
+        // É uma atualização - comparar dados
+        camposModificados = identificarCamposAlterados(dadosOriginais, editingLocation);
+      } else {
+        // É uma criação - todos os campos preenchidos são "alterados"
+        camposModificados = Object.keys(editingLocation)
+          .filter(key => {
+            const camposIgnorar = ['id', 'created_at', 'updated_at', 'activeTab', 'imagem_header'];
+            return !camposIgnorar.includes(key) && editingLocation[key];
+          })
+          .map(campo => ({
+            campo,
+            valorAntigo: '',
+            valorNovo: editingLocation[campo],
+            label: campo
+          }));
+      }
+
+      // Salvar escola SEM metadados primeiro (metadados serão salvos depois no modal)
+      const result = await saveEscola(editingLocation, null);
       
       if (result.success) {
         setSaveSuccess(true);
         // Atualizar o editingLocation com os dados salvos
         setEditingLocation(result.data);
         
-        // Limpar metadados após salvar (opcional - pode manter se quiser)
-        // setMetadados({ fonte_id: null, observacoes: '', autor: null });
+        // Preparar dados para o modal de metadados
+        setEscolaSalvaId(result.data.id);
+        setEscolaSalvaNome(result.data.Escola || 'Escola');
+        setCamposAlterados(camposModificados);
+        
+        // Mostrar modal de metadados apenas se houver campos alterados
+        if (camposModificados.length > 0) {
+          setShowMetadadosModal(true);
+        }
         
         // Limpar mensagem de sucesso após 3 segundos
         setTimeout(() => {
@@ -424,6 +458,12 @@ const AdminPanelContent = () => {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  // Callback quando metadados são salvos
+  const handleMetadadosSaved = (metadadosData) => {
+    console.log('Metadados salvos com sucesso:', metadadosData);
+    // Opcional: mostrar mensagem de sucesso adicional
   };
 
   // Renderizar aba ativa
@@ -746,16 +786,24 @@ const AdminPanelContent = () => {
             <div className="scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
               {renderActiveTab()}
             </div>
-
-            {/* Formulário de Metadados */}
-            <div className="mt-6">
-              <MetadadosForm 
-                onMetadadosChange={setMetadados}
-                initialMetadados={metadados}
-              />
-            </div>
           </div>
         )}
+
+        {/* Modal de Metadados - Aparece após salvar com sucesso */}
+        <MetadadosModal
+          isOpen={showMetadadosModal}
+          onClose={() => {
+            setShowMetadadosModal(false);
+            setEscolaSalvaId(null);
+            setEscolaSalvaNome(null);
+            setCamposAlterados([]);
+            setDadosOriginais(null);
+          }}
+          onSave={handleMetadadosSaved}
+          escolaId={escolaSalvaId}
+          escolaNome={escolaSalvaNome}
+          camposAlterados={camposAlterados}
+        />
 
         {/* Dashboard de Completude quando nenhuma escola está selecionada */}
         {!editingLocation && !escolasLoading && (
