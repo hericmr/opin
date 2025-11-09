@@ -180,8 +180,8 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
             Distribuição por Quantidade
           </h4>
           <ScrollAnimatedWrapper animationType="fadeInLeft" delay={0.2}>
-            <div className="h-80 w-full">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="h-80 w-full" style={{ minWidth: '300px', minHeight: '320px', width: '100%', height: '100%' }}>
+              <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={320}>
                 <BarChart
                   data={dataWithPercentual}
                   margin={{
@@ -236,8 +236,8 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
             Distribuição Percentual
           </h4>
           <ScrollAnimatedWrapper animationType="fadeInRight" delay={0.4}>
-            <div className="h-80 w-full">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="h-80 w-full" style={{ minWidth: '300px', minHeight: '320px', width: '100%', height: '100%' }}>
+              <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={320}>
                 <PieChart>
                   <Pie
                     data={dataWithPercentual}
