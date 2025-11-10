@@ -260,7 +260,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
               {!isAuthenticated ? (
               <button
                 onClick={handleAdminClick}
-                className="p-1.5 rounded hover:bg-green-700/20 transition-colors focus:outline-none"
+                className="p-1.5 rounded hover:bg-white/10 transition-colors focus:outline-none"
                 title="Acesso administrativo"
                 aria-label="Acesso administrativo"
               >
@@ -273,15 +273,14 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                   </span>
                   <button
                     onClick={() => navigate('/admin')}
-                    className="flex items-center gap-1 px-2 py-1 text-xs font-medium bg-green-600 text-white rounded hover:bg-green-700 transition-colors focus:outline-none"
+                    className="p-1.5 rounded hover:bg-white/10 transition-colors focus:outline-none"
                     aria-label="Painel administrativo"
                   >
-                    <Shield className="w-2.5 h-2.5" />
-                    <span className="hidden lg:inline">Admin</span>
+                    <Shield className="w-4 h-4" />
                   </button>
                   <button
                     onClick={logout}
-                    className="px-2 py-1 text-xs font-medium bg-red-600 text-white rounded hover:bg-red-700 transition-colors focus:outline-none"
+                    className="px-3 py-1.5 text-xs rounded hover:bg-white/10 transition-colors focus:outline-none"
                     title="Sair"
                     aria-label="Sair da conta"
                   >
