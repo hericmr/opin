@@ -468,44 +468,56 @@ const AdminPanelContent = () => {
           </div>
         )}
 
-        {/* Painel de Edição */}
+        {/* Painel de Edição - Estilo WhatsApp */}
         {editingLocation && typeof editingLocation === 'object' && (editingLocation.Escola !== undefined) && editingLocation.activeTab !== 'tabela-editavel' && (
-          <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800/50 p-6 flex flex-col">
-            {/* Header do painel */}
-            <div className="flex justify-between items-center mb-6 flex-shrink-0">
-              <div>
-                <h2 className="text-xl lg:text-2xl font-semibold text-gray-100 mb-1">
-                {editingLocation.id ? 'Editar Escola' : 'Nova Escola'}
-              </h2>
-                {editingLocation.Escola && (
-                  <p className="text-gray-400 text-sm">{editingLocation.Escola}</p>
-                )}
+          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col" style={{ maxHeight: 'calc(100vh - 120px)' }}>
+            {/* Header do painel - Estilo WhatsApp */}
+            <div className="bg-gradient-to-r from-[#075E54] to-[#128C7E] px-6 py-4 flex justify-between items-center flex-shrink-0 shadow-lg">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className="text-lg lg:text-xl font-semibold text-white">
+                    {editingLocation.id ? 'Editar Escola' : 'Nova Escola'}
+                  </h2>
+                  {editingLocation.Escola && (
+                    <p className="text-white/80 text-sm">{editingLocation.Escola}</p>
+                  )}
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                {/* Botão Salvar */}
+              <div className="flex items-center gap-2">
+                {/* Botão Salvar - Estilo WhatsApp */}
                 <button
                   onClick={handleSaveEscola}
                   disabled={isSaving}
-                  className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                  className="px-5 py-2.5 bg-white/20 hover:bg-white/30 text-white rounded-full focus:outline-none focus:ring-2 focus:ring-white/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm font-medium backdrop-blur-sm"
                 >
                   {isSaving ? (
-                    <div className="flex items-center gap-2">
+                    <>
+                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
                       Salvando...
-                    </div>
+                    </>
                   ) : (
-                    <div className="flex items-center gap-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       Salvar
-                    </div>
+                    </>
                   )}
                 </button>
                 
-                {/* Botão Fechar */}
+                {/* Botão Fechar - Estilo WhatsApp */}
                 <button
                   onClick={() => setEditingLocation(null)}
-                  className="px-4 py-3 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-xl transition-colors"
+                  className="p-2 text-white/80 hover:text-white hover:bg-white/20 rounded-full transition-colors"
+                  aria-label="Fechar"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -514,35 +526,37 @@ const AdminPanelContent = () => {
               </div>
             </div>
 
-            {/* Mensagens de feedback */}
-            {saveSuccess && (
-              <div className="mb-6 p-4 bg-green-900/50 border border-green-700/50 text-green-200 rounded-xl backdrop-blur-sm">
-                <div className="flex items-center gap-3">
-                  <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="font-semibold">Escola salva com sucesso!</span>
-                </div>
-              </div>
-            )}
-            
-            {saveError && (
-              <div className="mb-6 p-4 bg-red-900/50 border border-red-700/50 text-red-200 rounded-xl backdrop-blur-sm">
-                <div className="flex items-center gap-3">
-                  <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div>
-                    <span className="font-semibold">Erro ao salvar:</span>
-                    <p className="text-red-300">{saveError}</p>
+            {/* Mensagens de feedback - Estilo WhatsApp */}
+            <div className="px-6 pt-4 flex-shrink-0">
+              {saveSuccess && (
+                <div className="mb-4 p-3 bg-[#DCF8C6] rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-[#075E54]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="font-medium text-[#075E54] text-sm">Escola salva com sucesso!</span>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+              
+              {saveError && (
+                <div className="mb-4 p-3 bg-[#FFE5E5] rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-[#D32F2F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <span className="font-medium text-[#D32F2F] text-sm">Erro ao salvar:</span>
+                      <p className="text-[#B71C1C] text-xs mt-1">{saveError}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
-            {/* Navegação por abas */}
-            <div className="border-b border-gray-800 mb-6 flex-shrink-0 bg-gray-800/50 rounded-t-xl relative">
-              <nav className="-mb-px flex space-x-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 tabs-container">
+            {/* Navegação por abas - Estilo WhatsApp */}
+            <div className="bg-[#F0F2F5] border-b border-gray-200 flex-shrink-0 relative">
+              <nav className="flex space-x-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent tabs-container px-4">
                 {ADMIN_TABS.map((tab) => {
                   const isActive = (editingLocation.activeTab || FORM_CONFIG.DEFAULT_ACTIVE_TAB) === tab.id;
                   const hasMissing = hasMissingInfo(tab.id, editingLocation);
@@ -552,18 +566,18 @@ const AdminPanelContent = () => {
                       key={tab.id}
                       type="button"
                       onClick={() => setEditingLocation({ ...editingLocation, activeTab: tab.id })}
-                      className={`whitespace-nowrap py-3 px-3 sm:px-4 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 rounded-t-lg flex-shrink-0 min-w-fit relative ${
+                      className={`whitespace-nowrap py-3 px-4 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 flex-shrink-0 min-w-fit relative ${
                         isActive
-                          ? 'border-green-400 text-green-300 bg-gray-900 shadow-lg'
+                          ? 'border-[#075E54] text-[#075E54] bg-white'
                           : hasMissing
-                          ? 'border-orange-400 text-orange-300 bg-orange-900/20 hover:text-orange-200 hover:bg-orange-800/30'
-                          : 'border-transparent text-gray-400 hover:text-green-200 hover:bg-gray-700/50'
+                          ? 'border-orange-400 text-orange-600 hover:text-orange-700 hover:bg-white/50'
+                          : 'border-transparent text-gray-600 hover:text-[#075E54] hover:bg-white/50'
                       }`}
                     >
                       <div className="flex items-center gap-2">
                         {tab.label}
                         {hasMissing && !isActive && (
-                          <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                         )}
                       </div>
                     </button>
@@ -572,9 +586,11 @@ const AdminPanelContent = () => {
               </nav>
             </div>
 
-            {/* Conteúdo da aba ativa */}
-            <div className="scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
-              {renderActiveTab(editingLocation, setEditingLocation)}
+            {/* Conteúdo da aba ativa - Estilo WhatsApp */}
+            <div className="flex-grow overflow-y-auto bg-[#F0F2F5] p-6 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+              <div className="max-w-4xl mx-auto">
+                {renderActiveTab(editingLocation, setEditingLocation)}
+              </div>
             </div>
           </div>
         )}
