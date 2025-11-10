@@ -82,6 +82,34 @@ const AppContent = () => {
     }
   }, [navigate, location.pathname]);
 
+  // Handler para redirecionamento do GitHub Pages (404.html)
+  React.useEffect(() => {
+    const githubPagesRedirect = sessionStorage.getItem('githubPagesRedirect');
+    if (githubPagesRedirect) {
+      // Remove do sessionStorage
+      sessionStorage.removeItem('githubPagesRedirect');
+      
+      // Parse a rota (pode incluir query params e hash)
+      const [path, ...rest] = githubPagesRedirect.split('?');
+      const queryString = rest.length > 0 ? '?' + rest.join('?') : '';
+      const fullPath = path + queryString;
+      
+      // Aguarda um pouco para garantir que o Router esteja totalmente inicializado
+      const timer = setTimeout(() => {
+        // Verifica se já estamos na rota correta
+        const currentPath = location.pathname.replace(/\/$/, '');
+        const targetPath = path.replace(/\/$/, '');
+        
+        if (currentPath !== targetPath) {
+          // Navega para a rota usando React Router (sem reload)
+          navigate(fullPath, { replace: true });
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [navigate, location.pathname]);
+
   const handlePainelOpenFunction = (openPainelFn) => {
     setOpenPainelFunction(() => openPainelFn);
   };
