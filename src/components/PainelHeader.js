@@ -8,6 +8,19 @@ import { BREAKPOINTS } from '../constants/breakpoints';
 const formatarTituloEscola = (titulo) => {
   if (!titulo) return '';
   
+  // Normalizar variações de "EEI" no início do título (E.e.i., E.E.I., eei, etc.)
+  // Regex para detectar "E.e.i.", "E.E.I.", "eei", "EEI", etc. no início
+  // Aceita com ou sem pontos, e com ou sem espaço após
+  const eeiPattern = /^([Ee]\.?[Ee]\.?[Ii]\.?)\s*/i;
+  const match = titulo.match(eeiPattern);
+  
+  if (match) {
+    // Encontrar onde começa o resto do título (após "EEI" e espaços)
+    const restoTitulo = titulo.replace(eeiPattern, '').trim();
+    // Normalizar "EEI" para sempre ser "EEI" (maiúsculas, sem pontos)
+    return `EEI ${capitalizeWords(restoTitulo)}`;
+  }
+  
   // Converter para minúsculas para facilitar a busca
   const tituloLower = titulo.toLowerCase();
   
@@ -22,7 +35,7 @@ const formatarTituloEscola = (titulo) => {
     if (indiceAldeia !== -1 && indiceAldeia < partes.length - 1) {
       // Pegar a parte da aldeia (pode ter mais de uma palavra)
       const nomeAldeia = partes.slice(indiceAldeia + 1).join(' ');
-      return `E.E.I ${capitalizeWords(nomeAldeia)}`;
+      return `EEI ${capitalizeWords(nomeAldeia)}`;
     }
   }
   
