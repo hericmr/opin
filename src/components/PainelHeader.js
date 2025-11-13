@@ -17,8 +17,8 @@ const formatarTituloEscola = (titulo) => {
   if (match) {
     // Encontrar onde começa o resto do título (após "EEI" e espaços)
     const restoTitulo = titulo.replace(eeiPattern, '').trim();
-    // Normalizar "EEI" para sempre ser "EEI" (maiúsculas, sem pontos)
-    return `EEI ${capitalizeWords(restoTitulo)}`;
+    // Normalizar "EEI" para sempre ser "E.E.I." (maiúsculas, com pontos)
+    return `E.E.I. ${capitalizeWords(restoTitulo)}`;
   }
   
   // Converter para minúsculas para facilitar a busca
@@ -35,7 +35,7 @@ const formatarTituloEscola = (titulo) => {
     if (indiceAldeia !== -1 && indiceAldeia < partes.length - 1) {
       // Pegar a parte da aldeia (pode ter mais de uma palavra)
       const nomeAldeia = partes.slice(indiceAldeia + 1).join(' ');
-      return `EEI ${capitalizeWords(nomeAldeia)}`;
+      return `E.E.I. ${capitalizeWords(nomeAldeia)}`;
     }
   }
   
