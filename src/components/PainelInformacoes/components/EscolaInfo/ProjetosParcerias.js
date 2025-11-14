@@ -1,10 +1,6 @@
 import React, { memo } from 'react';
 import {
-  Target,
-  BookOpen,
   GraduationCap,
-  Users,
-  Heart,
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import NativeLandCard from '../NativeLandCard';
@@ -14,29 +10,9 @@ const ProjetosParcerias = memo(({ escola }) => {
 
   const projectsData = [
     {
-      field: 'projetos_andamento',
-      icon: BookOpen,
-      label: 'Projetos em andamento',
-    },
-    {
       field: 'parcerias_universidades',
       icon: GraduationCap,
       label: 'Parcerias com universidades',
-    },
-    {
-      field: 'acoes_ongs',
-      icon: Users,
-      label: 'Ações com ONGs ou coletivos',
-    },
-    {
-      field: 'desejos_comunidade',
-      icon: Heart,
-      label: 'Desejos da comunidade para a escola',
-    },
-    {
-      field: 'parcerias_municipio',
-      icon: Target,
-      label: 'Parcerias com o município',
     },
   ];
 
