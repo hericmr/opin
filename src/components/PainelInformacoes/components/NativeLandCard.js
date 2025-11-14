@@ -183,7 +183,7 @@ const NativeLandCard = memo(({
   return (
     <div 
       className={`
-        rounded-xl p-4 
+        rounded-xl p-3 
         ${cardHeightClass} flex flex-col
         overflow-visible
         card-container

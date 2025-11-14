@@ -140,7 +140,7 @@ const GestaoProfessores = memo(({ escola }) => {
 
   return (
     <InfoSection>
-      <div className="space-y-4 mt-1">
+      <div className="space-y-3">
         {/* Separar cards com muito conteúdo dos cards normais */}
         {(() => {
           const longContentCards = professoresCards.filter(item => hasLongContent(item.value));
@@ -150,7 +150,7 @@ const GestaoProfessores = memo(({ escola }) => {
             <>
               {/* Cards com muito conteúdo - linha inteira (1 coluna) */}
               {longContentCards.length > 0 && (
-                <div className="space-y-3" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+                <div className="space-y-2">
                   {longContentCards.map((item, idx) => (
                     <NativeLandCard
                       key={`long-${idx}`}
@@ -166,7 +166,7 @@ const GestaoProfessores = memo(({ escola }) => {
               
               {/* Cards normais - grid de 3 colunas */}
               {normalCards.length > 0 && (
-                <div className={`grid ${getGridCols(normalCards.length)} gap-2 sm:gap-3 ${longContentCards.length > 0 ? 'mt-3' : ''} items-stretch overflow-visible`} style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+                <div className={`grid ${getGridCols(normalCards.length)} gap-2 ${longContentCards.length > 0 ? 'mt-2' : ''} items-stretch overflow-visible`}>
                   {normalCards.map((item, idx) => (
                     <NativeLandCard
                       key={`normal-${idx}`}
@@ -216,7 +216,7 @@ const GestaoProfessores = memo(({ escola }) => {
 
           // Cada card ocupa uma linha inteira (1 coluna)
           return (
-            <div className="space-y-3 mt-4" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+            <div className="space-y-2 mt-3">
               {additionalCards.map((item, idx) => (
                 <NativeLandCard
                   key={`additional-${idx}`}
