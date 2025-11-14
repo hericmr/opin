@@ -139,7 +139,7 @@ const GestaoProfessores = memo(({ escola }) => {
   ].filter(Boolean);
 
   return (
-    <InfoSection title="Equipe" icon={UsersRound}>
+    <InfoSection>
       <div className="space-y-4 mt-1">
         {/* Separar cards com muito conteúdo dos cards normais */}
         {(() => {

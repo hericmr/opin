@@ -47,7 +47,7 @@ const ProjetosParcerias = memo(({ escola }) => {
   if (availableProjects.length === 0) return null;
 
   return (
-    <InfoSection title="Projetos e Parcerias" icon={Target}>
+    <InfoSection>
       <div className="grid grid-cols-1 gap-4 items-stretch overflow-visible" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
         {availableProjects.map((project) => {
           const value = escola[project.field];

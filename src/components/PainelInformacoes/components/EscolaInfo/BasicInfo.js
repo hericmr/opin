@@ -222,7 +222,7 @@ const getGridCols = (count) => {
           </div>
         </div>
       )}
-      <InfoSection title="Localização" icon={MapPin}>
+      <InfoSection>
         {/* Cards informativos básicos - Layout inspirado no native-land.ca */}
         {(() => {
           const longContentCards = allBasicCards.filter(item => hasLongContent(item.value));
