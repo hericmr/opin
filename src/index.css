@@ -72,14 +72,20 @@ code {
   outline: none !important;
   box-shadow: none !important;
   transition: none !important;
+  pointer-events: auto !important;
 }
 
-/* Remove all hover effects from cards */
-.card-container:hover {
-  background-color: inherit !important;
+/* Remove all hover effects from cards - mais específico para sobrescrever qualquer estilo */
+.card-container:hover,
+.card-container:focus,
+.card-container:active {
+  background-color: #D1FAE5 !important;
   transform: none !important;
   scale: 1 !important;
   box-shadow: none !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transition: none !important;
 }
 
 /* Fonte do logotipo (Papakilo) como classe utilitária */

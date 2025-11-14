@@ -202,7 +202,7 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false,
               <img
                 src={currentHistoria.imagem_public_url}
                 alt={currentHistoria.descricao_imagem || 'Imagem da história do professor'}
-                className="w-full max-w-2xl mx-auto rounded-xl shadow-lg cursor-pointer transition-transform duration-200 hover:scale-105"
+                className="w-full max-w-2xl mx-auto rounded-xl shadow-lg cursor-pointer"
                 onClick={() => setImagemZoom(currentHistoria)}
                 loading="lazy"
               />

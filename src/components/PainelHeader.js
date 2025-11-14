@@ -83,7 +83,13 @@ const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagem
             </div>
           )}
           <button
-            onClick={closePainel}
+            onClick={(e) => {
+              e.stopPropagation();
+              closePainel();
+            }}
+            onMouseDown={(e) => {
+              e.stopPropagation();
+            }}
             className="p-1.5 text-gray-700 hover:text-gray-900 hover:bg-green-100 transition-colors duration-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
             aria-label="Fechar painel"
             style={{ zIndex: 1005 }}
@@ -117,7 +123,13 @@ const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagem
           </button>
         )}
         <button
-          onClick={closePainel}
+          onClick={(e) => {
+            e.stopPropagation();
+            closePainel();
+          }}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+          }}
           className="p-2 text-gray-700 hover:text-gray-900 hover:bg-green-100 transition-colors duration-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           aria-label="Fechar painel"
           style={{ zIndex: 1005 }}
