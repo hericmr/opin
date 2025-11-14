@@ -183,54 +183,53 @@ const GestaoProfessores = memo(({ escola }) => {
           );
         })()}
         
-        {/* Card de Formação em linha inteira */}
-        {formacao?.status && (
-          <div style={{ paddingTop: '12px', paddingLeft: '12px' }}>
-            <NativeLandCard
-              icon={Star}
-              label="Formação dos Professores"
-              value={renderBooleanStatus(formacao.status)}
-              description={formacao.descricao}
-              showIconCircle={true}
-              className="h-auto min-h-[140px]"
-            />
-          </div>
-        )}
-      </div>
+        {/* Cards adicionais em grid de 2 colunas para distribuição equitativa */}
+        {(() => {
+          const additionalCards = [
+            formacao?.status && {
+              icon: Star,
+              label: "Formação dos Professores",
+              value: renderBooleanStatus(formacao.status),
+              description: formacao.descricao,
+              className: "h-auto min-h-[140px]"
+            },
+            !isEmptyValue(escola.gestao) && {
+              icon: User,
+              label: "Tem vice-diretor; COE?",
+              value: escola.gestao
+            },
+            !isEmptyValue(escola.outros_funcionarios) && {
+              icon: UsersRound,
+              label: "Outros Funcionários",
+              value: escola.outros_funcionarios
+            },
+            continuada?.status && {
+              icon: NotebookPen,
+              label: "Visitas de Supervisores e Formação Continuada",
+              value: renderBooleanStatus(continuada.status),
+              description: continuada.descricao,
+              className: "h-auto min-h-[140px]"
+            }
+          ].filter(Boolean);
 
-      <div className="space-y-4 mt-4">
-        {!isEmptyValue(escola.gestao) && (
-          <div style={{ paddingTop: '12px', paddingLeft: '12px' }}>
-            <NativeLandCard
-              icon={User}
-              label="Tem vice-diretor; COE?"
-              value={escola.gestao}
-              showIconCircle={true}
-            />
-          </div>
-        )}
-        {!isEmptyValue(escola.outros_funcionarios) && (
-          <div style={{ paddingTop: '12px', paddingLeft: '12px' }}>
-            <NativeLandCard
-              icon={UsersRound}
-              label="Outros Funcionários"
-              value={escola.outros_funcionarios}
-              showIconCircle={true}
-            />
-          </div>
-        )}
-        {continuada?.status && (
-          <div style={{ paddingTop: '12px', paddingLeft: '12px' }}>
-            <NativeLandCard
-              icon={NotebookPen}
-              label="Visitas de Supervisores e Formação Continuada"
-              value={renderBooleanStatus(continuada.status)}
-              description={continuada.descricao}
-              showIconCircle={true}
-              className="h-auto min-h-[140px]"
-            />
-          </div>
-        )}
+          if (additionalCards.length === 0) return null;
+
+          return (
+            <div className={`grid grid-cols-2 gap-2 sm:gap-3 mt-4 items-stretch overflow-visible`} style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+              {additionalCards.map((item, idx) => (
+                <NativeLandCard
+                  key={`additional-${idx}`}
+                  icon={item.icon}
+                  label={item.label}
+                  value={item.value}
+                  description={item.description}
+                  showIconCircle={true}
+                  className={item.className || ''}
+                />
+              ))}
+            </div>
+          );
+        })()}
       </div>
     </InfoSection>
   );
