@@ -30,7 +30,7 @@ const ProjetosParcerias = memo(({ escola }) => {
           const isNegative = value?.trim().toLowerCase() === 'não';
           
           return (
-            <div key={project.field} className="relative mt-3">
+            <div key={project.field} className="relative">
               <NativeLandCard
                 icon={project.icon}
                 label={project.label}
