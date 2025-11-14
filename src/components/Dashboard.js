@@ -18,7 +18,7 @@ import {
 const Dashboard = () => {
   const { dataPoints } = useEscolasData();
   const { data, loading, error } = useDashboardData();
-  const { headerImages, descriptionImage, imagesReady } = useDashboardImages();
+  const { headerImages, imagesReady } = useDashboardImages();
 
   // Breadcrumbs de Navegação - memoizado para evitar recriação
   const breadcrumbs = useMemo(() => [
