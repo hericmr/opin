@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Upload, X, Image as ImageIcon, Trash2, Check, AlertCircle, Save, RefreshCw, GripVertical, Settings, ChevronDown, ChevronUp } from 'lucide-react';
+import { Upload, X, Image as ImageIcon, Trash2, Check, AlertCircle, Save, RefreshCw, GripVertical, Settings, ChevronUp } from 'lucide-react';
 import { 
   uploadEscolaImage, 
   getEscolaImages, 
