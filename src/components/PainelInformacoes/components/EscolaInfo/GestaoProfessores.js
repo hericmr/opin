@@ -203,7 +203,7 @@ const GestaoProfessores = memo(({ escola }) => {
           <div style={{ paddingTop: '12px', paddingLeft: '12px' }}>
             <NativeLandCard
               icon={User}
-              label="Gestão/Nome"
+              label="Tem vice-diretor; COE?"
               value={escola.gestao}
               showIconCircle={true}
             />
