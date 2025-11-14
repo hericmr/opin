@@ -172,7 +172,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
               // Legacy: single video from link_para_videos
               <VideoPlayer 
                 videoUrl={painelInfo.link_para_videos}
-                title={<span style={{ fontSize: '0.75em' }}>{`Produções audiovisuais realizadas na ${painelInfo.titulo}`}</span>}
+                title={<span style={{ fontSize: '0.75em' }}>{`Produções realizadas na ${painelInfo.titulo}`}</span>}
                 escolaId={painelInfo.id}
               />
             ) : (
@@ -180,7 +180,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
               videos.length > 0 && (
                 <div>
                   <h3 className="text-xl font-semibold text-green-800 mb-4" style={{ fontSize: '0.75em' }}>
-                    {`Produções audiovisuais realizadas na ${painelInfo.titulo}`}
+                    {`Produções realizadas na ${painelInfo.titulo}`}
                   </h3>
                   {videos.map((video, index) => (
                     <div key={video.id || index} className={index > 0 ? "mt-8" : ""}>
