@@ -100,7 +100,7 @@ export const getEscolaSections = (escola) => [
   { title: "Ensino", data: formatters.ensino(escola) },
   { title: "Materiais Pedagógicos", data: formatters.materiaisPedagogicos(escola) },
   { title: "Infraestrutura", data: formatters.infraestrutura(escola) },
-  { title: "Gestão e Professores", data: formatters.gestaoEProfessores(escola) },
+  { title: "Equipe", data: formatters.gestaoEProfessores(escola) },
   { title: "Projeto Pedagógico", data: formatters.projetoPedagogico(escola) },
   { title: "Projetos e Parcerias", data: formatters.projetosEParcerias(escola) },
   { title: "Redes Sociais e Mídia", data: formatters.redesSociaisEMidia(escola) },

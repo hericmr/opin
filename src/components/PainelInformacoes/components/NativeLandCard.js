@@ -33,8 +33,8 @@ const NativeLandCard = memo(({
         return (
           <div className="text-center w-full flex items-center justify-center h-full min-w-0">
             <div 
-              className="text-3xl font-semibold text-green-800 truncate" 
-              style={{fontSize: '1.875rem', fontWeight: '600', color: '#166534', lineHeight: '1.2'}}
+              className="text-3xl font-semibold text-gray-900 truncate" 
+              style={{fontSize: '1.875rem', fontWeight: '600', color: '#111827', lineHeight: '1.2'}}
               title={String(numberValue)}
             >
               {numberValue.toLocaleString('pt-BR')}
@@ -43,7 +43,7 @@ const NativeLandCard = memo(({
         );
       case 'boolean':
         return value ? (
-          <span className="flex items-center gap-1.5 text-green-700 text-sm font-semibold">
+          <span className="flex items-center gap-1.5 text-gray-900 text-sm font-semibold">
             <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
@@ -73,11 +73,11 @@ const NativeLandCard = memo(({
     }
   };
 
-  // Cores para o círculo do ícone - usando cores verdes harmoniosas do site
+  // Cores para o círculo do ícone - usando cores neutras
   const iconCircleColors = {
-    green: { bg: '#D1FAE5', icon: '#166534' }, // Verde claro suave (green-100) com ícone verde escuro (green-800)
-    teal: { bg: '#14B8A6', icon: '#FFFFFF' }, // Teal claro com ícone branco
-    blue: { bg: '#3B82F6', icon: '#FFFFFF' }, // Azul com ícone branco
+    green: { bg: '#F3F4F6', icon: '#111827' }, // Cinza claro com ícone preto
+    teal: { bg: '#F3F4F6', icon: '#111827' }, // Cinza claro com ícone preto
+    blue: { bg: '#F3F4F6', icon: '#111827' }, // Cinza claro com ícone preto
   };
 
   const colors = iconCircleColors[iconColor] || iconCircleColors.green;

@@ -30,8 +30,8 @@ const AddressDetails = ({ escola }) => {
   
   if (!hasDetailedAddress) {
     return (
-      <div className="p-2.5 bg-green-50 border border-green-100 rounded-md">
-        <p className="text-sm text-gray-700 leading-relaxed break-words" style={{ lineHeight: '1.6' }}>
+      <div className="p-2.5 bg-gray-50 border border-gray-200 rounded-md">
+        <p className="text-sm text-gray-900 leading-relaxed break-words" style={{ lineHeight: '1.6' }}>
           {capitalize(escola.endereco)}
         </p>
       </div>
@@ -49,22 +49,22 @@ const AddressDetails = ({ escola }) => {
     <div className="space-y-2">
       {addressFields.map(({ field, label }) => 
         escola[field] && (
-          <div key={field} className="flex items-start gap-2.5 p-2.5 bg-green-50 border border-green-100 rounded-md">
-            <MapPin className="w-5 h-5 text-green-700 mt-0.5 flex-shrink-0" aria-hidden="true" />
+          <div key={field} className="flex items-start gap-2.5 p-2.5 bg-gray-50 border border-gray-200 rounded-md">
+            <MapPin className="w-5 h-5 text-gray-700 mt-0.5 flex-shrink-0" aria-hidden="true" />
             <div className="flex-1 min-w-0">
               <div className="text-xs font-semibold text-gray-800 mb-1">{label}</div>
-              <div className="text-sm text-gray-700 leading-relaxed break-words" style={{ lineHeight: '1.6' }}>{escola[field]}</div>
+              <div className="text-sm text-gray-900 leading-relaxed break-words" style={{ lineHeight: '1.6' }}>{escola[field]}</div>
             </div>
           </div>
         )
       )}
       
       {(escola.cep || escola.estado) && (
-        <div className="flex items-start gap-2.5 p-2.5 bg-green-50 border border-green-100 rounded-md">
-          <MapPin className="w-5 h-5 text-green-700 mt-0.5 flex-shrink-0" aria-hidden="true" />
+        <div className="flex items-start gap-2.5 p-2.5 bg-gray-50 border border-gray-200 rounded-md">
+          <MapPin className="w-5 h-5 text-gray-700 mt-0.5 flex-shrink-0" aria-hidden="true" />
           <div className="flex-1 min-w-0">
             <div className="text-xs font-semibold text-gray-800 mb-1">Localização</div>
-            <div className="text-sm text-gray-700 leading-relaxed break-words" style={{ lineHeight: '1.6' }}>
+            <div className="text-sm text-gray-900 leading-relaxed break-words" style={{ lineHeight: '1.6' }}>
               {[escola.municipio, escola.estado, escola.cep].filter(Boolean).join(', ')}
             </div>
           </div>
@@ -100,10 +100,10 @@ const SocialLinks = ({ links, expanded, onToggle }) => {
   if (socialLinks.length === 0) return null;
 
   return (
-    <div className="bg-green-100 rounded-md">
+    <div className="bg-gray-100 rounded-md">
       <button
         onClick={() => onToggle('social')}
-        className="w-full flex justify-between items-center p-2.5 hover:bg-green-100 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 rounded-md"
+        className="w-full flex justify-between items-center p-2.5 hover:bg-gray-100 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1 rounded-md"
         aria-expanded={expanded.social}
       >
         <span className="flex items-center gap-2 text-gray-800 font-semibold">
@@ -119,7 +119,7 @@ const SocialLinks = ({ links, expanded, onToggle }) => {
       </button>
       
       {expanded.social && (
-        <div className="px-3 pb-3 border-t border-green-200 bg-white">
+        <div className="px-3 pb-3 border-t border-gray-200 bg-white">
           <div className="mt-2 space-y-2">
             {socialLinks.map((link, index) => (
               <a
@@ -127,7 +127,7 @@ const SocialLinks = ({ links, expanded, onToggle }) => {
                 href={link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 p-2 bg-green-50 rounded-md hover:bg-green-100 group text-sm transition-colors"
+                className="flex items-center gap-2 p-2 bg-gray-50 rounded-md hover:bg-gray-100 group text-sm transition-colors"
               >
                 <LinkIcon className="w-5 h-5 text-blue-600 flex-shrink-0" aria-hidden="true" />
                 <span className="truncate flex-1 text-gray-700 font-medium">{link}</span>
@@ -186,7 +186,7 @@ const getGridCols = (count) => {
     {
       icon: Building,
       label: 'Município',
-      value: capitalize(escola.municipio),
+      value: escola.municipio,
     },
     {
       icon: Calendar,
@@ -217,7 +217,7 @@ const getGridCols = (count) => {
       {/* Povos Indígenas em destaque antes de tudo */}
       {escola.povos_indigenas && (
         <div className="mb-4">
-          <div className="text-lg sm:text-xl font-bold text-green-800 leading-tight">
+          <div className="text-lg sm:text-xl font-bold text-gray-900 leading-tight">
             Povos Indígenas: <span className="font-semibold text-gray-900">{escola.povos_indigenas}</span>
           </div>
         </div>
@@ -255,14 +255,14 @@ const getGridCols = (count) => {
 
           {/* Gaveta do endereço */}
           {escola.endereco && (
-            <div className="bg-green-100 rounded-md">
+            <div className="bg-gray-100 rounded-md">
       <button
         onClick={() => toggle('endereco')}
-        className="w-full flex justify-between items-center p-2.5 hover:bg-green-100 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 rounded-md"
+        className="w-full flex justify-between items-center p-2.5 hover:bg-gray-100 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1 rounded-md"
         aria-expanded={expanded.endereco}
       >
         <span className="flex items-center gap-2 text-gray-800 font-semibold">
-          <Building className="w-5 h-5 text-green-700" aria-hidden="true" />
+          <Building className="w-5 h-5 text-gray-700" aria-hidden="true" />
           Endereço
         </span>
         <ChevronRight
@@ -273,7 +273,7 @@ const getGridCols = (count) => {
         />
       </button>
               {expanded.endereco && (
-                <div className="px-3 pb-3 border-t border-green-200 bg-white">
+                <div className="px-3 pb-3 border-t border-gray-200 bg-white">
                   <AddressDetails escola={escola} />
                   <MapButton escola={escola} />
                 </div>

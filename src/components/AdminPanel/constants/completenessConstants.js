@@ -32,7 +32,7 @@ export const fieldCategories = {
     'Merenda_escolar',
     'diferenciada'
   ],
-  'Gestão e Professores': [
+  'Equipe': [
     'Gestão/Nome',
     'Outros funcionários',
     'Quantidade de professores indígenas',

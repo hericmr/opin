@@ -17,7 +17,7 @@ export const CARD_LABELS = {
   'basicInfo': 'Informações Básicas',
   'modalidades': 'Modalidades de Ensino',
   'infraestrutura': 'Infraestrutura',
-  'gestaoProfessores': 'Gestão e Professores',
+  'gestaoProfessores': 'Equipe',
   'projetosParcerias': 'Projetos e Parcerias',
   'historiaEscola': 'História da Escola',
   'imagensEscola': 'Imagens da Escola',

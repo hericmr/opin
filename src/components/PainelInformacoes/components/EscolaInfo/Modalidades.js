@@ -33,7 +33,7 @@ const ListWithBullets = ({ items }) => {
       <ul className="list-none pl-0 ml-0 space-y-1.5">
         {items.map((item, idx) => (
           <li key={idx} className="leading-relaxed m-0 p-0 pl-0 ml-0 flex items-start" style={{ lineHeight: '1.7' }}>
-            <span className="mr-2 text-green-700 select-none font-bold flex-shrink-0" style={{minWidth: '0.75em', display: 'inline-block'}} aria-hidden="true">•</span>
+            <span className="mr-2 text-gray-900 select-none font-bold flex-shrink-0" style={{minWidth: '0.75em', display: 'inline-block'}} aria-hidden="true">•</span>
             <span className="flex-1">{item}</span>
           </li>
         ))}
