@@ -230,7 +230,7 @@ const getGridCols = (count) => {
             <>
               {/* Cards com muito conteúdo - linha inteira (1 coluna) */}
               {longContentCards.length > 0 && (
-                <div className="space-y-2 mb-3">
+                <div className="space-y-3 mb-3">
                   {longContentCards.map((item, index) => (
                     <NativeLandCard key={`long-${index}`} {...item} showIconCircle={true} />
                   ))}
@@ -239,7 +239,7 @@ const getGridCols = (count) => {
               
               {/* Cards normais - grid de 3 colunas */}
               {normalCards.length > 0 && (
-                <div className={`grid ${getGridCols(normalCards.length)} gap-2 ${longContentCards.length > 0 ? 'mb-3' : 'mb-3'} items-stretch overflow-visible`}>
+                <div className={`grid ${getGridCols(normalCards.length)} gap-3 ${longContentCards.length > 0 ? 'mb-3' : 'mb-3'} items-stretch overflow-visible`}>
                   {normalCards.map((item, index) => (
                     <NativeLandCard key={`normal-${index}`} {...item} showIconCircle={true} />
                   ))}
