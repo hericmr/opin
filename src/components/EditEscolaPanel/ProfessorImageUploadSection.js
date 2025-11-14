@@ -20,6 +20,7 @@ import {
   getProfessorImageMetaByUrl
 } from '../../services/professorImageMetaService';
 import { supabase } from '../../supabaseClient';
+import BrazilianDateInput from '../AdminPanel/components/BrazilianDateInput';
 
 const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -808,11 +809,11 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                       <label className="block text-sm font-medium text-gray-300 mb-1">
                         Data da Foto
                       </label>
-                      <input
-                        type="date"
-                        className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100"
+                      <BrazilianDateInput
                         value={image.legendaData?.data_foto || ''}
                         onChange={e => handleLegendaFieldChange(image.id, 'data_foto', e.target.value)}
+                        className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100"
+                        placeholder="DD/MM/AAAA"
                       />
                       <label className="block text-sm font-medium text-gray-300 mb-1">
                         Categoria

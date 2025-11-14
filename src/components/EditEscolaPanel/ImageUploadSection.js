@@ -16,6 +16,7 @@ import {
 } from '../../services/legendasService';
 import { HeaderImageService } from '../../services/headerImageService';
 import { supabase } from '../../supabaseClient';
+import BrazilianDateInput from '../AdminPanel/components/BrazilianDateInput';
 
 const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -961,11 +962,11 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                       <label className="block text-sm font-medium text-gray-300 mb-1">
                         Data da Foto
                       </label>
-                      <input
-                        type="date"
-                        className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-gray-100"
+                      <BrazilianDateInput
                         value={image.legendaData?.data_foto || ''}
                         onChange={e => handleLegendaFieldChange(image.id, 'data_foto', e.target.value)}
+                        className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-gray-100"
+                        placeholder="DD/MM/AAAA"
                       />
                       <label className="block text-sm font-medium text-gray-300 mb-1">
                         Categoria

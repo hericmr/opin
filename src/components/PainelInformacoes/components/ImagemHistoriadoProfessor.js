@@ -5,6 +5,7 @@ import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService'
 import ReusableImageZoom from '../../ReusableImageZoom';
 import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
+import { formatDateForDisplay } from '../../../utils/dateUtils';
 import '../../ReusableImageZoom.css';
 
 const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = false, hideInlineMedia = false }) => {
@@ -171,7 +172,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
                     <span>Por: {img.autor}</span>
                   )}
                   {img.dataFoto && (
-                    <span>{new Date(img.dataFoto).toLocaleDateString('pt-BR')}</span>
+                    <span>{formatDateForDisplay(img.dataFoto)}</span>
                   )}
                 </div>
                 
