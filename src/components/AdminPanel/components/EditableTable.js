@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { Edit2, AlertCircle } from 'lucide-react';
 
 const EditableTable = ({ 
@@ -29,7 +29,7 @@ const EditableTable = ({
   const [originalValue, setOriginalValue] = useState('');
 
   // Colunas da tabela - definidas antes dos callbacks
-  const columns = [
+  const columns = useMemo(() => [
     { key: 'Escola', label: 'Escola', width: 'w-32' },
     { key: 'Município', label: 'Município', width: 'w-28' },
     { key: 'Endereço', label: 'Endereço', width: 'w-40' },
@@ -87,7 +87,7 @@ const EditableTable = ({
     { key: 'merenda_escolar', label: 'Merenda Escolar', width: 'w-28' },
     { key: 'diferenciada', label: 'Diferenciada', width: 'w-24' },
     { key: 'actions', label: 'Ações', width: 'w-32' }
-  ];
+  ], []);
 
   // Iniciar edição de uma célula
   const startEditing = useCallback((rowIndex, columnKey, value) => {

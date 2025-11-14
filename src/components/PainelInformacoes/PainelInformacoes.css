@@ -113,6 +113,23 @@
   line-height: 1.6;
 }
 
+/* Remover uppercase das legendas das fotos */
+.mj-panel .mj-prose figcaption h4,
+.mj-panel figcaption h4,
+.mj-panel .mj-prose figure figcaption h4,
+.mj-panel figure figcaption h4 {
+  text-transform: none !important;
+  letter-spacing: normal;
+}
+
+/* Remover uppercase das legendas nas miniaturas e sidebar */
+.mj-panel [class*="sidebar"] h4,
+.mj-panel [class*="caption"] h4,
+.mj-panel [class*="legenda"] h4 {
+  text-transform: none !important;
+  letter-spacing: normal;
+}
+
 /* Section separators */
 .mj-panel .mj-section-separator {
   height: 1px;
