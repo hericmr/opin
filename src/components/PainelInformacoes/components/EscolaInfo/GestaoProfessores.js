@@ -183,7 +183,7 @@ const GestaoProfessores = memo(({ escola }) => {
           );
         })()}
         
-        {/* Cards adicionais em grid de 2 colunas para distribuição equitativa */}
+        {/* Cards adicionais em grid de 2 colunas para melhor espaçamento */}
         {(() => {
           const additionalCards = [
             formacao?.status && {
@@ -214,8 +214,9 @@ const GestaoProfessores = memo(({ escola }) => {
 
           if (additionalCards.length === 0) return null;
 
+          // Sempre usar 2 colunas para os cards adicionais
           return (
-            <div className={`grid ${getGridCols(additionalCards.length)} gap-2 sm:gap-3 mt-4 items-stretch overflow-visible`} style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mt-4 items-stretch overflow-visible" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
               {additionalCards.map((item, idx) => (
                 <NativeLandCard
                   key={`additional-${idx}`}
