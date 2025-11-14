@@ -1,9 +1,9 @@
 {
   "files": {
-    "main.css": "/opin/static/css/main.4160f041.css",
-    "main.js": "/opin/static/js/main.e1136ca7.js",
+    "main.css": "/opin/static/css/main.d87e7d51.css",
+    "main.js": "/opin/static/js/main.ae689f22.js",
     "static/css/308.c43a8ac9.chunk.css": "/opin/static/css/308.c43a8ac9.chunk.css",
-    "static/js/308.0c30b62a.chunk.js": "/opin/static/js/308.0c30b62a.chunk.js",
+    "static/js/308.69c0d1e9.chunk.js": "/opin/static/js/308.69c0d1e9.chunk.js",
     "static/js/462.2493e79c.chunk.js": "/opin/static/js/462.2493e79c.chunk.js",
     "static/js/622.82e2766c.chunk.js": "/opin/static/js/622.82e2766c.chunk.js",
     "static/css/724.ebf4d1f0.chunk.css": "/opin/static/css/724.ebf4d1f0.chunk.css",
@@ -34,10 +34,10 @@
     "static/media/PapakiloDecorative-OVwG4.ttf": "/opin/static/media/PapakiloDecorative-OVwG4.f4f10c9c75dd0b148ab1.ttf",
     "static/media/PapakiloLight-ZVWpm.ttf": "/opin/static/media/PapakiloLight-ZVWpm.46e50e117340e36511fa.ttf",
     "index.html": "/opin/index.html",
-    "main.4160f041.css.map": "/opin/static/css/main.4160f041.css.map",
-    "main.e1136ca7.js.map": "/opin/static/js/main.e1136ca7.js.map",
+    "main.d87e7d51.css.map": "/opin/static/css/main.d87e7d51.css.map",
+    "main.ae689f22.js.map": "/opin/static/js/main.ae689f22.js.map",
     "308.c43a8ac9.chunk.css.map": "/opin/static/css/308.c43a8ac9.chunk.css.map",
-    "308.0c30b62a.chunk.js.map": "/opin/static/js/308.0c30b62a.chunk.js.map",
+    "308.69c0d1e9.chunk.js.map": "/opin/static/js/308.69c0d1e9.chunk.js.map",
     "462.2493e79c.chunk.js.map": "/opin/static/js/462.2493e79c.chunk.js.map",
     "622.82e2766c.chunk.js.map": "/opin/static/js/622.82e2766c.chunk.js.map",
     "724.ebf4d1f0.chunk.css.map": "/opin/static/css/724.ebf4d1f0.chunk.css.map",
@@ -67,7 +67,7 @@
     "236.f9e31da5.chunk.js.map": "/opin/static/js/236.f9e31da5.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.4160f041.css",
-    "static/js/main.e1136ca7.js"
+    "static/css/main.d87e7d51.css",
+    "static/js/main.ae689f22.js"
   ]
 }
