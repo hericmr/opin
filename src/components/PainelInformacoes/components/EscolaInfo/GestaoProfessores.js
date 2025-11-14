@@ -63,7 +63,7 @@ const renderBooleanStatus = (valor) => {
   const normalizado = String(valor).trim().toLowerCase();
   if (normalizado === 'sim') {
     return (
-      <div className="flex items-center gap-1 text-green-700">
+      <div className="flex items-center gap-1 text-gray-900">
         <Check className="w-5 h-5" />
         Sim
       </div>
@@ -139,7 +139,7 @@ const GestaoProfessores = memo(({ escola }) => {
   ].filter(Boolean);
 
   return (
-    <InfoSection title="Gestores" icon={UsersRound}>
+    <InfoSection title="Equipe" icon={UsersRound}>
       <div className="space-y-4 mt-1">
         {/* Separar cards com muito conteúdo dos cards normais */}
         {(() => {

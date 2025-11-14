@@ -9,7 +9,7 @@ const InfoCard = memo(({ label, value, icon: Icon, type = 'text', className = ''
       case 'number':
         return (
           <div className="text-center">
-            <div className="text-3xl font-medium text-green-800 mb-1">
+            <div className="text-3xl font-medium text-gray-900 mb-1">
               {value.toLocaleString('pt-BR')}
             </div>
           </div>
@@ -17,7 +17,7 @@ const InfoCard = memo(({ label, value, icon: Icon, type = 'text', className = ''
       case 'boolean':
         return (
           <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-            value ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
+            value ? 'bg-gray-100 text-gray-900' : 'bg-gray-100 text-gray-600'
           }`}>
             {value ? 'Sim' : 'Não'}
           </div>
@@ -26,11 +26,11 @@ const InfoCard = memo(({ label, value, icon: Icon, type = 'text', className = ''
         return (
           <div className="flex flex-wrap gap-1">
             {Array.isArray(value) ? value.map((item, index) => (
-              <span key={index} className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+              <span key={index} className="px-2 py-1 bg-gray-100 text-gray-900 text-xs rounded-full">
                 {item}
               </span>
             )) : (
-              <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+              <span className="px-2 py-1 bg-gray-100 text-gray-900 text-xs rounded-full">
                 {value}
               </span>
             )}
@@ -42,7 +42,7 @@ const InfoCard = memo(({ label, value, icon: Icon, type = 'text', className = ''
             href={value} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-green-700 hover:text-green-800 underline text-sm"
+            className="text-gray-900 hover:text-gray-700 underline text-sm"
           >
             {value}
           </a>
@@ -79,7 +79,7 @@ const InfoGrid = memo(({ children, columns = 'auto-fit', gap = 4, className = ''
   };
 
   return (
-    <div className={`grid ${gridClasses[columns]} gap-${gap} ${className} [&>*]:bg-green-100`}>
+    <div className={`grid ${gridClasses[columns]} gap-${gap} ${className} [&>*]:bg-gray-50`}>
       {children}
     </div>
   );
@@ -90,15 +90,15 @@ const InfoTable = memo(({ data, className = '' }) => {
   if (!data || data.length === 0) return null;
 
   return (
-    <div className={`bg-green-100 rounded-lg overflow-hidden ${className}`}>
+    <div className={`bg-gray-50 rounded-lg overflow-hidden ${className}`}>
       <table className="w-full">
         <tbody>
           {data.map((row, index) => (
-            <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-green-50'}>
-              <td className="px-4 py-3 text-sm font-medium text-gray-700 border-r border-green-200">
+            <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+              <td className="px-4 py-3 text-sm font-medium text-gray-700 border-r border-gray-200">
                 {row.label}
               </td>
-              <td className="px-4 py-3 text-sm text-gray-600">
+              <td className="px-4 py-3 text-sm text-gray-900">
                 {row.value}
               </td>
             </tr>
@@ -120,7 +120,7 @@ const InfoStats = memo(({ stats, className = '' }) => {
           <div className="flex justify-center mb-2">
             {stat.icon && <stat.icon className="w-6 h-6 text-gray-700" />}
           </div>
-          <div className="text-3xl font-medium text-green-800 mb-1">
+          <div className="text-3xl font-medium text-gray-900 mb-1">
             {stat.value}
           </div>
           <div className="text-xs text-gray-600 mt-1">
@@ -189,15 +189,15 @@ const InfoSection = memo(({
           className="
             w-full flex items-center justify-between 
             text-base sm:text-lg font-semibold
-            mb-4 sm:mb-5 text-gray-900 hover:text-green-800 
-            transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded-md p-1 -m-1
+            mb-4 sm:mb-5 text-gray-900 hover:text-gray-700 
+            transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-md p-1 -m-1
           "
           aria-expanded={!isCollapsed}
           aria-controls={`${title}-content`}
           id={`${title}-button`}
         >
           <div className="flex items-center gap-2.5 sm:gap-3">
-            {Icon && <Icon className="w-5 h-5 text-green-700 flex-shrink-0" />}
+            {Icon && <Icon className="w-5 h-5 text-gray-700 flex-shrink-0" />}
             <span className="tracking-tight leading-tight">{title}</span>
           </div>
           <svg 
@@ -220,7 +220,7 @@ const InfoSection = memo(({
           aria-labelledby={hasTitle ? `${title}-button` : undefined}
         >
           {description && (
-            <div className="bg-green-50 border border-green-100 rounded-lg p-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
               <p className="text-gray-700 text-sm leading-relaxed" style={{ lineHeight: '1.7' }}>
                 {description}
               </p>

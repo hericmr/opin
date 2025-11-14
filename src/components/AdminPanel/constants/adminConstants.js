@@ -6,7 +6,7 @@ export const ADMIN_TABS = [
   { id: 'povos-linguas', label: 'Povos' },
   { id: 'modalidades', label: 'Modalidades' },
   { id: 'infraestrutura', label: 'Infraestrutura' },
-  { id: 'gestao-professores', label: 'Gestores' },
+  { id: 'gestao-professores', label: 'Equipe' },
   { id: 'funcionarios', label: 'Funcionários' },
   { id: 'material-pedagogico', label: 'Material Pedagógico' },
   { id: 'projetos-parcerias', label: 'Projetos e Parcerias' },
