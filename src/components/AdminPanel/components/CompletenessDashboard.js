@@ -3,9 +3,23 @@ import { supabase } from '../../../supabaseClient';
 import logger from '../../../utils/logger';
 import { fieldCategories } from '../constants/completenessConstants';
 import { useCompletenessCalculations } from '../hooks/useCompletenessCalculations';
-import CompletenessCard from './CompletenessCard';
+import CardCategoria from './CardCategoria';
 import OverallProgressBar from './OverallProgressBar';
 import IncompleteSchoolsModal from './IncompleteSchoolsModal';
+import {
+  ClipboardList,
+  Languages,
+  GraduationCap,
+  Home,
+  Users,
+  BookOpen,
+  Handshake,
+  Share2,
+  History,
+  MapPin,
+  Image as ImageIcon,
+  Circle
+} from 'lucide-react';
 
 const CompletenessDashboard = () => {
   const [completenessData, setCompletenessData] = useState(null);
@@ -18,7 +32,6 @@ const CompletenessDashboard = () => {
   // Hook para cálculos de completude
   const {
     getCompletenessColor,
-    getCompletenessIcon,
     getProgressBarColor,
     getSimpleProgressBarColor,
     findIncompleteSchools,
@@ -69,10 +82,8 @@ const CompletenessDashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center">
-          <div className="text-gray-400 text-lg">Carregando dashboard de completude...</div>
-        </div>
+      <div className="flex items-center justify-center py-12 text-gray-400">
+        Carregando completude...
       </div>
     );
   }
@@ -95,15 +106,26 @@ const CompletenessDashboard = () => {
 
   if (!completenessData) {
     return (
-      <div className="text-center py-8 text-gray-400">
-        Nenhum dado encontrado para análise de completude.
-      </div>
+      <div className="text-center py-8 text-gray-400">Sem dados para calcular completude.</div>
     );
   }
 
+  const categoryIcons = {
+    'Dados Básicos': ClipboardList,
+    'Povos e Línguas': Languages,
+    'Modalidades e Alunos': GraduationCap,
+    'Infraestrutura': Home,
+    'Gestão e Professores': Users,
+    'Material Pedagógico': BookOpen,
+    'Projetos e Parcerias': Handshake,
+    'Redes Sociais e Mídia': Share2,
+    'Histórias': History,
+    'Localização': MapPin,
+    'Mídia': ImageIcon
+  };
+
   return (
     <div className="space-y-6">
-      {/* Header com estatísticas gerais */}
       <div className="bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -111,7 +133,7 @@ const CompletenessDashboard = () => {
               Dashboard de Completude
             </h2>
             <p className="text-gray-400 mt-1">
-              Análise do preenchimento dos dados da tabela escolas_completa
+              Visão rápida da tabela `escolas_completa`
             </p>
           </div>
           <button
@@ -127,34 +149,31 @@ const CompletenessDashboard = () => {
 
       </div>
 
-      {/* Barra de progresso geral */}
       <OverallProgressBar
         overallCompleteness={calculatedOverallCompleteness}
         getCompletenessColor={getCompletenessColor}
         getProgressBarColor={getProgressBarColor}
       />
 
-      {/* Grid de categorias */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-[repeat(auto-fit,_minmax(280px,_1fr))]">
         {Object.entries(calculatedCategoryCompleteness).map(([category, percentage]) => {
-          // Memoizar o handler para cada card para evitar recriação
           const handleClick = () => handleCategoryClick(category);
+          const Icon = categoryIcons[category] || Circle;
           return (
-            <CompletenessCard
+            <CardCategoria
               key={category}
-              category={category}
+              title={category}
               percentage={percentage}
-              fieldCount={fieldCategories[category].length}
-              onClick={handleClick}
-              getCompletenessColor={getCompletenessColor}
-              getCompletenessIcon={getCompletenessIcon}
-              getSimpleProgressBarColor={getSimpleProgressBarColor}
+              itemCount={fieldCategories[category].length}
+              onViewPending={handleClick}
+              badgeClassName={getCompletenessColor(percentage)}
+              progressBarClassName={getSimpleProgressBarColor(percentage)}
+              Icon={Icon}
             />
           );
         })}
       </div>
 
-      {/* Modal para mostrar escolas sem informação */}
       <IncompleteSchoolsModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
