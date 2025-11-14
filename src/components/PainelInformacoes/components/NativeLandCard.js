@@ -183,13 +183,14 @@ const NativeLandCard = memo(({
   return (
     <div 
       className={`
+        rounded-xl p-3 
         ${cardHeightClass} flex flex-col
         overflow-visible
         card-container
         relative
         ${className}
       `}
-      style={{ border: 'none', outline: 'none', backgroundColor: 'transparent' }}
+      style={{ border: 'none', outline: 'none', backgroundColor: '#D1FAE5' }}
     >
       {/* Ícone FORA do card, no canto superior esquerdo */}
       {Icon && (
