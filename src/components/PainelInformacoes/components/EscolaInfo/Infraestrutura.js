@@ -49,6 +49,17 @@ const getGridCols = (count) => {
 const Infraestrutura = memo(({ escola }) => {
   if (!escola) return null;
 
+  // Adicionar espaço escolar como primeiro item se existir
+  const allItems = [];
+  
+  if (escola.espaco_escolar && !isEmptyValue(escola.espaco_escolar)) {
+    allItems.push({
+      icon: Home,
+      label: 'Espaço Escolar e Estrutura',
+      value: escola.espaco_escolar,
+    });
+  }
+
   const items = [
     {
       icon: Droplet,
@@ -92,23 +103,20 @@ const Infraestrutura = memo(({ escola }) => {
     },
   ].filter(item => !isEmptyValue(item.value));
 
-  if (items.length === 0) return null;
+  // Combinar todos os itens
+  const allItemsCombined = [...allItems, ...items];
+
+  if (allItemsCombined.length === 0) return null;
 
   // Separar cards com muito conteúdo dos cards normais
-  const longContentCards = items.filter(item => hasLongContent(item.value));
-  const normalCards = items.filter(item => !hasLongContent(item.value));
+  const longContentCards = allItemsCombined.filter(item => hasLongContent(item.value));
+  const normalCards = allItemsCombined.filter(item => !hasLongContent(item.value));
 
   return (
     <InfoSection title="Infraestrutura" icon={Home}>
-      {escola.espaco_escolar && (
-        <div className="p-3 text-sm text-gray-700 border-b border-gray-200 whitespace-pre-wrap leading-relaxed mb-4" style={{ lineHeight: '1.7' }}>
-          {escola.espaco_escolar}
-        </div>
-      )}
-      
       {/* Cards com muito conteúdo - linha inteira (1 coluna) */}
       {longContentCards.length > 0 && (
-        <div className="space-y-3 mt-3" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+        <div className="space-y-3" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
           {longContentCards.map((item, idx) => (
             <NativeLandCard
               key={`long-${idx}`}
@@ -123,7 +131,7 @@ const Infraestrutura = memo(({ escola }) => {
       
       {/* Cards normais - grid de 3 colunas */}
       {normalCards.length > 0 && (
-        <div className={`grid ${getGridCols(normalCards.length)} gap-2 sm:gap-3 ${longContentCards.length > 0 ? 'mt-3' : 'mt-3'} items-stretch overflow-visible`} style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+        <div className={`grid ${getGridCols(normalCards.length)} gap-2 sm:gap-3 ${longContentCards.length > 0 ? 'mt-3' : ''} items-stretch overflow-visible`} style={{ paddingTop: '12px', paddingLeft: '12px' }}>
           {normalCards.map((item, idx) => (
             <NativeLandCard
               key={`normal-${idx}`}
