@@ -6,6 +6,7 @@ import { supabase } from '../../../supabaseClient';
 import ReusableImageZoom from '../../ReusableImageZoom';
 import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
+import { formatDateForDisplay } from '../../../utils/dateUtils';
 import '../../ReusableImageZoom.css';
 
 const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hideInlineMedia = false }) => {
@@ -268,7 +269,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
                     <span>Por: {img.autor}</span>
                   )}
                   {img.dataFoto && (
-                    <span>{new Date(img.dataFoto).toLocaleDateString('pt-BR')}</span>
+                    <span>{formatDateForDisplay(img.dataFoto)}</span>
                   )}
                 </div>
                 

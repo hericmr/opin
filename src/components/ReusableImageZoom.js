@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { X, ZoomIn, ZoomOut, RotateCw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { formatDateForDisplay } from '../utils/dateUtils';
 
 const ReusableImageZoom = ({ 
   images = [], 
@@ -242,7 +243,7 @@ const ReusableImageZoom = ({
                 <span>Fotógrafo: {currentImage.autor}</span>
               )}
               {currentImage.dataFoto && (
-                <span>Data: {new Date(currentImage.dataFoto).toLocaleDateString('pt-BR')}</span>
+                <span>Data: {formatDateForDisplay(currentImage.dataFoto)}</span>
               )}
             </div>
             
