@@ -26,7 +26,7 @@ const capitalize = (str) => {
 // );
 
 const AddressDetails = ({ escola }) => {
-  const hasDetailedAddress = escola.logradouro || escola.numero || escola.bairro || escola.cep;
+  const hasDetailedAddress = escola.logradouro || escola.bairro || escola.cep;
   
   if (!hasDetailedAddress) {
     return (
@@ -40,7 +40,6 @@ const AddressDetails = ({ escola }) => {
 
   const addressFields = [
     { field: 'logradouro', label: 'Logradouro' },
-    { field: 'numero', label: 'Número' },
     { field: 'complemento', label: 'Complemento' },
     { field: 'bairro', label: 'Bairro' },
   ];
