@@ -132,20 +132,6 @@ const DadosBasicosTab = ({ editingLocation, setEditingLocation }) => {
             />
           </div>
 
-          {/* Complemento */}
-          <div>
-            <label className="block text-sm font-medium text-gray-200 mb-3">
-              Complemento
-            </label>
-            <input
-              type="text"
-              className="w-full border border-gray-700 bg-gray-800/50 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100 placeholder-gray-400 transition-all duration-200 backdrop-blur-sm"
-              value={editingLocation.complemento || ''}
-              onChange={e => setEditingLocation({ ...editingLocation, complemento: e.target.value })}
-              placeholder="Apto, Casa, etc."
-            />
-          </div>
-
           {/* Bairro */}
           <div>
             <label className="block text-sm font-medium text-gray-200 mb-3">

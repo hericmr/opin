@@ -40,7 +40,6 @@ const AddressDetails = ({ escola }) => {
 
   const addressFields = [
     { field: 'logradouro', label: 'Logradouro' },
-    { field: 'complemento', label: 'Complemento' },
     { field: 'bairro', label: 'Bairro' },
   ];
 
