@@ -17,17 +17,16 @@ const HistoriaEscola = memo(({ escola, refreshKey = 0, isMaximized = false }) =>
         <div className="h-1 w-20 sm:w-24 bg-green-300 rounded-full" />
       </header>
 
-      {/* Card com conteúdo - mantém largura máxima sempre */}
+      {/* Card com conteúdo - sem borda, inline com o resto, largura otimizada para leitura */}
       <article
         className="
-          px-4 sm:px-6 md:px-8 py-6
-          bg-white rounded-2xl shadow-lg
           prose prose-sm sm:prose-base md:prose-lg lg:prose-xl
           prose-headings:text-green-900 prose-p:text-black prose-p:leading-relaxed prose-p:text-justify
           prose-img:rounded-xl prose-img:shadow-lg
           prose-a:text-green-700 prose-a:no-underline prose-a:border-b-2 prose-a:border-green-100 hover:prose-a:border-green-600
-          max-w-4xl mx-auto w-full
+          max-w-3xl mx-auto w-full
         "
+        style={{ maxWidth: '65ch' }}
       >
         <HistoriaEscolaContent htmlContent={htmlContent} />
       </article>
