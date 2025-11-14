@@ -178,8 +178,6 @@ const InfoSection = memo(({
   return (
     <section 
       className={`
-        bg-white rounded-2xl p-5
-        shadow-sm transition-all duration-200
         ${className}
       `}
     >
@@ -215,7 +213,7 @@ const InfoSection = memo(({
       {(!hasTitle || !isCollapsed) && (
         <div 
           id={hasTitle ? `${title}-content` : undefined}
-          className="space-y-4 sm:space-y-5 overflow-visible"
+          className="overflow-visible"
           role={hasTitle ? "region" : undefined}
           aria-labelledby={hasTitle ? `${title}-button` : undefined}
         >
