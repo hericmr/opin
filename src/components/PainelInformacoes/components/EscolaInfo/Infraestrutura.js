@@ -116,7 +116,7 @@ const Infraestrutura = memo(({ escola }) => {
     <InfoSection>
       {/* Cards com muito conteúdo - linha inteira (1 coluna) */}
       {longContentCards.length > 0 && (
-        <div className="space-y-3">
+        <div className="space-y-3 mb-3">
           {longContentCards.map((item, idx) => (
             <NativeLandCard
               key={`long-${idx}`}
@@ -131,7 +131,7 @@ const Infraestrutura = memo(({ escola }) => {
       
       {/* Cards normais - grid de 3 colunas */}
       {normalCards.length > 0 && (
-        <div className={`grid ${getGridCols(normalCards.length)} gap-3 ${longContentCards.length > 0 ? 'mt-3' : ''} items-stretch overflow-visible`}>
+        <div className={`grid ${getGridCols(normalCards.length)} gap-3 ${longContentCards.length > 0 ? '' : ''} items-stretch overflow-visible`}>
           {normalCards.map((item, idx) => (
             <NativeLandCard
               key={`normal-${idx}`}

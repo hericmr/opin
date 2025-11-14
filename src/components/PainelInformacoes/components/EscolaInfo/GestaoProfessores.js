@@ -140,98 +140,96 @@ const GestaoProfessores = memo(({ escola }) => {
 
   return (
     <InfoSection>
-      <div className="space-y-3">
-        {/* Separar cards com muito conteúdo dos cards normais */}
-        {(() => {
-          const longContentCards = professoresCards.filter(item => hasLongContent(item.value));
-          const normalCards = professoresCards.filter(item => !hasLongContent(item.value));
-          
-          return (
-            <>
-              {/* Cards com muito conteúdo - linha inteira (1 coluna) */}
-              {longContentCards.length > 0 && (
-                <div className="space-y-3">
-                  {longContentCards.map((item, idx) => (
-                    <NativeLandCard
-                      key={`long-${idx}`}
-                      icon={item.icon}
-                      label={item.label}
-                      value={item.value}
-                      type={item.type}
-                      showIconCircle={true}
-                    />
-                  ))}
-                </div>
-              )}
-              
-              {/* Cards normais - grid de 3 colunas */}
-              {normalCards.length > 0 && (
-                <div className={`grid ${getGridCols(normalCards.length)} gap-3 ${longContentCards.length > 0 ? 'mt-3' : ''} items-stretch overflow-visible`}>
-                  {normalCards.map((item, idx) => (
-                    <NativeLandCard
-                      key={`normal-${idx}`}
-                      icon={item.icon}
-                      label={item.label}
-                      value={item.value}
-                      type={item.type}
-                      showIconCircle={true}
-                    />
-                  ))}
-                </div>
-              )}
-            </>
-          );
-        })()}
+      {/* Separar cards com muito conteúdo dos cards normais */}
+      {(() => {
+        const longContentCards = professoresCards.filter(item => hasLongContent(item.value));
+        const normalCards = professoresCards.filter(item => !hasLongContent(item.value));
         
-        {/* Cards adicionais - cada um ocupa uma linha inteira */}
-        {(() => {
-          const additionalCards = [
-            formacao?.status && {
-              icon: Star,
-              label: "Formação dos Professores",
-              value: renderBooleanStatus(formacao.status),
-              description: formacao.descricao,
-              className: "h-auto min-h-[140px]"
-            },
-            !isEmptyValue(escola.gestao) && {
-              icon: User,
-              label: "Tem vice-diretor; COE?",
-              value: escola.gestao
-            },
-            !isEmptyValue(escola.outros_funcionarios) && {
-              icon: UsersRound,
-              label: "Outros Funcionários",
-              value: escola.outros_funcionarios
-            },
-            continuada?.status && {
-              icon: NotebookPen,
-              label: "Visitas de Supervisores e Formação Continuada",
-              value: renderBooleanStatus(continuada.status),
-              description: continuada.descricao,
-              className: "h-auto min-h-[140px]"
-            }
-          ].filter(Boolean);
+        return (
+          <>
+            {/* Cards com muito conteúdo - linha inteira (1 coluna) */}
+            {longContentCards.length > 0 && (
+              <div className="space-y-3 mb-3">
+                {longContentCards.map((item, idx) => (
+                  <NativeLandCard
+                    key={`long-${idx}`}
+                    icon={item.icon}
+                    label={item.label}
+                    value={item.value}
+                    type={item.type}
+                    showIconCircle={true}
+                  />
+                ))}
+              </div>
+            )}
+            
+            {/* Cards normais - grid de 3 colunas */}
+            {normalCards.length > 0 && (
+              <div className={`grid ${getGridCols(normalCards.length)} gap-3 ${longContentCards.length > 0 ? 'mb-3' : 'mb-3'} items-stretch overflow-visible`}>
+                {normalCards.map((item, idx) => (
+                  <NativeLandCard
+                    key={`normal-${idx}`}
+                    icon={item.icon}
+                    label={item.label}
+                    value={item.value}
+                    type={item.type}
+                    showIconCircle={true}
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        );
+      })()}
+      
+      {/* Cards adicionais - cada um ocupa uma linha inteira */}
+      {(() => {
+        const additionalCards = [
+          formacao?.status && {
+            icon: Star,
+            label: "Formação dos Professores",
+            value: renderBooleanStatus(formacao.status),
+            description: formacao.descricao,
+            className: "h-auto min-h-[140px]"
+          },
+          !isEmptyValue(escola.gestao) && {
+            icon: User,
+            label: "Tem vice-diretor; COE?",
+            value: escola.gestao
+          },
+          !isEmptyValue(escola.outros_funcionarios) && {
+            icon: UsersRound,
+            label: "Outros Funcionários",
+            value: escola.outros_funcionarios
+          },
+          continuada?.status && {
+            icon: NotebookPen,
+            label: "Visitas de Supervisores e Formação Continuada",
+            value: renderBooleanStatus(continuada.status),
+            description: continuada.descricao,
+            className: "h-auto min-h-[140px]"
+          }
+        ].filter(Boolean);
 
-          if (additionalCards.length === 0) return null;
+        if (additionalCards.length === 0) return null;
 
-          // Cada card ocupa uma linha inteira (1 coluna)
-          return (
-            <div className="space-y-3 mt-3">
-              {additionalCards.map((item, idx) => (
-                <NativeLandCard
-                  key={`additional-${idx}`}
-                  icon={item.icon}
-                  label={item.label}
-                  value={item.value}
-                  description={item.description}
-                  showIconCircle={true}
-                  className={item.className || ''}
-                />
-              ))}
-            </div>
-          );
-        })()}
-      </div>
+        // Cada card ocupa uma linha inteira (1 coluna)
+        return (
+          <div className="space-y-3 mt-3">
+            {additionalCards.map((item, idx) => (
+              <NativeLandCard
+                key={`additional-${idx}`}
+                icon={item.icon}
+                label={item.label}
+                value={item.value}
+                description={item.description}
+                showIconCircle={true}
+                className={item.className || ''}
+              />
+            ))}
+          </div>
+        );
+      })()}
     </InfoSection>
   );
 });
