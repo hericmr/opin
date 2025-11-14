@@ -29,3 +29,4 @@ COMMENT ON COLUMN escolas_completa.cards_visibilidade IS
 
 
 
+

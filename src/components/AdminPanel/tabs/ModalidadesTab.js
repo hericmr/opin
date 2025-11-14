@@ -36,6 +36,23 @@ const ModalidadesTab = ({
         label="Visibilidade do Card: Modalidades de Ensino"
       />
       
+      {/* Campo de Edição Direta do Texto de Modalidades */}
+      <div>
+        <label className="block text-sm font-medium text-gray-200 mb-2 text-base">
+          Modalidades de Ensino (Edição Direta)
+        </label>
+        <textarea
+          className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-gray-100 placeholder-gray-400 text-base resize-y"
+          rows={6}
+          value={editingLocation['Modalidade de Ensino/turnos de funcionamento'] || ''}
+          onChange={e => setEditingLocation({ ...editingLocation, 'Modalidade de Ensino/turnos de funcionamento': e.target.value })}
+          placeholder="Digite ou edite o texto completo das modalidades de ensino..."
+        />
+        <p className="mt-1 text-xs text-gray-400">
+          Você pode editar o texto completo diretamente aqui. Use Enter para quebras de linha.
+        </p>
+      </div>
+      
       {/* Modalidades de Ensino */}
       <div className="md:col-span-2">
         <label className="block text-sm font-medium text-gray-200 mb-4 text-base">
