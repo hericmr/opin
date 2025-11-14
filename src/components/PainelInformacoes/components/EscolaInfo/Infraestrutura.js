@@ -113,7 +113,7 @@ const Infraestrutura = memo(({ escola }) => {
   const normalCards = allItemsCombined.filter(item => !hasLongContent(item.value));
 
   return (
-    <InfoSection title="Infraestrutura" icon={Home}>
+    <InfoSection>
       {/* Cards com muito conteúdo - linha inteira (1 coluna) */}
       {longContentCards.length > 0 && (
         <div className="space-y-3" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
