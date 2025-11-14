@@ -42,8 +42,8 @@ const hasLongContent = (value) => {
 const getGridCols = (count) => {
   if (count === 0) return 'grid-cols-1';
   if (count === 1) return 'grid-cols-1';
-  if (count === 2) return 'grid-cols-2';
-  return 'grid-cols-3 lg:grid-cols-3';
+  // Sempre usar 2 colunas para distribuição equitativa
+  return 'grid-cols-2';
 };
 
 const Infraestrutura = memo(({ escola }) => {
@@ -121,7 +121,7 @@ const Infraestrutura = memo(({ escola }) => {
         </div>
       )}
       
-      {/* Cards normais - grid de 3 colunas */}
+      {/* Cards normais - grid de 2 colunas */}
       {normalCards.length > 0 && (
         <div className={`grid ${getGridCols(normalCards.length)} gap-2 sm:gap-3 ${longContentCards.length > 0 ? 'mt-3' : 'mt-3'} items-stretch overflow-visible`} style={{ paddingTop: '12px', paddingLeft: '12px' }}>
           {normalCards.map((item, idx) => (
