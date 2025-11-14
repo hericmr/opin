@@ -128,21 +128,7 @@ const DadosBasicosTab = ({ editingLocation, setEditingLocation }) => {
               className="w-full border border-gray-700 bg-gray-800/50 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100 placeholder-gray-400 transition-all duration-200 backdrop-blur-sm"
               value={editingLocation.logradouro || ''}
               onChange={e => setEditingLocation({ ...editingLocation, logradouro: e.target.value })}
-              placeholder="Rua, Avenida, etc."
-            />
-          </div>
-
-          {/* Número */}
-          <div>
-            <label className="block text-sm font-medium text-gray-200 mb-3">
-              Número
-            </label>
-            <input
-              type="text"
-              className="w-full border border-gray-700 bg-gray-800/50 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100 placeholder-gray-400 transition-all duration-200 backdrop-blur-sm"
-              value={editingLocation.numero || ''}
-              onChange={e => setEditingLocation({ ...editingLocation, numero: e.target.value })}
-              placeholder="Número"
+              placeholder="Rua, Avenida, número, etc."
             />
           </div>
 
