@@ -24,7 +24,7 @@ const ProjetosParcerias = memo(({ escola }) => {
 
   return (
     <InfoSection>
-      <div className="grid grid-cols-1 gap-4 items-stretch overflow-visible" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+      <div className="grid grid-cols-1 gap-2 items-stretch overflow-visible">
         {availableProjects.map((project) => {
           const value = escola[project.field];
           const isNegative = value?.trim().toLowerCase() === 'não';
