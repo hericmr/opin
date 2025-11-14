@@ -1,9 +1,9 @@
 {
   "files": {
-    "main.css": "/opin/static/css/main.e9b86899.css",
-    "main.js": "/opin/static/js/main.0341a28f.js",
+    "main.css": "/opin/static/css/main.d87e7d51.css",
+    "main.js": "/opin/static/js/main.4b73425f.js",
     "static/css/308.c43a8ac9.chunk.css": "/opin/static/css/308.c43a8ac9.chunk.css",
-    "static/js/308.6ca92a11.chunk.js": "/opin/static/js/308.6ca92a11.chunk.js",
+    "static/js/308.bcf134d5.chunk.js": "/opin/static/js/308.bcf134d5.chunk.js",
     "static/js/462.2493e79c.chunk.js": "/opin/static/js/462.2493e79c.chunk.js",
     "static/js/622.82e2766c.chunk.js": "/opin/static/js/622.82e2766c.chunk.js",
     "static/css/940.447e318d.chunk.css": "/opin/static/css/940.447e318d.chunk.css",
@@ -34,10 +34,10 @@
     "static/media/PapakiloDecorative-OVwG4.ttf": "/opin/static/media/PapakiloDecorative-OVwG4.f4f10c9c75dd0b148ab1.ttf",
     "static/media/PapakiloLight-ZVWpm.ttf": "/opin/static/media/PapakiloLight-ZVWpm.46e50e117340e36511fa.ttf",
     "index.html": "/opin/index.html",
-    "main.e9b86899.css.map": "/opin/static/css/main.e9b86899.css.map",
-    "main.0341a28f.js.map": "/opin/static/js/main.0341a28f.js.map",
+    "main.d87e7d51.css.map": "/opin/static/css/main.d87e7d51.css.map",
+    "main.4b73425f.js.map": "/opin/static/js/main.4b73425f.js.map",
     "308.c43a8ac9.chunk.css.map": "/opin/static/css/308.c43a8ac9.chunk.css.map",
-    "308.6ca92a11.chunk.js.map": "/opin/static/js/308.6ca92a11.chunk.js.map",
+    "308.bcf134d5.chunk.js.map": "/opin/static/js/308.bcf134d5.chunk.js.map",
     "462.2493e79c.chunk.js.map": "/opin/static/js/462.2493e79c.chunk.js.map",
     "622.82e2766c.chunk.js.map": "/opin/static/js/622.82e2766c.chunk.js.map",
     "940.447e318d.chunk.css.map": "/opin/static/css/940.447e318d.chunk.css.map",
@@ -67,7 +67,7 @@
     "312.d54d39ef.chunk.js.map": "/opin/static/js/312.d54d39ef.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e9b86899.css",
-    "static/js/main.0341a28f.js"
+    "static/css/main.d87e7d51.css",
+    "static/js/main.4b73425f.js"
   ]
 }
