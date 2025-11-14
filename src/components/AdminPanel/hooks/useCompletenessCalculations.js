@@ -36,34 +36,35 @@ export const useCompletenessCalculations = (data = []) => {
 
   // Função para obter cor baseada na completude
   const getCompletenessColor = (percentage) => {
-    if (percentage >= 80) return 'text-green-400 bg-green-400/10';
-    if (percentage >= 60) return 'text-yellow-400 bg-yellow-400/10';
-    if (percentage >= 40) return 'text-orange-400 bg-orange-400/10';
-    return 'text-red-400 bg-red-400/10';
-  };
-
-  // Função para obter ícone baseado na completude
-  const getCompletenessIcon = (percentage) => {
-    if (percentage >= 80) return '✅';
-    if (percentage >= 60) return '⚠️';
-    if (percentage >= 40) return '🔶';
-    return '❌';
+    if (percentage > 85) {
+      return 'text-emerald-300 bg-emerald-500/10 border border-emerald-400/20';
+    }
+    if (percentage >= 60) {
+      return 'text-amber-300 bg-amber-500/10 border border-amber-400/20';
+    }
+    return 'text-rose-300 bg-rose-500/10 border border-rose-400/20';
   };
 
   // Função para obter cor da barra de progresso
   const getProgressBarColor = (percentage) => {
-    if (percentage >= 80) return 'bg-gradient-to-r from-green-500 to-green-400';
-    if (percentage >= 60) return 'bg-gradient-to-r from-yellow-500 to-yellow-400';
-    if (percentage >= 40) return 'bg-gradient-to-r from-orange-500 to-orange-400';
-    return 'bg-gradient-to-r from-red-500 to-red-400';
+    if (percentage > 85) {
+      return 'bg-gradient-to-r from-emerald-500 to-emerald-400';
+    }
+    if (percentage >= 60) {
+      return 'bg-gradient-to-r from-amber-500 to-amber-400';
+    }
+    return 'bg-gradient-to-r from-rose-500 to-rose-400';
   };
 
   // Função para obter cor da barra de progresso simples
   const getSimpleProgressBarColor = (percentage) => {
-    if (percentage >= 80) return 'bg-green-500';
-    if (percentage >= 60) return 'bg-yellow-500';
-    if (percentage >= 40) return 'bg-orange-500';
-    return 'bg-red-500';
+    if (percentage > 85) {
+      return 'bg-emerald-500';
+    }
+    if (percentage >= 60) {
+      return 'bg-amber-500';
+    }
+    return 'bg-rose-500';
   };
 
   // Função para encontrar escolas sem informação em uma categoria
@@ -142,7 +143,6 @@ export const useCompletenessCalculations = (data = []) => {
     calculateFieldCompleteness,
     calculateCategoryCompleteness,
     getCompletenessColor,
-    getCompletenessIcon,
     getProgressBarColor,
     getSimpleProgressBarColor,
     findIncompleteSchools,

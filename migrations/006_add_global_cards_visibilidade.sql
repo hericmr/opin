@@ -39,3 +39,8 @@ ON configuracao_global USING GIN (valor);
 COMMENT ON TABLE configuracao_global IS 
 'Tabela para armazenar configurações globais do sistema. A chave "cards_visibilidade_global" define a visibilidade padrão dos cards.';
 
+
+
+
+
+

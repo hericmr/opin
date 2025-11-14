@@ -24,3 +24,8 @@ ON escolas_completa USING GIN (cards_visibilidade);
 COMMENT ON COLUMN escolas_completa.cards_visibilidade IS 
 'Configuração de visibilidade dos cards no painel de informações. Cada chave representa um card e o valor booleano indica se está visível.';
 
+
+
+
+
+

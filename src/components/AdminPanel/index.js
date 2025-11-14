@@ -468,23 +468,18 @@ const AdminPanelContent = () => {
           </div>
         )}
 
-        {/* Painel de Edição - Estilo WhatsApp Dark Mode */}
+        {/* Painel de Edição - Simplificado */}
         {editingLocation && typeof editingLocation === 'object' && (editingLocation.Escola !== undefined) && editingLocation.activeTab !== 'tabela-editavel' && (
-          <div className="bg-[#0B141A] rounded-2xl shadow-2xl overflow-hidden flex flex-col border border-[#202C33]" style={{ maxHeight: 'calc(100vh - 120px)' }}>
-            {/* Header do painel - Estilo WhatsApp Dark Mode */}
-            <div className="bg-[#202C33] px-6 py-4 flex justify-between items-center flex-shrink-0 border-b border-[#2A3942]">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-[#075E54] rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                </div>
+          <div className="bg-[#0B141A] rounded-lg shadow-lg flex flex-col border border-[#202C33]">
+            {/* Header do painel - Simplificado */}
+            <div className="bg-[#202C33] px-4 py-3 flex justify-between items-center flex-shrink-0 border-b border-[#2A3942]">
+              <div className="flex items-center gap-3">
                 <div>
-                  <h2 className="text-lg lg:text-xl font-semibold text-[#E9EDEF]">
+                  <h2 className="text-base font-semibold text-[#E9EDEF]">
                     {editingLocation.id ? 'Editar Escola' : 'Nova Escola'}
                   </h2>
                   {editingLocation.Escola && (
-                    <p className="text-[#8696A0] text-sm">{editingLocation.Escola}</p>
+                    <p className="text-[#8696A0] text-xs">{editingLocation.Escola}</p>
                   )}
                 </div>
               </div>
@@ -493,7 +488,7 @@ const AdminPanelContent = () => {
                 <button
                   onClick={handleSaveEscola}
                   disabled={isSaving}
-                  className="px-5 py-2.5 bg-[#075E54] hover:bg-[#0C7A6B] text-white rounded-full focus:outline-none focus:ring-2 focus:ring-[#075E54]/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm font-medium"
+                  className="px-4 py-2 bg-[#075E54] hover:bg-[#0C7A6B] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#075E54]/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-xs font-medium"
                 >
                   {isSaving ? (
                     <>
@@ -526,8 +521,8 @@ const AdminPanelContent = () => {
               </div>
             </div>
 
-            {/* Mensagens de feedback - Estilo WhatsApp Dark Mode */}
-            <div className="px-6 pt-4 flex-shrink-0">
+            {/* Mensagens de feedback - Simplificado */}
+            <div className="px-4 pt-3 flex-shrink-0">
               {saveSuccess && (
                 <div className="mb-4 p-3 bg-[#1C2B32] rounded-lg border-l-4 border-[#00A884]">
                   <div className="flex items-center gap-2">
@@ -554,9 +549,9 @@ const AdminPanelContent = () => {
               )}
             </div>
 
-            {/* Navegação por abas - Estilo WhatsApp Dark Mode */}
-            <div className="bg-[#111B21] border-b border-[#2A3942] flex-shrink-0 relative">
-              <nav className="flex space-x-1 overflow-x-auto scrollbar-thin scrollbar-thumb-[#2A3942] scrollbar-track-transparent tabs-container px-4">
+            {/* Navegação por abas - Simplificada */}
+            <div className="bg-[#111B21] border-b border-[#2A3942] flex-shrink-0">
+              <nav className="flex flex-wrap gap-1 px-3 py-2">
                 {ADMIN_TABS.map((tab) => {
                   const isActive = (editingLocation.activeTab || FORM_CONFIG.DEFAULT_ACTIVE_TAB) === tab.id;
                   const hasMissing = hasMissingInfo(tab.id, editingLocation);
@@ -566,31 +561,29 @@ const AdminPanelContent = () => {
                       key={tab.id}
                       type="button"
                       onClick={() => setEditingLocation({ ...editingLocation, activeTab: tab.id })}
-                      className={`whitespace-nowrap py-3 px-4 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 flex-shrink-0 min-w-fit relative ${
+                      className={`whitespace-nowrap py-1.5 px-3 rounded text-xs font-medium transition-all duration-200 ${
                         isActive
-                          ? 'border-[#00A884] text-[#00A884] bg-[#0B141A]'
+                          ? 'bg-[#00A884] text-white'
                           : hasMissing
-                          ? 'border-orange-500 text-orange-400 hover:text-orange-300 hover:bg-[#1C2B32]'
-                          : 'border-transparent text-[#8696A0] hover:text-[#E9EDEF] hover:bg-[#1C2B32]'
+                          ? 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
+                          : 'bg-[#202C33] text-[#8696A0] hover:bg-[#2A3942] hover:text-[#E9EDEF]'
                       }`}
                     >
-                      <div className="flex items-center gap-2">
+                      <span className="flex items-center gap-1.5">
                         {tab.label}
                         {hasMissing && !isActive && (
-                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
                         )}
-                      </div>
+                      </span>
                     </button>
                   );
                 })}
               </nav>
             </div>
 
-            {/* Conteúdo da aba ativa - Estilo WhatsApp Dark Mode */}
-            <div className="flex-grow overflow-y-auto bg-[#0B141A] p-6 scrollbar-thin scrollbar-thumb-[#2A3942] scrollbar-track-transparent">
-              <div className="max-w-4xl mx-auto">
-                {renderActiveTab(editingLocation, setEditingLocation)}
-              </div>
+            {/* Conteúdo da aba ativa - Sem scroll interno */}
+            <div className="flex-grow bg-[#0B141A] p-4">
+              {renderActiveTab(editingLocation, setEditingLocation)}
             </div>
           </div>
         )}

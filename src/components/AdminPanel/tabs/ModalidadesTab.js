@@ -41,8 +41,7 @@ const ModalidadesTab = ({
         <label className="block text-sm font-medium text-gray-200 mb-4 text-base">
           Modalidades de Ensino
         </label>
-        <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 max-h-96 overflow-y-auto">
-          <div className="space-y-4">
+        <div className="space-y-4">
             {MODALIDADES_CATEGORIAS.map((categoria) => (
               <div key={categoria.id}>
                 <h4 className="text-sm font-semibold text-green-400 mb-2 border-b border-gray-600 pb-1">
@@ -97,7 +96,6 @@ const ModalidadesTab = ({
               </label>
             </div>
           </div>
-        </div>
       </div>
 
       {/* Número de Alunos */}
