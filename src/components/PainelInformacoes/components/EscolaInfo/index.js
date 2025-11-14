@@ -83,7 +83,7 @@ const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0, sectio
   ].filter(({ id }) => isCardVisible(cardsVisibilidade, id, globalVisibility));
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Grid de cards */}
       {gridSections.length > 0 && (
         <div ref={(el) => sectionRefs && (sectionRefs.dados = el)}>

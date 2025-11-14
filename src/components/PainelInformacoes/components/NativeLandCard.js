@@ -183,14 +183,13 @@ const NativeLandCard = memo(({
   return (
     <div 
       className={`
-        rounded-xl p-3 
         ${cardHeightClass} flex flex-col
         overflow-visible
         card-container
         relative
         ${className}
       `}
-      style={{ border: 'none', outline: 'none', backgroundColor: '#D1FAE5' }}
+      style={{ border: 'none', outline: 'none', backgroundColor: 'transparent' }}
     >
       {/* Ícone FORA do card, no canto superior esquerdo */}
       {Icon && (
@@ -225,20 +224,20 @@ const NativeLandCard = memo(({
       {/* Conteúdo interno do card - flexível para permitir expansão */}
       <div className="flex flex-col relative z-20">
         {/* Título centralizado - aproveitando melhor o espaço */}
-        <div className="flex items-center justify-center mb-1.5 flex-shrink-0 min-h-[28px] pt-0.5 relative z-20">
-          <div className="text-xs text-gray-700 font-semibold leading-tight text-center uppercase tracking-wide break-words px-2 relative z-20" style={{ lineHeight: '1.4' }}>
+        <div className="flex items-center justify-center mb-1 flex-shrink-0 relative z-20">
+          <div className="text-xs text-gray-700 font-semibold leading-tight text-center uppercase tracking-wide break-words relative z-20" style={{ lineHeight: '1.3' }}>
             {label}
           </div>
         </div>
         
         {/* Conteúdo do valor - flexível para textos longos */}
-        <div className={`${needsFlexibleLayout ? 'flex-grow flex items-start justify-center py-1' : 'flex-1 flex items-center justify-center pb-1'} relative z-20`}>
+        <div className={`${needsFlexibleLayout ? 'flex-grow flex items-start justify-center' : 'flex-1 flex items-center justify-center'} relative z-20`}>
           {renderValue()}
         </div>
         
         {/* Descrição opcional */}
         {description && (
-          <div className="text-xs text-gray-700 leading-relaxed mt-1.5 pt-1.5 border-t border-gray-200 break-words relative z-20 pb-0.5" style={{ lineHeight: '1.5' }}>
+          <div className="text-xs text-gray-700 leading-relaxed mt-1 pt-1 break-words relative z-20" style={{ lineHeight: '1.5' }}>
             {description}
           </div>
         )}
