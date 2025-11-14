@@ -9,6 +9,14 @@ export const useClickOutside = (ref, handler) => {
         return;
       }
       
+      // Ignorar cliques em botões de fechar ou seus elementos filhos
+      const isCloseButton = el.closest('button[aria-label="Fechar painel"]') || 
+                           el.closest('button[aria-label*="Fechar"]') ||
+                           el.closest('[aria-label="Fechar painel"]');
+      if (isCloseButton) {
+        return;
+      }
+      
       if (!ref.current || ref.current.contains(event.target)) {
         return;
       }
