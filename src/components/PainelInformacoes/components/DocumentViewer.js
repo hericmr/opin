@@ -124,11 +124,11 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
             key={doc.id}
             className={`
               flex flex-col justify-between h-full max-w-xs mx-auto
-              rounded-2xl transition-all duration-200 cursor-pointer
-              shadow-sm hover:shadow-lg
+              rounded-2xl cursor-pointer
+              shadow-sm
               ${selectedDoc?.id === doc.id
                 ? 'bg-green-100 scale-[1.03]'
-                : 'bg-white hover:bg-green-50'
+                : 'bg-white'
               }
             `}
             onClick={() => {
@@ -163,10 +163,10 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
             onClick={() => {
               setSelectedDoc(doc);
             }}
-            className={`w-full text-left p-3 rounded-lg transition-colors duration-200 ${
+            className={`w-full text-left p-3 rounded-lg ${
               selectedDoc?.id === doc.id
                 ? 'bg-green-100'
-                : 'hover:bg-green-50'
+                : ''
             }`}
           >
             <h4 className="font-medium text-green-800">{doc.titulo}</h4>

@@ -231,7 +231,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
         {imagens.map((img) => (
           <figure
             key={img.id}
-            className="rounded-lg overflow-hidden bg-white shadow-sm flex flex-col cursor-pointer transition hover:shadow-md"
+            className="rounded-lg overflow-hidden bg-white shadow-sm flex flex-col cursor-pointer"
             onClick={() => {
               if (img.publicURL) {
                 const index = imagens.findIndex(i => i.publicURL === img.publicURL);
@@ -244,7 +244,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
               <OptimizedImage
                 src={img.publicURL}
                 alt={img.descricao}
-                className="w-full h-full object-cover object-center transition-transform duration-200 hover:scale-105"
+                className="w-full h-full object-cover object-center"
                 isPreloaded={isImagePreloaded(img.publicURL)}
                 style={{ maxHeight: '350px' }}
               />
