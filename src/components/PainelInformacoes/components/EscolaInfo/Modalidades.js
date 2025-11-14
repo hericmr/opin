@@ -7,10 +7,20 @@ import NativeLandCard from '../NativeLandCard';
 // Função utilitária para transformar o texto em lista
 function parseModalidadeEnsino(text) {
   if (!text || typeof text !== 'string') return [];
-  // Divide pelo traço longo (–, U+2013) e remove espaços extras
+  
+  // Primeiro, divide por quebras de linha (\n)
+  // Depois, divide pelo traço longo (–, U+2013) para cada linha
+  // Remove espaços extras e filtra itens vazios
   return text
-    .split('–')
-    .map(item => item.trim())
+    .split('\n')
+    .flatMap(line => {
+      // Se a linha contém traço longo, divide por ele também
+      if (line.includes('–')) {
+        return line.split('–').map(item => item.trim()).filter(Boolean);
+      }
+      // Caso contrário, retorna a linha inteira (se não estiver vazia)
+      return line.trim() ? [line.trim()] : [];
+    })
     .filter(Boolean);
 }
 
