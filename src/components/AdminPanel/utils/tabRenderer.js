@@ -5,6 +5,7 @@ import PovosLinguasTab from '../tabs/PovosLinguasTab';
 import ModalidadesTab from '../tabs/ModalidadesTab';
 import InfraestruturaTab from '../tabs/InfraestruturaTab';
 import GestaoProfessoresTab from '../tabs/GestaoProfessoresTab';
+import FuncionariosTab from '../tabs/FuncionariosTab';
 import MaterialPedagogicoTab from '../tabs/MaterialPedagogicoTab';
 import ProjetosParceriasTab from '../tabs/ProjetosParceriasTab';
 import RedesSociaisTab from '../tabs/RedesSociaisTab';
@@ -61,6 +62,14 @@ export const renderActiveTab = (editingLocation, setEditingLocation) => {
     case 'gestao-professores':
       return (
         <GestaoProfessoresTab 
+          editingLocation={editingLocation}
+          setEditingLocation={setEditingLocation}
+        />
+      );
+    
+    case 'funcionarios':
+      return (
+        <FuncionariosTab 
           editingLocation={editingLocation}
           setEditingLocation={setEditingLocation}
         />

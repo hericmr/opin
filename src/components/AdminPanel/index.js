@@ -247,6 +247,7 @@ const AdminPanelContent = () => {
       'modalidades': ['Modalidade de Ensino/turnos de funcionamento', 'Numero de alunos'],
       'infraestrutura': ['Espaço escolar e estrutura', 'Acesso à água', 'Acesso à internet'],
       'gestao-professores': ['Gestão/Nome', 'Quantidade de professores indígenas', 'Quantidade de professores não indígenas'],
+      'funcionarios': ['Outros funcionários'],
       'material-pedagogico': ['A escola possui PPP próprio?', 'Material pedagógico indígena'],
       'projetos-parcerias': ['Projetos em andamento', 'Parcerias com universidades?'],
       'redes-sociais': ['Escola utiliza redes sociais?', 'Links das redes sociais'],
