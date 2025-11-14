@@ -167,12 +167,12 @@ const NativeLandCard = memo(({
   }
 
   // Layout vertical (padrão)
-  // Cards são flexíveis por padrão - altura mínima de 140px, mas podem expandir
+  // Cards são flexíveis por padrão - altura mínima reduzida para evitar espaçamento excessivo
   // Se className já especifica altura, usa ela; caso contrário, usa min-h para permitir expansão
   const hasCustomHeight = className.includes('h-[') || className.includes('h-auto') || className.includes('min-h-[');
   const cardHeightClass = hasCustomHeight 
     ? '' 
-    : 'min-h-[140px]';
+    : 'min-h-[120px]';
   
   // Determina se precisa de layout flexível para textos longos
   const isTextType = type === 'text' || (!type || type === 'default');
@@ -225,20 +225,20 @@ const NativeLandCard = memo(({
       {/* Conteúdo interno do card - flexível para permitir expansão */}
       <div className="flex flex-col relative z-20">
         {/* Título centralizado - aproveitando melhor o espaço */}
-        <div className="flex items-center justify-center mb-2 flex-shrink-0 min-h-[32px] pt-1 relative z-20">
-          <div className="text-xs text-gray-700 font-semibold leading-tight text-center uppercase tracking-wide break-words px-2 relative z-20" style={{ lineHeight: '1.5' }}>
+        <div className="flex items-center justify-center mb-1.5 flex-shrink-0 min-h-[28px] pt-0.5 relative z-20">
+          <div className="text-xs text-gray-700 font-semibold leading-tight text-center uppercase tracking-wide break-words px-2 relative z-20" style={{ lineHeight: '1.4' }}>
             {label}
           </div>
         </div>
         
         {/* Conteúdo do valor - flexível para textos longos */}
-        <div className={`${needsFlexibleLayout ? 'flex-grow flex items-start justify-center py-2' : 'flex-1 flex items-center justify-center'} relative z-20`}>
+        <div className={`${needsFlexibleLayout ? 'flex-grow flex items-start justify-center py-1' : 'flex-1 flex items-center justify-center pb-1'} relative z-20`}>
           {renderValue()}
         </div>
         
         {/* Descrição opcional */}
         {description && (
-          <div className="text-xs text-gray-700 leading-relaxed mt-2 pt-2 border-t border-gray-200 break-words relative z-20" style={{ lineHeight: '1.6' }}>
+          <div className="text-xs text-gray-700 leading-relaxed mt-1.5 pt-1.5 border-t border-gray-200 break-words relative z-20 pb-0.5" style={{ lineHeight: '1.5' }}>
             {description}
           </div>
         )}
