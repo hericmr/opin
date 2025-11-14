@@ -115,7 +115,7 @@ const CompletenessDashboard = () => {
     'Povos e Línguas': Languages,
     'Modalidades e Alunos': GraduationCap,
     'Infraestrutura': Home,
-    'Gestão e Professores': Users,
+    'Equipe': Users,
     'Material Pedagógico': BookOpen,
     'Projetos e Parcerias': Handshake,
     'Redes Sociais e Mídia': Share2,

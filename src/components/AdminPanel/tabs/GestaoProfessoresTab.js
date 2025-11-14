@@ -9,7 +9,7 @@ const GestaoProfessoresTab = ({ editingLocation, setEditingLocation }) => {
         cardId="gestaoProfessores"
         editingLocation={editingLocation}
         setEditingLocation={setEditingLocation}
-        label="Visibilidade do Card: Gestão e Professores"
+        label="Visibilidade do Card: Equipe"
       />
       
       {/* Gestão/Nome */}

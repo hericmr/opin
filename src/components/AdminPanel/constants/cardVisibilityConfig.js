@@ -23,7 +23,7 @@ export const CARD_VISIBILITY_CONFIG = [
   },
   {
     id: 'gestaoProfessores',
-    label: 'Gestão e Professores',
+    label: 'Equipe',
     description: 'Direção, professores, formação profissional',
     defaultVisible: true,
     category: 'grid'
