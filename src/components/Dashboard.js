@@ -71,13 +71,6 @@ const Dashboard = () => {
         {/* Descrição da página - Abaixo do hero, estilo Native Land Digital */}
         <DashboardDescription />
 
-        {/* Imagem aleatória de escola após a descrição */}
-        {imagesReady && descriptionImage && (
-          <div className="mt-6">
-            <DashboardImageSection image={descriptionImage} priority="normal" />
-          </div>
-        )}
-
       {/* Seções com cores que mudam conforme o scroll */}
       <div className="w-full">
         {/* PRIMEIRO GRÁFICO - Distribuição de Alunos por Modalidade - Seção Branca */}
