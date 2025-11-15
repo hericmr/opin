@@ -194,7 +194,7 @@ const GestaoProfessores = memo(({ escola }) => {
           },
           !isEmptyValue(escola.gestao) && {
             icon: User,
-            label: "Tem vice-diretor; COE?",
+            label: "Tem vice-diretor OU COE?",
             value: escola.gestao
           },
           !isEmptyValue(escola.outros_funcionarios) && {
