@@ -1,31 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Trash2, RefreshCw, Check, X, Palette } from 'lucide-react';
+import { Trash2, RefreshCw, Check, X } from 'lucide-react';
 
 /**
  * Action buttons overlay for image card
  * @param {Object} props
  * @param {Object} props.image - Image object
  * @param {boolean} props.isHeader - Whether this image is the header image
- * @param {boolean} props.isDrawing - Whether this image is a drawing
  * @param {Function} props.onDelete - Delete handler
  * @param {Function} props.onReplace - Replace handler
  * @param {Function} props.onSetHeader - Set as header handler
  * @param {Function} props.onRemoveHeader - Remove from header handler
- * @param {Function} props.onAddDrawing - Add to drawings handler
- * @param {Function} props.onRemoveDrawing - Remove from drawings handler
  * @param {boolean} [props.loading] - Whether action is loading
  */
 const ImageActions = ({
   image,
   isHeader,
-  isDrawing,
   onDelete,
   onReplace,
   onSetHeader,
   onRemoveHeader,
-  onAddDrawing,
-  onRemoveDrawing,
   loading = false,
 }) => {
   return (
@@ -51,32 +45,6 @@ const ImageActions = ({
             disabled={loading}
             className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-700 disabled:opacity-50"
             title="Remover do header"
-            type="button"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        )}
-        
-        {/* Button to add to drawings */}
-        {!isDrawing && onAddDrawing && (
-          <button
-            onClick={() => onAddDrawing(image.publicURL)}
-            disabled={loading}
-            className="p-2 bg-purple-500 text-white rounded-full hover:bg-purple-700 disabled:opacity-50"
-            title="Adicionar aos Desenhos"
-            type="button"
-          >
-            <Palette className="w-5 h-5" />
-          </button>
-        )}
-        
-        {/* Button to remove from drawings */}
-        {isDrawing && onRemoveDrawing && (
-          <button
-            onClick={() => onRemoveDrawing(image.publicURL)}
-            disabled={loading}
-            className="p-2 bg-purple-600 text-white rounded-full hover:bg-purple-800 disabled:opacity-50"
-            title="Remover dos Desenhos"
             type="button"
           >
             <X className="w-5 h-5" />
@@ -114,13 +82,10 @@ const ImageActions = ({
 ImageActions.propTypes = {
   image: PropTypes.object.isRequired,
   isHeader: PropTypes.bool.isRequired,
-  isDrawing: PropTypes.bool,
   onDelete: PropTypes.func,
   onReplace: PropTypes.func,
   onSetHeader: PropTypes.func,
   onRemoveHeader: PropTypes.func,
-  onAddDrawing: PropTypes.func,
-  onRemoveDrawing: PropTypes.func,
   loading: PropTypes.bool,
 };
 

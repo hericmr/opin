@@ -163,11 +163,6 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
                 
                 {/* Informações adicionais */}
                 <div className="flex items-center gap-4 text-xs text-gray-500">
-                  {img.categoria && (
-                    <span className="capitalize bg-gray-100 px-2 py-1 rounded">
-                      {img.categoria}
-                    </span>
-                  )}
                   {img.autor && (
                     <span>Por: {img.autor}</span>
                   )}
