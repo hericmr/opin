@@ -132,8 +132,6 @@ export const useEscolas = () => {
             'bairro': escolaData['bairro'],
             'cep': escolaData['cep'],
             'estado': escolaData['estado'],
-            'Cozinha': escolaData['cozinha'],
-            'Merenda_escolar': escolaData['merenda_escolar'],
             'diferenciada': escolaData['diferenciada'],
             'imagem_header': escolaData['imagem_header'],
             'cards_visibilidade': escolaData['cards_visibilidade'] || null
@@ -216,8 +214,6 @@ export const useEscolas = () => {
             'bairro': escolaData['bairro'],
             'cep': escolaData['cep'],
             'estado': escolaData['estado'],
-            'Cozinha': escolaData['cozinha'],
-            'Merenda_escolar': escolaData['merenda_escolar'],
             'diferenciada': escolaData['diferenciada'],
             'imagem_header': escolaData['imagem_header'],
             'cards_visibilidade': escolaData['cards_visibilidade'] || null

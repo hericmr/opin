@@ -91,8 +91,6 @@ const TabelaEditavelTab = ({ setEditingLocation, onShowMetadadosModal }) => {
       'Outros Funcionários (Det.)',
       'Gestão (Det.)',
       'Merenda Diferenciada',
-      'Cozinha',
-      'Merenda Escolar',
       'Diferenciada'
     ];
     
@@ -151,8 +149,6 @@ const TabelaEditavelTab = ({ setEditingLocation, onShowMetadadosModal }) => {
         `"${escola.outros_funcionarios_detalhado || ''}"`,
         `"${escola.gestao_detalhado || ''}"`,
         `"${escola.merenda_diferenciada || ''}"`,
-        `"${escola.cozinha || ''}"`,
-        `"${escola.merenda_escolar || ''}"`,
         `"${escola.merenda_diferenciada_detalhado || ''}"`
       ].join(','))
     ].join('\n');

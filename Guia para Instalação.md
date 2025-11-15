@@ -83,8 +83,6 @@ CREATE TABLE escolas_completa (
   latitude NUMERIC,
   longitude NUMERIC,
   link_para_videos TEXT,
-  cozinha TEXT,
-  merenda_escolar TEXT,
   diferenciada TEXT,
   merenda_diferenciada TEXT,
   logradouro TEXT,
