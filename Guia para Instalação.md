@@ -94,6 +94,7 @@ CREATE TABLE escolas_completa (
   cep TEXT,
   estado TEXT DEFAULT 'SP',
   imagem_header TEXT,
+  imagens_desenhos TEXT,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );

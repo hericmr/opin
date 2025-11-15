@@ -11,7 +11,6 @@ import ImageCard from './ImageCard';
  * @param {Object} props.dragHandlers - Drag & drop handlers from useImageDragDrop
  * @param {string|number} props.escolaId - School ID
  * @param {Object} props.headerImage - Header image state and functions
- * @param {Object} props.drawingsImage - Drawings image state and functions
  * @param {Function} props.onDelete - Delete handler
  * @param {Function} props.onReplace - Replace handler
  * @param {Function} props.onLegendSave - Legend save handler
@@ -23,7 +22,6 @@ const ImagesGrid = ({
   dragHandlers,
   escolaId,
   headerImage,
-  drawingsImage,
   onDelete,
   onReplace,
   onLegendSave,
@@ -33,7 +31,7 @@ const ImagesGrid = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h4 className="font-medium text-gray-100">
-          Imagens da Escola ({images.length})
+          Imagens dos Professores ({images.length})
         </h4>
         <p className="text-sm text-gray-400">Arraste as imagens para reordenar</p>
       </div>
@@ -43,13 +41,10 @@ const ImagesGrid = ({
             key={image.id}
             image={image}
             isHeader={headerImage?.headerImageUrl === image.publicURL}
-            isDrawing={drawingsImage?.isDrawingImage(image.publicURL)}
             onDelete={onDelete}
             onReplace={onReplace}
             onSetHeader={headerImage?.setHeaderImage}
             onRemoveHeader={headerImage?.removeHeaderImage}
-            onAddDrawing={drawingsImage?.addDrawingImage}
-            onRemoveDrawing={drawingsImage?.removeDrawingImage}
             onLegendSave={onLegendSave}
             onLegendChange={onLegendChange}
             dragHandlers={dragHandlers}
@@ -68,7 +63,6 @@ ImagesGrid.propTypes = {
   dragHandlers: PropTypes.object.isRequired,
   escolaId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   headerImage: PropTypes.object,
-  drawingsImage: PropTypes.object,
   onDelete: PropTypes.func,
   onReplace: PropTypes.func,
   onLegendSave: PropTypes.func.isRequired,
