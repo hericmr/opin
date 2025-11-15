@@ -266,7 +266,7 @@ Após cada atualização, verificar:
   - [x] babel-loader (8.4.1 → 10.0.0) ✅
 - [🔄] Fase 3: Dependências de Médio Risco
   - [x] react-markdown (9.1.0 → 10.1.0) ✅
-  - [ ] tailwindcss (3.4.18 → 4.1.17) ⚠️ ALTA COMPLEXIDADE
+  - [❌] tailwindcss (3.4.18 → 4.1.17) ⚠️ REVERTIDO - Incompatível com react-scripts
 - [ ] Fase 4: Dependências Críticas
   - [ ] react e react-dom
 
@@ -288,6 +288,11 @@ Após cada atualização, verificar:
   - Todas as 3 dependências de baixo risco atualizadas sem problemas
   - Builds compilando corretamente
   - Nenhum breaking change encontrado
+- ⚠️ **2024-12-XX**: Tentativa de atualizar Tailwind CSS 4
+  - Tailwind CSS 4 requer `@tailwindcss/postcss` separado
+  - Incompatível com `react-scripts` sem configuração adicional complexa
+  - **Decisão**: Manter Tailwind CSS 3.4.18 por enquanto
+  - **Nota**: Para atualizar no futuro, considerar migrar para Vite ou atualizar react-scripts primeiro
 
 ---
 

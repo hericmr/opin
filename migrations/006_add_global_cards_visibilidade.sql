@@ -45,3 +45,4 @@ COMMENT ON TABLE configuracao_global IS
 
 
 
+
