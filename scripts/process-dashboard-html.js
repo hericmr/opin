@@ -17,8 +17,8 @@ function processDashboardHtml() {
   }
 
   if (!fs.existsSync(dashboardIndexPath)) {
-    console.error('❌ build/dashboard/index.html não encontrado.');
-    process.exit(1);
+    console.warn('⚠️ build/dashboard/index.html não encontrado. Pulando processamento...');
+    return; // Não falhar o build se o dashboard não existir
   }
 
   // Ler o index.html principal para extrair os scripts
