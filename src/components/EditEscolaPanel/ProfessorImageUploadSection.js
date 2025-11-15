@@ -728,9 +728,19 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                     <GripVertical className="w-4 h-4 text-gray-400" />
                   </div>
                 <img
-                  src={image.publicUrl}
+                  src={image.publicUrl || image.url}
                   alt={image.descricao || 'Imagem do professor'}
-                    className="w-full h-48 object-cover"
+                  className="w-full h-48 object-cover"
+                  onError={(e) => {
+                    console.error('Erro ao carregar imagem:', image.publicUrl || image.url);
+                    // Tentar usar URL alternativa se disponível
+                    if (image.url && image.publicUrl !== image.url) {
+                      e.target.src = image.url;
+                    } else {
+                      e.target.style.display = 'none';
+                    }
+                  }}
+                  loading="lazy"
                 />
                 
                 {/* Overlay de ações */}
