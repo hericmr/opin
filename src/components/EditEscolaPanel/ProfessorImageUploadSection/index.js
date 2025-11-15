@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Image as ImageIcon, AlertCircle, Check } from 'lucide-react';
+import { User, AlertCircle, Check } from 'lucide-react';
 import { testLegendasTable } from '../../../services/legendasService';
+import { 
+  getProfessorImageMetaByUrl, 
+  updateProfessorImageMeta 
+} from '../../../services/professorImageMetaService';
 
 // Hooks
-import { useImageUpload } from './hooks/useImageUpload';
-import { useImageManagement } from './hooks/useImageManagement';
-import { useImageDragDrop } from './hooks/useImageDragDrop';
-import { useImageLegends } from './hooks/useImageLegends';
-import { useHeaderImage } from './hooks/useHeaderImage';
-import { useDrawingsImage } from './hooks/useDrawingsImage';
-import { useImageReplace } from './hooks/useImageReplace';
+import { useProfessorImageUpload } from './hooks/useProfessorImageUpload';
+import { useImageManagement } from '../ImageUploadSection/hooks/useImageManagement';
+import { useImageDragDrop } from '../ImageUploadSection/hooks/useImageDragDrop';
+import { useImageLegends } from '../ImageUploadSection/hooks/useImageLegends';
+import { useProfessorImageReplace } from './hooks/useProfessorImageReplace';
 
 // Components
 import UploadArea from './components/UploadArea';
@@ -21,12 +23,12 @@ import ReplaceImageModal from './components/ReplaceImageModal';
 import EmptyState from './components/EmptyState';
 
 /**
- * Main ImageUploadSection component - Refactored and modularized
+ * Main ProfessorImageUploadSection component - Refactored and modularized
  * @param {Object} props
  * @param {string|number} props.escolaId - School ID
  * @param {Function} [props.onImagesUpdate] - Callback when images are updated
  */
-const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
+const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   // State for selected files
   const [selectedFiles, setSelectedFiles] = useState([]);
   
@@ -35,12 +37,10 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   const [success, setSuccess] = useState('');
 
   // Hooks
-  const imageUpload = useImageUpload(escolaId);
-  const imageManagement = useImageManagement(escolaId, 'imagens-das-escolas', 'escola');
-  const headerImage = useHeaderImage(escolaId);
-  const drawingsImage = useDrawingsImage(escolaId);
-  const imageReplace = useImageReplace(escolaId, 'imagens-das-escolas');
-  const { saveLegend } = useImageLegends(escolaId, 'escola');
+  const imageUpload = useProfessorImageUpload(escolaId);
+  const imageManagement = useImageManagement(escolaId, 'imagens-professores', 'professor');
+  const imageReplace = useProfessorImageReplace(escolaId);
+  const { saveLegend } = useImageLegends(escolaId, 'professor');
   
   // Drag & drop hook
   const dragDrop = useImageDragDrop();
@@ -92,7 +92,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         await imageManagement.addImages(uploadedImages);
         
         setSelectedFiles([]);
-        setSuccess(`${uploadedImages.length} imagem(ns) carregada(s) com sucesso!`);
+        setSuccess(`${uploadedImages.length} imagem(ns) do(s) professor(es) carregada(s) com sucesso!`);
         
         if (onImagesUpdate) {
           onImagesUpdate();
@@ -108,31 +108,11 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
 
   // Handle delete image
   const handleDeleteImage = useCallback(async (imageId, filePath) => {
-    if (!window.confirm('Tem certeza que deseja excluir esta imagem?')) return;
+    if (!window.confirm('Tem certeza que deseja excluir esta imagem do professor?')) return;
 
     try {
-      // If deleted image was header, remove header reference
-      const deletedImage = imageManagement.images.find(img => img.id === imageId);
-      if (deletedImage) {
-        if (deletedImage.publicURL === headerImage.headerImageUrl) {
-          try {
-            await headerImage.removeHeaderImage();
-          } catch (_) {
-            // Ignore if already removed
-          }
-        }
-        // If deleted image was a drawing, remove from drawings
-        if (drawingsImage.isDrawingImage(deletedImage.publicURL)) {
-          try {
-            await drawingsImage.removeDrawingImage(deletedImage.publicURL);
-          } catch (_) {
-            // Ignore if already removed
-          }
-        }
-      }
-
       await imageManagement.deleteImage(imageId, filePath);
-      setSuccess('Imagem excluída com sucesso!');
+      setSuccess('Imagem do professor excluída com sucesso!');
 
       if (onImagesUpdate) {
         onImagesUpdate();
@@ -141,7 +121,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       console.error('Erro ao deletar imagem:', err);
       setError(err.message || 'Erro ao excluir imagem');
     }
-  }, [imageManagement, headerImage, drawingsImage, onImagesUpdate]);
+  }, [imageManagement, onImagesUpdate]);
 
   // Handle replace image (called when file is selected in modal)
   const handleReplaceImage = useCallback(async (file) => {
@@ -159,7 +139,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
 
       // Refresh images
       await imageManagement.refresh();
-      setSuccess('Imagem substituída com sucesso!');
+      setSuccess('Imagem do professor substituída com sucesso!');
 
       if (onImagesUpdate) {
         onImagesUpdate();
@@ -169,66 +149,6 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       setError(err.message || 'Erro ao substituir imagem');
     }
   }, [imageManagement, imageReplace, onImagesUpdate]);
-
-  // Handle set header image
-  const handleSetHeaderImage = useCallback(async (imageUrl) => {
-    try {
-      await headerImage.setHeaderImage(imageUrl);
-      setSuccess('Imagem definida como header com sucesso!');
-      
-      if (onImagesUpdate) {
-        onImagesUpdate();
-      }
-    } catch (err) {
-      console.error('Erro ao definir imagem do header:', err);
-      setError(err.message || 'Erro ao definir imagem do header');
-    }
-  }, [headerImage, onImagesUpdate]);
-
-  // Handle remove header image
-  const handleRemoveHeaderImage = useCallback(async () => {
-    try {
-      await headerImage.removeHeaderImage();
-      setSuccess('Imagem removida do header com sucesso!');
-      
-      if (onImagesUpdate) {
-        onImagesUpdate();
-      }
-    } catch (err) {
-      console.error('Erro ao remover imagem do header:', err);
-      setError(err.message || 'Erro ao remover imagem do header');
-    }
-  }, [headerImage, onImagesUpdate]);
-
-  // Handle add drawing image
-  const handleAddDrawingImage = useCallback(async (imageUrl) => {
-    try {
-      await drawingsImage.addDrawingImage(imageUrl);
-      setSuccess('Imagem adicionada aos Desenhos com sucesso!');
-      
-      if (onImagesUpdate) {
-        onImagesUpdate();
-      }
-    } catch (err) {
-      console.error('Erro ao adicionar imagem aos desenhos:', err);
-      setError(err.message || 'Erro ao adicionar imagem aos desenhos');
-    }
-  }, [drawingsImage, onImagesUpdate]);
-
-  // Handle remove drawing image
-  const handleRemoveDrawingImage = useCallback(async (imageUrl) => {
-    try {
-      await drawingsImage.removeDrawingImage(imageUrl);
-      setSuccess('Imagem removida dos Desenhos com sucesso!');
-      
-      if (onImagesUpdate) {
-        onImagesUpdate();
-      }
-    } catch (err) {
-      console.error('Erro ao remover imagem dos desenhos:', err);
-      setError(err.message || 'Erro ao remover imagem dos desenhos');
-    }
-  }, [drawingsImage, onImagesUpdate]);
 
   // Handle image reorder
   const handleImageReorder = useCallback(async (newOrder) => {
@@ -273,10 +193,27 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     }));
   }, [imageManagement]);
 
-  // Handle legend save
+  // Handle legend save - includes professor meta update
   const handleLegendSave = useCallback(async (image) => {
     try {
       await saveLegend(image.url, image.legendaData);
+      
+      // Update professor image meta with autor_foto
+      const imagePublicUrl = image.publicURL || image.publicUrl;
+      if (imagePublicUrl && image.legendaData?.autor_foto) {
+        try {
+          const meta = await getProfessorImageMetaByUrl(imagePublicUrl, escolaId);
+          if (meta) {
+            await updateProfessorImageMeta(meta.id, {
+              autor: image.legendaData.autor_foto,
+              updated_at: new Date().toISOString()
+            });
+          }
+        } catch (err) {
+          console.warn('Erro ao atualizar meta do professor:', err);
+          // Don't fail the whole operation if meta update fails
+        }
+      }
       
       setSuccess('Legenda salva com sucesso!');
       
@@ -290,8 +227,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       console.error('Erro ao salvar legenda:', err);
       setError(err.message || 'Erro ao salvar legenda');
     }
-  }, [saveLegend, imageManagement, onImagesUpdate]);
-
+  }, [saveLegend, imageManagement, escolaId, onImagesUpdate]);
 
   // Get current image for replace modal
   const currentReplaceImage = imageReplace.replacingImageId
@@ -302,19 +238,19 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     return (
       <div className="p-6 bg-gray-800/30 rounded-lg">
         <div className="flex items-center justify-center py-8">
-          <span className="ml-2 text-gray-400">Carregando imagens...</span>
+          <span className="ml-2 text-gray-400">Carregando imagens dos professores...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 ImageUploadSection">
+    <div className="space-y-6 ProfessorImageUploadSection">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <ImageIcon className="w-5 h-5 text-blue-400" />
-          <h3 className="text-lg font-semibold text-gray-100">Imagens da Escola</h3>
+          <User className="w-5 h-5 text-green-400" />
+          <h3 className="text-lg font-semibold text-gray-100">Imagens dos Professores</h3>
         </div>
         <div className="text-sm text-gray-400">
           {imageManagement.images.length} imagens
@@ -364,8 +300,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
           onImageReorder={handleImageReorder}
           dragHandlers={dragDropHandlers}
           escolaId={escolaId}
-          headerImage={headerImage}
-          drawingsImage={drawingsImage}
+          headerImage={null}
           onDelete={handleDeleteImage}
           onReplace={(imageId) => imageReplace.startReplace(imageId)}
           onLegendSave={handleLegendSave}
@@ -395,10 +330,10 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   );
 };
 
-ImageUploadSection.propTypes = {
+ProfessorImageUploadSection.propTypes = {
   escolaId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   onImagesUpdate: PropTypes.func,
 };
 
-export default ImageUploadSection;
+export default ProfessorImageUploadSection;
 

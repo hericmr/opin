@@ -11,13 +11,10 @@ import useImagePreloader from '../../../../hooks/useImagePreloader';
  * @param {Object} props
  * @param {Object} props.image - Image object
  * @param {boolean} props.isHeader - Whether this image is the header image
- * @param {boolean} props.isDrawing - Whether this image is a drawing
  * @param {Function} props.onDelete - Delete handler (imageId: string, filePath: string) => void
  * @param {Function} props.onReplace - Replace handler (imageId: string) => void
  * @param {Function} props.onSetHeader - Set as header handler (imageUrl: string) => void
  * @param {Function} props.onRemoveHeader - Remove from header handler
- * @param {Function} props.onAddDrawing - Add to drawings handler (imageUrl: string) => void
- * @param {Function} props.onRemoveDrawing - Remove from drawings handler (imageUrl: string) => void
  * @param {Function} props.onLegendSave - Save legend handler (image: Object) => void
  * @param {Function} props.onLegendChange - Legend change handler (imageId: string, field: string, value: any) => void
  * @param {Object} props.dragHandlers - Drag & drop handlers
@@ -27,13 +24,10 @@ import useImagePreloader from '../../../../hooks/useImagePreloader';
 const ImageCard = ({
   image,
   isHeader,
-  isDrawing,
   onDelete,
   onReplace,
   onSetHeader,
   onRemoveHeader,
-  onAddDrawing,
-  onRemoveDrawing,
   onLegendSave,
   onLegendChange,
   dragHandlers,
@@ -143,25 +137,14 @@ const ImageCard = ({
           </div>
         )}
         
-        {/* Drawing Badge */}
-        {isDrawing && (
-          <div className="absolute top-2 left-2 z-20 bg-purple-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-            <Check className="w-3 h-3" />
-            Desenho
-          </div>
-        )}
-        
         {/* Actions Overlay */}
         <ImageActions
           image={image}
           isHeader={isHeader}
-          isDrawing={isDrawing}
           onDelete={onDelete}
           onReplace={handleReplace}
           onSetHeader={onSetHeader}
           onRemoveHeader={onRemoveHeader}
-          onAddDrawing={onAddDrawing}
-          onRemoveDrawing={onRemoveDrawing}
         />
       </div>
       
@@ -190,13 +173,10 @@ const ImageCard = ({
 ImageCard.propTypes = {
   image: PropTypes.object.isRequired,
   isHeader: PropTypes.bool.isRequired,
-  isDrawing: PropTypes.bool,
   onDelete: PropTypes.func,
   onReplace: PropTypes.func,
   onSetHeader: PropTypes.func,
   onRemoveHeader: PropTypes.func,
-  onAddDrawing: PropTypes.func,
-  onRemoveDrawing: PropTypes.func,
   onLegendSave: PropTypes.func.isRequired,
   onLegendChange: PropTypes.func.isRequired,
   dragHandlers: PropTypes.object.isRequired,

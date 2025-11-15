@@ -234,11 +234,6 @@ const ReusableImageZoom = ({
             
             {/* Informações adicionais */}
             <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
-              {currentImage.categoria && (
-                <span className="capitalize bg-gray-100 px-2 py-1 rounded text-gray-800">
-                  {currentImage.categoria}
-                </span>
-              )}
               {currentImage.autor && (
                 <span>Fotógrafo: {currentImage.autor}</span>
               )}

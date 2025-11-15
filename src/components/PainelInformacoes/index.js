@@ -13,6 +13,7 @@ import IntroPanel from "./IntroPanel";
 import PainelContainer from "./components/PainelContainer";
 import DocumentViewer from "./components/DocumentViewer";
 import VideoPlayer from "./components/VideoPlayer";
+import DrawingsSection from "./components/DrawingsSection";
 import { getVideosEscola } from "../../services/videoService";
 
 const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 }) => {
@@ -196,6 +197,12 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
             )}
           </div>
         )}
+        
+        {/* Desenhos - Displayed after videos */}
+        <DrawingsSection 
+          escolaId={painelInfo.id}
+          refreshKey={refreshKey}
+        />
       </div>
     );
   };

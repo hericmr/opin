@@ -307,7 +307,6 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
                 <h4 className="text-sm font-semibold m-0">{currentItem.titulo}</h4>
               )}
               <div className="text-[11px] mt-0.5 space-x-2">
-                {currentItem.origem && <span className="capitalize">{currentItem.origem}</span>}
                 {currentItem.autor && <span>Por: {currentItem.autor}</span>}
                 {currentItem.dataFoto && (
                   <span>{formatDateForDisplay(currentItem.dataFoto)}</span>
