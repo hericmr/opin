@@ -556,9 +556,10 @@ A migração para **React 19** e **Tailwind CSS 4** foi concluída com sucesso. 
 
 ### Próximos Passos Finais
 - [x] Preparar commits finais (organizar em commits lógicos) ✅
-- [ ] Code review
-- [ ] Merge para `main`
-- [ ] Deploy e validação em produção
+- [x] Code review ✅
+- [x] Merge para `main` ✅
+- [x] Push para `main` ✅ (GitHub Actions deploy automático em andamento)
+- [ ] Validação em produção (após deploy)
 
 ### Commits Criados
 
