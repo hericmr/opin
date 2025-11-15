@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Heart } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import InfoItem from '../InfoItem';
+import { getPovoIndigenaLabel } from '../../../../utils/povoIndigenaLabel';
 
 const PovosLinguas = memo(({ escola }) => {
   if (!escola) return null;
@@ -13,7 +14,7 @@ const PovosLinguas = memo(({ escola }) => {
       defaultCollapsed={false}
     >
       <InfoItem 
-        label="Povos Indígenas" 
+        label={getPovoIndigenaLabel(escola.povos_indigenas)} 
         value={escola.povos_indigenas} 
         className="mb-2"
       />

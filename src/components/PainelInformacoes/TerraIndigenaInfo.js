@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import HandFistIcon from './icons/HandFistIcon';
 import InfoSection from './components/InfoSection';
 import InfoItem from './components/InfoItem';
+import { getPovoIndigenaLabel } from '../../utils/povoIndigenaLabel';
 
 // Wrapper para passar className maior ao ícone
 const LargeHandFistIcon = (props) => <HandFistIcon className="w-8 h-8" {...props} />;
@@ -23,7 +24,7 @@ const TerraIndigenaInfo = memo(({ terraIndigena }) => {
 
   return (
     <InfoSection title="Informações da Terra Indígena" icon={LargeHandFistIcon}>
-      <InfoItem label="Povos Indígenas" value={terraIndigena.etnia} />
+      <InfoItem label={getPovoIndigenaLabel(terraIndigena.etnia)} value={terraIndigena.etnia} />
       <InfoItem label="Localização" value={formatarLocalizacao()} />
       <InfoItem label="Superfície" value={formatarSuperficie()} />
       <InfoItem label="Fase" value={terraIndigena.fase} />
