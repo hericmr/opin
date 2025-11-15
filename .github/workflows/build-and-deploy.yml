@@ -48,11 +48,13 @@ jobs:
         CI: false
         NODE_ENV: production
         # Variáveis de ambiente do Supabase (usando secrets do GitHub)
-        VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-        VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-        # Fallback para compatibilidade com REACT_APP_ (se necessário)
-        REACT_APP_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-        REACT_APP_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        # Usando REACT_APP_* (já configurados) e VITE_* para compatibilidade
+        REACT_APP_SUPABASE_URL: ${{ secrets.REACT_APP_SUPABASE_URL }}
+        REACT_APP_SUPABASE_ANON_KEY: ${{ secrets.REACT_APP_SUPABASE_ANON_KEY }}
+        REACT_APP_ADMIN_PASSWORD: ${{ secrets.REACT_APP_ADMIN_PASSWORD }}
+        # VITE_* para compatibilidade com Vite
+        VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || secrets.REACT_APP_SUPABASE_URL }}
+        VITE_SUPABASE_ANON_KEY: ${{ secrets.REACT_APP_SUPABASE_ANON_KEY }}
         
     - name: Setup Pages
       uses: actions/configure-pages@v4
