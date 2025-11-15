@@ -62,11 +62,11 @@ const NativeLandCard = memo(({
         if (React.isValidElement(value)) {
           return value;
         }
-        // Textos completos com quebra de linha - permite expansão
+        // Textos completos com quebra de linha - permite expansão e preserva quebras de linha
         const textValue = String(value || '');
         const isLongText = textValue.length > 30;
         return (
-          <div className={`text-sm text-gray-800 ${isLongText ? 'text-left' : 'text-center'} w-full font-medium leading-relaxed break-words px-2`} style={{ lineHeight: '1.6' }}>
+          <div className={`text-sm text-gray-800 ${isLongText ? 'text-left' : 'text-center'} w-full font-medium leading-relaxed whitespace-pre-line break-words px-2`} style={{ lineHeight: '1.6' }}>
             {textValue}
           </div>
         );
@@ -158,7 +158,7 @@ const NativeLandCard = memo(({
         
         {/* Descrição opcional */}
         {description && (
-          <div className="text-xs text-gray-700 leading-relaxed mt-2 pt-2 border-t border-gray-200 whitespace-pre-line break-words relative z-20" style={{ lineHeight: '1.6' }}>
+          <div className="text-sm text-gray-700 leading-relaxed mt-2 pt-2 border-t border-gray-200 whitespace-pre-line break-words relative z-20" style={{ lineHeight: '1.6' }}>
             {description}
           </div>
         )}
@@ -170,15 +170,21 @@ const NativeLandCard = memo(({
   // Cards são flexíveis por padrão - altura mínima reduzida para evitar espaçamento excessivo
   // Se className já especifica altura, usa ela; caso contrário, usa min-h para permitir expansão
   const hasCustomHeight = className.includes('h-[') || className.includes('h-auto') || className.includes('min-h-[');
-  const cardHeightClass = hasCustomHeight 
-    ? '' 
-    : 'min-h-[120px]';
   
   // Determina se precisa de layout flexível para textos longos
   const isTextType = type === 'text' || (!type || type === 'default');
   const isStringValue = value && typeof value === 'string';
   const isLongText = isTextType && isStringValue && String(value).trim().length > 20;
   const needsFlexibleLayout = isLongText;
+  
+  // Altura mínima reduzida para cards simples (sem descrição e sem texto longo)
+  // Cards com descrição ou texto longo mantêm altura maior
+  const hasDescription = description && description.trim();
+  const cardHeightClass = hasCustomHeight 
+    ? '' 
+    : (hasDescription || needsFlexibleLayout) 
+      ? 'min-h-[120px]' 
+      : 'min-h-[90px]';
 
   return (
     <div 
@@ -225,20 +231,20 @@ const NativeLandCard = memo(({
       {/* Conteúdo interno do card - flexível para permitir expansão */}
       <div className="flex flex-col relative z-20">
         {/* Título centralizado - aproveitando melhor o espaço */}
-        <div className="flex items-center justify-center mb-1 flex-shrink-0 relative z-20">
+        <div className={`flex items-center justify-center flex-shrink-0 relative z-20 ${hasDescription || needsFlexibleLayout ? 'mb-1' : 'mb-0.5'}`}>
           <div className="text-xs text-gray-700 font-semibold leading-tight text-center uppercase tracking-wide break-words relative z-20" style={{ lineHeight: '1.3' }}>
             {label}
           </div>
         </div>
         
         {/* Conteúdo do valor - flexível para textos longos */}
-        <div className={`${needsFlexibleLayout ? 'flex-grow flex items-start justify-center' : 'flex-1 flex items-center justify-center'} relative z-20`}>
+        <div className={`${needsFlexibleLayout ? 'flex-grow flex items-start justify-center' : (hasDescription ? 'flex-1 flex items-center justify-center' : 'flex items-center justify-center')} relative z-20`}>
           {renderValue()}
         </div>
         
         {/* Descrição opcional */}
         {description && (
-          <div className="text-xs text-gray-700 leading-relaxed mt-1 pt-1 break-words relative z-20" style={{ lineHeight: '1.5' }}>
+          <div className="text-sm text-gray-700 leading-relaxed mt-1 pt-1 whitespace-pre-line break-words relative z-20" style={{ lineHeight: '1.5' }}>
             {description}
           </div>
         )}
