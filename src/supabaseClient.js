@@ -4,8 +4,13 @@ import { createClient } from "@supabase/supabase-js";
 console.log('=== DEBUG: Inicialização do Supabase Client ===');
 
 // Usando variáveis de ambiente (compatível com Vite e CRA)
-const supabaseUrl = import.meta.env.REACT_APP_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.REACT_APP_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Prioriza VITE_*, mas faz fallback para REACT_APP_* se VITE_* estiver vazio ou não definido
+const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_URL.trim()) 
+  || import.meta.env.REACT_APP_SUPABASE_URL 
+  || '';
+const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY && import.meta.env.VITE_SUPABASE_ANON_KEY.trim())
+  || import.meta.env.REACT_APP_SUPABASE_ANON_KEY
+  || '';
 
 console.log('=== DEBUG: Valores das variáveis ===');
 console.log('supabaseUrl está definido:', !!supabaseUrl);
