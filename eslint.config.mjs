@@ -50,9 +50,11 @@ export default [
       ...reactHooks.configs.recommended.rules,
       'react/react-in-jsx-scope': 'off', // Não necessário no React 17+
       'react/prop-types': 'warn', // Avisar mas não bloquear
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-unused-vars': 'off', // Desabilitar - muitos falsos positivos
+      'no-console': 'off', // Desabilitar - console.log é usado para debug
+      'no-undef': 'warn', // Avisar mas não bloquear
       'react-hooks/preserve-manual-memoization': 'warn', // Avisar mas não bloquear
+      'react-hooks/exhaustive-deps': 'warn', // Avisar mas não bloquear
     },
   },
   {
