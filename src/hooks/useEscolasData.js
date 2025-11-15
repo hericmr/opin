@@ -55,16 +55,10 @@ export function useEscolasData() {
           escolasSemCoordenadas.foraDosLimites.push({ ...infoEscola, problema: "Coordenadas fora dos limites válidos", detalhes: { latitude, longitude, limites: { latMin: -90, latMax: 90, lngMin: -180, lngMax: 180 } } });
           return null;
         }
-        let cozinha = e.Cozinha ?? null;
-        let merenda_escolar = e.Merenda_escolar ?? null;
         let diferenciada = e.diferenciada ?? null;
-        if ((cozinha === null || merenda_escolar === null || diferenciada === null) && e["Cozinha/Merenda escolar/diferenciada"]) {
+        if (diferenciada === null && e["Cozinha/Merenda escolar/diferenciada"]) {
           const partes = e["Cozinha/Merenda escolar/diferenciada"].split("/");
-          cozinha = cozinha ?? partes[0]?.trim();
-          merenda_escolar = merenda_escolar ?? partes[1]?.trim();
           diferenciada = diferenciada ?? partes[2]?.trim();
-          cozinha = cozinha?.toLowerCase().startsWith("sim") ? true : cozinha?.toLowerCase().startsWith("não") ? false : cozinha;
-          merenda_escolar = merenda_escolar?.toLowerCase().startsWith("sim") ? true : merenda_escolar?.toLowerCase().startsWith("não") ? false : merenda_escolar;
           diferenciada = diferenciada?.toLowerCase().startsWith("sim") ? true : diferenciada?.toLowerCase().startsWith("não") ? false : diferenciada;
         }
         return {
@@ -92,8 +86,6 @@ export function useEscolasData() {
           acesso_internet: e["Acesso à internet"],
           equipamentos: e["Equipamentos Tecs"],
           modo_acesso: e["Modo de acesso à escola"],
-          cozinha,
-          merenda_escolar,
           diferenciada,
           gestao: e["Gestão/Nome"],
           outros_funcionarios: e["Outros funcionários"],

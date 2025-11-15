@@ -82,8 +82,6 @@ const EditableTable = ({
     { key: 'outros_funcionarios', label: 'Outros Funcionários (Det.)', width: 'w-32' },
     { key: 'gestao', label: 'Gestão (Det.)', width: 'w-32' },
     { key: 'merenda_diferenciada', label: 'Merenda Diferenciada', width: 'w-32' },
-    { key: 'cozinha', label: 'Cozinha', width: 'w-24' },
-    { key: 'merenda_escolar', label: 'Merenda Escolar', width: 'w-28' },
     { key: 'diferenciada', label: 'Diferenciada', width: 'w-24' },
     { key: 'actions', label: 'Ações', width: 'w-32' }
   ], []);

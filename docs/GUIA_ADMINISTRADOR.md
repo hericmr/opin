@@ -10,7 +10,7 @@ Acesse o painel administrativo para gerenciar todas as informações das escolas
 - **Dados Básicos**: Nome, município, endereço, terra indígena, diretoria
 - **Povos**: Povos indígenas e línguas faladas
 - **Modalidades**: Ensino, alunos, turnos de funcionamento
-- **Infraestrutura**: Estrutura física, água, internet, equipamentos, cozinha, merenda escolar
+- **Infraestrutura**: Estrutura física, água, internet, equipamentos, merenda diferenciada
 - **Gestores**: Direção, professores, formação profissional
 - **Material Pedagógico**: PPP com comunidade
 - **Projetos**: Parcerias, ONGs, desejos da comunidade
@@ -61,10 +61,8 @@ longitude (numeric)
 link_para_videos (text)
 
 -- Campos de infraestrutura
-cozinha (text) -- Ex: "Sim", "Não", "Em construção"
-merenda_escolar (text) -- Ex: "Sim", "Não", "Parcial"
-diferenciada (text) -- Ex: "Sim", "Não", "Específica"
-merenda_diferenciada (text) -- Detalhes sobre a merenda
+diferenciada (text) -- Ex: "Sim", "Não", "Específica" - Merenda Diferenciada
+merenda_diferenciada (text) -- Detalhes sobre a merenda diferenciada
 
 -- Campos de endereço detalhado
 logradouro (text)

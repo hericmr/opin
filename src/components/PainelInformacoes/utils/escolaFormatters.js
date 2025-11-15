@@ -35,8 +35,6 @@ export const formatters = {
     "Acesso à Internet": escola.acesso_internet,
     "Equipamentos Tecs": escola.equipamentos,
     "Modo de Acesso à Escola": escola.modo_acesso,
-    "Cozinha": escola.cozinha,
-    "Merenda Escolar": escola.merenda_escolar,
     "Merenda Diferenciada": escola.diferenciada
   }),
 
