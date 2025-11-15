@@ -69,6 +69,8 @@ export default [
       'react/jsx-no-target-blank': 'warn',
       'jsx-a11y/anchor-is-valid': 'warn',
       'jsx-a11y/alt-text': 'warn',
+      'no-case-declarations': 'warn',
+      'react-hooks/static-components': 'warn',
     },
   },
   {
