@@ -11,7 +11,7 @@ module.exports = {
   },
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
-    '!src/index.js',
+    '!src/index.jsx',
     '!src/reportWebVitals.js',
     '!src/setupTests.js',
   ],
@@ -23,7 +23,4 @@ module.exports = {
       statements: 80,
     },
   },
-  testEnvironmentOptions: {
-    url: 'http://localhost'
-  }
 }; 
