@@ -29,6 +29,10 @@ export default [
         require: 'readonly',
         exports: 'readonly',
         global: 'readonly',
+        Image: 'readonly',
+        IntersectionObserver: 'readonly',
+        fetch: 'readonly',
+        inserirVideos: 'readonly',
       },
       parserOptions: {
         ecmaFeatures: {
@@ -58,10 +62,13 @@ export default [
       'dist/**',
       'coverage/**',
       '*.config.js',
+      '*.config.mjs',
+      'config-overrides.js',
       'public/**',
       'scripts/**',
       '**/*.test.js',
       '**/*.spec.js',
+      'utils.js', // Arquivo antigo, pode ter problemas
     ],
   },
 ];
