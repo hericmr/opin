@@ -631,7 +631,7 @@ const AdminPanelContent = () => {
             <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800/50 p-6">
               <div className="text-center mb-8">
                 <img 
-                  src={`${process.env.PUBLIC_URL || ''}/logo_index.png`}
+                  src={`${import.meta.env.BASE_URL || '/opin'}/logo_index.png`}
                   alt="OPIN - Observatório dos Professores Indígenas"
                   className="w-32 h-32 mx-auto mb-6 object-contain"
                 />

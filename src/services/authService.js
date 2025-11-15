@@ -3,7 +3,7 @@ import logger from '../utils/logger';
 
 // Chave secreta para assinar os JWTs (em produção, deve vir de variável de ambiente)
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.REACT_APP_JWT_SECRET || 'opin-admin-secret-key-2024'
+  import.meta.env.REACT_APP_JWT_SECRET || import.meta.env.VITE_JWT_SECRET || 'opin-admin-secret-key-2024'
 );
 
 // Configurações do JWT
