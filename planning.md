@@ -267,8 +267,8 @@ Após cada atualização, verificar:
 - [🔄] Fase 3: Dependências de Médio Risco
   - [x] react-markdown (9.1.0 → 10.1.0) ✅
   - [❌] tailwindcss (3.4.18 → 4.1.17) ⚠️ REVERTIDO - Incompatível com react-scripts
-- [ ] Fase 4: Dependências Críticas
-  - [ ] react e react-dom
+- [❌] Fase 4: Dependências Críticas
+  - [❌] react e react-dom (18.3.1 → 19.2.0) ⚠️ REVERTIDO - Incompatível com react-scripts 5.0.1
 
 ---
 
@@ -293,6 +293,14 @@ Após cada atualização, verificar:
   - Incompatível com `react-scripts` sem configuração adicional complexa
   - **Decisão**: Manter Tailwind CSS 3.4.18 por enquanto
   - **Nota**: Para atualizar no futuro, considerar migrar para Vite ou atualizar react-scripts primeiro
+- ⚠️ **2024-12-XX**: Tentativa de atualizar React 19
+  - React 19 mudou estrutura de exports (ESM-only em alguns casos)
+  - `react-scripts` 5.0.1 não suporta React 19 (webpack tenta acessar arquivos que não existem mais)
+  - **Decisão**: Manter React 18.3.1 por enquanto
+  - **Nota**: Para atualizar no futuro, necessário:
+    - Atualizar `react-scripts` para versão que suporte React 19 (ainda não disponível)
+    - OU migrar para Vite/outro bundler moderno
+    - OU usar `react-scripts` com override/customização extensa do webpack
 
 ---
 
