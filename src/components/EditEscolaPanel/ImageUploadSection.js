@@ -816,7 +816,6 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
             </div>
           )}
         </div>
-      )}
 
       {/* Imagens Existentes */}
       {existingImages.length > 0 && (
