@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkopin_observatorio_professores_indigenas=self.webpackChunkopin_observatorio_professores_indigenas||[]).push([[488],{2488:(e,s,o)=>{new Map,new Date}}]);
-//# sourceMappingURL=488.282882af.chunk.js.map
