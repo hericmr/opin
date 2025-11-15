@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { BookOpen, Home, BarChart3 } from 'lucide-react';
+import { BookOpen, Map, BarChart3 } from 'lucide-react';
 
 const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, isMobileLandscape }) => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
         aria-label="Ir para o mapa das escolas indígenas"
         aria-current={isActive('/mapa') ? 'page' : undefined}
       >
-        <Home className="w-4 h-4" />
+        <Map className="w-4 h-4" />
         <span className="hidden xl:inline">Mapa</span>
       </button>
 

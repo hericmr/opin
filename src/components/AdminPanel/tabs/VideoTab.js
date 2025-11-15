@@ -1,18 +1,27 @@
 import React from 'react';
 import VideoManager from '../VideoManager';
+import CardVisibilityToggle from '../components/CardVisibilityToggle';
 
-const VideoTab = ({ editingLocation }) => {
+const VideoTab = ({ editingLocation, setEditingLocation }) => {
   // Extrair o ID da escola do editingLocation
   const escolaId = editingLocation?.id || editingLocation?.escola_id;
 
   return (
     <div className="space-y-6">
+      {/* Toggle de Visibilidade */}
+      <CardVisibilityToggle
+        cardId="videos"
+        editingLocation={editingLocation}
+        setEditingLocation={setEditingLocation}
+        label="Visibilidade do Card: Vídeos"
+      />
+      
       {/* Informações sobre Vídeos */}
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-        <h3 className="text-lg font-semibold text-gray-100 mb-4 border-b border-gray-600 pb-2">
+      <div className="space-y-2">
+        <h3 className="text-sm font-semibold text-gray-100">
           Gerenciamento de Vídeos
         </h3>
-        <p className="text-gray-300 text-sm mb-4">
+        <p className="text-gray-300 text-xs">
           Aqui você pode adicionar, editar e gerenciar vídeos relacionados à escola. 
           Os vídeos podem ser do YouTube, Vimeo ou outras plataformas.
         </p>
@@ -20,20 +29,18 @@ const VideoTab = ({ editingLocation }) => {
 
       {/* VideoManager Component */}
       {escolaId ? (
-        <div className="bg-white rounded-lg shadow-sm">
-          <VideoManager escolaId={escolaId} />
-        </div>
+        <VideoManager escolaId={escolaId} />
       ) : (
-        <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 text-center">
-          <p className="text-gray-300">
+        <div className="text-center py-4">
+          <p className="text-gray-300 text-sm">
             Selecione uma escola para gerenciar os vídeos.
           </p>
         </div>
       )}
 
       {/* Instruções de Uso */}
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-        <h3 className="text-lg font-semibold text-gray-100 mb-4 border-b border-gray-600 pb-2">
+      <div className="space-y-2">
+        <h3 className="text-sm font-semibold text-gray-100">
           Como Adicionar Vídeos
         </h3>
         

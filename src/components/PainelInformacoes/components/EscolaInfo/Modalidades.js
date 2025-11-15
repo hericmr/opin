@@ -7,29 +7,71 @@ import NativeLandCard from '../NativeLandCard';
 // Função utilitária para transformar o texto em lista
 function parseModalidadeEnsino(text) {
   if (!text || typeof text !== 'string') return [];
-  // Divide pelo traço longo (–, U+2013) e remove espaços extras
+  
+  // Primeiro, divide por quebras de linha (\n)
+  // Depois, divide pelo traço longo (–, U+2013) para cada linha
+  // Remove espaços extras e filtra itens vazios
   return text
-    .split('–')
-    .map(item => item.trim())
+    .split('\n')
+    .flatMap(line => {
+      // Se a linha contém traço longo, divide por ele também
+      if (line.includes('–')) {
+        return line.split('–').map(item => item.trim()).filter(Boolean);
+      }
+      // Caso contrário, retorna a linha inteira (se não estiver vazia)
+      return line.trim() ? [line.trim()] : [];
+    })
     .filter(Boolean);
 }
 
-// Componente de lista expansível
-const ExpandableList = ({ items, maxVisible = 3 }) => {
+// Componente para renderizar lista com bolinhas
+const ListWithBullets = ({ items }) => {
   if (!items || items.length === 0) return null;
-
+  
   return (
-    <div className="-mt-1">
-      <ul className="list-none text-gray-800 text-xs pl-0 ml-0">
+    <div className="text-sm text-gray-800 text-left w-full font-medium leading-relaxed break-words px-2">
+      <ul className="list-none pl-0 ml-0 space-y-1.5">
         {items.map((item, idx) => (
-          <li key={idx} className="leading-tight m-0 p-0 pl-0 ml-0 flex items-start">
-            <span className="mr-1 text-green-700 select-none" style={{minWidth: '1em', display: 'inline-block'}}>•</span>
-            <span>{item}</span>
+          <li key={idx} className="leading-relaxed m-0 p-0 pl-0 ml-0 flex items-start" style={{ lineHeight: '1.7' }}>
+            <span className="mr-2 text-gray-900 select-none font-bold flex-shrink-0" style={{minWidth: '0.75em', display: 'inline-block'}} aria-hidden="true">•</span>
+            <span className="flex-1">{item}</span>
           </li>
         ))}
       </ul>
     </div>
   );
+};
+
+// Helper function to check if a value is empty
+const isEmptyValue = (value) => {
+  if (value === null || value === undefined) return true;
+  if (typeof value === 'string' && value.trim() === '') return true;
+  if (typeof value === 'number' && isNaN(value)) return true;
+  // Keep 0, false, and React elements as valid
+  if (typeof value === 'number') return false;
+  if (typeof value === 'boolean') return false;
+  if (React.isValidElement(value)) return false;
+  return false;
+};
+
+// Helper function to check if a card has long content
+const hasLongContent = (value) => {
+  if (!value) return false;
+  if (React.isValidElement(value)) return false; // React elements are not long text
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    // Verifica se tem mais de 30 caracteres OU se tem vírgulas (lista de itens)
+    return trimmed.length > 30 || (trimmed.includes(',') && trimmed.length > 20);
+  }
+  return false;
+};
+
+// Helper function to get grid columns based on item count
+const getGridCols = (count) => {
+  if (count === 0) return 'grid-cols-1';
+  if (count === 1) return 'grid-cols-1';
+  if (count === 2) return 'grid-cols-2';
+  return 'grid-cols-3 lg:grid-cols-3';
 };
 
 // Usando NativeLandCard em vez de MiniCard customizado
@@ -42,7 +84,7 @@ const Modalidades = memo(({ escola }) => {
   const modalidadeList = parseModalidadeEnsino(escola.modalidade_ensino);
   
 
-  // Outros cards para o grid
+  // Cards para o grid (sem Modalidade de Ensino)
   const gridItems = [
     turnosValue && {
       icon: Clock,
@@ -60,10 +102,7 @@ const Modalidades = memo(({ escola }) => {
       label: 'Línguas Faladas',
       value: escola.linguas_faladas,
     },
-  ].filter(Boolean);
-
-  // Cards de Materiais Pedagógicos
-  const materiaisItems = [
+    // Cards de Materiais Pedagógicos integrados
     {
       icon: BookOpen,
       label: 'Material Pedagógico Não Indígena',
@@ -84,83 +123,52 @@ const Modalidades = memo(({ escola }) => {
       label: 'PPP com Comunidade',
       value: <BooleanValue value={escola.ppp_comunidade} />,
     },
-  ];
+  ].filter(Boolean).filter(item => !isEmptyValue(item.value));
+
+  if (gridItems.length === 0 && modalidadeList.length === 0) return null;
 
   return (
     <>
       <InfoSection>
-        {/* Modalidade de Ensino em linha inteira */}
-        <div className="mb-4 rounded-lg p-4" style={{ backgroundColor: '#D1FAE5' }}>
-          <div className="flex items-start gap-3 mb-2">
-            <Sparkles className="w-5 h-5 text-gray-700 mt-0.5 flex-shrink-0" />
-            <span className="text-sm font-medium text-gray-700">Modalidade de Ensino</span>
-          </div>
-          <div className="ml-8">
-            <ExpandableList items={modalidadeList} maxVisible={3} />
-          </div>
-        </div>
-        
-        {/* Grid com os outros cards - estilo native-land.ca */}
-        <div className="grid grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-3 mt-1 items-stretch overflow-visible" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
-          {gridItems.map((item, idx) => (
-            <NativeLandCard key={idx} icon={item.icon} label={item.label} value={item.value} type={item.type} showIconCircle={true} />
-          ))}
-        </div>
-      </InfoSection>
-      
-      <InfoSection 
-        title="Materiais Pedagógicos" 
-        icon={BookOpen}
-        description="Diferenciados e não diferenciados, produzidos dentro e fora da comunidade."
-      >
-        {/* Primeiro card em linha inteira */}
-        <div className="mb-3 overflow-visible" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
-          <NativeLandCard 
-            icon={materiaisItems[0].icon} 
-            label={materiaisItems[0].label} 
-            value={materiaisItems[0].value} 
-            showIconCircle={true}
-          />
-        </div>
-        
-        {/* Cards restantes - agrupados por múltiplos de 3 */}
-        {materiaisItems.length > 1 && (
-          <div className="space-y-3">
-            {(() => {
-              const remainingCards = materiaisItems.slice(1);
-              const groups = [];
-              
-              // Agrupar em múltiplos de 3
-              for (let i = 0; i < remainingCards.length; i += 3) {
-                groups.push(remainingCards.slice(i, i + 3));
-              }
-              
-              return groups.map((group, groupIdx) => (
-                <div 
-                  key={groupIdx}
-                  className={`grid gap-2 sm:gap-3 items-stretch overflow-visible ${
-                    group.length === 3 
-                      ? 'grid-cols-3' 
-                      : group.length === 2 
-                        ? 'grid-cols-2' 
-                        : 'grid-cols-1'
-                  }`}
-                  style={{ paddingTop: '12px', paddingLeft: '12px' }}
-                >
-                  {group.map((item, idx) => (
-                    <NativeLandCard 
-                      key={`${groupIdx}-${idx}`} 
-                      icon={item.icon} 
-                      label={item.label} 
-                      value={item.value} 
-                      showIconCircle={true}
-                    />
-                  ))}
-                </div>
-              ));
-            })()}
+        {/* Modalidade de Ensino - sempre em linha inteira (1 coluna) */}
+        {modalidadeList.length > 0 && (
+          <div className="mb-3">
+            <NativeLandCard
+              icon={Sparkles}
+              label="Modalidade de Ensino"
+              value={<ListWithBullets items={modalidadeList} />}
+              showIconCircle={true}
+            />
           </div>
         )}
+        
+        {/* Separar cards com muito conteúdo dos cards normais */}
+        {gridItems.length > 0 && (() => {
+          const longContentCards = gridItems.filter(item => hasLongContent(item.value));
+          const normalCards = gridItems.filter(item => !hasLongContent(item.value));
+          
+          return (
+            <>
+              {/* Cards com muito conteúdo - linha inteira (1 coluna) */}
+              {longContentCards.length > 0 && (
+                <div className={`space-y-3 ${modalidadeList.length > 0 ? 'mb-3' : 'mb-3'}`}>
+                  {longContentCards.map((item, idx) => (
+                    <NativeLandCard key={`long-${idx}`} icon={item.icon} label={item.label} value={item.value} type={item.type} showIconCircle={true} />
+                  ))}
+                </div>
+              )}
+              
+              {/* Cards normais - grid de 3 colunas */}
+              {normalCards.length > 0 && (
+                <div className={`grid ${getGridCols(normalCards.length)} gap-3 ${longContentCards.length > 0 || modalidadeList.length > 0 ? '' : ''} items-stretch overflow-visible`}>
+                  {normalCards.map((item, idx) => (
+                    <NativeLandCard key={`normal-${idx}`} icon={item.icon} label={item.label} value={item.value} type={item.type} showIconCircle={true} />
+                  ))}
+                </div>
+              )}
+            </>
+          );
+        })()}
       </InfoSection>
     </>
   );

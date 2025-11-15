@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Eye, RefreshCw, Database, FileText, Users, Image, Video, Archive, FileDown, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '../../../supabaseClient';
+import logger from '../../../utils/logger';
 
 const TabelasIntegraisTab = () => {
   const [tabelas, setTabelas] = useState([]);
@@ -69,6 +70,22 @@ const TabelasIntegraisTab = () => {
       icone: Image,
       cor: 'bg-indigo-500',
       registros: 0
+    },
+    {
+      id: 'fontes_dados',
+      nome: 'Fontes de Dados',
+      descricao: 'Fontes de dados utilizadas no sistema de versionamento',
+      icone: FileText,
+      cor: 'bg-cyan-500',
+      registros: 0
+    },
+    {
+      id: 'versoes_dados',
+      nome: 'Versões de Dados',
+      descricao: 'Histórico de versões e metadados das alterações',
+      icone: Archive,
+      cor: 'bg-orange-500',
+      registros: 0
     }
   ];
 
@@ -110,14 +127,14 @@ const TabelasIntegraisTab = () => {
 
   // Função para testar buckets
   const testarBuckets = async () => {
-    console.log('Testando buckets do Supabase...');
+    logger.debug('Testando buckets do Supabase...');
     setBackupStatus({ status: 'testando', message: 'Testando buckets...' });
     
     const resultados = [];
     
     for (const bucket of BUCKETS_BACKUP) {
       try {
-        console.log(`Testando bucket: ${bucket.id}`);
+        logger.debug(`Testando bucket: ${bucket.id}`);
         
         // Tentar listar arquivos do bucket
         const { data, error } = await supabase.storage
@@ -125,23 +142,23 @@ const TabelasIntegraisTab = () => {
           .list('', { limit: 1000 });
         
         if (error) {
-          console.error(`❌ Erro no bucket ${bucket.id}:`, error);
+          logger.error(`❌ Erro no bucket ${bucket.id}:`, error);
           resultados.push({ bucket: bucket.id, status: 'erro', mensagem: error.message });
         } else {
-          console.log(`✅ Bucket ${bucket.id} OK - ${data?.length || 0} arquivos encontrados`);
+          logger.debug(`✅ Bucket ${bucket.id} OK - ${data?.length || 0} arquivos encontrados`);
           if (data && data.length > 0) {
-            console.log(`📁 Arquivos no bucket ${bucket.id}:`, data.map(f => f.name));
+            logger.debug(`📁 Arquivos no bucket ${bucket.id}:`, data.map(f => f.name));
           }
           resultados.push({ bucket: bucket.id, status: 'ok', arquivos: data?.length || 0 });
         }
       } catch (err) {
-        console.error(`❌ Exceção no bucket ${bucket.id}:`, err);
+        logger.error(`❌ Exceção no bucket ${bucket.id}:`, err);
         resultados.push({ bucket: bucket.id, status: 'excecao', mensagem: err.message });
       }
     }
     
     // Mostrar resultados
-    console.log('Resultados dos testes:', resultados);
+    logger.debug('Resultados dos testes:', resultados);
     
     const bucketsOk = resultados.filter(r => r.status === 'ok').length;
     const bucketsErro = resultados.filter(r => r.status === 'erro' || r.status === 'excecao').length;
@@ -166,14 +183,14 @@ const TabelasIntegraisTab = () => {
 
   // Função para testar tabelas
   const testarTabelas = async () => {
-    console.log('Testando tabelas do Supabase...');
+    logger.debug('Testando tabelas do Supabase...');
     setBackupStatus({ status: 'testando', message: 'Testando tabelas...' });
     
     const resultados = [];
     
     for (const tabela of TABELAS_SISTEMA) {
       try {
-        console.log(`Testando tabela: ${tabela.id}`);
+        logger.debug(`Testando tabela: ${tabela.id}`);
         
         // Tentar buscar dados da tabela
         const { data, error } = await supabase
@@ -182,20 +199,20 @@ const TabelasIntegraisTab = () => {
           .limit(5);
         
         if (error) {
-          console.error(`❌ Erro na tabela ${tabela.id}:`, error);
+          logger.error(`❌ Erro na tabela ${tabela.id}:`, error);
           resultados.push({ tabela: tabela.id, status: 'erro', mensagem: error.message });
         } else {
-          console.log(`✅ Tabela ${tabela.id} OK - ${data?.length || 0} registros encontrados`);
+          logger.debug(`✅ Tabela ${tabela.id} OK - ${data?.length || 0} registros encontrados`);
           resultados.push({ tabela: tabela.id, status: 'ok', registros: data?.length || 0 });
         }
       } catch (err) {
-        console.error(`❌ Exceção na tabela ${tabela.id}:`, err);
+        logger.error(`❌ Exceção na tabela ${tabela.id}:`, err);
         resultados.push({ tabela: tabela.id, status: 'excecao', mensagem: err.message });
       }
     }
     
     // Mostrar resultados
-    console.log('Resultados dos testes de tabelas:', resultados);
+    logger.debug('Resultados dos testes de tabelas:', resultados);
     
     const tabelasOk = resultados.filter(r => r.status === 'ok').length;
     const tabelasErro = resultados.filter(r => r.status === 'erro' || r.status === 'excecao').length;
@@ -239,7 +256,7 @@ const TabelasIntegraisTab = () => {
       setDadosTabela(data || []);
       setSelectedTabela(tabelaId);
     } catch (err) {
-      console.error(`Erro ao carregar dados da tabela ${tabelaId}:`, err);
+      logger.error(`Erro ao carregar dados da tabela ${tabelaId}:`, err);
       setError(`Erro ao carregar dados: ${err.message}`);
     } finally {
       setLoadingDados(false);
@@ -260,14 +277,14 @@ const TabelasIntegraisTab = () => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
-      console.error(`Erro ao baixar ${filename}:`, error);
+      logger.error(`Erro ao baixar ${filename}:`, error);
     }
   };
 
   // Função para criar e baixar ZIP
   const createAndDownloadZip = async (files, zipName) => {
     try {
-      console.log('Iniciando criação do ZIP com', files.length, 'arquivos');
+      logger.debug('Iniciando criação do ZIP com', files.length, 'arquivos');
       
       // Importar JSZip dinamicamente
       const JSZip = (await import('jszip')).default;
@@ -277,7 +294,7 @@ const TabelasIntegraisTab = () => {
       let arquivosAdicionados = 0;
       for (const file of files) {
         try {
-          console.log(`Baixando arquivo: ${file.name} de ${file.url}`);
+          logger.debug(`Baixando arquivo: ${file.name} de ${file.url}`);
           
           const response = await fetch(file.url);
           if (!response.ok) {
@@ -285,7 +302,7 @@ const TabelasIntegraisTab = () => {
           }
           
           const blob = await response.blob();
-          console.log(`Arquivo ${file.name} baixado, tamanho: ${blob.size} bytes`);
+          logger.debug(`Arquivo ${file.name} baixado, tamanho: ${blob.size} bytes`);
           
           zip.file(file.name, blob);
           arquivosAdicionados++;
@@ -295,7 +312,7 @@ const TabelasIntegraisTab = () => {
           setBackupProgress(progress);
           
         } catch (error) {
-          console.error(`Erro ao adicionar ${file.name} ao ZIP:`, error);
+          logger.error(`Erro ao adicionar ${file.name} ao ZIP:`, error);
           // Continuar com outros arquivos
         }
       }
@@ -304,11 +321,11 @@ const TabelasIntegraisTab = () => {
         throw new Error('Nenhum arquivo foi adicionado ao ZIP');
       }
 
-      console.log(`Gerando ZIP com ${arquivosAdicionados} arquivos...`);
+      logger.debug(`Gerando ZIP com ${arquivosAdicionados} arquivos...`);
       
       // Gerar e baixar ZIP
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      console.log(`ZIP gerado, tamanho: ${zipBlob.size} bytes`);
+      logger.debug(`ZIP gerado, tamanho: ${zipBlob.size} bytes`);
       
       const downloadUrl = window.URL.createObjectURL(zipBlob);
       const link = document.createElement('a');
@@ -319,19 +336,19 @@ const TabelasIntegraisTab = () => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(downloadUrl);
       
-      console.log('ZIP baixado com sucesso:', zipName);
+      logger.debug('ZIP baixado com sucesso:', zipName);
       
     } catch (error) {
-      console.error('Erro ao criar ZIP:', error);
+      logger.error('Erro ao criar ZIP:', error);
       
       // Fallback: baixar arquivos individualmente
-      console.log('Tentando download individual dos arquivos...');
+      logger.debug('Tentando download individual dos arquivos...');
       for (const file of files) {
         try {
           await downloadFile(file.url, file.name);
           await new Promise(resolve => setTimeout(resolve, 200)); // Delay maior para evitar sobrecarga
         } catch (downloadError) {
-          console.error(`Erro ao baixar ${file.name}:`, downloadError);
+          logger.error(`Erro ao baixar ${file.name}:`, downloadError);
         }
       }
     }
@@ -357,7 +374,7 @@ const TabelasIntegraisTab = () => {
           if (error) throw error;
           backupTabelas[tabela.id] = data || [];
         } catch (err) {
-          console.error(`Erro ao fazer backup da tabela ${tabela.id}:`, err);
+          logger.error(`Erro ao fazer backup da tabela ${tabela.id}:`, err);
         }
       }
       setBackupProgress(25);
@@ -371,20 +388,20 @@ const TabelasIntegraisTab = () => {
       
       for (const bucket of BUCKETS_BACKUP) {
         try {
-          console.log(`Listando arquivos do bucket: ${bucket.id}`);
+          logger.debug(`Listando arquivos do bucket: ${bucket.id}`);
           const { data, error } = await supabase.storage
             .from(bucket.id)
             .list('', { limit: 1000 });
           
           if (error) throw error;
           
-          console.log(`Bucket ${bucket.id}: ${data?.length || 0} arquivos encontrados`);
-          console.log('Arquivos encontrados:', data);
+          logger.debug(`Bucket ${bucket.id}: ${data?.length || 0} arquivos encontrados`);
+          logger.debug('Arquivos encontrados:', data);
           
           const arquivosComUrls = [];
           for (const arquivo of data) {
             try {
-              console.log(`Gerando URL para: ${arquivo.name}`);
+              logger.debug(`Gerando URL para: ${arquivo.name}`);
               const { data: urlData } = await supabase.storage
                 .from(bucket.id)
                 .createSignedUrl(arquivo.name, 3600); // URL válida por 1 hora
@@ -398,19 +415,19 @@ const TabelasIntegraisTab = () => {
                 };
                 arquivosComUrls.push(arquivoCompleto);
                 todosArquivos.push(arquivoCompleto);
-                console.log(`URL gerada para ${arquivo.name}: ${urlData.signedUrl.substring(0, 50)}...`);
+                logger.debug(`URL gerada para ${arquivo.name}: ${urlData.signedUrl.substring(0, 50)}...`);
               } else {
-                console.warn(`URL não gerada para ${arquivo.name}`);
+                logger.warn(`URL não gerada para ${arquivo.name}`);
               }
             } catch (err) {
-              console.error(`Erro ao gerar URL para ${arquivo.name}:`, err);
+              logger.error(`Erro ao gerar URL para ${arquivo.name}:`, err);
             }
           }
           
-          console.log(`Bucket ${bucket.id}: ${arquivosComUrls.length} URLs geradas`);
+          logger.debug(`Bucket ${bucket.id}: ${arquivosComUrls.length} URLs geradas`);
           backupArquivos[bucket.id] = arquivosComUrls;
         } catch (err) {
-          console.error(`Erro ao fazer backup do bucket ${bucket.id}:`, err);
+          logger.error(`Erro ao fazer backup do bucket ${bucket.id}:`, err);
         }
       }
       setBackupProgress(75);
@@ -449,8 +466,8 @@ const TabelasIntegraisTab = () => {
       document.body.removeChild(link);
 
       // 5. Download das imagens em ZIP
-      console.log(`Total de arquivos para download: ${todosArquivos.length}`);
-      console.log('Arquivos para download:', todosArquivos);
+      logger.debug(`Total de arquivos para download: ${todosArquivos.length}`);
+      logger.debug('Arquivos para download:', todosArquivos);
       
       if (todosArquivos.length > 0) {
         setBackupStatus({ status: 'imagens', message: 'Baixando imagens...' });
@@ -461,7 +478,7 @@ const TabelasIntegraisTab = () => {
           `imagens_opin_${new Date().toISOString().split('T')[0]}.zip`
         );
       } else {
-        console.warn('Nenhuma imagem encontrada para backup');
+        logger.warn('Nenhuma imagem encontrada para backup');
         setBackupStatus({ 
           status: 'erro', 
           message: 'Nenhuma imagem encontrada para backup. Verifique se há arquivos nos buckets.' 
@@ -486,7 +503,7 @@ const TabelasIntegraisTab = () => {
       }, 5000);
 
     } catch (err) {
-      console.error('Erro no backup completo:', err);
+      logger.error('Erro no backup completo:', err);
       setBackupStatus({ 
         status: 'erro', 
         message: `Erro no backup: ${err.message}` 
@@ -514,7 +531,7 @@ const TabelasIntegraisTab = () => {
           
           setBackupProgress((i + 1) / TABELAS_SISTEMA.length * 100);
         } catch (err) {
-          console.error(`Erro ao fazer backup da tabela ${tabela.id}:`, err);
+          logger.error(`Erro ao fazer backup da tabela ${tabela.id}:`, err);
         }
       }
 
@@ -586,7 +603,7 @@ const TabelasIntegraisTab = () => {
       }, 3000);
 
     } catch (err) {
-      console.error('Erro no backup das tabelas:', err);
+      logger.error('Erro no backup das tabelas:', err);
       setBackupStatus({ 
         status: 'erro', 
         message: `Erro no backup: ${err.message}` 
@@ -598,7 +615,7 @@ const TabelasIntegraisTab = () => {
   // Backup apenas das imagens
   const backupImagens = async () => {
     try {
-      console.log('Iniciando backup das imagens...');
+      logger.debug('Iniciando backup das imagens...');
       setBackupStatus({ status: 'imagens', message: 'Preparando backup das imagens...' });
       setBackupProgress(0);
 
@@ -607,7 +624,7 @@ const TabelasIntegraisTab = () => {
       for (let i = 0; i < BUCKETS_BACKUP.length; i++) {
         const bucket = BUCKETS_BACKUP[i];
         try {
-          console.log(`Processando bucket: ${bucket.id} (${bucket.nome})`);
+          logger.debug(`Processando bucket: ${bucket.id} (${bucket.nome})`);
           setBackupStatus({ 
             status: 'imagens', 
             message: `Processando bucket: ${bucket.nome}...` 
@@ -619,24 +636,24 @@ const TabelasIntegraisTab = () => {
             .list('', { limit: 1000 });
           
           if (error) {
-            console.error(`Erro ao listar arquivos do bucket ${bucket.id}:`, error);
+            logger.error(`Erro ao listar arquivos do bucket ${bucket.id}:`, error);
             throw error;
           }
           
-          console.log(`Bucket ${bucket.id} tem ${arquivos?.length || 0} arquivos`);
+          logger.debug(`Bucket ${bucket.id} tem ${arquivos?.length || 0} arquivos`);
           
           if (arquivos && arquivos.length > 0) {
             // Gerar URLs assinadas para cada arquivo
             for (const arquivo of arquivos) {
               try {
-                console.log(`Gerando URL para: ${arquivo.name}`);
+                logger.debug(`Gerando URL para: ${arquivo.name}`);
                 
                 const { data: urlData, error: urlError } = await supabase.storage
                   .from(bucket.id)
                   .createSignedUrl(arquivo.name, 3600);
                 
                 if (urlError) {
-                  console.error(`Erro ao gerar URL para ${arquivo.name}:`, urlError);
+                  logger.error(`Erro ao gerar URL para ${arquivo.name}:`, urlError);
                   continue;
                 }
                 
@@ -648,26 +665,26 @@ const TabelasIntegraisTab = () => {
                     bucketNome: bucket.nome
                   };
                   todosArquivos.push(arquivoCompleto);
-                  console.log(`URL gerada para ${arquivo.name}: ${urlData.signedUrl.substring(0, 50)}...`);
+                  logger.debug(`URL gerada para ${arquivo.name}: ${urlData.signedUrl.substring(0, 50)}...`);
                 } else {
-                  console.warn(`URL não gerada para ${arquivo.name}`);
+                  logger.warn(`URL não gerada para ${arquivo.name}`);
                 }
               } catch (err) {
-                console.error(`Erro ao gerar URL para ${arquivo.name}:`, err);
+                logger.error(`Erro ao gerar URL para ${arquivo.name}:`, err);
               }
             }
           } else {
-            console.log(`Bucket ${bucket.id} está vazio`);
+            logger.debug(`Bucket ${bucket.id} está vazio`);
           }
           
           setBackupProgress((i + 1) / BUCKETS_BACKUP.length * 100);
         } catch (err) {
-          console.error(`Erro ao processar bucket ${bucket.id}:`, err);
+          logger.error(`Erro ao processar bucket ${bucket.id}:`, err);
           // Continuar com outros buckets
         }
       }
 
-      console.log(`Total de arquivos encontrados: ${todosArquivos.length}`);
+      logger.debug(`Total de arquivos encontrados: ${todosArquivos.length}`);
 
       if (todosArquivos.length > 0) {
         setBackupStatus({ 
@@ -697,7 +714,7 @@ const TabelasIntegraisTab = () => {
       }, 3000);
 
     } catch (err) {
-      console.error('Erro no backup das imagens:', err);
+      logger.error('Erro no backup das imagens:', err);
       setBackupStatus({ 
         status: 'erro', 
         message: `Erro no backup: ${err.message}` 
@@ -793,7 +810,7 @@ const TabelasIntegraisTab = () => {
               </div>
             </div>
             <p className="text-sm text-gray-300 mb-4">
-              Inclui todas as tabelas, imagens dos buckets e metadados do sistema
+              Inclui todas as tabelas, imagens dos buckets e tabelas de metadados (fontes_dados e versoes_dados)
             </p>
             <button
               onClick={backupCompletoSite}

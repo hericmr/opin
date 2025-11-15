@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+import logger from '../utils/logger';
 
 class CSVDataService {
   constructor() {
@@ -26,20 +27,20 @@ class CSVDataService {
           skipEmptyLines: true,
           complete: (results) => {
             if (results.errors && results.errors.length > 0) {
-              console.error(`Erros ao processar ${filename}:`, results.errors);
+              logger.error(`Erros ao processar ${filename}:`, results.errors);
             }
             const data = results.data;
             this.cache.set(filename, data);
             resolve(data);
           },
           error: (error) => {
-            console.error(`Erro ao processar ${filename}:`, error);
+            logger.error(`Erro ao processar ${filename}:`, error);
             reject(error);
           }
         });
       });
     } catch (error) {
-      console.error(`Erro ao carregar ${filename}:`, error);
+      logger.error(`Erro ao carregar ${filename}:`, error);
       throw error;
     }
   }
@@ -333,7 +334,7 @@ class CSVDataService {
         .filter(item => item.value > 0)
         .sort((a, b) => b.value - a.value);
     } catch (error) {
-      console.error('Erro ao calcular distribuição de alunos por modalidade:', error);
+      logger.error('Erro ao calcular distribuição de alunos por modalidade:', error);
       // Fallback para valores padrão com todas as modalidades EJA separadas
       return [
         { name: 'Anos Iniciais', value: 654 },

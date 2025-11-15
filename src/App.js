@@ -30,7 +30,85 @@ const AppContent = () => {
   const [openPainelFunction, setOpenPainelFunction] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const isMapRoute = location?.pathname?.includes('/mapa');
+  
+  const isMapRoute = React.useMemo(() => {
+    const routerPath = location?.pathname?.replace(/\/$/, '') || '';
+    return routerPath.includes('/mapa');
+  }, [location?.pathname]);
+
+  // Verificação para rotas que usam navbar integrada no Hero (showNavbar={true})
+  const isHeroNavbarRoute = React.useMemo(() => {
+    // Verifica a URL atual da janela primeiro
+    if (typeof window !== 'undefined' && window.location) {
+      const windowPath = window.location.pathname;
+      const normalizedWindowPath = windowPath.replace(/^\/opin/, '').replace(/\/$/, '');
+      
+      if (normalizedWindowPath === '/conteudo' || 
+          normalizedWindowPath === '/dashboard' || 
+          normalizedWindowPath === '/painel-dados' || 
+          normalizedWindowPath === '/dados-escolas-indigenas') {
+        return true;
+      }
+    }
+    
+    // Verifica o pathname do React Router
+    const routerPath = location?.pathname?.replace(/\/$/, '') || '';
+    return routerPath === '/conteudo' || 
+           routerPath === '/dashboard' || 
+           routerPath === '/painel-dados' || 
+           routerPath === '/dados-escolas-indigenas';
+  }, [location?.pathname]);
+
+  // Verifica se há uma rota inicial definida (para o dashboard estático)
+  React.useEffect(() => {
+    if (window.__INITIAL_ROUTE__) {
+      const initialRoute = window.__INITIAL_ROUTE__;
+      // Limpa a variável global
+      delete window.__INITIAL_ROUTE__;
+      
+      // Aguarda um pouco para garantir que o Router esteja totalmente inicializado
+      const timer = setTimeout(() => {
+        // Verifica se já estamos na rota correta
+        const currentPath = location.pathname.replace(/\/$/, ''); // Remove barra final
+        const targetPath = initialRoute.replace(/\/$/, ''); // Remove barra final
+        
+        if (currentPath !== targetPath && !currentPath.includes(targetPath)) {
+          // Navega para a rota inicial usando React Router (sem reload)
+          navigate(initialRoute, { replace: true });
+        }
+      }, 50);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [navigate, location.pathname]);
+
+  // Handler para redirecionamento do GitHub Pages (404.html)
+  React.useEffect(() => {
+    const githubPagesRedirect = sessionStorage.getItem('githubPagesRedirect');
+    if (githubPagesRedirect) {
+      // Remove do sessionStorage
+      sessionStorage.removeItem('githubPagesRedirect');
+      
+      // Parse a rota (pode incluir query params e hash)
+      const [path, ...rest] = githubPagesRedirect.split('?');
+      const queryString = rest.length > 0 ? '?' + rest.join('?') : '';
+      const fullPath = path + queryString;
+      
+      // Aguarda um pouco para garantir que o Router esteja totalmente inicializado
+      const timer = setTimeout(() => {
+        // Verifica se já estamos na rota correta
+        const currentPath = location.pathname.replace(/\/$/, '');
+        const targetPath = path.replace(/\/$/, '');
+        
+        if (currentPath !== targetPath) {
+          // Navega para a rota usando React Router (sem reload)
+          navigate(fullPath, { replace: true });
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [navigate, location.pathname]);
 
   const handlePainelOpenFunction = (openPainelFn) => {
     setOpenPainelFunction(() => openPainelFn);
@@ -66,8 +144,14 @@ const AppContent = () => {
       {/* Meta tags automáticas para escolas específicas */}
       <MetaTagsDetector dataPoints={dataPoints} />
       
-      {!isMapRoute && (
-        <Navbar onConteudoClick={() => navigate('/conteudo')} dataPoints={dataPoints} openPainelFunction={openPainelFunction} />
+      {/* Navbar só aparece se NÃO for rota de mapa E NÃO for rota que usa navbar integrada no Hero */}
+      {/* Verificação dupla para garantir que não apareça quando acessado diretamente */}
+      {!isMapRoute && !isHeroNavbarRoute && (
+        <Navbar 
+          onConteudoClick={() => navigate('/conteudo')} 
+          dataPoints={dataPoints} 
+          openPainelFunction={openPainelFunction} 
+        />
       )}
       <Suspense fallback={
         loading ? null : (
@@ -164,20 +248,6 @@ function AppRoutes() {
 }
 
 const App = () => {
-  // Verifica se há uma rota inicial definida (para o dashboard)
-  React.useEffect(() => {
-    if (window.__INITIAL_ROUTE__) {
-      const initialRoute = window.__INITIAL_ROUTE__;
-      // Limpa a variável global
-      delete window.__INITIAL_ROUTE__;
-      // Navega para a rota inicial após um pequeno delay para garantir que o router esteja pronto
-      setTimeout(() => {
-        window.history.replaceState({}, '', `/opin${initialRoute}`);
-        window.location.reload();
-      }, 100);
-    }
-  }, []);
-
   return (
     <HelmetProvider>
       <ToastProvider>

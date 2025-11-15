@@ -1,4 +1,5 @@
 import { supabase } from '../supabaseClient';
+import logger from '../utils/logger';
 
 /**
  * Serviço para gerenciar imagens de header das escolas
@@ -21,7 +22,7 @@ export class HeaderImageService {
       if (error) throw error;
       return data?.imagem_header || null;
     } catch (err) {
-      console.error('Erro ao buscar imagem do header:', err);
+      logger.error('Erro ao buscar imagem do header:', err);
       throw err;
     }
   }
@@ -41,7 +42,7 @@ export class HeaderImageService {
       
       if (error) throw error;
     } catch (err) {
-      console.error('Erro ao definir imagem do header:', err);
+      logger.error('Erro ao definir imagem do header:', err);
       throw err;
     }
   }
@@ -60,7 +61,7 @@ export class HeaderImageService {
       
       if (error) throw error;
     } catch (err) {
-      console.error('Erro ao remover imagem do header:', err);
+      logger.error('Erro ao remover imagem do header:', err);
       throw err;
     }
   }

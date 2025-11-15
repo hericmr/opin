@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import "./assets/fonts/fonts.css";
+import "./styles/map-controls.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
@@ -18,7 +19,7 @@ reportWebVitals();
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     // Usa o caminho base do projeto (/opin) se estiver configurado
-    const basePath = process.env.PUBLIC_URL || '/opin';
+    const basePath = import.meta.env.BASE_URL || '/opin';
     const swPath = `${basePath}/sw.js`;
     
     navigator.serviceWorker.register(swPath, { scope: `${basePath}/` })

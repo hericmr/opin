@@ -13,6 +13,7 @@ import MinimalLoginModal from '../Auth/MinimalLoginModal';
 const Navbar = ({ dataPoints, openPainelFunction }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { setSearch } = useSearch();
@@ -44,6 +45,19 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Controlar mudança de fundo da navbar baseado no scroll
+  // Similar ao Native Land Digital: transparente no topo, sólido quando rola
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      // Mudar para fundo sólido quando rolar mais de 50px
+      setIsScrolled(currentScrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Texto: controles movidos para o menu de camadas
 
   const handleAdminClick = () => {
@@ -68,6 +82,12 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
     location.pathname === '/painel-dados' || 
     location.pathname === '/dados-escolas-indigenas',
     [location.pathname]
+  );
+  
+  // Páginas que usam hero image (navbar transparente)
+  const isHeroPage = useMemo(() => 
+    isPainelPage || isConteudoPage,
+    [isPainelPage, isConteudoPage]
   );
   
   const toggleMobileMenu = React.useCallback(() => {
@@ -123,13 +143,36 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
     }
   };
 
+  // Determinar se deve mostrar fundo sólido
+  // Se estiver em página hero E não tiver rolado, manter transparente
+  // Caso contrário, mostrar fundo sólido
+  const shouldShowSolidBackground = !isHeroPage || isScrolled;
+  
+  // Verificar se está na homepage
+  const isHomepage = useMemo(() => location.pathname === '/', [location.pathname]);
+  
+  // URL da imagem hero
+  const heroImageUrl = `${import.meta.env.BASE_URL || '/opin'}/hero.png`;
+  
   return (
     <header 
-      className="fixed top-0 left-0 right-0 z-50 bg-[#215A36] text-white shadow-lg"
+      className={`fixed top-0 left-0 right-0 z-50 text-white shadow-lg transition-all duration-300 ${
+        isHomepage ? '' : (shouldShowSolidBackground ? 'bg-[#215A36]' : 'bg-transparent')
+      }`}
+      style={isHomepage ? {
+        backgroundImage: `url('${heroImageUrl}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center top',
+        backgroundRepeat: 'no-repeat'
+      } : {}}
       role="banner"
     >
+      {/* Overlay para legibilidade do texto na homepage */}
+      {isHomepage && (
+        <div className="absolute inset-0 bg-green-900/60 pointer-events-none"></div>
+      )}
       {/* Header Principal - Estilo UNIFESP */}
-      <div className="w-full max-w-none px-2 sm:px-4 md:px-6 lg:px-16 xl:px-24">
+      <div className={`w-full max-w-none px-2 sm:px-4 md:px-6 lg:px-16 xl:px-24 ${isHomepage ? 'relative z-10' : ''}`}>
         <div className="flex items-center justify-between py-1 sm:py-1.5 md:py-2">
           
           {/* Título do Projeto - Lado esquerdo */}
@@ -141,7 +184,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
             >
               <div className="flex items-center space-x-1 sm:space-x-2">
                 <img 
-                  src={`${process.env.PUBLIC_URL || ''}/logo_index.png`}
+                  src={`${import.meta.env.BASE_URL || '/opin'}/logo_index.png`}
                   alt="OPIN - Observatório dos Professores Indígenas"
                   className="h-6 sm:h-7 md:h-8 lg:h-10 xl:h-12 w-auto object-contain object-left"
                   style={{ display: 'block' }}
@@ -190,7 +233,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                 className="flex items-center hover:opacity-80 transition-opacity"
               >
                 <img 
-                  src={`${process.env.PUBLIC_URL}/lindi.svg`} 
+                  src={`${import.meta.env.BASE_URL || '/opin'}/lindi.svg`} 
                   alt="LINDI - Licenciatura Intercultural Indígena" 
                   className="h-12 xl:h-16 w-auto"
                 />
@@ -203,7 +246,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                 className="flex items-center hover:opacity-80 transition-opacity"
               >
                 <img 
-                  src={`${process.env.PUBLIC_URL}/logo.webp`} 
+                  src={`${import.meta.env.BASE_URL || '/opin'}/logo.webp`} 
                   alt="UNIFESP" 
                   className="h-8 xl:h-12 w-auto"
                 />
@@ -217,7 +260,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
               {!isAuthenticated ? (
               <button
                 onClick={handleAdminClick}
-                className="p-1.5 rounded hover:bg-green-700/20 transition-colors focus:outline-none"
+                className="p-1.5 rounded hover:bg-white/10 transition-colors focus:outline-none"
                 title="Acesso administrativo"
                 aria-label="Acesso administrativo"
               >
@@ -230,15 +273,14 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                   </span>
                   <button
                     onClick={() => navigate('/admin')}
-                    className="flex items-center gap-1 px-2 py-1 text-xs font-medium bg-green-600 text-white rounded hover:bg-green-700 transition-colors focus:outline-none"
+                    className="p-1.5 rounded hover:bg-white/10 transition-colors focus:outline-none"
                     aria-label="Painel administrativo"
                   >
-                    <Shield className="w-2.5 h-2.5" />
-                    <span className="hidden lg:inline">Admin</span>
+                    <Shield className="w-4 h-4" />
                   </button>
                   <button
                     onClick={logout}
-                    className="px-2 py-1 text-xs font-medium bg-red-600 text-white rounded hover:bg-red-700 transition-colors focus:outline-none"
+                    className="px-3 py-1.5 text-xs rounded hover:bg-white/10 transition-colors focus:outline-none"
                     title="Sair"
                     aria-label="Sair da conta"
                   >

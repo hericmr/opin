@@ -3,6 +3,7 @@ import { Feature } from 'ol';
 import { Point } from 'ol/geom';
 import { fromLonLat } from 'ol/proj';
 import { findNearbyPairs } from '../utils/mapUtils';
+import logger from '../utils/logger';
 
 export const useMapMarkers = (map, dataPoints, showMarcadores) => {
   const vectorSourceRef = useRef(null);
@@ -29,8 +30,8 @@ export const useMapMarkers = (map, dataPoints, showMarcadores) => {
     // Encontrar pares de marcadores próximos
     const nearbyPairs = findNearbyPairs(pontosValidos);
 
-    console.log(`useMapMarkers: Processando ${pontosValidos.length} marcadores válidos`);
-    console.log(`useMapMarkers: Encontrados ${nearbyPairs.length} pares próximos`);
+    logger.debug(`useMapMarkers: Processando ${pontosValidos.length} marcadores válidos`);
+    logger.debug(`useMapMarkers: Encontrados ${nearbyPairs.length} pares próximos`);
 
     // Adicionar novos marcadores
     pontosValidos.forEach((point, index) => {
@@ -51,7 +52,7 @@ export const useMapMarkers = (map, dataPoints, showMarcadores) => {
       }
     });
 
-    console.log(`useMapMarkers: Adicionados ${pontosValidos.length} marcadores com clustering inteligente`);
+    logger.debug(`useMapMarkers: Adicionados ${pontosValidos.length} marcadores com clustering inteligente`);
   }, [map, dataPoints, showMarcadores]);
 
   return {

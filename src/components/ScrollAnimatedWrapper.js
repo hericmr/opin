@@ -78,6 +78,7 @@ const ScrollAnimatedWrapper = ({
         ease: "easeOut"
       }}
       className={`w-full ${className}`}
+      style={{ minWidth: 0, minHeight: 0 }}
     >
       {children}
     </motion.div>

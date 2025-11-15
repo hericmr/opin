@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Edit2, X, Check, AlertCircle } from 'lucide-react';
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { Edit2, AlertCircle } from 'lucide-react';
 
 const EditableTable = ({ 
   escolas, 
@@ -28,53 +28,8 @@ const EditableTable = ({
   const [editValue, setEditValue] = useState('');
   const [originalValue, setOriginalValue] = useState('');
 
-  // Iniciar edição de uma célula
-  const startEditing = useCallback((rowIndex, columnKey, value) => {
-    setEditingCell({ rowIndex, columnKey });
-    setEditValue(value || '');
-    setOriginalValue(value || '');
-  }, []);
-
-  // Cancelar edição
-  const cancelEditing = useCallback(() => {
-    setEditingCell(null);
-    setEditValue('');
-    setOriginalValue('');
-  }, []);
-
-  // Salvar edição
-  const saveEdit = useCallback(async () => {
-    if (!editingCell) return;
-
-    const { rowIndex, columnKey } = editingCell;
-    const escola = escolas[rowIndex];
-    
-    // Só salvar se o valor mudou
-    if (editValue !== originalValue) {
-      const updatedEscola = {
-        ...escola,
-        [columnKey]: editValue
-      };
-      
-      await onSave(updatedEscola);
-    }
-    
-    cancelEditing();
-  }, [editingCell, editValue, originalValue, escolas, onSave, cancelEditing]);
-
-  // Lidar com tecla Enter para salvar
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      saveEdit();
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      cancelEditing();
-    }
-  }, [saveEdit, cancelEditing]);
-
-  // Colunas da tabela
-  const columns = [
+  // Colunas da tabela - definidas antes dos callbacks
+  const columns = useMemo(() => [
     { key: 'Escola', label: 'Escola', width: 'w-32' },
     { key: 'Município', label: 'Município', width: 'w-28' },
     { key: 'Endereço', label: 'Endereço', width: 'w-40' },
@@ -131,8 +86,65 @@ const EditableTable = ({
     { key: 'cozinha', label: 'Cozinha', width: 'w-24' },
     { key: 'merenda_escolar', label: 'Merenda Escolar', width: 'w-28' },
     { key: 'diferenciada', label: 'Diferenciada', width: 'w-24' },
-    { key: 'actions', label: 'Ações', width: 'w-20' }
-  ];
+    { key: 'actions', label: 'Ações', width: 'w-32' }
+  ], []);
+
+  // Iniciar edição de uma célula
+  const startEditing = useCallback((rowIndex, columnKey, value) => {
+    setEditingCell({ rowIndex, columnKey });
+    setEditValue(value || '');
+    setOriginalValue(value || '');
+  }, []);
+
+  // Cancelar edição
+  const cancelEditing = useCallback(() => {
+    setEditingCell(null);
+    setEditValue('');
+    setOriginalValue('');
+  }, []);
+
+  // Salvar edição
+  const saveEdit = useCallback(async () => {
+    if (!editingCell) return;
+
+    const { rowIndex, columnKey } = editingCell;
+    const escola = escolas[rowIndex];
+    
+    // Só salvar se o valor mudou
+    if (editValue !== originalValue) {
+      const updatedEscola = {
+        ...escola,
+        [columnKey]: editValue
+      };
+      
+      // Encontrar o label da coluna
+      const column = columns.find(col => col.key === columnKey);
+      const label = column ? column.label : columnKey;
+      
+      // Preparar informação do campo alterado para o modal de metadados
+      const campoAlterado = {
+        campo: columnKey,
+        valorAntigo: originalValue,
+        valorNovo: editValue,
+        label: label
+      };
+      
+      await onSave(updatedEscola, campoAlterado);
+    }
+    
+    cancelEditing();
+  }, [editingCell, editValue, originalValue, escolas, onSave, cancelEditing, columns]);
+
+  // Lidar com tecla Enter para salvar
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      saveEdit();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      cancelEditing();
+    }
+  }, [saveEdit, cancelEditing]);
 
   // Renderizar célula editável
   const renderCell = (escola, column, rowIndex) => {
@@ -141,35 +153,10 @@ const EditableTable = ({
 
     if (column.key === 'actions') {
       return (
-        <div className="flex items-center space-x-1">
-          {isEditing ? (
-            <>
-              <button
-                onClick={saveEdit}
-                className="p-1 text-green-500 hover:text-green-600 transition-colors"
-                title="Salvar"
-              >
-                <Check size={16} />
-              </button>
-              <button
-                onClick={cancelEditing}
-                className="p-1 text-red-500 hover:text-red-600 transition-colors"
-                title="Cancelar"
-              >
-                <X size={16} />
-              </button>
-            </>
-          ) : (
-            <div className="flex items-center space-x-1">
-              <button
-                onClick={() => startEditing(rowIndex, 'Escola', escola.Escola)}
-                className="p-1 text-blue-500 hover:text-blue-600 transition-colors"
-                title="Editar Escola"
-              >
-                <Edit2 size={14} />
-              </button>
-            </div>
-          )}
+        <div className="flex items-center justify-center">
+          <div className="text-gray-500 text-xs">
+            {isEditing ? 'Editando...' : 'Editar'}
+          </div>
         </div>
       );
     }
@@ -193,7 +180,7 @@ const EditableTable = ({
             onChange={(e) => setEditValue(e.target.value)}
             onKeyDown={handleKeyDown}
             onBlur={saveEdit}
-            className="w-full px-2 py-1 text-sm bg-gray-700 border border-gray-600 rounded text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none"
+            className="w-full px-2 py-1 text-sm bg-gray-800 border border-blue-400 rounded text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none"
             rows={3}
             autoFocus
           />
@@ -207,7 +194,7 @@ const EditableTable = ({
           onChange={(e) => setEditValue(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={saveEdit}
-          className="w-full px-2 py-1 text-sm bg-gray-700 border border-gray-600 rounded text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          className="w-full px-2 py-1 text-sm bg-gray-800 border border-blue-400 rounded text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           autoFocus
           {...inputProps}
         />
@@ -216,83 +203,92 @@ const EditableTable = ({
 
     return (
       <div 
-        className="cursor-pointer hover:bg-gray-700 px-2 py-1 rounded transition-colors group"
+        className="cursor-pointer hover:bg-gray-700/50 px-2 py-1.5 rounded transition-colors group relative"
         onClick={() => startEditing(rowIndex, column.key, value)}
         title="Clique para editar"
       >
-        <span className="text-gray-200 group-hover:text-white text-xs whitespace-nowrap overflow-hidden">
-          {value && value.length > 30 
-            ? `${value.substring(0, 30)}...` 
-            : value || '-'}
-        </span>
-        <Edit2 size={10} className="inline ml-1 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="flex items-center gap-1.5">
+          <span className="text-gray-300 group-hover:text-white text-xs flex-1 truncate">
+            {value && value.length > 30 
+              ? `${value.substring(0, 30)}...` 
+              : value || <span className="text-gray-500">-</span>}
+          </span>
+          <Edit2 size={12} className="text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+        </div>
       </div>
     );
   };
 
   return (
-    <div className="bg-gray-900 rounded-lg overflow-hidden h-full flex flex-col">
-      {/* Header com status */}
-      <div className="bg-gray-800 px-4 py-3 border-b border-gray-700">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+    <div className="h-full flex flex-col bg-gray-900">
+      {/* Status Bar - mais discreto */}
+      {(loading || error) && (
+        <div className="flex-shrink-0 bg-gray-800/50 px-4 py-2 border-b border-gray-700/50">
+          <div className="flex items-center gap-3">
             {loading && (
-              <div className="flex items-center text-yellow-400">
-                Salvando...
+              <div className="flex items-center gap-2 text-yellow-400 text-sm">
+                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-yellow-400"></div>
+                <span>Salvando alterações...</span>
               </div>
             )}
             {error && (
-              <div className="flex items-center text-red-400">
-                <AlertCircle size={16} className="mr-1" />
-                {error}
+              <div className="flex items-center gap-2 text-red-400 text-sm">
+                <AlertCircle size={14} />
+                <span>{error}</span>
               </div>
             )}
           </div>
         </div>
-        <p className="text-sm text-gray-400 mt-1">
-          Clique em qualquer célula para editar. Pressione Enter para salvar ou Esc para cancelar.
-        </p>
-      </div>
+      )}
 
       {/* Tabela */}
       <div 
         ref={scrollRef}
         className={`editable-table-scroll flex-1 relative ${canScroll ? 'can-scroll' : ''}`}
-        style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
+        style={{ overflow: 'auto' }}
       >
         <table className="w-full min-w-[3000px]">
-                      <thead className="bg-gray-800">
-              <tr>
-                {columns.map((column) => (
-                  <th
-                    key={column.key}
-                    className={`${column.width} px-2 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider border-b border-gray-700`}
-                  >
-                    <div className="truncate" title={column.label}>
-                      {column.label}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-          <tbody className="bg-gray-900 divide-y divide-gray-700">
-            {escolas.map((escola, rowIndex) => (
-              <tr key={escola.id} className="hover:bg-gray-800 transition-colors">
-                {columns.map((column) => (
-                                  <td
+          <thead className="bg-gray-800/80 sticky top-0 z-10">
+            <tr>
+              {columns.map((column) => (
+                <th
                   key={column.key}
-                  className="px-2 py-2 text-xs"
+                  className={`${column.width} px-3 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider border-b border-gray-700`}
                 >
-                    {renderCell(escola, column, rowIndex)}
-                  </td>
-                ))}
+                  <div className="truncate" title={column.label}>
+                    {column.label}
+                  </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-gray-900 divide-y divide-gray-800">
+            {escolas.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length} className="px-4 py-8 text-center text-gray-400">
+                  Nenhuma escola encontrada
+                </td>
               </tr>
-            ))}
+            ) : (
+              escolas.map((escola, rowIndex) => (
+                <tr 
+                  key={escola.id || rowIndex} 
+                  className="hover:bg-gray-800/50 transition-colors"
+                >
+                  {columns.map((column) => (
+                    <td
+                      key={column.key}
+                      className="px-3 py-2.5 text-xs"
+                    >
+                      {renderCell(escola, column, rowIndex)}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
-
-
     </div>
   );
 };

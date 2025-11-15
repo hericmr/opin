@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import OpenLayersMap from './OpenLayersMap';
 import { useGeoJSONCache } from '../hooks/useGeoJSONCache';
 import { MAP_CONFIG } from '../utils/mapConfig';
@@ -6,6 +6,10 @@ import { ResponsiveIcon } from '../hooks/useResponsiveIcon';
 import { useBreakpoint } from '../hooks/responsive/useBreakpoint';
 import logger from '../utils/logger';
 import { Link } from 'react-router-dom';
+import { fromLonLat } from 'ol/proj';
+import { Search, X, MapPin, BookOpen, Users, FileText, Map } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import useSearch from '../hooks/useSearch';
 
 const MapSelector = ({ 
   dataPoints, 
@@ -28,6 +32,13 @@ const MapSelector = ({
   // Estados para responsividade - usando hook centralizado
   const { isMobile } = useBreakpoint();
   const [isMinimized, setIsMinimized] = useState(false);
+
+  // Estados para busca
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  const [localSearchTerm, setLocalSearchTerm] = useState('');
+  const searchRef = useRef(null);
+  const searchInputRef = useRef(null);
+  const { searchResults, isSearching, performSearch } = useSearch(dataPoints);
 
   // Handler para minimizar/expandir
   const handleMinimize = useCallback(() => setIsMinimized(prev => !prev), []);
@@ -54,6 +65,147 @@ const MapSelector = ({
       duration: 200,
     });
   }, [mapInstance]);
+
+  // Handler para busca - quando o usuário faz uma busca simples
+  const handleSearch = useCallback((searchTerm) => {
+    // Se temos a função de abrir painel, tentar encontrar a escola e abrir
+    if (onPainelOpen && dataPoints && dataPoints.length > 0) {
+      const term = searchTerm.toLowerCase();
+      const foundSchool = dataPoints.find(school => 
+        school.titulo && school.titulo.toLowerCase().includes(term)
+      );
+      if (foundSchool) {
+        onPainelOpen(foundSchool);
+        // Centralizar no mapa se tiver coordenadas
+        if (mapInstance && foundSchool.Latitude && foundSchool.Longitude) {
+          const view = mapInstance.getView();
+          if (view) {
+            view.animate({
+              center: fromLonLat([foundSchool.Longitude, foundSchool.Latitude]),
+              zoom: Math.max(view.getZoom() || 15, 15),
+              duration: 500,
+            });
+          }
+        }
+      }
+    }
+  }, [onPainelOpen, dataPoints, mapInstance]);
+
+  // Handler para quando um resultado da busca é clicado
+  const handleResultClick = useCallback((result) => {
+    // Se temos dados completos da escola, abrir o painel
+    if (onPainelOpen && result.data) {
+      onPainelOpen(result.data);
+      // Centralizar no mapa se tiver coordenadas
+      if (mapInstance && result.coordinates) {
+        const view = mapInstance.getView();
+        if (view) {
+          view.animate({
+            center: fromLonLat([result.coordinates.lng, result.coordinates.lat]),
+            zoom: Math.max(view.getZoom() || 15, 15),
+            duration: 500,
+          });
+        }
+      }
+    } else if (result.coordinates && mapInstance) {
+      // Se só temos coordenadas, centralizar no mapa
+      const view = mapInstance.getView();
+      if (view) {
+        view.animate({
+          center: fromLonLat([result.coordinates.lng, result.coordinates.lat]),
+          zoom: Math.max(view.getZoom() || 15, 15),
+          duration: 500,
+        });
+      }
+    }
+    setIsSearchExpanded(false);
+    setLocalSearchTerm('');
+  }, [onPainelOpen, mapInstance]);
+
+  // Fechar busca quando clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setIsSearchExpanded(false);
+        setLocalSearchTerm('');
+      }
+    };
+
+    if (isSearchExpanded) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isSearchExpanded]);
+
+  // Focar no input quando expandir
+  useEffect(() => {
+    if (isSearchExpanded && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isSearchExpanded]);
+
+  // Buscar dados quando o termo local mudar (busca em tempo real)
+  useEffect(() => {
+    if (localSearchTerm.length < 2) {
+      return;
+    }
+
+    const searchData = async () => {
+      try {
+        await performSearch(localSearchTerm);
+      } catch (error) {
+        console.error('Erro na busca:', error);
+      }
+    };
+
+    const debounceTimer = setTimeout(searchData, 300);
+    return () => clearTimeout(debounceTimer);
+  }, [localSearchTerm, performSearch]);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const termToSearch = localSearchTerm.trim();
+    if (termToSearch) {
+      handleSearch(termToSearch);
+      setIsSearchExpanded(false);
+      setLocalSearchTerm('');
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setLocalSearchTerm(e.target.value);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearchSubmit(e);
+    } else if (e.key === 'Escape') {
+      setIsSearchExpanded(false);
+      setLocalSearchTerm('');
+    }
+  };
+
+  const getIconForType = (type) => {
+    switch (type) {
+      case 'school': return <MapPin className="w-4 h-4" />;
+      case 'land': return <BookOpen className="w-4 h-4" />;
+      case 'teacher': return <Users className="w-4 h-4" />;
+      case 'history': return <FileText className="w-4 h-4" />;
+      default: return <MapPin className="w-4 h-4" />;
+    }
+  };
+
+  const highlightText = (text, searchTerm) => {
+    if (!searchTerm) return text;
+    const regex = new RegExp(`(${searchTerm})`, 'gi');
+    const parts = text.split(regex);
+    return parts.map((part, index) => 
+      regex.test(part) ? (
+        <span key={index} className="bg-yellow-200 font-semibold">{part}</span>
+      ) : part
+    );
+  };
 
   useEffect(() => {
     const clamped = Math.min(1.3, Math.max(0.9, textScale));
@@ -312,6 +464,130 @@ const MapSelector = ({
           >
             <span className="text-green-100 text-lg font-semibold leading-none">&minus;</span>
           </button>
+        </div>
+
+        {/* Botão de busca */}
+        <div ref={searchRef} className="relative">
+          <AnimatePresence>
+            {!isSearchExpanded ? (
+              <motion.button
+                initial={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                onClick={() => setIsSearchExpanded(true)}
+                className="rounded-full bg-green-900/90 hover:bg-green-800 p-3 shadow-lg flex items-center justify-center cursor-pointer transition-all duration-200 backdrop-blur-md"
+                aria-label="Buscar escolas"
+                title="Buscar escolas"
+              >
+                <Search className="w-5 h-5 text-green-100" />
+              </motion.button>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, width: 0 }}
+                animate={{ opacity: 1, scale: 1, width: "auto" }}
+                exit={{ opacity: 0, scale: 0.8, width: 0 }}
+                transition={{ 
+                  duration: 0.3, 
+                  ease: "easeInOut",
+                  opacity: { duration: 0.2 },
+                  scale: { duration: 0.3 }
+                }}
+                className="flex items-center bg-white rounded-lg shadow-lg overflow-hidden"
+              >
+                <form onSubmit={handleSearchSubmit} className="flex items-center">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      placeholder="Buscar escolas, povos, línguas..."
+                      value={localSearchTerm}
+                      onChange={handleInputChange}
+                      onKeyDown={handleKeyDown}
+                      className="w-64 pl-10 pr-12 py-2 border-0 rounded-l-lg 
+                               focus:outline-none focus:ring-2 focus:ring-green-500
+                               text-sm text-black"
+                    />
+                  </div>
+                  <motion.button
+                    type="button"
+                    onClick={() => {
+                      setIsSearchExpanded(false);
+                      setLocalSearchTerm('');
+                    }}
+                    className="px-3 py-2 text-gray-400 hover:text-gray-600 transition-colors"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <X className="w-4 h-4" />
+                  </motion.button>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Resultados da busca */}
+          <AnimatePresence>
+            {isSearchExpanded && searchResults.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ 
+                  duration: 0.25, 
+                  ease: "easeOut",
+                  delay: 0.1
+                }}
+                className="absolute top-full mt-2 left-0 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50"
+              >
+                <div className="p-2 max-h-64 overflow-y-auto">
+                  {isSearching ? (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="p-4 text-center text-gray-500"
+                    >
+                      <p className="mt-2 text-xs">Buscando...</p>
+                    </motion.div>
+                  ) : (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.2 }}
+                      className="space-y-1"
+                    >
+                      {searchResults.slice(0, 8).map((result, index) => (
+                        <motion.button
+                          key={result.id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.1 + index * 0.05 }}
+                          onClick={() => handleResultClick(result)}
+                          className="w-full p-2 text-left hover:bg-gray-50 rounded transition-colors
+                                   flex items-center gap-2 group"
+                          whileHover={{ x: 5 }}
+                        >
+                          <div className="text-gray-400 group-hover:text-green-600 transition-colors flex-shrink-0">
+                            {getIconForType(result.type)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 text-sm truncate">
+                              {highlightText(result.title, localSearchTerm)}
+                            </p>
+                            <p className="text-xs text-gray-500 truncate">
+                              {result.subtitle}
+                            </p>
+                          </div>
+                          {result.coordinates && (
+                            <Map className="w-4 h-4 text-gray-300 group-hover:text-green-600 transition-colors flex-shrink-0" />
+                          )}
+                        </motion.button>
+                      ))}
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
