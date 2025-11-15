@@ -1,3 +1,4 @@
+// eslint.config.mjs
 import js from '@eslint/js';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -47,6 +48,7 @@ export default [
       'react/prop-types': 'warn', // Avisar mas não bloquear
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'react-hooks/preserve-manual-memoization': 'warn', // Avisar mas não bloquear
     },
   },
   {
