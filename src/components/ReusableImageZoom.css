@@ -2,7 +2,7 @@
 .image-zoom-modal {
   position: fixed;
   inset: 0;
-  z-index: 10050; /* Higher than panel (9999) and title (1015) */
+  z-index: 99999 !important; /* Highest z-index - above panel (9999) and title (1015) */
   background-color: rgba(0, 0, 0, 0.9);
   display: flex;
   align-items: center;
@@ -58,7 +58,7 @@
   transition: all 0.2s ease;
   border: none;
   cursor: pointer;
-  z-index: 10060; /* Higher than modal */
+  z-index: 100000 !important; /* Higher than modal */
 }
 
 .image-zoom-close:hover {
@@ -72,7 +72,7 @@
   left: 1rem;
   display: flex;
   gap: 0.5rem;
-  z-index: 10060; /* Higher than modal */
+  z-index: 100000 !important; /* Higher than modal */
 }
 
 .image-zoom-control-button {
@@ -109,7 +109,7 @@
   transition: all 0.2s ease;
   border: none;
   cursor: pointer;
-  z-index: 10060; /* Higher than modal */
+  z-index: 100000 !important; /* Higher than modal */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,7 +143,7 @@
   border-radius: 9999px;
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
-  z-index: 10060; /* Higher than modal */
+  z-index: 100000 !important; /* Higher than modal */
 }
 
 .image-zoom-caption {
@@ -154,7 +154,7 @@
   padding: 1rem !important;
   max-width: 80% !important;
   text-align: center !important;
-  z-index: 10060 !important; /* Higher than modal */
+  z-index: 100000 !important; /* Higher than modal */
   margin: 0.5rem auto 0 auto !important;
   width: auto !important;
   height: auto !important;
@@ -172,7 +172,7 @@
   border-radius: 0.5rem;
   padding: 0.5rem;
   font-size: 0.75rem;
-  z-index: 10060; /* Higher than modal */
+  z-index: 100000 !important; /* Higher than modal */
 }
 
 /* Responsividade */
