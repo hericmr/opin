@@ -87,7 +87,6 @@ const obterLabelCampo = (campo) => {
     'Professores falam a língua indígena?': 'Professores Falam Língua Indígena',
     'Formação dos professores': 'Formação dos Professores',
     'Formação continuada oferecida': 'Formação Continuada',
-    'A escola possui PPP próprio?': 'PPP Próprio',
     'PPP elaborado com a comunidade?': 'PPP com Comunidade',
     'Material pedagógico não indígena': 'Material Não Indígena',
     'Material pedagógico indígena': 'Material Indígena',

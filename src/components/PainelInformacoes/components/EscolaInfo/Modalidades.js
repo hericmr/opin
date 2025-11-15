@@ -115,11 +115,6 @@ const Modalidades = memo(({ escola }) => {
     },
     {
       icon: BookOpen,
-      label: 'PPP Próprio',
-      value: <BooleanValue value={escola.ppp_proprio} />,
-    },
-    {
-      icon: BookOpen,
       label: 'PPP com Comunidade',
       value: <BooleanValue value={escola.ppp_comunidade} />,
     },
