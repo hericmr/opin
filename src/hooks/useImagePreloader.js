@@ -10,6 +10,8 @@ const useImagePreloader = (escolaId, enabled = true) => {
   const [preloadedImages, setPreloadedImages] = useState(new Map());
   const [isPreloading, setIsPreloading] = useState(false);
   const preloadTimeoutRef = useRef(null);
+  const preloadingEscolaIdRef = useRef(null); // Track which escolaId is currently being preloaded
+  const completedPreloadsRef = useRef(new Set()); // Track completed preloads per escolaId
 
   // Função para preload de uma imagem específica
   const preloadImage = (url) => {
@@ -35,22 +37,35 @@ const useImagePreloader = (escolaId, enabled = true) => {
   };
 
   // Função principal de preload
-  const startPreload = async () => {
-    if (!escolaId || !enabled) return;
+  const startPreload = async (targetEscolaId = escolaId) => {
+    if (!targetEscolaId || !enabled) return;
 
+    // Prevent duplicate preloads for the same escolaId
+    if (preloadingEscolaIdRef.current === targetEscolaId) {
+      logger.debug('🖼️ Preload já em progresso para escola:', targetEscolaId);
+      return;
+    }
+
+    // Skip if already completed (optional: remove this if you want to re-preload on re-render)
+    // if (completedPreloadsRef.current.has(targetEscolaId)) {
+    //   logger.debug('🖼️ Preload já concluído para escola:', targetEscolaId);
+    //   return;
+    // }
+
+    preloadingEscolaIdRef.current = targetEscolaId;
     setIsPreloading(true);
-    logger.debug('🖼️ Iniciando preload de imagens para escola:', escolaId);
+    logger.debug('🖼️ Iniciando preload de imagens para escola:', targetEscolaId);
 
     try {
       // Preload de imagens da escola
       const { data: escolaFiles } = await supabase.storage
         .from('imagens-das-escolas')
-        .list(`${escolaId}/`);
+        .list(`${targetEscolaId}/`);
 
       // Preload de imagens dos professores
       const { data: professorFiles } = await supabase.storage
         .from('imagens-professores')
-        .list(`${escolaId}/`);
+        .list(`${targetEscolaId}/`);
 
       const urlsToPreload = [];
 
@@ -59,7 +74,7 @@ const useImagePreloader = (escolaId, enabled = true) => {
         escolaFiles.forEach(file => {
           const { data: { publicUrl } } = supabase.storage
             .from('imagens-das-escolas')
-            .getPublicUrl(`${escolaId}/${file.name}`);
+            .getPublicUrl(`${targetEscolaId}/${file.name}`);
           urlsToPreload.push(publicUrl);
         });
       }
@@ -69,7 +84,7 @@ const useImagePreloader = (escolaId, enabled = true) => {
         professorFiles.forEach(file => {
           const { data: { publicUrl } } = supabase.storage
             .from('imagens-professores')
-            .getPublicUrl(`${escolaId}/${file.name}`);
+            .getPublicUrl(`${targetEscolaId}/${file.name}`);
           urlsToPreload.push(publicUrl);
         });
       }
@@ -108,10 +123,17 @@ const useImagePreloader = (escolaId, enabled = true) => {
         logger.debug('✅ Preload concluído:', urlsToPreload.length, 'imagens');
       }
 
+      // Mark this escolaId as completed
+      completedPreloadsRef.current.add(targetEscolaId);
+
     } catch (error) {
       logger.error('❌ Erro durante preload:', error);
     } finally {
       setIsPreloading(false);
+      // Clear the preloading flag if this was the current preload
+      if (preloadingEscolaIdRef.current === targetEscolaId) {
+        preloadingEscolaIdRef.current = null;
+      }
     }
   };
 
@@ -119,19 +141,33 @@ const useImagePreloader = (escolaId, enabled = true) => {
   useEffect(() => {
     if (!escolaId || !enabled) return;
 
+    // Skip if already preloading or completed for this escolaId
+    if (preloadingEscolaIdRef.current === escolaId) {
+      return;
+    }
+
     // Limpar timeout anterior se existir
     if (preloadTimeoutRef.current) {
       clearTimeout(preloadTimeoutRef.current);
+      preloadTimeoutRef.current = null;
+    }
+
+    // Reset preloading flag if escolaId changed
+    if (preloadingEscolaIdRef.current && preloadingEscolaIdRef.current !== escolaId) {
+      preloadingEscolaIdRef.current = null;
     }
 
     // Delay inicial para não bloquear a UI
+    // Capture escolaId in a const to ensure we use the correct value
+    const currentEscolaId = escolaId;
     preloadTimeoutRef.current = setTimeout(() => {
-      startPreload();
+      startPreload(currentEscolaId);
     }, 500); // 500ms de delay inicial
 
     return () => {
       if (preloadTimeoutRef.current) {
         clearTimeout(preloadTimeoutRef.current);
+        preloadTimeoutRef.current = null;
       }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps

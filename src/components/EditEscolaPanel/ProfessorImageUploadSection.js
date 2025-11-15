@@ -21,6 +21,9 @@ import {
 } from '../../services/professorImageMetaService';
 import { supabase } from '../../supabaseClient';
 import BrazilianDateInput from '../AdminPanel/components/BrazilianDateInput';
+import OptimizedImage from '../shared/OptimizedImage';
+import FilePreview from '../shared/FilePreview';
+import useImagePreloader from '../../hooks/useImagePreloader';
 
 const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -30,6 +33,30 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   const [success, setSuccess] = useState('');
   const [existingImages, setExistingImages] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Hook de preload de imagens - React 19 best practice
+  const { isImagePreloaded } = useImagePreloader(escolaId, true);
+
+  // Helper function to get valid image URL - exactly like information panel
+  const getImageUrl = useCallback((image) => {
+    // Use publicURL (uppercase) first, exactly like information panel does
+    if (image.publicURL) {
+      return image.publicURL;
+    }
+    // Fallback to lowercase for compatibility
+    if (image.publicUrl) {
+      return image.publicUrl;
+    }
+    // If not available, construct it from the file path (same as info panel)
+    if (image.url) {
+      const { data: { publicUrl } } = supabase.storage
+        .from('imagens-professores')
+        .getPublicUrl(image.url);
+      return publicUrl;
+    }
+    console.warn('Image missing URL:', image);
+    return '';
+  }, []);
 
   const [genero] = useState('professor');
   const [titulo] = useState('');
@@ -88,12 +115,27 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         }
       });
       
-      // Ordenar imagens baseado na ordem do banco
-      const sortedImages = [...images].sort((a, b) => {
-        const orderA = orderMap.has(a.url) ? orderMap.get(a.url) : Infinity;
-        const orderB = orderMap.has(b.url) ? orderMap.get(b.url) : Infinity;
+      // Ordenar imagens baseado na ordem do banco - PRESERVAR TODAS AS PROPRIEDADES
+      const sortedImages = images.map(img => ({ ...img })).sort((a, b) => {
+        const orderA = orderMap.get(a.url) ?? Infinity;
+        const orderB = orderMap.get(b.url) ?? Infinity;
         return orderA - orderB;
       });
+      
+      // Verificar se publicURL foi preservado
+      const missingUrls = sortedImages.filter(img => !img.publicURL);
+      if (missingUrls.length > 0) {
+        console.error('[ProfessorImageUploadSection] ⚠️ publicURL perdido após ordenação:', missingUrls);
+        // Recriar publicURL se foi perdido
+        missingUrls.forEach(img => {
+          if (img.url) {
+            const { data: { publicUrl } } = supabase.storage
+              .from('imagens-professores')
+              .getPublicUrl(img.url);
+            img.publicURL = publicUrl;
+          }
+        });
+      }
       
       return sortedImages;
     } catch (err) {
@@ -121,17 +163,59 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     }
   }, [escolaId]);
 
-  // Buscar imagens existentes dos professores
+  // Buscar imagens existentes dos professores - Using same logic as information panel
   const fetchExistingImages = useCallback(async () => {
     if (!escolaId) return;
     
     try {
       setLoading(true);
-      const images = await getEscolaImages(escolaId, 'imagens-professores');
-      const orderedImages = await loadImageOrder(images);
-      setExistingImages(orderedImages);
       
+      // Use the same approach as information panel: list files directly from storage
+      const { data: files, error } = await supabase.storage
+        .from('imagens-professores')
+        .list(`${escolaId}/`);
 
+      if (error) {
+        throw error;
+      }
+
+      if (!files || files.length === 0) {
+        setExistingImages([]);
+        setLoading(false);
+        return;
+      }
+
+      // Process each file - Exatamente como painel de informações
+      const images = files.map((file, index) => {
+        const filePath = `${escolaId}/${file.name}`;
+        const { data: { publicUrl } } = supabase.storage
+          .from('imagens-professores')
+          .getPublicUrl(filePath);
+
+        console.log(`[ProfessorImageUploadSection] Image ${index + 1}:`, {
+          filePath,
+          publicUrl,
+          fileName: file.name
+        });
+
+        return {
+          id: `${escolaId}-${file.name}`,
+          url: filePath,
+          publicURL: publicUrl, // EXATAMENTE como painel de informações
+          filePath: filePath,
+          descricao: `Imagem`,
+          created_at: file.created_at || new Date().toISOString()
+        };
+      });
+      
+      const orderedImages = await loadImageOrder(images);
+      console.log('[ProfessorImageUploadSection] Images after ordering:', orderedImages.map(img => ({
+        id: img.id,
+        url: img.url,
+        publicURL: img.publicURL || 'MISSING',
+        hasPublicURL: !!img.publicURL
+      })));
+      setExistingImages(orderedImages);
     } catch (err) {
       console.error('Erro ao buscar imagens dos professores:', err);
       setError('Erro ao carregar imagens dos professores');
@@ -147,7 +231,6 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   // Testar estrutura da tabela quando o componente for carregado
   useEffect(() => {
     if (escolaId) {
-      console.log('Testando estrutura da tabela legendas_fotos (professores)...');
       testLegendasTable();
     }
   }, [escolaId]);
@@ -157,7 +240,6 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     const fetchLegendas = async () => {
       if (!existingImages.length || !escolaId) return;
       
-      console.log('Buscando legendas para', existingImages.length, 'imagens de professores');
       const legendasMap = {};
       
       try {
@@ -167,41 +249,42 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
             continue;
           }
           
-          console.log('Buscando legenda para imagem de professor:', img.url);
           const legenda = await getLegendaByImageUrl(img.url, escolaId, 'professor');
-          console.log('Legenda encontrada para professor:', legenda);
           legendasMap[img.url] = legenda;
         }
         
-        // Só atualizar se houver legendas novas para carregar
+        // Atualizar imagens com legendas - React 19: preserve all properties
         if (Object.keys(legendasMap).length > 0) {
           setExistingImages(prev => prev.map(img => {
             const legenda = legendasMap[img.url];
-            // Se não há legenda no map, manter os dados existentes
+            
+            // Se já tem legenda e não há nova, manter como está
             if (!legenda && img.legendaData) {
               return img;
             }
             
+            // Extrair campos da legenda
+            const legendaData = legenda ? {
+              legenda: legenda.legenda || '',
+              descricao_detalhada: legenda.descricao_detalhada || '',
+              autor_foto: legenda.autor_foto || '',
+              data_foto: legenda.data_foto || '',
+              categoria: legenda.categoria || 'geral',
+            } : (img.legendaData || {
+              legenda: '',
+              descricao_detalhada: '',
+              autor_foto: '',
+              data_foto: '',
+              categoria: 'geral',
+            });
+            
+            // React 19: preserve all properties using spread
             return {
               ...img,
-              legendaData: legenda ? {
-                legenda: legenda.legenda || '',
-                descricao_detalhada: legenda.descricao_detalhada || '',
-                autor_foto: legenda.autor_foto || '',
-                data_foto: legenda.data_foto || '',
-                categoria: legenda.categoria || 'geral',
-              } : (img.legendaData || {
-                legenda: '',
-                descricao_detalhada: '',
-                autor_foto: '',
-                data_foto: '',
-                categoria: 'geral',
-              })
+              legendaData,
             };
           }));
         }
-        
-        console.log('Legendas de professores carregadas com sucesso');
       } catch (error) {
         console.error('Erro ao buscar legendas de professores:', error);
         setError('Erro ao carregar legendas: ' + error.message);
@@ -470,14 +553,8 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   };
 
   const handleLegendaSave = async (image) => {
-    console.log('=== DEBUG: Salvando legenda de professor ===');
-    console.log('Imagem completa:', image);
-    
     const imagem_url_relativa = image.url;
     const legendaData = image.legendaData;
-    console.log('URL relativa:', imagem_url_relativa);
-    console.log('Dados da legenda:', legendaData);
-    console.log('Escola ID:', escolaId);
     
     // Validar e limpar dados da legenda
     const cleanLegendaData = { ...legendaData };
@@ -494,26 +571,16 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       }
     });
     
-    console.log('Dados limpos da legenda:', cleanLegendaData);
-    
     try {
-      console.log('Buscando legenda existente...');
       let legenda = await getLegendaByImageUrl(imagem_url_relativa, escolaId, 'professor');
-      console.log('Legenda existente encontrada:', legenda);
       
       if (legenda) {
-        console.log('Atualizando legenda existente...');
-        const updateData = {
+        await updateLegendaFoto(legenda.id, {
           ...cleanLegendaData,
           updated_at: new Date().toISOString()
-        };
-        console.log('Dados para atualização:', updateData);
-        
-        const resultado = await updateLegendaFoto(legenda.id, updateData);
-        console.log('Legenda de professor atualizada com sucesso:', resultado);
+        });
       } else {
-        console.log('Criando nova legenda...');
-        const novaLegendaData = {
+        await addLegendaFoto({
           escola_id: escolaId,
           imagem_url: imagem_url_relativa,
           ...cleanLegendaData,
@@ -521,25 +588,17 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           tipo_foto: 'professor'
-        };
-        console.log('Dados para nova legenda:', novaLegendaData);
-        
-        const novaLegenda = await addLegendaFoto(novaLegendaData);
-        console.log('Nova legenda de professor criada:', novaLegenda);
+        });
       }
       
       // Atualizar imagens_professores
-      console.log('Atualizando metadados da imagem...');
-      let meta = await getProfessorImageMetaByUrl(image.publicUrl, escolaId);
+      const imagePublicUrl = image.publicURL || getImageUrl(image);
+      let meta = await getProfessorImageMetaByUrl(imagePublicUrl, escolaId);
       if (meta) {
-        console.log('Metadados encontrados:', meta);
         await updateProfessorImageMeta(meta.id, {
           autor: cleanLegendaData.autor_foto,
           updated_at: new Date().toISOString()
         });
-        console.log('Metadados atualizados com sucesso');
-      } else {
-        console.log('Nenhum metadado encontrado para atualizar');
       }
       
       setSuccess('Legenda salva com sucesso!');
@@ -562,18 +621,12 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       }));
       
       // Recarregar as imagens para garantir sincronização com o banco
-      // Isso também recarrega as legendas através do useEffect
       await fetchExistingImages();
       
       if (onImagesUpdate) {
-        console.log('Chamando onImagesUpdate...');
         onImagesUpdate();
       }
     } catch (err) {
-      console.error('=== ERRO ao salvar legenda de professor ===');
-      console.error('Erro completo:', err);
-      console.error('Mensagem de erro:', err.message);
-      console.error('Stack trace:', err.stack);
       setError('Erro ao salvar legenda: ' + err.message);
     }
   };
@@ -589,7 +642,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ProfessorImageUploadSection">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -672,8 +725,8 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {selectedFiles.map((file, index) => (
                   <div key={index} className="relative group">
-                    <img
-                      src={URL.createObjectURL(file)}
+                    <FilePreview
+                      file={file}
                       alt={file.name}
                       className="w-full h-24 object-cover rounded-lg border"
                     />
@@ -715,37 +768,33 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                 onDragLeave={handleImageDragLeave}
                 onDrop={(e) => handleImageDrop(e, index)}
                 onDragEnd={handleImageDragEnd}
-                className={`bg-gray-800/50 border border-gray-700/50 rounded-lg overflow-hidden shadow-sm transition-all cursor-move ${
+                className={`relative bg-gray-800/50 border border-gray-700/50 rounded-lg overflow-hidden shadow-sm transition-all cursor-move ${
                   draggedImage === index ? 'opacity-50 scale-95' : ''
                 } ${
                   dragOverIndex === index ? 'ring-2 ring-green-500 scale-105' : ''
                 }`}
               >
-                {/* Imagem */}
-                <div className="relative group">
+                {/* Imagem Container - EXATAMENTE como painel de informações */}
+                <div className="relative w-full aspect-[4/3] bg-gray-100">
                   {/* Handle de arrastar */}
                   <div className="absolute top-2 left-2 z-10 bg-gray-900/80 p-1 rounded cursor-grab active:cursor-grabbing">
                     <GripVertical className="w-4 h-4 text-gray-400" />
                   </div>
-                <img
-                  src={image.publicUrl || image.url}
-                  alt={image.descricao || 'Imagem do professor'}
-                  className="w-full h-48 object-cover"
-                  onError={(e) => {
-                    console.error('Erro ao carregar imagem:', image.publicUrl || image.url);
-                    // Tentar usar URL alternativa se disponível
-                    if (image.url && image.publicUrl !== image.url) {
-                      e.target.src = image.url;
-                    } else {
-                      e.target.style.display = 'none';
-                    }
-                  }}
-                  loading="lazy"
-                />
-                
-                {/* Overlay de ações */}
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center">
-                  <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  
+                  {/* Renderizar imagem EXATAMENTE como no painel de informações */}
+                  <div className="w-full aspect-[4/3] bg-gray-100 flex items-center justify-center">
+                    <OptimizedImage
+                      src={image.publicURL}
+                      alt={image.descricao || image.legendaData?.legenda || 'Imagem do professor'}
+                      className="w-full h-full object-cover object-center"
+                      isPreloaded={isImagePreloaded(image.publicURL)}
+                      style={{ maxHeight: '350px' }}
+                    />
+                  </div>
+                  
+                  {/* Overlay de ações */}
+                  <div className="absolute inset-0 z-10 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center pointer-events-none">
+                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-auto">
                     <button
                       onClick={() => startReplaceImage(image.id)}
                       className="p-2 bg-orange-500 text-white rounded-full hover:bg-orange-700"
@@ -764,6 +813,15 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                     </div>
                   </div>
                 </div>
+                
+                {/* Caption below thumbnail - Same as information panel */}
+                {(image.legendaData?.legenda || image.descricao) && (
+                  <div className="px-4 pb-2 pt-1">
+                    <p className="text-sm font-medium text-gray-200 line-clamp-2">
+                      {image.legendaData?.legenda || image.descricao}
+                    </p>
+                  </div>
+                )}
 
                 {/* Campos de legenda - Simplificados */}
                 <div className="p-4 space-y-2">
@@ -877,8 +935,8 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Pré-visualização
                   </label>
-                  <img
-                    src={URL.createObjectURL(replacementFile)}
+                  <FilePreview
+                    file={replacementFile}
                     alt="Nova imagem"
                     className="w-full h-32 object-cover rounded-lg border border-gray-600"
                   />
