@@ -18,9 +18,10 @@ import {
   uploadHistoriaProfessorImage,
   deleteHistoriaProfessorImage
 } from '../../services/historiaProfessorService';
+import logger from '../../utils/logger';
 
 const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
-  console.log('render historia manager', { escolaId, escolaNome });
+  logger.debug('render historia manager', { escolaId, escolaNome });
   const [historias, setHistorias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -71,15 +72,15 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
 
   // Handle form submit
   const handleSubmit = async (e) => {
-    console.log('🔍 SUBMIT CHAMADO - ID:', editingHistoria?.id);
-    console.log('📝 Evento recebido:', e);
-    console.log('📝 Evento type:', e.type);
-    console.log('📝 Evento target:', e.target);
+    logger.debug('🔍 SUBMIT CHAMADO - ID:', editingHistoria?.id);
+    logger.debug('📝 Evento recebido:', e);
+    logger.debug('📝 Evento type:', e.type);
+    logger.debug('📝 Evento target:', e.target);
     
     e.preventDefault();
-    console.log('✅ preventDefault executado');
+    logger.debug('✅ preventDefault executado');
     
-    console.log('submit historia', editingHistoria);
+    logger.debug('submit historia', editingHistoria);
     if (!formData.nome_professor.trim()) {
       setError('O nome do professor é obrigatório.');
       return;
@@ -97,9 +98,9 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
       ativo: Boolean(formData.ativo),
     };
     if (editingHistoria) {
-      console.log('Payload enviado para updateHistoriaProfessor:', payload);
+      logger.debug('Payload enviado para updateHistoriaProfessor:', payload);
     }
-    console.log('Payload enviado para createHistoriaProfessor:', payload);
+    logger.debug('Payload enviado para createHistoriaProfessor:', payload);
     try {
       setError('');
       setSuccess('');
@@ -114,7 +115,7 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
       carregarHistorias();
     } catch (err) {
       setError(err.message);
-      console.log('ERRO AO CRIAR/EDITAR HISTÓRIA:', err);
+      logger.error('ERRO AO CRIAR/EDITAR HISTÓRIA:', err);
     }
   };
 
@@ -162,7 +163,7 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
 
   // Handle edit
   const handleEdit = (historia) => {
-    console.log('Entrou em handleEdit:', historia);
+    logger.debug('Entrou em handleEdit:', historia);
     setEditingHistoria(historia);
     setFormData({
       nome_professor: historia.nome_professor || '',
@@ -263,7 +264,7 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
           </div>
         ) : (
           historias.map((historia, index) => {
-            console.log('Renderizando história:', historia);
+            logger.debug('Renderizando história:', historia);
             return (
               <div
                 key={historia.id}
@@ -311,7 +312,7 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
                     </button>
                     {/* Action buttons */}
                     <button
-                      onClick={() => { console.log('CLICOU NO BOTÃO EDITAR', historia); handleEdit(historia); }}
+                      onClick={() => { logger.debug('CLICOU NO BOTÃO EDITAR', historia); handleEdit(historia); }}
                       className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg"
                       title="Editar"
                     >
@@ -335,9 +336,8 @@ const HistoriaProfessorManager = ({ escolaId, escolaNome }) => {
       {/* Add/Edit Form */}
       {showAddForm && (
         <div className="p-6 bg-gray-50 rounded-lg border">
-          {editingHistoria
-            ? console.log('Abrindo formulário de edição:', editingHistoria)
-            : console.log('Abrindo formulário de criação')}
+          {editingHistoria && logger.debug('Abrindo formulário de edição:', editingHistoria)}
+          {!editingHistoria && logger.debug('Abrindo formulário de criação')}
           <div className="flex items-center justify-between mb-4">
             <h4 className="text-lg font-medium text-gray-900">
               {editingHistoria ? 'Editar História' : 'Nova História'}

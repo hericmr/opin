@@ -5,3 +5,7 @@
 /dashboard    /opin/index.html   200
 /painel-dados    /opin/index.html   200
 /dados-escolas-indigenas    /opin/index.html   200
+
+# Map route
+/mapa    /opin/index.html   200
+/opin/mapa    /opin/index.html   200

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Upload, X, User, Trash2, Check, AlertCircle, Save, RefreshCw } from 'lucide-react';
+import { Upload, X, User, Trash2, Check, AlertCircle, Save, RefreshCw, Settings, ChevronUp, GripVertical } from 'lucide-react';
 import { 
   uploadProfessorImage, 
   getEscolaImages, 
@@ -11,13 +11,16 @@ import {
   getLegendaByImageUrl, 
   addLegendaFoto, 
   updateLegendaFoto,
-  testLegendasTable
+  testLegendasTable,
+  updateMultipleImageOrders
 } from '../../services/legendasService';
 import {
   addProfessorImageMeta,
   updateProfessorImageMeta,
   getProfessorImageMetaByUrl
 } from '../../services/professorImageMetaService';
+import { supabase } from '../../supabaseClient';
+import BrazilianDateInput from '../AdminPanel/components/BrazilianDateInput';
 
 const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -34,6 +37,89 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   // Estados para trocar imagem
   const [replacingImage, setReplacingImage] = useState(null);
   const [replacementFile, setReplacementFile] = useState(null);
+  
+  // Estados para drag and drop de reordenação
+  const [draggedImage, setDraggedImage] = useState(null);
+  const [dragOverIndex, setDragOverIndex] = useState(null);
+  
+  // Estado para controlar quais imagens têm campos detalhados expandidos
+  const [expandedDetails, setExpandedDetails] = useState(new Set());
+  
+  // Toggle para expandir/colapsar campos detalhados
+  const toggleDetails = (imageId) => {
+    setExpandedDetails(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(imageId)) {
+        newSet.delete(imageId);
+      } else {
+        newSet.add(imageId);
+      }
+      return newSet;
+    });
+  };
+
+  // Carregar ordem das imagens dos professores
+  const loadImageOrder = useCallback(async (images) => {
+    if (!escolaId || !images || images.length === 0) return images;
+    
+    try {
+      // Buscar todas as legendas dos professores para obter a ordem
+      const { data: legendas, error } = await supabase
+        .from('legendas_fotos')
+        .select('imagem_url, ordem')
+        .eq('escola_id', escolaId)
+        .eq('tipo_foto', 'professor')
+        .eq('ativo', true);
+      
+      if (error) {
+        console.warn('Erro ao buscar ordem das imagens dos professores:', error);
+        return images;
+      }
+      
+      if (!legendas || legendas.length === 0) {
+        return images;
+      }
+      
+      // Criar um mapa de URLs para ordem
+      const orderMap = new Map();
+      legendas.forEach(legenda => {
+        if (legenda.ordem !== null && legenda.ordem !== undefined) {
+          orderMap.set(legenda.imagem_url, legenda.ordem);
+        }
+      });
+      
+      // Ordenar imagens baseado na ordem do banco
+      const sortedImages = [...images].sort((a, b) => {
+        const orderA = orderMap.has(a.url) ? orderMap.get(a.url) : Infinity;
+        const orderB = orderMap.has(b.url) ? orderMap.get(b.url) : Infinity;
+        return orderA - orderB;
+      });
+      
+      return sortedImages;
+    } catch (err) {
+      console.warn('Erro ao carregar ordem das imagens dos professores:', err);
+      return images;
+    }
+  }, [escolaId]);
+
+  // Salvar ordem no banco de dados
+  const saveImageOrder = useCallback(async (images) => {
+    if (!escolaId || !images || images.length === 0) return;
+    
+    try {
+      // Preparar array de ordens
+      const imageOrders = images.map((img, index) => ({
+        imageUrl: img.url,
+        ordem: index + 1
+      }));
+      
+      // Atualizar ordens no banco
+      await updateMultipleImageOrders(imageOrders, escolaId);
+    } catch (err) {
+      console.error('Erro ao salvar ordem das imagens dos professores no banco:', err);
+      setError('Erro ao salvar ordem das imagens. Tente novamente.');
+    }
+  }, [escolaId]);
 
   // Buscar imagens existentes dos professores
   const fetchExistingImages = useCallback(async () => {
@@ -42,7 +128,8 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     try {
       setLoading(true);
       const images = await getEscolaImages(escolaId, 'imagens-professores');
-      setExistingImages(images);
+      const orderedImages = await loadImageOrder(images);
+      setExistingImages(orderedImages);
       
 
     } catch (err) {
@@ -51,7 +138,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     } finally {
       setLoading(false);
     }
-  }, [escolaId]);
+  }, [escolaId, loadImageOrder]);
 
   useEffect(() => {
     fetchExistingImages();
@@ -68,26 +155,59 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
   // Buscar legendas para as imagens existentes
   useEffect(() => {
     const fetchLegendas = async () => {
-      if (!existingImages.length) return;
+      if (!existingImages.length || !escolaId) return;
+      
       console.log('Buscando legendas para', existingImages.length, 'imagens de professores');
       const legendasMap = {};
-      for (const img of existingImages) {
-        console.log('Buscando legenda para imagem de professor:', img.url);
-        const legenda = await getLegendaByImageUrl(img.url, escolaId, 'professor');
-        console.log('Legenda encontrada para professor:', legenda);
-        legendasMap[img.url] = legenda;
-      }
-      setExistingImages(prev => prev.map(img => ({
-        ...img,
-        legendaData: legendasMap[img.url] || {
-          legenda: '',
-          descricao_detalhada: '',
-          autor_foto: '',
-          data_foto: '',
-          categoria: 'geral',
+      
+      try {
+        for (const img of existingImages) {
+          // Pular se já tiver legendaData carregado (evitar recarregamento desnecessário)
+          if (img.legendaData && Object.keys(img.legendaData).length > 0 && img.legendaData.legenda !== undefined) {
+            continue;
+          }
+          
+          console.log('Buscando legenda para imagem de professor:', img.url);
+          const legenda = await getLegendaByImageUrl(img.url, escolaId, 'professor');
+          console.log('Legenda encontrada para professor:', legenda);
+          legendasMap[img.url] = legenda;
         }
-      })));
+        
+        // Só atualizar se houver legendas novas para carregar
+        if (Object.keys(legendasMap).length > 0) {
+          setExistingImages(prev => prev.map(img => {
+            const legenda = legendasMap[img.url];
+            // Se não há legenda no map, manter os dados existentes
+            if (!legenda && img.legendaData) {
+              return img;
+            }
+            
+            return {
+              ...img,
+              legendaData: legenda ? {
+                legenda: legenda.legenda || '',
+                descricao_detalhada: legenda.descricao_detalhada || '',
+                autor_foto: legenda.autor_foto || '',
+                data_foto: legenda.data_foto || '',
+                categoria: legenda.categoria || 'geral',
+              } : (img.legendaData || {
+                legenda: '',
+                descricao_detalhada: '',
+                autor_foto: '',
+                data_foto: '',
+                categoria: 'geral',
+              })
+            };
+          }));
+        }
+        
+        console.log('Legendas de professores carregadas com sucesso');
+      } catch (error) {
+        console.error('Erro ao buscar legendas de professores:', error);
+        setError('Erro ao carregar legendas: ' + error.message);
+      }
     };
+    
     fetchLegendas();
     // eslint-disable-next-line
   }, [existingImages.length, escolaId]);
@@ -300,6 +420,55 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     ));
   };
 
+  // Handlers para drag and drop de reordenação de imagens
+  const handleImageDragStart = (e, index) => {
+    setDraggedImage(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.target);
+  };
+
+  const handleImageDragOver = (e, index) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverIndex(index);
+  };
+
+  const handleImageDragLeave = () => {
+    setDragOverIndex(null);
+  };
+
+  const handleImageDrop = async (e, dropIndex) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (draggedImage === null || draggedImage === dropIndex) {
+      setDraggedImage(null);
+      setDragOverIndex(null);
+      return;
+    }
+
+    const newImages = [...existingImages];
+    const draggedItem = newImages[draggedImage];
+    
+    // Remover item da posição original
+    newImages.splice(draggedImage, 1);
+    
+    // Inserir na nova posição
+    newImages.splice(dropIndex, 0, draggedItem);
+    
+    setExistingImages(newImages);
+    await saveImageOrder(newImages);
+    setDraggedImage(null);
+    setDragOverIndex(null);
+    setSuccess('Ordem das imagens atualizada!');
+    setTimeout(() => setSuccess(''), 3000);
+  };
+
+  const handleImageDragEnd = () => {
+    setDraggedImage(null);
+    setDragOverIndex(null);
+  };
+
   const handleLegendaSave = async (image) => {
     console.log('=== DEBUG: Salvando legenda de professor ===');
     console.log('Imagem completa:', image);
@@ -374,6 +543,28 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       }
       
       setSuccess('Legenda salva com sucesso!');
+      
+      // Atualizar o estado local imediatamente com os dados salvos
+      setExistingImages(prev => prev.map(img => {
+        if (img.id === image.id) {
+          return {
+            ...img,
+            legendaData: {
+              legenda: cleanLegendaData.legenda || '',
+              descricao_detalhada: cleanLegendaData.descricao_detalhada || '',
+              autor_foto: cleanLegendaData.autor_foto || '',
+              data_foto: cleanLegendaData.data_foto || '',
+              categoria: cleanLegendaData.categoria || 'geral',
+            }
+          };
+        }
+        return img;
+      }));
+      
+      // Recarregar as imagens para garantir sincronização com o banco
+      // Isso também recarrega as legendas através do useEffect
+      await fetchExistingImages();
+      
       if (onImagesUpdate) {
         console.log('Chamando onImagesUpdate...');
         onImagesUpdate();
@@ -506,17 +697,36 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
             </div>
           )}
         </div>
-      )}
 
       {/* Imagens Existentes */}
       {existingImages.length > 0 && (
         <div className="space-y-4">
-          <h4 className="font-medium text-gray-100">Imagens dos Professores ({existingImages.length})</h4>
+          <div className="flex items-center justify-between">
+            <h4 className="font-medium text-gray-100">Imagens dos Professores ({existingImages.length})</h4>
+            <p className="text-sm text-gray-400">Arraste as imagens para reordenar</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {existingImages.map((image) => (
-              <div key={image.id} className="bg-gray-800/50 border border-gray-700/50 rounded-lg overflow-hidden shadow-sm">
+            {existingImages.map((image, index) => (
+              <div 
+                key={image.id} 
+                draggable
+                onDragStart={(e) => handleImageDragStart(e, index)}
+                onDragOver={(e) => handleImageDragOver(e, index)}
+                onDragLeave={handleImageDragLeave}
+                onDrop={(e) => handleImageDrop(e, index)}
+                onDragEnd={handleImageDragEnd}
+                className={`bg-gray-800/50 border border-gray-700/50 rounded-lg overflow-hidden shadow-sm transition-all cursor-move ${
+                  draggedImage === index ? 'opacity-50 scale-95' : ''
+                } ${
+                  dragOverIndex === index ? 'ring-2 ring-green-500 scale-105' : ''
+                }`}
+              >
                 {/* Imagem */}
                 <div className="relative group">
+                  {/* Handle de arrastar */}
+                  <div className="absolute top-2 left-2 z-10 bg-gray-900/80 p-1 rounded cursor-grab active:cursor-grabbing">
+                    <GripVertical className="w-4 h-4 text-gray-400" />
+                  </div>
                 <img
                   src={image.publicUrl}
                   alt={image.descricao || 'Imagem do professor'}
@@ -545,11 +755,25 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                   </div>
                 </div>
 
-                {/* Campos de legenda integrados com legendas_fotos */}
+                {/* Campos de legenda - Simplificados */}
                 <div className="p-4 space-y-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Legenda
-                  </label>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-medium text-gray-300">
+                      Legenda
+                    </label>
+                    <button
+                      onClick={() => toggleDetails(image.id)}
+                      className="p-1.5 text-gray-400 hover:text-gray-200 hover:bg-gray-700 rounded transition-colors"
+                      title={expandedDetails.has(image.id) ? 'Ocultar campos detalhados' : 'Mostrar campos detalhados'}
+                      type="button"
+                    >
+                      {expandedDetails.has(image.id) ? (
+                        <ChevronUp className="w-4 h-4" />
+                      ) : (
+                        <Settings className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
                   <input
                     type="text"
                     className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100"
@@ -557,51 +781,59 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                     onChange={e => handleLegendaFieldChange(image.id, 'legenda', e.target.value)}
                     placeholder="Digite a legenda da imagem..."
                   />
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Descrição Detalhada
-                  </label>
-                  <textarea
-                    className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100"
-                    value={image.legendaData?.descricao_detalhada || ''}
-                    onChange={e => handleLegendaFieldChange(image.id, 'descricao_detalhada', e.target.value)}
-                    placeholder="Descrição detalhada da imagem..."
-                  />
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Autor da Foto
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100"
-                    value={image.legendaData?.autor_foto || ''}
-                    onChange={e => handleLegendaFieldChange(image.id, 'autor_foto', e.target.value)}
-                    placeholder="Nome do fotógrafo"
-                  />
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Data da Foto
-                  </label>
-                  <input
-                    type="date"
-                    className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100"
-                    value={image.legendaData?.data_foto || ''}
-                    onChange={e => handleLegendaFieldChange(image.id, 'data_foto', e.target.value)}
-                  />
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Categoria
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100"
-                    value={image.legendaData?.categoria || ''}
-                    onChange={e => handleLegendaFieldChange(image.id, 'categoria', e.target.value)}
-                    placeholder="Digite a categoria da imagem..."
-                  />
+                  
+                  {/* Campos detalhados - Aparecem apenas quando expandido */}
+                  {expandedDetails.has(image.id) && (
+                    <div className="space-y-2 pt-2 border-t border-gray-600">
+                      <label className="block text-sm font-medium text-gray-300 mb-1">
+                        Descrição Detalhada
+                      </label>
+                      <textarea
+                        className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100"
+                        value={image.legendaData?.descricao_detalhada || ''}
+                        onChange={e => handleLegendaFieldChange(image.id, 'descricao_detalhada', e.target.value)}
+                        placeholder="Descrição detalhada da imagem..."
+                        rows={3}
+                      />
+                      <label className="block text-sm font-medium text-gray-300 mb-1">
+                        Autor da Foto
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100"
+                        value={image.legendaData?.autor_foto || ''}
+                        onChange={e => handleLegendaFieldChange(image.id, 'autor_foto', e.target.value)}
+                        placeholder="Nome do fotógrafo"
+                      />
+                      <label className="block text-sm font-medium text-gray-300 mb-1">
+                        Data da Foto
+                      </label>
+                      <BrazilianDateInput
+                        value={image.legendaData?.data_foto || ''}
+                        onChange={e => handleLegendaFieldChange(image.id, 'data_foto', e.target.value)}
+                        className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100"
+                        placeholder="DD/MM/AAAA"
+                      />
+                      <label className="block text-sm font-medium text-gray-300 mb-1">
+                        Categoria
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-100"
+                        value={image.legendaData?.categoria || ''}
+                        onChange={e => handleLegendaFieldChange(image.id, 'categoria', e.target.value)}
+                        placeholder="Digite a categoria da imagem..."
+                      />
+                    </div>
+                  )}
+                  
                   <div className="flex gap-2 pt-2">
                     <button
                       onClick={() => handleLegendaSave(image)}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
                       type="button"
                     >
-                      <Save className="w-5 h-5" /> Salvar Legenda
+                      <Save className="w-4 h-4" /> Salvar
                     </button>
                   </div>
                 </div>

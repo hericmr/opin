@@ -79,7 +79,8 @@ import {
 Edite `src/utils/metaTags.js`:
 
 ```javascript
-export const DEFAULT_META_CONFIG = {
+// Use META_TAGS_CONFIG from '../../config/metaTagsConfig' instead
+// export const DEFAULT_META_CONFIG = {
   siteName: 'OPIN - Observatório dos Professores Indígenas',
   siteUrl: 'https://hericmr.github.io/escolasindigenas',
   defaultImage: '/escolasindigenas/onça.svg',
@@ -212,7 +213,7 @@ console.log('Meta tags geradas para:', escola.titulo);
 3. Teste com imagem padrão
 
 ### URLs Incorretas
-1. Verifique `DEFAULT_META_CONFIG.siteUrl`
+1. Verifique `META_TAGS_CONFIG.site.url`
 2. Confirme se `gerarUrlEscola()` está funcionando
 3. Teste com URL manual
 

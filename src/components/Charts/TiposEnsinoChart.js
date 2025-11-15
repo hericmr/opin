@@ -6,9 +6,11 @@ const TiposEnsinoChart = ({ data }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-white p-3 border border-gray-300 rounded shadow-lg">
-          <p className="font-semibold">{data.tipo}</p>
-          <p className="text-sm">Escolas: {data.quantidade}</p>
+        <div className="bg-white p-4 border border-gray-300 rounded shadow-lg" style={{
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        }}>
+          <p className="font-semibold mb-1" style={{ fontSize: '1rem', lineHeight: '1.5', color: '#111827' }}>{data.tipo}</p>
+          <p style={{ fontSize: '0.9375rem', lineHeight: '1.5', color: '#374151' }}>Escolas: {data.quantidade}</p>
         </div>
       );
     }
@@ -18,11 +20,16 @@ const TiposEnsinoChart = ({ data }) => {
   return (
     <div className="p-6">
       
-      <h3 className="text-xl sm:text-2xl font-bold mb-4 text-gray-800">
+      <h3 className="font-bold mb-6 text-gray-800 text-center" style={{
+        fontSize: '1.5rem',
+        lineHeight: '1.75',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        letterSpacing: '-0.01em'
+      }}>
         Número de Escolas por Tipo de Ensino Oferecido
       </h3>
-      <div className="h-96">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="h-96" style={{ minWidth: '300px', minHeight: '384px', width: '100%', height: '100%' }}>
+        <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={384}>
           <BarChart
             data={data}
             margin={{
@@ -39,9 +46,11 @@ const TiposEnsinoChart = ({ data }) => {
               textAnchor="end"
               height={100}
               interval={0}
+              tick={{ fontSize: 12, fill: '#374151' }}
             />
             <YAxis 
-              label={{ value: 'Número de Escolas', angle: -90, position: 'insideLeft' }}
+              label={{ value: 'Número de Escolas', angle: -90, position: 'insideLeft', style: { fontSize: '0.875rem', fill: '#374151' } }}
+              tick={{ fontSize: 12, fill: '#374151' }}
             />
             <Tooltip content={<CustomTooltip />} />
             <Bar dataKey="quantidade">
@@ -53,7 +62,12 @@ const TiposEnsinoChart = ({ data }) => {
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <p className="text-sm text-gray-600 mt-2 text-center">
+      <p className="mt-4 text-center" style={{
+        fontSize: '0.9375rem',
+        lineHeight: '1.5',
+        color: '#4b5563',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+      }}>
         Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2025
       </p>
     </div>

@@ -5,13 +5,13 @@
  * consistência em toda a aplicação.
  */
 
-export const BREAKPOINTS = {
+const BREAKPOINTS = {
   mobile: 768,
   tablet: 1024,
   desktop: 1025,
 };
 
-export const MEDIA_QUERIES = {
+const MEDIA_QUERIES = {
   mobile: `(max-width: ${BREAKPOINTS.mobile}px)`,
   tablet: `(min-width: ${BREAKPOINTS.mobile + 1}px) and (max-width: ${BREAKPOINTS.tablet}px)`,
   desktop: `(min-width: ${BREAKPOINTS.desktop}px)`,
@@ -22,14 +22,14 @@ export const MEDIA_QUERIES = {
  * @param {number} width - Largura em pixels
  * @returns {boolean}
  */
-export const isMobile = (width) => width <= BREAKPOINTS.mobile;
+const isMobileWidth = (width) => width <= BREAKPOINTS.mobile;
 
 /**
  * Verifica se a largura fornecida corresponde a tablet
  * @param {number} width - Largura em pixels
  * @returns {boolean}
  */
-export const isTablet = (width) => 
+const isTabletWidth = (width) => 
   width > BREAKPOINTS.mobile && width <= BREAKPOINTS.tablet;
 
 /**
@@ -37,7 +37,20 @@ export const isTablet = (width) =>
  * @param {number} width - Largura em pixels
  * @returns {boolean}
  */
-export const isDesktop = (width) => width > BREAKPOINTS.tablet;
+const isDesktopWidth = (width) => width > BREAKPOINTS.tablet;
+
+// Exportar tudo no final para evitar problemas de hoisting
+export {
+  BREAKPOINTS,
+  MEDIA_QUERIES,
+  isMobileWidth,
+  isTabletWidth,
+  isDesktopWidth
+};
+
+
+
+
 
 
 

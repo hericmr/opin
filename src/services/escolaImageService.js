@@ -1,4 +1,5 @@
 import { supabase } from '../supabaseClient';
+import logger from '../utils/logger';
 
 // Configurações para imagens das escolas
 const ESCOLA_IMAGE_CONFIG = {
@@ -126,7 +127,7 @@ export const uploadEscolaImage = async (file, escolaId, descricao = '') => {
     };
 
   } catch (error) {
-    console.error('Erro no upload da imagem da escola:', error);
+    logger.error('Erro no upload da imagem da escola:', error);
     throw error;
   }
 };
@@ -160,7 +161,7 @@ export const uploadProfessorImage = async (file, escolaId, descricao = '', gener
       });
 
     if (uploadError) {
-      console.error('Erro detalhado do upload:', uploadError);
+      logger.error('Erro detalhado do upload:', uploadError);
       throw new Error(`Erro no upload: ${uploadError.message}`);
     }
 
@@ -180,7 +181,7 @@ export const uploadProfessorImage = async (file, escolaId, descricao = '', gener
     };
 
   } catch (error) {
-    console.error('Erro no upload da imagem do professor:', error);
+    logger.error('Erro no upload da imagem do professor:', error);
     throw error;
   }
 };
@@ -225,7 +226,7 @@ export const getEscolaImages = async (escolaId, bucketName = ESCOLA_IMAGE_CONFIG
     return imagens;
 
   } catch (error) {
-    console.error('Erro ao buscar imagens da escola:', error);
+    logger.error('Erro ao buscar imagens da escola:', error);
     throw error;
   }
 };
@@ -255,14 +256,14 @@ export const deleteImage = async (imageId, filePath, bucketName) => {
       .list(directory);
     if (listError) {
       // Não bloquear, mas logar
-      console.warn('Aviso: falha ao listar após deleção:', listError);
+      logger.warn('Aviso: falha ao listar após deleção:', listError);
     } else if (files && files.some(f => `${directory}${f.name}` === filePath)) {
       throw new Error('Arquivo ainda presente no bucket após tentativa de exclusão. Verifique permissões do bucket.');
     }
 
     return true;
   } catch (error) {
-    console.error('Erro ao deletar imagem:', error);
+    logger.error('Erro ao deletar imagem:', error);
     throw error;
   }
 };
@@ -282,7 +283,7 @@ export const updateImageDescription = async (imageId, descricao) => {
     };
 
   } catch (error) {
-    console.error('Erro ao atualizar descrição da imagem:', error);
+    logger.error('Erro ao atualizar descrição da imagem:', error);
     throw error;
   }
 };
@@ -338,7 +339,7 @@ export const replaceImage = async (newFile, oldFilePath, escolaId, bucketName, d
       .remove([oldFilePath]);
 
     if (deleteError) {
-      console.warn('Erro ao deletar imagem antiga:', deleteError);
+      logger.warn('Erro ao deletar imagem antiga:', deleteError);
       // Não falha a operação se não conseguir deletar a imagem antiga
     }
 
@@ -351,7 +352,7 @@ export const replaceImage = async (newFile, oldFilePath, escolaId, bucketName, d
     };
 
   } catch (error) {
-    console.error('Erro ao substituir imagem:', error);
+    logger.error('Erro ao substituir imagem:', error);
     throw error;
   }
 };
@@ -386,7 +387,7 @@ export const checkImageLimit = async (escolaId, bucketName) => {
     };
 
   } catch (error) {
-    console.error('Erro ao verificar limite de imagens:', error);
+    logger.error('Erro ao verificar limite de imagens:', error);
     throw error;
   }
 }; 

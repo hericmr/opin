@@ -1,4 +1,5 @@
 import { supabase } from '../supabaseClient';
+import logger from '../utils/logger';
 
 // Configurações para imagens das histórias do professor
 const HISTORIA_PROFESSOR_CONFIG = {
@@ -118,7 +119,7 @@ export const getHistoriasProfessor = async (escolaId) => {
     return historiasComImagens;
 
   } catch (error) {
-    console.error('Erro ao buscar histórias do professor:', error);
+    logger.error('Erro ao buscar histórias do professor:', error);
     throw error;
   }
 };
@@ -150,7 +151,7 @@ export const createHistoriaProfessor = async (historiaData) => {
     return data;
 
   } catch (error) {
-    console.error('Erro ao criar história do professor:', error);
+    logger.error('Erro ao criar história do professor:', error);
     throw error;
   }
 };
@@ -184,7 +185,7 @@ export const updateHistoriaProfessor = async (historiaId, historiaData) => {
     return data;
 
   } catch (error) {
-    console.error('Erro ao atualizar história do professor:', error);
+    logger.error('Erro ao atualizar história do professor:', error);
     throw error;
   }
 };
@@ -206,7 +207,7 @@ export const deleteHistoriaProfessor = async (historiaId) => {
       throw deleteError;
     }
   } catch (error) {
-    console.error('Erro ao deletar história do professor:', error);
+    logger.error('Erro ao deletar história do professor:', error);
     throw error;
   }
 };
@@ -230,7 +231,7 @@ export const uploadHistoriaProfessorImage = async (file, escolaId, historiaId, d
     // Validar dimensões (opcional)
     const hasValidDimensions = await validateImageDimensions(file);
     if (!hasValidDimensions) {
-      console.warn('Imagem com dimensões menores que o recomendado');
+      logger.warn('Imagem com dimensões menores que o recomendado');
     }
 
     // Gerar nome único
@@ -279,7 +280,7 @@ export const uploadHistoriaProfessorImage = async (file, escolaId, historiaId, d
     };
 
   } catch (error) {
-    console.error('Erro no upload da imagem da história do professor:', error);
+    logger.error('Erro no upload da imagem da história do professor:', error);
     throw error;
   }
 };
@@ -325,11 +326,11 @@ export const deleteHistoriaProfessorImage = async (historiaId) => {
       .remove([historia.imagem_url]);
 
     if (storageError) {
-      console.warn('Erro ao deletar imagem do storage:', storageError);
+      logger.warn('Erro ao deletar imagem do storage:', storageError);
     }
 
   } catch (error) {
-    console.error('Erro ao deletar imagem da história do professor:', error);
+    logger.error('Erro ao deletar imagem da história do professor:', error);
     throw error;
   }
 };
@@ -379,7 +380,7 @@ export const migrarDadosExistentes = async () => {
     };
 
   } catch (error) {
-    console.error('Erro na migração de dados:', error);
+    logger.error('Erro na migração de dados:', error);
     throw error;
   }
 };
@@ -404,7 +405,7 @@ export const escolaTemHistoriasProfessor = async (escolaId) => {
     return (count || 0) > 0;
 
   } catch (error) {
-    console.error('Erro ao verificar histórias do professor:', error);
+    logger.error('Erro ao verificar histórias do professor:', error);
     return false;
   }
 }; 

@@ -1,10 +1,13 @@
+import { BREAKPOINTS } from '../../../constants/breakpoints';
+
 // Configuração das abas do painel de administração
 export const ADMIN_TABS = [
   { id: 'dados-basicos', label: 'Dados Básicos' },
   { id: 'povos-linguas', label: 'Povos' },
   { id: 'modalidades', label: 'Modalidades' },
   { id: 'infraestrutura', label: 'Infraestrutura' },
-  { id: 'gestao-professores', label: 'Gestores' },
+  { id: 'gestao-professores', label: 'Equipe' },
+  { id: 'funcionarios', label: 'Funcionários' },
   { id: 'material-pedagogico', label: 'Material Pedagógico' },
   { id: 'projetos-parcerias', label: 'Projetos e Parcerias' },
   { id: 'redes-sociais', label: 'Redes Sociais' },
@@ -20,7 +23,7 @@ export const ADMIN_TABS = [
 
 // Configurações de UI
 export const UI_CONFIG = {
-  MOBILE_BREAKPOINT: 768,
+  MOBILE_BREAKPOINT: BREAKPOINTS.mobile,
   SIDEBAR_WIDTH: 'w-64',
   SIDEBAR_WIDTH_MOBILE: 'max-w-[80vw]',
   SIDEBAR_TOP_OFFSET: 72,

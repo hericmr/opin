@@ -3,6 +3,8 @@ import { useShare } from "../hooks/useShare";
 import { useDynamicURL } from "../hooks/useDynamicURL";
 import { useClickOutside } from "../hooks/useClickOutside";
 import useDocumentosEscola from "../hooks/useDocumentosEscola";
+import { isCardVisible } from "../../components/AdminPanel/constants/cardVisibilityConfig";
+import { useGlobalCardVisibility } from "../../hooks/useGlobalCardVisibility";
 
 // Import modular components
 import EscolaInfo from "./components/EscolaInfo";
@@ -121,6 +123,9 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
     return () => { mounted = false; };
   }, [painelInfo?.id, refreshKey]);
 
+  // Buscar configuração global de visibilidade (deve estar antes de qualquer return)
+  const { globalVisibility } = useGlobalCardVisibility();
+
   if (!painelInfo) {
     return null;
   }
@@ -131,6 +136,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
 
   const renderContent = (layoutInfo = {}) => {
     const { useSplitLayout = false } = layoutInfo;
+    const cardsVisibilidade = painelInfo?.cards_visibilidade;
 
     if (isIntro) {
       return <IntroPanel painelInfo={painelInfo} />;
@@ -150,19 +156,23 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
           isMaximized={isMaximized}
           shouldHideInlineMedia={useSplitLayout}
         />
-        {documentos && documentos.length > 0 && (
+        {/* Documentos */}
+        {isCardVisible(cardsVisibilidade, 'documentos', globalVisibility) && 
+         documentos && documentos.length > 0 && (
           <DocumentViewer 
             documentos={documentos}
             title="Produções e materiais da escola"
           />
         )}
-        {((painelInfo.link_para_videos) || hasVideos) && (
+        {/* Vídeos */}
+        {isCardVisible(cardsVisibilidade, 'videos', globalVisibility) && 
+         ((painelInfo.link_para_videos) || hasVideos) && (
           <div ref={(el) => (sectionRefs.current['videos'] = el)}>
             {painelInfo.link_para_videos ? (
               // Legacy: single video from link_para_videos
               <VideoPlayer 
                 videoUrl={painelInfo.link_para_videos}
-                title={<span style={{ fontSize: '0.75em' }}>{`Produções audiovisuais realizadas na ${painelInfo.titulo}`}</span>}
+                title={<span style={{ fontSize: '0.75em' }}>{`Produções realizadas na ${painelInfo.titulo}`}</span>}
                 escolaId={painelInfo.id}
               />
             ) : (
@@ -170,7 +180,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
               videos.length > 0 && (
                 <div>
                   <h3 className="text-xl font-semibold text-green-800 mb-4" style={{ fontSize: '0.75em' }}>
-                    {`Produções audiovisuais realizadas na ${painelInfo.titulo}`}
+                    {`Produções realizadas na ${painelInfo.titulo}`}
                   </h3>
                   {videos.map((video, index) => (
                     <div key={video.id || index} className={index > 0 ? "mt-8" : ""}>

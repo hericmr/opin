@@ -21,12 +21,7 @@
  * );
  */
 import { useState, useEffect } from 'react';
-
-// Breakpoints consistentes em todo o projeto
-const BREAKPOINTS = {
-  mobile: 768,
-  tablet: 1024,
-};
+import { BREAKPOINTS } from '../../constants/breakpoints';
 
 export const useBreakpoint = () => {
   // Calcular breakpoint inicial baseado na largura real

@@ -4,6 +4,7 @@ import VectorSource from 'ol/source/Vector';
 import { GeoJSON } from 'ol/format';
 import { createTerrasIndigenasStyle, createEstadoSPStyle } from '../utils/mapStyles';
 import { PROJECTION_CONFIG } from '../utils/mapConfig';
+import logger from '../utils/logger';
 
 export const useMapLayers = (map, terrasIndigenasData, estadoSPData, showTerrasIndigenas, showEstadoSP, onPainelOpen) => {
   const terrasIndigenasLayerRef = useRef(null);
@@ -13,7 +14,7 @@ export const useMapLayers = (map, terrasIndigenasData, estadoSPData, showTerrasI
   useEffect(() => {
     if (!map) return;
 
-    console.log('useMapLayers: Gerenciando camadas GeoJSON:', {
+    logger.debug('useMapLayers: Gerenciando camadas GeoJSON:', {
       showTerrasIndigenas,
       showEstadoSP,
       terrasIndigenasData: !!terrasIndigenasData,
@@ -35,11 +36,11 @@ export const useMapLayers = (map, terrasIndigenasData, estadoSPData, showTerrasI
 
     // Adicionar camada Terras Indígenas
     if (showTerrasIndigenas && terrasIndigenasData) {
-      console.log('useMapLayers: Adicionando camada Terras Indígenas');
+      logger.debug('useMapLayers: Adicionando camada Terras Indígenas');
       
       // Verificar se os dados têm a estrutura correta
       if (!terrasIndigenasData.features || terrasIndigenasData.features.length === 0) {
-        console.error('useMapLayers: Dados Terras Indígenas não têm features válidas');
+        logger.error('useMapLayers: Dados Terras Indígenas não têm features válidas');
         return;
       }
 
@@ -49,7 +50,7 @@ export const useMapLayers = (map, terrasIndigenasData, estadoSPData, showTerrasI
           featureProjection: PROJECTION_CONFIG.featureProjection
         });
         const features = geoJSONFormat.readFeatures(terrasIndigenasData);
-        console.log('useMapLayers: Features lidas do GeoJSON:', features.length);
+        logger.debug('useMapLayers: Features lidas do GeoJSON:', features.length);
 
         const terrasIndigenasLayer = new VectorLayer({
           source: new VectorSource({
@@ -64,7 +65,7 @@ export const useMapLayers = (map, terrasIndigenasData, estadoSPData, showTerrasI
         // Adicionar interatividade
         terrasIndigenasLayer.getSource().getFeatures().forEach(feature => {
           const properties = feature.getProperties();
-          console.log('useMapLayers: Processando feature terra indígena:', properties.terrai_nom);
+          logger.debug('useMapLayers: Processando feature terra indígena:', properties.terrai_nom);
           feature.set('terraIndigenaInfo', {
             titulo: properties.terrai_nom,
             tipo: 'terra_indigena',
@@ -88,19 +89,19 @@ export const useMapLayers = (map, terrasIndigenasData, estadoSPData, showTerrasI
 
         map.addLayer(terrasIndigenasLayer);
         terrasIndigenasLayerRef.current = terrasIndigenasLayer;
-        console.log('useMapLayers: Camada Terras Indígenas adicionada com sucesso. Total de camadas:', map.getLayers().getLength());
+        logger.debug('useMapLayers: Camada Terras Indígenas adicionada com sucesso. Total de camadas:', map.getLayers().getLength());
       } catch (error) {
-        console.error('useMapLayers: Erro ao processar Terras Indígenas:', error);
+        logger.error('useMapLayers: Erro ao processar Terras Indígenas:', error);
       }
     }
 
     // Adicionar camada Estado SP
     if (showEstadoSP && estadoSPData) {
-      console.log('useMapLayers: Adicionando camada Estado SP');
+      logger.debug('useMapLayers: Adicionando camada Estado SP');
       
       // Verificar se os dados têm a estrutura correta
       if (!estadoSPData.features || estadoSPData.features.length === 0) {
-        console.error('useMapLayers: Dados Estado SP não têm features válidas');
+        logger.error('useMapLayers: Dados Estado SP não têm features válidas');
         return;
       }
 
@@ -110,7 +111,7 @@ export const useMapLayers = (map, terrasIndigenasData, estadoSPData, showTerrasI
           featureProjection: PROJECTION_CONFIG.featureProjection
         });
         const features = geoJSONFormat.readFeatures(estadoSPData);
-        console.log('useMapLayers: Features Estado SP lidas do GeoJSON:', features.length);
+        logger.debug('useMapLayers: Features Estado SP lidas do GeoJSON:', features.length);
 
         const estadoSPLayer = new VectorLayer({
           source: new VectorSource({
@@ -123,13 +124,13 @@ export const useMapLayers = (map, terrasIndigenasData, estadoSPData, showTerrasI
 
         map.addLayer(estadoSPLayer);
         estadoSPLayerRef.current = estadoSPLayer;
-        console.log('useMapLayers: Camada Estado SP adicionada com sucesso. Total de camadas:', map.getLayers().getLength());
+        logger.debug('useMapLayers: Camada Estado SP adicionada com sucesso. Total de camadas:', map.getLayers().getLength());
       } catch (error) {
-        console.error('useMapLayers: Erro ao processar Estado SP:', error);
+        logger.error('useMapLayers: Erro ao processar Estado SP:', error);
       }
     }
 
-    console.log('useMapLayers: Finalização - Total de camadas no mapa:', map.getLayers().getLength());
+    logger.debug('useMapLayers: Finalização - Total de camadas no mapa:', map.getLayers().getLength());
   }, [map, showTerrasIndigenas, showEstadoSP, terrasIndigenasData, estadoSPData]);
 
   // Adicionar event listeners para camadas GeoJSON
@@ -140,7 +141,7 @@ export const useMapLayers = (map, terrasIndigenasData, estadoSPData, showTerrasI
     // O sistema de interações do OpenLayers já gerencia os cliques
     // Adicionar event listeners aqui causa conflitos com o sistema de clique duplo no mobile
     
-    console.log('useMapLayers: Event listeners de clique não adicionados para evitar conflitos');
+    logger.debug('useMapLayers: Event listeners de clique não adicionados para evitar conflitos');
 
     return () => {
       // Cleanup não necessário

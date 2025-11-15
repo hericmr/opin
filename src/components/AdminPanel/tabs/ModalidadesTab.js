@@ -1,6 +1,7 @@
 import React from 'react';
 import { useModalidades } from '../hooks/useModalidades';
 import { MODALIDADES_OPTIONS, MODALIDADES_CATEGORIAS } from '../utils/modalidadesOptions';
+import CardVisibilityToggle from '../components/CardVisibilityToggle';
 
 const ModalidadesTab = ({ 
   editingLocation, 
@@ -27,13 +28,37 @@ const ModalidadesTab = ({
 
   return (
     <div className="space-y-6">
+      {/* Toggle de Visibilidade */}
+      <CardVisibilityToggle
+        cardId="modalidades"
+        editingLocation={editingLocation}
+        setEditingLocation={setEditingLocation}
+        label="Visibilidade do Card: Modalidades de Ensino"
+      />
+      
+      {/* Campo de Edição Direta do Texto de Modalidades */}
+      <div>
+        <label className="block text-sm font-medium text-gray-200 mb-2 text-base">
+          Modalidades de Ensino (Edição Direta)
+        </label>
+        <textarea
+          className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-gray-100 placeholder-gray-400 text-base resize-y"
+          rows={6}
+          value={editingLocation['Modalidade de Ensino/turnos de funcionamento'] || ''}
+          onChange={e => setEditingLocation({ ...editingLocation, 'Modalidade de Ensino/turnos de funcionamento': e.target.value })}
+          placeholder="Digite ou edite o texto completo das modalidades de ensino..."
+        />
+        <p className="mt-1 text-xs text-gray-400">
+          Você pode editar o texto completo diretamente aqui. Use Enter para quebras de linha.
+        </p>
+      </div>
+      
       {/* Modalidades de Ensino */}
       <div className="md:col-span-2">
         <label className="block text-sm font-medium text-gray-200 mb-4 text-base">
           Modalidades de Ensino
         </label>
-        <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 max-h-96 overflow-y-auto">
-          <div className="space-y-4">
+        <div className="space-y-4">
             {MODALIDADES_CATEGORIAS.map((categoria) => (
               <div key={categoria.id}>
                 <h4 className="text-sm font-semibold text-green-400 mb-2 border-b border-gray-600 pb-1">
@@ -88,7 +113,6 @@ const ModalidadesTab = ({
               </label>
             </div>
           </div>
-        </div>
       </div>
 
       {/* Número de Alunos */}

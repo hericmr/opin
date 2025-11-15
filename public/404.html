@@ -4,29 +4,36 @@
     <meta charset="utf-8">
     <title>Redirecionando...</title>
     <script>
-      // Função para redirecionar mantendo a rota
-      function redirectToApp() {
-        // Pega o path atual (sem o domínio)
+      // Função para redirecionar mantendo a rota (browser history routing)
+      // GitHub Pages redireciona 404s para este arquivo, então precisamos
+      // redirecionar para index.html e deixar o React Router processar a rota
+      (function() {
         var path = window.location.pathname;
+        var search = window.location.search || '';
+        var hash = window.location.hash || '';
         
-        // Remove '/opin' do início se existir
-        if (path.startsWith('/opin')) {
-          path = path.substring(5); // Remove '/opin'
-        }
-        
-        // Se não há path ou é apenas '/', vai para a página principal
-        if (!path || path === '/') {
-          window.location.href = '/opin/';
+        // Se já estamos em /opin/index.html, não faz nada
+        if (path === '/opin/index.html' || path === '/opin/') {
           return;
         }
         
-        // Para outras rotas, redireciona para o index.html com a rota como hash
-        // Isso permite que o React Router processe a rota
-        window.location.href = '/opin/index.html#' + path;
-      }
-      
-      // Executa o redirecionamento
-      redirectToApp();
+        // Remove '/opin' do início se existir para obter a rota relativa
+        var route = path;
+        if (route.startsWith('/opin')) {
+          route = route.substring(5);
+        }
+        
+        // Se a rota está vazia ou é apenas '/', vai para a raiz
+        if (!route || route === '/') {
+          window.location.replace('/opin/');
+          return;
+        }
+        
+        // Para outras rotas, salva a rota no sessionStorage e redireciona para index.html
+        // O React Router vai ler isso e navegar para a rota correta
+        sessionStorage.setItem('githubPagesRedirect', route + search + hash);
+        window.location.replace('/opin/index.html');
+      })();
     </script>
   </head>
   <body>

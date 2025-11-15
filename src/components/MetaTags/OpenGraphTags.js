@@ -5,7 +5,8 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { gerarUrlEscola, gerarTituloEscola, gerarDescricaoEscola, gerarImagemEscola, DEFAULT_META_CONFIG } from '../../utils/metaTags';
+import { gerarUrlEscola, gerarTituloEscola, gerarDescricaoEscola, gerarImagemEscola } from '../../utils/metaTags';
+import { META_TAGS_CONFIG } from '../../config/metaTagsConfig';
 
 const OpenGraphTags = ({ escola }) => {
   if (!escola) return null;
@@ -22,8 +23,8 @@ const OpenGraphTags = ({ escola }) => {
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
-      <meta property="og:site_name" content={DEFAULT_META_CONFIG.siteName} />
-      <meta property="og:locale" content={DEFAULT_META_CONFIG.locale} />
+      <meta property="og:site_name" content={META_TAGS_CONFIG.site.name} />
+      <meta property="og:locale" content={META_TAGS_CONFIG.site.locale} />
       
       {/* Imagem Open Graph */}
       <meta property="og:image" content={image} />
@@ -33,7 +34,7 @@ const OpenGraphTags = ({ escola }) => {
       <meta property="og:image:type" content="image/png" />
       
       {/* Open Graph específico para artigos/conteúdo */}
-      <meta property="article:author" content={DEFAULT_META_CONFIG.siteName} />
+      <meta property="article:author" content={META_TAGS_CONFIG.site.name} />
       <meta property="article:section" content="Educação Indígena" />
       <meta property="article:tag" content="escola indígena" />
       <meta property="article:tag" content="educação indígena" />

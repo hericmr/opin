@@ -49,8 +49,8 @@ const DistribuicaoAlunosChart = ({ data }) => {
       <h3 className="text-xl font-bold mb-4 text-gray-800">
         Distribuição de Escolas por Número de Alunos
       </h3>
-      <div className="h-96">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="h-96" style={{ minWidth: '300px', minHeight: '384px', width: '100%', height: '100%' }}>
+        <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={384}>
           <PieChart>
             <Pie
               data={dataWithTotal}

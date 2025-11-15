@@ -1,9 +1,18 @@
 import React from 'react';
 import RichTextEditor from './RichTextEditor';
+import CardVisibilityToggle from '../components/CardVisibilityToggle';
 
 const HistoriasTab = ({ editingLocation, setEditingLocation }) => {
   return (
     <div className="space-y-6">
+      {/* Toggle de Visibilidade */}
+      <CardVisibilityToggle
+        cardId="historiaEscola"
+        editingLocation={editingLocation}
+        setEditingLocation={setEditingLocation}
+        label="Visibilidade do Card: História da Escola"
+      />
+      
       {/* História da Escola */}
       <RichTextEditor
         label="História da Escola"
