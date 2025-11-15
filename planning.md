@@ -1,12 +1,3 @@
-
-* Como **mitigar riscos sem atualizar agora**
-* Como **garantir que o projeto atual evita ataques de Injeção SQL**
-* Mantendo tudo em formato profissional e estruturado
-
-Você pode copiar/colar direto no projeto.
-
----
-
 # **planning.md — Mitigação de Riscos e Segurança do Projeto**
 
 ## 📋 Histórico de Atualizações Realizadas
@@ -51,7 +42,7 @@ Estabelecer ações imediatas e de curto prazo para:
 
 * Nunca expor `npm start` na internet.
 * Garantir que apenas o build de produção (`npm run build`) seja servido.
-* Confirmar que o servidor de deploy (Netlify, Vercel, GitHub Pages ou backend próprio) está servindo arquivos **estáticos**.
+* Confirmar que o servidor de deploy (GitHub Pages) está servindo arquivos **estáticos**.
 
 ### ✔️ Isolar o Ambiente de Desenvolvimento
 
@@ -106,23 +97,22 @@ Mesmo sendo um projeto React (front-end), é importante garantir que:
 
 ### ✔️ Nunca construir SQL no front-end
 
-* Confirmar que o React **não contém strings SQL**.
-* Garantir que toda persistência de dados ocorre via backend.
+* ✅ Confirmado: O React **não contém strings SQL**.
+* ✅ Confirmado: Toda persistência de dados ocorre via Supabase Client.
 
 ### ✔️ Validar todas as requisições enviadas ao backend
 
 * Todo input do usuário deve ser validado e sanitizado do lado do servidor.
-* O backend deve usar:
+* O backend Supabase usa:
+  * *Prepared statements* automáticos
+  * *Parameterized queries* via cliente JavaScript
+  * Row Level Security (RLS) para controle de acesso
 
-  * *Prepared statements*
-  * *Parameterized queries*
-  * ORMs que previnem SQL Injection (Prisma, Sequelize, TypeORM)
+### ✔️ Verificação Realizada
 
-### ✔️ Verificar se o backend já usa essas práticas:
-
-* `WHERE id = $1` (Postgres)
-* `?` placeholders (MySQL)
-* `prisma.user.findUnique({ where: { id } })`
+* ✅ **Supabase Client**: Todas as queries usam métodos seguros do cliente
+* ✅ **Queries Parametrizadas**: `supabase.from('tabela').select('*').eq('campo', valor)`
+* ✅ **Sem SQL Raw**: Nenhuma string SQL encontrada no código frontend
 
 ### ✔️ Escapar dados enviados para APIs
 
@@ -179,55 +169,103 @@ npm ls > dependency-tree.txt
 
 # 5. 🚀 Plano de Migração (Médio Prazo)
 
-## 5.1 Migração recomendada: **react-scripts → Vite**
+## 5.1 Migração Recomendada: react-scripts → Vite
 
-### Justificativas:
+### Por que Vite?
 
-* Resolve TODOS os problemas atuais:
+* **Suporte nativo a React 19**: Permite atualizar para React 19 sem problemas
+* **Suporte nativo a Tailwind 4**: Compatível com Tailwind CSS 4
+* **Elimina completamente Webpack 5 + webpack-dev-server**: Remove dependências vulneráveis
+* **Build extremamente mais rápido**: 10-20x mais rápido que webpack
+* **100% compatível com projetos CRA**: Migração relativamente simples
 
-  * Suporte a React 19
-  * Suporte a Tailwind 4
-  * Abandona Webpack 5, webpack-dev-server e dependências vulneráveis
-  * Build 10x mais rápido
-  * Totalmente compatível com CRA
+### Ações para a Migração
 
-### Ações:
-
-1. Criar nova branch:
-
-   ```
-   feature/vite-migration
-   ```
-2. Rodar conversão automática:
+1. **Criar branch**:
 
    ```bash
-   npm create vite@latest
+   git checkout -b feature/vite-migration
    ```
-3. Migrar:
 
-   * `src/` inteiro
-   * assets
-   * rotas
-   * envs
-   * Tailwind config
-4. Testar build:
+2. **Instalar Vite e dependências**:
+
+   ```bash
+   npm install -D vite @vitejs/plugin-react
+   npm install -D @tailwindcss/vite
+   ```
+
+3. **Criar `vite.config.js`**:
+
+   ```javascript
+   import { defineConfig } from 'vite';
+   import react from '@vitejs/plugin-react';
+   import tailwindcss from '@tailwindcss/vite';
+
+   export default defineConfig({
+     plugins: [react(), tailwindcss()],
+     base: '/opin/',
+     build: {
+       outDir: 'build',
+     },
+   });
+   ```
+
+4. **Atualizar `package.json` scripts**:
+
+   ```json
+   {
+     "scripts": {
+       "dev": "vite",
+       "build": "vite build",
+       "preview": "vite preview"
+     }
+   }
+   ```
+
+5. **Migrar arquivos**:
+   * Mover `public/index.html` para raiz do projeto
+   * Atualizar imports no `index.html` (remover `%PUBLIC_URL%`)
+   * Migrar variáveis de ambiente (`.env` → `.env.local`)
+   * Atualizar imports de assets
+
+6. **Testar build**:
 
    ```bash
    npm run build
+   npm run preview
    ```
+
+7. **Atualizar dependências**:
+   * Após migração bem-sucedida, atualizar React 19 e Tailwind 4
+   * Remover `react-scripts` e dependências relacionadas
+
+### Checklist de Migração
+
+- [ ] Branch `feature/vite-migration` criada
+- [ ] Vite instalado e configurado
+- [ ] `vite.config.js` criado
+- [ ] Scripts do `package.json` atualizados
+- [ ] `index.html` movido e atualizado
+- [ ] Variáveis de ambiente migradas
+- [ ] Build de produção funcionando
+- [ ] Dev server funcionando
+- [ ] Todas as rotas funcionando
+- [ ] Assets carregando corretamente
+- [ ] Testes passando (se houver)
+- [ ] Deploy funcionando
 
 ---
 
 # 6. 🧪 Checklist de Segurança Contínua
 
-* [ ] Nenhuma execução do dev-server em ambiente público
-* [ ] Build de produção sempre utilizado
-* [ ] Nenhum SQL aparece no front-end
-* [ ] Todas as APIs usam prepared statements no backend
-* [ ] Sanitização de HTML/Markdown está ativa
-* [ ] `npm audit` revisado semanalmente
-* [ ] Dependências desnecessárias removidas
-* [ ] Planejamento da migração para Vite em andamento
+- [x] Nenhuma execução do dev-server em ambiente público
+- [x] Build de produção sempre utilizado
+- [x] Nenhum SQL aparece no front-end
+- [x] Todas as APIs usam prepared statements no backend (via Supabase)
+- [x] Sanitização de HTML/Markdown está ativa (DOMPurify)
+- [ ] `npm audit` revisado semanalmente
+- [ ] Dependências desnecessárias removidas
+- [ ] Planejamento da migração para Vite em andamento
 
 ---
 
@@ -235,8 +273,30 @@ npm ls > dependency-tree.txt
 
 * O projeto não está vulnerável em produção **neste momento**, mas a falta de atualizações cria risco acumulado.
 * O maior risco é continuar preso ao `react-scripts`, impossibilitando atualizações de segurança futuras.
-* Injeção SQL só ocorre do lado do servidor — garantir que o backend continue usando *prepared statements*.
-* Migrar para Vite é a solução estrutural definitiva.
+* Injeção SQL só ocorre do lado do servidor — garantido que o Supabase usa *prepared statements* automaticamente.
+* Migrar para Vite é a solução estrutural definitiva para permitir atualizações futuras.
 
 ---
 
+## 📊 Status Atual do Projeto
+
+### Segurança
+- ✅ **SQL Injection**: Protegido via Supabase Client
+- ✅ **XSS**: Protegido via DOMPurify e React Markdown
+- ✅ **Dev Server**: Isolado em localhost
+- ⚠️ **Dependências**: 25 vulnerabilidades moderadas (principalmente dev dependencies)
+
+### Dependências
+- ✅ **4 dependências atualizadas** com sucesso
+- ⚠️ **3 dependências bloqueadas** por incompatibilidade técnica
+- 📋 **Plano de migração** para Vite documentado
+
+### Próximos Passos
+1. Revisar `npm audit` semanalmente
+2. Planejar migração para Vite (médio prazo)
+3. Após migração, atualizar React 19 e Tailwind 4
+
+---
+
+**Última atualização**: 2024-12-XX  
+**Status**: Projeto seguro, migração para Vite planejada
