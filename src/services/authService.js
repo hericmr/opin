@@ -74,7 +74,7 @@ export class AuthService {
   static async authenticate(password) {
     try {
       // Verificar senha (em produção, usar hash + salt)
-      const validPassword = process.env.REACT_APP_ADMIN_PASSWORD || 'admin123';
+      const validPassword = import.meta.env.REACT_APP_ADMIN_PASSWORD || import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
       
       // Debug: remover espaços em branco e comparar
       const trimmedPassword = password?.trim();
@@ -83,7 +83,7 @@ export class AuthService {
       // Log para debug (apenas em desenvolvimento)
       logger.debug('Debug auth - Password recebida:', `"${trimmedPassword}"`, 'Length:', trimmedPassword?.length);
       logger.debug('Debug auth - Password esperada:', `"${trimmedValidPassword}"`, 'Length:', trimmedValidPassword?.length);
-      logger.debug('Debug auth - REACT_APP_ADMIN_PASSWORD definida?', !!process.env.REACT_APP_ADMIN_PASSWORD);
+      logger.debug('Debug auth - REACT_APP_ADMIN_PASSWORD definida?', !!(import.meta.env.REACT_APP_ADMIN_PASSWORD || import.meta.env.VITE_ADMIN_PASSWORD));
       
       if (trimmedPassword !== trimmedValidPassword) {
         return {
