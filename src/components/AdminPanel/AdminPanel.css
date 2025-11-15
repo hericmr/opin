@@ -266,6 +266,48 @@
   }
 }
 
+/* Ensure images display correctly in EditEscolaPanel */
+.ImageUploadSection img,
+.ProfessorImageUploadSection img,
+.EditEscolaPanel img,
+[class*="ImageUploadSection"] img,
+[class*="ProfessorImageUploadSection"] img {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  max-width: 100% !important;
+  pointer-events: auto !important;
+  /* Allow height to be set via inline styles or classes */
+}
+
+/* Specific rule for images in aspect ratio containers */
+/* REMOVIDO: position: absolute estava causando problemas de renderização */
+/* As imagens agora usam layout normal como no painel de informações */
+.ImageUploadSection .aspect-\[4\/3\] img,
+.ProfessorImageUploadSection .aspect-\[4\/3\] img,
+.ImageUploadSection [class*="aspect"] img,
+.ProfessorImageUploadSection [class*="aspect"] img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  /* position: absolute REMOVIDO - estava causando problemas */
+  /* top: 0 REMOVIDO */
+  /* left: 0 REMOVIDO */
+  z-index: 1 !important;
+}
+
+/* Ensure image containers have proper dimensions */
+.ImageUploadSection .aspect-\[4\/3\],
+.ProfessorImageUploadSection .aspect-\[4\/3\] {
+  position: relative !important;
+  width: 100% !important;
+  min-height: 200px !important;
+}
+
 /* Print styles */
 @media print {
   .admin-panel {
