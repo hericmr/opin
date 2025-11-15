@@ -32,9 +32,12 @@ export default defineConfig({
     port: 3000,
     open: false,
   },
-  // Configuração para polyfills do Node.js (necessário para algumas dependências)
+  // Configuração para variáveis de ambiente e compatibilidade com CRA
   define: {
-    'process.env': 'import.meta.env',
+    'process.env.PUBLIC_URL': JSON.stringify('/opin'),
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    'process.env.REACT_APP_SUPABASE_URL': JSON.stringify(process.env.VITE_SUPABASE_URL || process.env.REACT_APP_SUPABASE_URL || ''),
+    'process.env.REACT_APP_SUPABASE_ANON_KEY': JSON.stringify(process.env.VITE_SUPABASE_ANON_KEY || process.env.REACT_APP_SUPABASE_ANON_KEY || ''),
     global: 'globalThis',
   },
 });
