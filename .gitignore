@@ -28,3 +28,10 @@ yarn-error.log*
 .vscode/
 *.swp
 *.swo
+
+# Backup files
+*.backup
+*.vite-backup
+*.v3-backup
+*.react18-backup
+*.react-scripts-backup
