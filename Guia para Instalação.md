@@ -41,7 +41,24 @@ REACT_APP_ADMIN_PASSWORD=sua_senha_admin
 REACT_APP_JWT_SECRET=sua_chave_jwt_secreta
 ```
 
-### 4. Configure o Banco de Dados Supabase
+### 4. Execute o Projeto
+
+```bash
+# Modo desenvolvimento (com hot reload)
+npm run dev
+# ou
+npm start
+
+# Build de produção
+npm run build
+
+# Preview do build de produção
+npm run preview
+```
+
+**Nota**: Este projeto usa **Vite** como build tool. O servidor de desenvolvimento roda na porta 3000 por padrão.
+
+### 5. Configure o Banco de Dados Supabase
 
 #### Criar Tabelas
 

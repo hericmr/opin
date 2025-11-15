@@ -31,6 +31,9 @@ jobs:
       run: npm run build
       env:
         CI: false
+        # Variáveis de ambiente do Supabase (se necessário para build)
+        # REACT_APP_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        # REACT_APP_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         
     - name: Check build size
       run: |
