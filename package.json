@@ -57,11 +57,6 @@
     "optimize-images": "node scripts/optimize-images.js",
     "process-dashboard": "node scripts/process-dashboard-html.js"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
