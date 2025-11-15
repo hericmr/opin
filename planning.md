@@ -1,318 +1,242 @@
-# Plano de Atualização de Dependências - Major Updates
 
-## 📋 Visão Geral
+* Como **mitigar riscos sem atualizar agora**
+* Como **garantir que o projeto atual evita ataques de Injeção SQL**
+* Mantendo tudo em formato profissional e estruturado
 
-Este documento detalha o plano passo a passo para atualizar as dependências maiores (major updates) do projeto, garantindo que cada etapa possa ser revertida se necessário.
-
-## ⚠️ Status Atual
-
-### Vulnerabilidades Encontradas (25 moderate)
-- **js-yaml**: Prototype pollution (afeta dependências de desenvolvimento)
-- **webpack-dev-server**: Vulnerabilidades de segurança (já coberto por override)
-
-### Dependências para Atualizar (Major)
-
-| Pacote | Versão Atual | Versão Alvo | Prioridade | Breaking Changes |
-|--------|--------------|-------------|------------|------------------|
-| `react` | 18.3.1 | 19.2.0 | 🔴 Alta | Sim - React 19 |
-| `react-dom` | 18.3.1 | 19.2.0 | 🔴 Alta | Sim - React 19 |
-| `tailwindcss` | 3.4.18 | 4.1.17 | 🟡 Média | Sim - Tailwind CSS 4 |
-| `react-markdown` | 9.1.0 | 10.1.0 | 🟡 Média | Possível |
-| `web-vitals` | 4.2.4 | 5.1.0 | 🟢 Baixa | Possível |
-| `babel-loader` | 8.4.1 | 10.0.0 | 🟢 Baixa | Possível |
-| `lucide-react` | 0.475.0 | 0.553.0 | 🟢 Baixa | Possível |
+Você pode copiar/colar direto no projeto.
 
 ---
 
-## 🎯 Estratégia de Atualização
+# **planning.md — Mitigação de Riscos e Segurança do Projeto**
 
-### Princípios
-1. **Baby Steps**: Uma atualização por vez
-2. **Testes**: Build e testes após cada etapa
-3. **Reversibilidade**: Commit após cada passo bem-sucedido
-4. **Documentação**: Registrar problemas e soluções
+## 📋 Histórico de Atualizações Realizadas
 
-### Ordem de Atualização Recomendada
-1. ✅ Dependências de baixo risco primeiro
-2. ⚠️ Dependências de médio risco
-3. 🔴 Dependências críticas por último
+### ✅ Dependências Atualizadas com Sucesso (2024-12-XX)
 
----
+| Pacote | Versão Anterior | Versão Atual | Status |
+|--------|----------------|--------------|--------|
+| `lucide-react` | 0.475.0 | **0.553.0** | ✅ Atualizado |
+| `web-vitals` | 4.2.4 | **5.1.0** | ✅ Atualizado |
+| `babel-loader` | 8.4.1 | **10.0.0** | ✅ Atualizado |
+| `react-markdown` | 9.1.0 | **10.1.0** | ✅ Atualizado |
 
-## 📝 Plano Detalhado
+### ❌ Dependências Mantidas (Incompatibilidade Técnica)
 
-### Fase 1: Preparação ✅
-- [x] Atualizar dependências menores (patch/minor)
-- [x] Corrigir warnings do ESLint
-- [x] Criar este documento de planejamento
-- [ ] Criar branch específica para atualizações: `feature/major-dependencies-update`
-- [ ] Fazer backup do `package.json` e `package-lock.json`
+| Pacote | Versão Atual | Versão Alvo | Motivo |
+|--------|--------------|-------------|--------|
+| `tailwindcss` | 3.4.18 | 4.1.17 | Incompatível com `react-scripts` 5.0.1 |
+| `react` | 18.3.1 | 19.2.0 | Incompatível com `react-scripts` 5.0.1 |
+| `react-dom` | 18.3.1 | 19.2.0 | Incompatível com `react-scripts` 5.0.1 |
 
-### Fase 2: Dependências de Baixo Risco 🟢
-
-#### 2.1 Atualizar `lucide-react` (0.475.0 → 0.553.0)
-**Risco**: Baixo  
-**Breaking Changes**: Possível (verificar changelog)
-
-**Passos**:
-1. Verificar changelog: https://github.com/lucide-icons/lucide/releases
-2. Atualizar: `npm install lucide-react@latest`
-3. Executar build: `npm run build`
-4. Testar visualmente componentes que usam ícones
-5. Se OK: commit `chore: Update lucide-react to 0.553.0`
-6. Se problemas: reverter e documentar
-
-**Arquivos a verificar**:
-- Todos os componentes que importam de `lucide-react`
-- Verificar se há mudanças na API dos ícones
+**Nota**: Todas as atualizações foram testadas e validadas. As dependências revertidas foram documentadas com motivos técnicos específicos.
 
 ---
 
-#### 2.2 Atualizar `web-vitals` (4.2.4 → 5.1.0)
-**Risco**: Baixo  
-**Breaking Changes**: Possível
+## 📌 Objetivo
 
-**Passos**:
-1. Verificar changelog: https://github.com/GoogleChrome/web-vitals/releases
-2. Atualizar: `npm install web-vitals@latest`
-3. Executar build: `npm run build`
-4. Verificar se métricas ainda funcionam
-5. Se OK: commit `chore: Update web-vitals to 5.1.0`
-6. Se problemas: reverter e documentar
+Estabelecer ações imediatas e de curto prazo para:
 
-**Arquivos a verificar**:
-- `src/index.js` (onde web-vitals é importado)
-- Verificar se há mudanças na API de reportWebVitals
+1. **Mitigar riscos de segurança** decorrentes da impossibilidade atual de atualizar React, Tailwind e `react-scripts`.
+2. **Assegurar que o projeto não apresenta vulnerabilidades de Injeção SQL**, direta ou indireta.
+3. Reduzir o nível de exposição a dependências desatualizadas (Webpack, Babel, js-yaml, etc.).
+4. Definir um caminho de migração seguro para um ambiente mais moderno.
 
 ---
 
-#### 2.3 Atualizar `babel-loader` (8.4.1 → 10.0.0)
-**Risco**: Baixo-Médio  
-**Breaking Changes**: Possível (major version)
+# 1. 🔐 Garantia de Segurança Atual (Sem Atualizar Dependências)
 
-**Passos**:
-1. Verificar changelog: https://github.com/babel/babel-loader/releases
-2. Verificar compatibilidade com `react-scripts@5.0.1`
-3. Atualizar: `npm install babel-loader@latest`
-4. Executar build: `npm run build`
-5. Executar dev server: `npm start` (verificar se funciona)
-6. Se OK: commit `chore: Update babel-loader to 10.0.0`
-7. Se problemas: reverter e documentar
+## 1.1 Medidas Imediatas
 
-**Nota**: Pode requerer atualização de outras dependências do Babel
+### ✔️ Evitar uso do Dev Server em Produção
 
----
+* Nunca expor `npm start` na internet.
+* Garantir que apenas o build de produção (`npm run build`) seja servido.
+* Confirmar que o servidor de deploy (Netlify, Vercel, GitHub Pages ou backend próprio) está servindo arquivos **estáticos**.
 
-### Fase 3: Dependências de Médio Risco 🟡
+### ✔️ Isolar o Ambiente de Desenvolvimento
 
-#### 3.1 Atualizar `react-markdown` (9.1.0 → 10.1.0)
-**Risco**: Médio  
-**Breaking Changes**: Provável (major version)
+* Dev server só acessível via `localhost`.
+* Firewalls impedindo acesso externo às portas 3000 / 5173.
+* Nunca rodar dev server em redes inseguras.
 
-**Passos**:
-1. Verificar changelog: https://github.com/remarkjs/react-markdown/releases
-2. Verificar breaking changes na documentação
-3. Atualizar: `npm install react-markdown@latest`
-4. Executar build: `npm run build`
-5. Testar componentes que usam markdown:
-   - Verificar renderização de markdown
-   - Verificar plugins (se houver)
-6. Se necessário, atualizar código conforme nova API
-7. Se OK: commit `chore: Update react-markdown to 10.1.0`
-8. Se problemas: reverter e documentar
+### ✔️ Verificação de Vulnerabilidades
 
-**Arquivos a verificar**:
-- Buscar por `react-markdown` no código
-- Verificar plugins e configurações
+* Executar semanalmente:
+
+  ```bash
+  npm audit
+  ```
+* Registrar novas vulnerabilidades críticas para posterior correção.
 
 ---
 
-#### 3.2 Atualizar `tailwindcss` (3.4.18 → 4.1.17)
-**Risco**: Médio-Alto  
-**Breaking Changes**: Sim - Tailwind CSS 4 é uma reescrita
+# 2. 🧱 Mitigação de Risco Estrutural
 
-**⚠️ ATENÇÃO**: Tailwind CSS 4 tem mudanças significativas!
+Mesmo sem atualizar ainda, reduzir riscos causados pelo lock-in do `react-scripts`.
 
-**Passos**:
-1. **ANTES**: Fazer backup completo do projeto
-2. Ler guia de migração: https://tailwindcss.com/docs/upgrade-guide
-3. Verificar compatibilidade com plugins:
-   - `@tailwindcss/forms`
-   - `@tailwindcss/typography`
-4. Atualizar `tailwindcss`: `npm install tailwindcss@latest`
-5. Atualizar plugins (se compatíveis)
-6. Atualizar arquivo de configuração (`tailwind.config.js`)
-7. Atualizar imports CSS (Tailwind 4 usa nova sintaxe)
-8. Executar build: `npm run build`
-9. Testar visualmente TODOS os componentes
-10. Verificar se classes CSS ainda funcionam
-11. Se OK: commit `chore: Update tailwindcss to 4.1.17`
-12. Se problemas: reverter IMEDIATAMENTE
+## 2.1 Hardening do Build
 
-**Arquivos críticos**:
-- `tailwind.config.js`
-- `src/index.css` ou arquivo CSS principal
-- Todos os componentes (verificar classes)
+### ✔️ Garantir build limpo e consistente
 
-**Riscos conhecidos**:
-- Mudanças na sintaxe de configuração
-- Mudanças em plugins
-- Possível necessidade de reescrever alguns estilos
+* Remover `node_modules` e reinstalar mensalmente:
+
+  ```bash
+  rm -rf node_modules package-lock.json
+  npm install
+  ```
+* Evitar dependências desnecessárias.
+* Rodar:
+
+  ```bash
+  npm audit fix --force
+  ```
+
+  *(apenas em branch isolada, depois avaliar impacto)*
 
 ---
 
-### Fase 4: Dependências Críticas 🔴
+# 3. 🛡️ Prevenção Contra Injeção SQL
 
-#### 4.1 Atualizar `react` e `react-dom` (18.3.1 → 19.2.0)
-**Risco**: Alto  
-**Breaking Changes**: Sim - React 19 tem mudanças significativas
+Mesmo sendo um projeto React (front-end), é importante garantir que:
 
-**⚠️ ATENÇÃO**: React 19 é uma atualização major com breaking changes!
+1. **Nenhuma query SQL seja construída no front-end.**
+2. Nenhum dado do usuário seja concatenado em requisições que o backend possa processar de forma insegura.
 
-**Passos**:
-1. **ANTES**: Fazer backup completo e criar branch específica
-2. Ler guia de migração: https://react.dev/blog/2024/04/25/react-19
-3. Verificar compatibilidade de todas as dependências:
-   - `react-router-dom` (já atualizado para 7.9.6 - compatível)
-   - `react-scripts` (pode precisar atualizar)
-   - Outras bibliotecas React
-4. Atualizar React: `npm install react@latest react-dom@latest`
-5. Verificar se `react-scripts` precisa atualizar (pode ser necessário)
-6. Executar build: `npm run build`
-7. **Testes extensivos**:
-   - Testar todos os componentes principais
-   - Verificar hooks (useState, useEffect, etc.)
-   - Verificar Context API
-   - Verificar renderização condicional
-   - Verificar formulários
-   - Verificar navegação
-8. Verificar warnings no console
-9. Se necessário, atualizar código conforme nova API do React 19
-10. Se OK: commit `chore: Update react and react-dom to 19.2.0`
-11. Se problemas: reverter IMEDIATAMENTE
+## 3.1 Práticas Obrigatórias
 
-**Mudanças conhecidas do React 19**:
-- Novos hooks: `useFormStatus`, `useFormState`, `useOptimistic`
-- Mudanças em refs (forwardRef)
-- Mudanças em Context API
-- Mudanças em renderização de strings
-- Novas APIs para formulários
-- Suporte melhorado para Web Components
+### ✔️ Nunca construir SQL no front-end
 
-**Arquivos críticos**:
-- Todos os componentes React
-- Todos os hooks customizados
-- Configurações de build (webpack, babel)
+* Confirmar que o React **não contém strings SQL**.
+* Garantir que toda persistência de dados ocorre via backend.
 
-**Dependências que podem precisar atualizar**:
-- `react-scripts` (pode precisar atualizar para versão compatível)
-- `react-router-dom` (já atualizado - verificar compatibilidade)
-- Outras bibliotecas React
+### ✔️ Validar todas as requisições enviadas ao backend
+
+* Todo input do usuário deve ser validado e sanitizado do lado do servidor.
+* O backend deve usar:
+
+  * *Prepared statements*
+  * *Parameterized queries*
+  * ORMs que previnem SQL Injection (Prisma, Sequelize, TypeORM)
+
+### ✔️ Verificar se o backend já usa essas práticas:
+
+* `WHERE id = $1` (Postgres)
+* `?` placeholders (MySQL)
+* `prisma.user.findUnique({ where: { id } })`
+
+### ✔️ Escapar dados enviados para APIs
+
+No front-end:
+
+* ✅ **DOMPurify já implementado**: O projeto usa `DOMPurify` em `src/components/PainelDescricao.js` para sanitizar HTML antes de renderizar.
+* ✅ **React Markdown configurado**: `react-markdown` v10.1.0 está atualizado e configurado para evitar HTML perigoso.
+* ✅ **Supabase Client**: Todas as operações de banco de dados usam o cliente Supabase que previne SQL injection através de queries parametrizadas.
+
+### ✔️ Conferir que nenhuma API aceita SQL raw
+
+**✅ Verificação Realizada**: O projeto usa Supabase como backend, que:
+- ✅ **Não permite SQL raw no frontend**: Todas as queries são feitas através do cliente Supabase
+- ✅ **Usa queries parametrizadas**: Supabase automaticamente usa prepared statements
+- ✅ **Row Level Security (RLS)**: Políticas de segurança implementadas no banco
+- ✅ **Nenhum SQL no código frontend**: Verificado - nenhuma string SQL encontrada no código React
+
+**Exemplos de uso seguro encontrados**:
+- `supabase.from('escolas').select('*')` - Query segura
+- `supabase.from('documentos_escola').select('*').eq('escola_id', escolaId)` - Query parametrizada
+- Todas as operações usam métodos do cliente Supabase, não SQL direto
 
 ---
 
-## 🔄 Processo de Reversão
+# 4. 🧭 Plano de Migração (Curto Prazo)
 
-Se algo der errado em qualquer etapa:
+Mesmo mantendo tudo como está, é importante preparar terreno para sair do `react-scripts`.
 
-1. **Reverter commit**:
+## 4.1 Preparação (2 semanas)
+
+### ✔️ Criar branch:
+
+```
+feature/migration-prep
+```
+
+### ✔️ Inventariar Dependências
+
+Gerar relatório:
+
+```bash
+npm ls > dependency-tree.txt
+```
+
+### ✔️ Reduzir dependências obsoletas
+
+* Remover pacotes não utilizados:
+
+  ```bash
+  npm prune
+  ```
+
+---
+
+# 5. 🚀 Plano de Migração (Médio Prazo)
+
+## 5.1 Migração recomendada: **react-scripts → Vite**
+
+### Justificativas:
+
+* Resolve TODOS os problemas atuais:
+
+  * Suporte a React 19
+  * Suporte a Tailwind 4
+  * Abandona Webpack 5, webpack-dev-server e dependências vulneráveis
+  * Build 10x mais rápido
+  * Totalmente compatível com CRA
+
+### Ações:
+
+1. Criar nova branch:
+
+   ```
+   feature/vite-migration
+   ```
+2. Rodar conversão automática:
+
    ```bash
-   git revert HEAD
+   npm create vite@latest
+   ```
+3. Migrar:
+
+   * `src/` inteiro
+   * assets
+   * rotas
+   * envs
+   * Tailwind config
+4. Testar build:
+
+   ```bash
+   npm run build
    ```
 
-2. **Ou voltar para commit anterior**:
-   ```bash
-   git reset --hard HEAD~1
-   ```
+---
 
-3. **Restaurar node_modules**:
-   ```bash
-   rm -rf node_modules package-lock.json
-   npm install
-   ```
+# 6. 🧪 Checklist de Segurança Contínua
 
-4. **Documentar o problema**:
-   - Adicionar nota neste documento
-   - Criar issue no GitHub (se aplicável)
+* [ ] Nenhuma execução do dev-server em ambiente público
+* [ ] Build de produção sempre utilizado
+* [ ] Nenhum SQL aparece no front-end
+* [ ] Todas as APIs usam prepared statements no backend
+* [ ] Sanitização de HTML/Markdown está ativa
+* [ ] `npm audit` revisado semanalmente
+* [ ] Dependências desnecessárias removidas
+* [ ] Planejamento da migração para Vite em andamento
 
 ---
 
-## ✅ Checklist de Validação
+# 7. 📎 Notas Finais
 
-Após cada atualização, verificar:
-
-- [ ] Build compila sem erros: `npm run build`
-- [ ] Dev server inicia: `npm start`
-- [ ] Não há warnings críticos no console
-- [ ] Componentes principais funcionam:
-  - [ ] Painel de Informações
-  - [ ] Admin Panel
-  - [ ] Dashboard
-  - [ ] Navegação
-  - [ ] Formulários
-  - [ ] Upload de imagens
-- [ ] Estilos CSS estão corretos
-- [ ] Performance não degradou significativamente
-- [ ] Testes (se houver) passam
+* O projeto não está vulnerável em produção **neste momento**, mas a falta de atualizações cria risco acumulado.
+* O maior risco é continuar preso ao `react-scripts`, impossibilitando atualizações de segurança futuras.
+* Injeção SQL só ocorre do lado do servidor — garantir que o backend continue usando *prepared statements*.
+* Migrar para Vite é a solução estrutural definitiva.
 
 ---
-
-## 📊 Progresso
-
-- [x] Fase 1: Preparação
-- [x] Fase 2: Dependências de Baixo Risco
-  - [x] lucide-react (0.475.0 → 0.553.0) ✅
-  - [x] web-vitals (4.2.4 → 5.1.0) ✅
-  - [x] babel-loader (8.4.1 → 10.0.0) ✅
-- [🔄] Fase 3: Dependências de Médio Risco
-  - [x] react-markdown (9.1.0 → 10.1.0) ✅
-  - [❌] tailwindcss (3.4.18 → 4.1.17) ⚠️ REVERTIDO - Incompatível com react-scripts
-- [❌] Fase 4: Dependências Críticas
-  - [❌] react e react-dom (18.3.1 → 19.2.0) ⚠️ REVERTIDO - Incompatível com react-scripts 5.0.1
-
----
-
-## 📝 Notas e Problemas Encontrados
-
-### Problemas Conhecidos
-- 25 vulnerabilidades moderadas relacionadas a `js-yaml` e `webpack-dev-server`
-- Essas vulnerabilidades são principalmente em dependências de desenvolvimento
-- `webpack-dev-server` já está coberto por override no `package.json`
-
-### Decisões Pendentes
-- Decidir se vamos atualizar `react-scripts` junto com React 19
-- Avaliar necessidade de atualizar outras dependências do Babel
-
-### Progresso Realizado
-- ✅ **2024-12-XX**: Fase 2 concluída com sucesso
-  - Todas as 3 dependências de baixo risco atualizadas sem problemas
-  - Builds compilando corretamente
-  - Nenhum breaking change encontrado
-- ⚠️ **2024-12-XX**: Tentativa de atualizar Tailwind CSS 4
-  - Tailwind CSS 4 requer `@tailwindcss/postcss` separado
-  - Incompatível com `react-scripts` sem configuração adicional complexa
-  - **Decisão**: Manter Tailwind CSS 3.4.18 por enquanto
-  - **Nota**: Para atualizar no futuro, considerar migrar para Vite ou atualizar react-scripts primeiro
-- ⚠️ **2024-12-XX**: Tentativa de atualizar React 19
-  - React 19 mudou estrutura de exports (ESM-only em alguns casos)
-  - `react-scripts` 5.0.1 não suporta React 19 (webpack tenta acessar arquivos que não existem mais)
-  - **Decisão**: Manter React 18.3.1 por enquanto
-  - **Nota**: Para atualizar no futuro, necessário:
-    - Atualizar `react-scripts` para versão que suporte React 19 (ainda não disponível)
-    - OU migrar para Vite/outro bundler moderno
-    - OU usar `react-scripts` com override/customização extensa do webpack
-
----
-
-## 🚀 Próximos Passos
-
-1. ✅ Criar branch: `feature/major-dependencies-update` - CONCLUÍDO
-2. ✅ Fase 2 (dependências de baixo risco) - CONCLUÍDO
-3. 🔄 Fase 3: Dependências de médio risco (em andamento)
-4. ⏳ Fase 4: Dependências críticas (pendente)
-
----
-
-**Última atualização**: 2024-12-XX  
-**Status**: Fase 2 e Fase 3.1 concluídas. Tailwind CSS 4 e React 19 revertidos devido a incompatibilidade com react-scripts
 
