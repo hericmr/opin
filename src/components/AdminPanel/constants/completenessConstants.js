@@ -42,7 +42,6 @@ export const fieldCategories = {
     'Formação continuada oferecida'
   ],
   'Material Pedagógico': [
-    'A escola possui PPP próprio?',
     'PPP elaborado com a comunidade?',
     'Material pedagógico não indígena',
     'Material pedagógico indígena',

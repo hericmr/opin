@@ -49,7 +49,6 @@ export const formatters = {
   }),
 
   projetoPedagogico: (escola) => ({
-    "Possui PPP Próprio": escola.ppp_proprio,
     "PPP Elaborado com a Comunidade": escola.ppp_comunidade
   }),
 

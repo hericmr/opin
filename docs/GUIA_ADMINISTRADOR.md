@@ -12,7 +12,7 @@ Acesse o painel administrativo para gerenciar todas as informações das escolas
 - **Modalidades**: Ensino, alunos, turnos de funcionamento
 - **Infraestrutura**: Estrutura física, água, internet, equipamentos, cozinha, merenda escolar
 - **Gestores**: Direção, professores, formação profissional
-- **Material Pedagógico**: PPP próprio e com comunidade
+- **Material Pedagógico**: PPP com comunidade
 - **Projetos**: Parcerias, ONGs, desejos da comunidade
 - **Redes Sociais**: Links e uso de redes sociais
 - **Vídeo**: Links para vídeos da escola
