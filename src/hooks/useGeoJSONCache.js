@@ -26,7 +26,7 @@ export const useGeoJSONCache = (key) => {
       }
       setLoading(true);
       try {
-         const url = `${process.env.PUBLIC_URL}/${key}.geojson`;
+         const url = `${import.meta.env.BASE_URL || '/opin'}/${key}.geojson`;
          logger.debug(`useGeoJSONCache: Carregando ${key} de:`, url);
          const response = await fetch(url);
          if (!response.ok) throw new Error(`Erro ao buscar GeoJSON (${response.status})`);

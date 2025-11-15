@@ -3,9 +3,9 @@ import { createClient } from "@supabase/supabase-js";
 
 console.log('=== DEBUG: Inicialização do Supabase Client ===');
 
-// Usando variáveis de ambiente
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+// Usando variáveis de ambiente (compatível com Vite e CRA)
+const supabaseUrl = import.meta.env.REACT_APP_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.REACT_APP_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 console.log('=== DEBUG: Valores das variáveis ===');
 console.log('supabaseUrl está definido:', !!supabaseUrl);
@@ -21,7 +21,7 @@ if (!supabaseUrl || !supabaseAnonKey || isUrlPlaceholder || isKeyPlaceholder) {
   console.error('supabaseAnonKey está ausente:', !supabaseAnonKey);
   console.error('supabaseUrl é placeholder:', isUrlPlaceholder);
   console.error('supabaseAnonKey é placeholder:', isKeyPlaceholder);
-  console.error('Ambiente atual:', process.env.NODE_ENV);
+  console.error('Ambiente atual:', import.meta.env.MODE || import.meta.env.NODE_ENV);
   console.error('\n=== INSTRUÇÕES PARA RESOLVER ===');
   console.error('1. Verifique se o arquivo .env.local existe na raiz do projeto');
   console.error('2. Preencha as seguintes variáveis com suas credenciais reais do Supabase:');
@@ -29,7 +29,7 @@ if (!supabaseUrl || !supabaseAnonKey || isUrlPlaceholder || isKeyPlaceholder) {
   console.error('   - REACT_APP_SUPABASE_ANON_KEY (encontrada em Settings > API > anon public)');
   console.error('3. Reinicie o servidor de desenvolvimento (npm start) após alterar o arquivo .env.local');
   console.error('\nTodas as variáveis de ambiente REACT_APP_ disponíveis:', 
-    Object.keys(process.env).filter(key => key.startsWith('REACT_APP_')));
+    Object.keys(import.meta.env).filter(key => key.startsWith('REACT_APP_') || key.startsWith('VITE_')));
 }
 
 console.log('=== DEBUG: Criando cliente Supabase ===');

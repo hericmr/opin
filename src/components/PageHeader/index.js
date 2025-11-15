@@ -21,7 +21,7 @@ const PageHeader = ({
   dataPoints = [],
   openPainelFunction = null
 }) => {
-  const heroImageUrl = `${process.env.PUBLIC_URL || ''}/hero.png`;
+  const heroImageUrl = `${import.meta.env.BASE_URL || '/opin'}/hero.png`;
   const contentRef = React.useRef(null);
   const searchBarRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState('auto');
@@ -144,7 +144,7 @@ const PageHeader = ({
                   >
                     <div className="flex items-center space-x-1 sm:space-x-2">
                       <img 
-                        src={`${process.env.PUBLIC_URL || ''}/logo_index.png`}
+                        src={`${import.meta.env.BASE_URL || '/opin'}/logo_index.png`}
                         alt="OPIN - Observatório dos Professores Indígenas"
                         className="h-6 sm:h-7 md:h-8 lg:h-10 xl:h-12 w-auto object-contain object-left"
                         style={{ display: 'block' }}
@@ -193,7 +193,7 @@ const PageHeader = ({
                       className="flex items-center hover:opacity-80 transition-opacity"
                     >
                       <img 
-                        src={`${process.env.PUBLIC_URL}/lindi.svg`} 
+                        src={`${import.meta.env.BASE_URL || '/opin'}/lindi.svg`} 
                         alt="LINDI - Licenciatura Intercultural Indígena" 
                         className="h-12 xl:h-16 w-auto"
                       />
@@ -206,7 +206,7 @@ const PageHeader = ({
                       className="flex items-center hover:opacity-80 transition-opacity"
                     >
                       <img 
-                        src={`${process.env.PUBLIC_URL}/logo.webp`} 
+                        src={`${import.meta.env.BASE_URL || '/opin'}/logo.webp`} 
                         alt="UNIFESP" 
                         className="h-8 xl:h-12 w-auto"
                       />
