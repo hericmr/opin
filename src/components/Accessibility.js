@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 
 // Skip Link para navegação por teclado
 export const SkipLink = ({ targetId, children = 'Pular para o conteúdo principal' }) => {
@@ -34,6 +35,11 @@ export const SkipLink = ({ targetId, children = 'Pular para o conteúdo principa
       {children}
     </a>
   );
+};
+
+SkipLink.propTypes = {
+  targetId: PropTypes.string.isRequired,
+  children: PropTypes.node
 };
 
 // Hook para gerenciar foco
@@ -88,6 +94,11 @@ export const FocusIndicator = ({ children, className = '' }) => {
   );
 };
 
+FocusIndicator.propTypes = {
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string
+};
+
 // Hook para detectar se o usuário prefere movimento reduzido
 export const useReducedMotion = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
@@ -112,6 +123,11 @@ export const HighContrastText = ({ children, className = '' }) => {
       {children}
     </span>
   );
+};
+
+HighContrastText.propTypes = {
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string
 };
 
 // Hook para navegação por teclado em listas
@@ -184,6 +200,16 @@ export const AccessibleButton = ({
   );
 };
 
+AccessibleButton.propTypes = {
+  children: PropTypes.node.isRequired,
+  onClick: PropTypes.func,
+  disabled: PropTypes.bool,
+  loading: PropTypes.bool,
+  ariaLabel: PropTypes.string,
+  ariaDescribedBy: PropTypes.string,
+  className: PropTypes.string
+};
+
 // Componente para melhorar acessibilidade de links
 export const AccessibleLink = ({ 
   children, 
@@ -215,6 +241,14 @@ export const AccessibleLink = ({
   );
 };
 
+AccessibleLink.propTypes = {
+  children: PropTypes.node.isRequired,
+  href: PropTypes.string.isRequired,
+  external: PropTypes.bool,
+  ariaLabel: PropTypes.string,
+  className: PropTypes.string
+};
+
 // Componente para melhorar acessibilidade de imagens
 export const AccessibleImage = ({ 
   src, 
@@ -232,6 +266,13 @@ export const AccessibleImage = ({
       {...props}
     />
   );
+};
+
+AccessibleImage.propTypes = {
+  src: PropTypes.string.isRequired,
+  alt: PropTypes.string,
+  decorative: PropTypes.bool,
+  className: PropTypes.string
 };
 
 // Hook para melhorar acessibilidade de modais
@@ -308,6 +349,15 @@ export const AccessibleFormField = ({
       )}
     </div>
   );
+};
+
+AccessibleFormField.propTypes = {
+  id: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  error: PropTypes.string,
+  required: PropTypes.bool,
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string
 };
 
 const AccessibilityComponents = {
