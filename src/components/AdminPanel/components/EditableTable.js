@@ -55,7 +55,6 @@ const EditableTable = ({
     { key: 'Professores falam a língua indígena?', label: 'Falam Língua', width: 'w-24' },
     { key: 'Formação dos professores', label: 'Formação', width: 'w-32' },
     { key: 'Formação continuada oferecida', label: 'Formação Cont.', width: 'w-32' },
-    { key: 'A escola possui PPP próprio?', label: 'PPP Próprio', width: 'w-24' },
     { key: 'PPP elaborado com a comunidade?', label: 'PPP Comunidade', width: 'w-28' },
     { key: 'Projetos em andamento', label: 'Projetos', width: 'w-32' },
     { key: 'Parcerias com universidades?', label: 'Parcerias Univ.', width: 'w-28' },

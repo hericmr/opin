@@ -138,9 +138,6 @@ const useSearch = (dataPoints) => {
           }
 
           // === PROJETO PEDAGÓGICO ===
-          if (school.ppp_proprio && school.ppp_proprio.toLowerCase().includes(term)) {
-            matches.push('ppp próprio');
-          }
           if (school.ppp_comunidade && school.ppp_comunidade.toLowerCase().includes(term)) {
             matches.push('ppp comunidade');
           }

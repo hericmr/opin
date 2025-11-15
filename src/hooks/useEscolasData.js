@@ -102,7 +102,6 @@ export function useEscolasData() {
           professores_falam_lingua: e["Professores falam a língua indígena?"],
           formacao_professores: e["Formação dos professores"],
           formacao_continuada: e["Formação continuada oferecida"],
-          ppp_proprio: e["A escola possui PPP próprio?"],
           ppp_comunidade: e["PPP elaborado com a comunidade?"],
           material_nao_indigena: e["Material pedagógico não indígena"],
           material_indigena: e["Material pedagógico indígena"],
