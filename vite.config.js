@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { config } from 'dotenv';
@@ -18,6 +19,7 @@ export default defineConfig({
       jsxRuntime: 'automatic',
       include: '**/*.{jsx,js}',
     }),
+    tailwindcss(), // Tailwind CSS 4 plugin
   ],
   esbuild: {
     loader: 'jsx',

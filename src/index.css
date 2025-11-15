@@ -31,9 +31,7 @@ code {
     monospace;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* Suporte para truncamento de texto multiline */
 .line-clamp-1 {
