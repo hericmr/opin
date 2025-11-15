@@ -139,8 +139,6 @@ const AdminPanelContent = () => {
       'outros_funcionarios': escola['outros_funcionarios'],
       'gestao': escola['gestao'],
       'merenda_diferenciada': escola['merenda_diferenciada'],
-      cozinha: escola.cozinha,
-      merenda_escolar: escola.merenda_escolar,
       diferenciada: escola.diferenciada,
       activeTab: FORM_CONFIG.DEFAULT_ACTIVE_TAB
     };
@@ -217,8 +215,6 @@ const AdminPanelContent = () => {
       'outros_funcionarios': '',
       'gestao': '',
       'merenda_diferenciada': '',
-      cozinha: '',
-      merenda_escolar: '',
       diferenciada: '',
       activeTab: FORM_CONFIG.DEFAULT_ACTIVE_TAB
     };

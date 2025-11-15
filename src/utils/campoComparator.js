@@ -108,8 +108,6 @@ const obterLabelCampo = (campo) => {
     'bairro': 'Bairro',
     'cep': 'CEP',
     'estado': 'Estado',
-    'Cozinha': 'Cozinha',
-    'Merenda_escolar': 'Merenda Escolar',
     'diferenciada': 'Diferenciada'
   };
 

@@ -77,32 +77,6 @@ const InfraestruturaTab = ({ editingLocation, setEditingLocation }) => {
         />
       </div>
 
-      {/* Cozinha */}
-      <div>
-        <label className="block text-sm font-medium text-gray-200 mb-2 text-base">
-          Cozinha
-        </label>
-        <textarea
-          className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 h-24 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-gray-100 placeholder-gray-400 text-base"
-          value={editingLocation.cozinha || ''}
-          onChange={e => setEditingLocation({ ...editingLocation, cozinha: e.target.value })}
-          placeholder="Descreva a estrutura da cozinha..."
-        />
-      </div>
-
-      {/* Merenda Escolar */}
-      <div>
-        <label className="block text-sm font-medium text-gray-200 mb-2 text-base">
-          Merenda Escolar
-        </label>
-        <textarea
-          className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 h-24 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-gray-100 placeholder-gray-400 text-base"
-          value={editingLocation.merenda_escolar || ''}
-          onChange={e => setEditingLocation({ ...editingLocation, merenda_escolar: e.target.value })}
-          placeholder="Descreva como é fornecida a merenda escolar..."
-        />
-      </div>
-
       {/* Merenda Diferenciada */}
       <div>
         <label className="block text-sm font-medium text-gray-200 mb-2 text-base">

@@ -28,8 +28,6 @@ export const fieldCategories = {
     'Acesso à internet',
     'Equipamentos Tecs',
     'Modo de acesso à escola',
-    'Cozinha',
-    'Merenda_escolar',
     'diferenciada'
   ],
   'Equipe': [
