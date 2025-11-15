@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-// import { useRefresh } from '../../contexts/RefreshContext'; // Removido - não utilizado
+import React, { useState, Suspense } from 'react';
 import { useEscolas } from './hooks/useEscolas';
 import { useModalidades } from './hooks/useModalidades';
 import { ADMIN_TABS, UI_CONFIG, FORM_CONFIG } from './constants/adminConstants';
@@ -8,81 +7,77 @@ import AdminToolbar from './AdminToolbar';
 import ProtectedRoute from '../Auth/ProtectedRoute';
 import { supabase } from '../../supabaseClient';
 import './AdminPanel.css';
-import ModalidadesTab from './tabs/ModalidadesTab';
-import DadosBasicosTab from './tabs/DadosBasicosTab';
-import PovosLinguasTab from './tabs/PovosLinguasTab';
-import InfraestruturaTab from './tabs/InfraestruturaTab';
-import GestaoProfessoresTab from './tabs/GestaoProfessoresTab';
-import MaterialPedagogicoTab from './tabs/MaterialPedagogicoTab';
-import ProjetosParceriasTab from './tabs/ProjetosParceriasTab';
-import RedesSociaisTab from './tabs/RedesSociaisTab';
-import VideoTab from './tabs/VideoTab';
-import HistoriasTab from './tabs/HistoriasTab';
-import HistoriaProfessoresTab from './tabs/HistoriaProfessoresTab';
-import CoordenadasTab from './tabs/CoordenadasTab';
-import TabelasIntegraisTab from './tabs/TabelasIntegraisTab';
+// Imports de tabs movidos para tabRenderer.js
 import TabelaEditavelTab from './tabs/TabelaEditavelTab';
-import CompletenessDashboard from './components/CompletenessDashboard';
+import GlobalCardVisibilitySettings from './components/GlobalCardVisibilitySettings';
+import MetadadosModal from './components/MetadadosModal';
+import BackupModal from './components/BackupModal';
+import DeleteEscolaModal from './components/DeleteEscolaModal';
+import logger from '../../utils/logger';
+import { renderActiveTab } from './utils/tabRenderer';
+import { useAdminSave } from './hooks/useAdminSave';
+import { useAdminFilters } from './hooks/useAdminFilters';
 
-// Imports condicionais para evitar problemas de hot reload
-let ImagensEscolaTab = null;
-let ImagensProfessoresTab = null;
-let DocumentosTab = null;
-
-try {
-  ImagensEscolaTab = require('./tabs/ImagensEscolaTab').default;
-} catch (e) {
-  console.warn('ImagensEscolaTab não encontrado:', e);
-}
-
-try {
-  ImagensProfessoresTab = require('./tabs/ImagensProfessoresTab').default;
-} catch (e) {
-  console.warn('ImagensProfessoresTab não encontrado:', e);
-}
-
-try {
-  DocumentosTab = require('./tabs/DocumentosTab').default;
-} catch (e) {
-  console.warn('DocumentosTab não encontrado:', e);
-}
+// Lazy loading do CompletenessDashboard - só é carregado quando necessário
+const CompletenessDashboard = React.lazy(() => import('./components/CompletenessDashboard'));
 
 const AdminPanelContent = () => {
-  // const { triggerRefresh } = useRefresh(); // Removido - não utilizado
-  
   // Estados principais
   const [editingLocation, setEditingLocation] = useState(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveError, setSaveError] = useState(null);
-  const [saveSuccess, setSaveSuccess] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showBackupModal, setShowBackupModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [escolaToDelete, setEscolaToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showCompletenessDashboard, setShowCompletenessDashboard] = useState(false);
+  const [showGlobalCardVisibility, setShowGlobalCardVisibility] = useState(false);
+  const [showMetadadosModal, setShowMetadadosModal] = useState(false);
+  const [escolaSalvaId, setEscolaSalvaId] = useState(null);
+  const [escolaSalvaNome, setEscolaSalvaNome] = useState(null);
+  const [camposAlterados, setCamposAlterados] = useState([]);
+  const [dadosOriginais, setDadosOriginais] = useState(null);
 
   // Detectar se é mobile
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= UI_CONFIG.MOBILE_BREAKPOINT;
 
   // Hooks customizados
   const { 
-    // escolas, // Removido - não utilizado
+    escolas,
     loading: escolasLoading, 
     error: escolasError,
     searchTerm, 
     setSearchTerm, 
     selectedType, 
     setSelectedType,
-    filteredEscolas,
     saveEscola,
     deleteEscola
   } = useEscolas();
+
+  // Hook para filtros
+  const { filteredEscolas } = useAdminFilters(escolas, searchTerm, selectedType);
 
   const {
     loadExistingModalidades,
     clearModalidades
   } = useModalidades();
+
+  // Hook para gerenciar salvamento de escolas
+  const {
+    isSaving,
+    saveError,
+    saveSuccess,
+    handleSaveEscola
+  } = useAdminSave({
+    saveEscola,
+    editingLocation,
+    setEditingLocation,
+    setEscolaSalvaId,
+    setEscolaSalvaNome,
+    setCamposAlterados,
+    setShowMetadadosModal,
+    dadosOriginais,
+    setDadosOriginais
+  });
 
   // Função para abrir edição de escola
   const openEditModal = (escola) => {
@@ -151,6 +146,8 @@ const AdminPanelContent = () => {
       activeTab: FORM_CONFIG.DEFAULT_ACTIVE_TAB
     };
     
+    // Salvar dados originais para comparação posterior
+    setDadosOriginais({ ...escolaOriginal });
     setEditingLocation(escolaOriginal);
   };
 
@@ -250,6 +247,7 @@ const AdminPanelContent = () => {
       'modalidades': ['Modalidade de Ensino/turnos de funcionamento', 'Numero de alunos'],
       'infraestrutura': ['Espaço escolar e estrutura', 'Acesso à água', 'Acesso à internet'],
       'gestao-professores': ['Gestão/Nome', 'Quantidade de professores indígenas', 'Quantidade de professores não indígenas'],
+      'funcionarios': ['Outros funcionários'],
       'material-pedagogico': ['A escola possui PPP próprio?', 'Material pedagógico indígena'],
       'projetos-parcerias': ['Projetos em andamento', 'Parcerias com universidades?'],
       'redes-sociais': ['Escola utiliza redes sociais?', 'Links das redes sociais'],
@@ -287,7 +285,7 @@ const AdminPanelContent = () => {
         });
 
       if (error) {
-        console.error('Erro ao buscar imagens:', error);
+        logger.error('Erro ao buscar imagens:', error);
         alert('Erro ao buscar imagens: ' + error.message);
         return;
       }
@@ -320,7 +318,7 @@ const AdminPanelContent = () => {
             .download(imagem.name);
 
           if (downloadError) {
-            console.error(`Erro ao baixar ${imagem.name}:`, downloadError);
+            logger.error(`Erro ao baixar ${imagem.name}:`, downloadError);
             continue;
           }
 
@@ -337,7 +335,7 @@ const AdminPanelContent = () => {
             </div>
           `;
         } catch (err) {
-          console.error(`Erro ao processar ${imagem.name}:`, err);
+          logger.error(`Erro ao processar ${imagem.name}:`, err);
         }
       }
 
@@ -360,7 +358,7 @@ const AdminPanelContent = () => {
       alert(`Download concluído! ${imagens.length} imagens foram baixadas em um arquivo ZIP.`);
       
     } catch (error) {
-      console.error('Erro ao fazer download das imagens:', error);
+      logger.error('Erro ao fazer download das imagens:', error);
       alert('Erro ao fazer download das imagens: ' + error.message);
     }
   };
@@ -381,196 +379,24 @@ const AdminPanelContent = () => {
           setEditingLocation(null);
         }
       } else {
-        console.error('Erro ao remover escola:', result.error);
+        logger.error('Erro ao remover escola:', result.error);
       }
     } catch (error) {
-      console.error('Erro ao remover escola:', error);
+      logger.error('Erro ao remover escola:', error);
     } finally {
       setIsDeleting(false);
     }
   };
 
-  // Função para salvar escola
-  const handleSaveEscola = async () => {
-    if (!editingLocation) return;
+  // Função para salvar escola (lógica extraída para useAdminSave.js)
 
-    setIsSaving(true);
-    setSaveError(null);
-    setSaveSuccess(false);
-
-    try {
-      const result = await saveEscola(editingLocation);
-      
-      if (result.success) {
-        setSaveSuccess(true);
-        // Atualizar o editingLocation com os dados salvos
-        setEditingLocation(result.data);
-        
-        // Limpar mensagem de sucesso após 3 segundos
-        setTimeout(() => {
-          setSaveSuccess(false);
-        }, 3000);
-      } else {
-        setSaveError(result.error);
-      }
-    } catch (error) {
-      setSaveError(error.message);
-    } finally {
-      setIsSaving(false);
-    }
+  // Callback quando metadados são salvos
+  const handleMetadadosSaved = (metadadosData) => {
+    logger.debug('Metadados salvos com sucesso:', metadadosData);
+    // Opcional: mostrar mensagem de sucesso adicional
   };
 
-  // Renderizar aba ativa
-  const renderActiveTab = () => {
-    const activeTab = editingLocation?.activeTab || FORM_CONFIG.DEFAULT_ACTIVE_TAB;
-
-    switch (activeTab) {
-      case 'dados-basicos':
-        return (
-          <DadosBasicosTab 
-            editingLocation={editingLocation}
-            setEditingLocation={setEditingLocation}
-          />
-        );
-      
-      case 'povos-linguas':
-        return (
-          <PovosLinguasTab 
-            editingLocation={editingLocation}
-            setEditingLocation={setEditingLocation}
-          />
-        );
-      
-      case 'modalidades':
-        return (
-          <ModalidadesTab 
-            editingLocation={editingLocation}
-            setEditingLocation={setEditingLocation}
-          />
-        );
-      
-      case 'infraestrutura':
-        return (
-          <InfraestruturaTab 
-            editingLocation={editingLocation}
-            setEditingLocation={setEditingLocation}
-          />
-        );
-      
-      case 'gestao-professores':
-        return (
-          <GestaoProfessoresTab 
-            editingLocation={editingLocation}
-            setEditingLocation={setEditingLocation}
-          />
-        );
-      
-      case 'material-pedagogico':
-        return (
-          <MaterialPedagogicoTab 
-            editingLocation={editingLocation}
-            setEditingLocation={setEditingLocation}
-          />
-        );
-      
-      case 'projetos-parcerias':
-        return (
-          <ProjetosParceriasTab 
-            editingLocation={editingLocation}
-            setEditingLocation={setEditingLocation}
-          />
-        );
-      
-      case 'redes-sociais':
-        return (
-          <RedesSociaisTab 
-            editingLocation={editingLocation}
-            setEditingLocation={setEditingLocation}
-          />
-        );
-      
-      case 'video':
-        return (
-          <VideoTab 
-            editingLocation={editingLocation}
-          />
-        );
-      
-      case 'historias':
-        return (
-          <HistoriasTab 
-            editingLocation={editingLocation}
-            setEditingLocation={setEditingLocation}
-          />
-        );
-      
-      case 'historia-professores':
-        return (
-          <HistoriaProfessoresTab 
-            editingLocation={editingLocation}
-            setEditingLocation={setEditingLocation}
-          />
-        );
-      
-      case 'coordenadas':
-        return (
-          <CoordenadasTab 
-            editingLocation={editingLocation}
-            setEditingLocation={setEditingLocation}
-          />
-        );
-      
-      case 'historias-professor':
-        return <div className="text-center py-16">
-          <div className="max-w-md mx-auto">
-            <h3 className="text-xl font-semibold text-gray-200 mb-2">
-              Tabela de Histórias dos Professores
-            </h3>
-            <p className="text-gray-400 mb-8">
-              Funcionalidade em desenvolvimento...
-            </p>
-          </div>
-        </div>;
-      
-      case 'documentos-escola':
-        return <div className="text-center py-16">
-          <div className="max-w-md mx-auto">
-            <h3 className="text-xl font-semibold text-gray-200 mb-2">
-              Tabela de Documentos das Escolas
-            </h3>
-            <p className="text-gray-400 mb-8">
-              Funcionalidade em desenvolvimento...
-            </p>
-          </div>
-        </div>;
-      
-      case 'imagens-escola':
-        if (!ImagensEscolaTab) {
-          return <div className="text-center py-8 text-gray-500">Componente em carregamento...</div>;
-        }
-        return <ImagensEscolaTab editingLocation={editingLocation} />;
-      
-      case 'imagens-professores':
-        if (!ImagensProfessoresTab) {
-          return <div className="text-center py-8 text-gray-500">Componente em carregamento...</div>;
-        }
-        return <ImagensProfessoresTab editingLocation={editingLocation} />;
-      
-      case 'documentos':
-        if (!DocumentosTab) {
-          return <div className="text-center py-8 text-gray-500">Componente em carregamento...</div>;
-        }
-        return <DocumentosTab editingLocation={editingLocation} />;
-      
-      // TODO: Implementar outras abas
-      default:
-        return (
-          <div className="text-gray-400 text-center py-8">
-            Aba "{activeTab}" em desenvolvimento...
-          </div>
-        );
-    }
-  };
+  // Renderizar aba ativa (lógica extraída para tabRenderer.js)
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
@@ -581,6 +407,9 @@ const AdminPanelContent = () => {
         setSidebarOpen={setSidebarOpen}
         editingLocation={editingLocation}
         onEscolaSelect={openEditModal}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        filteredEscolas={filteredEscolas}
       />
 
       {/* Conteúdo principal */}
@@ -628,48 +457,63 @@ const AdminPanelContent = () => {
         {/* Tabela Editável em Tela Cheia */}
         {editingLocation && editingLocation.activeTab === 'tabela-editavel' && (
           <div className="fixed inset-0 bg-gray-900 z-40 overflow-hidden" style={{ top: '72px' }}>
-            <TabelaEditavelTab setEditingLocation={setEditingLocation} />
+            <TabelaEditavelTab 
+              setEditingLocation={setEditingLocation}
+              onShowMetadadosModal={(escolaId, escolaNome, camposAlterados) => {
+                setEscolaSalvaId(escolaId);
+                setEscolaSalvaNome(escolaNome);
+                setCamposAlterados(camposAlterados);
+                setShowMetadadosModal(true);
+              }}
+            />
           </div>
         )}
 
-        {/* Painel de Edição */}
+        {/* Painel de Edição - Simplificado */}
         {editingLocation && typeof editingLocation === 'object' && (editingLocation.Escola !== undefined) && editingLocation.activeTab !== 'tabela-editavel' && (
-          <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800/50 p-6 flex flex-col">
-            {/* Header do painel */}
-            <div className="flex justify-between items-center mb-6 flex-shrink-0">
-              <div>
-                <h2 className="text-xl lg:text-2xl font-semibold text-gray-100 mb-1">
-                {editingLocation.id ? 'Editar Escola' : 'Nova Escola'}
-              </h2>
-                {editingLocation.Escola && (
-                  <p className="text-gray-400 text-sm">{editingLocation.Escola}</p>
-                )}
-              </div>
+          <div className="bg-[#0B141A] rounded-lg shadow-lg flex flex-col border border-[#202C33]">
+            {/* Header do painel - Simplificado */}
+            <div className="bg-[#202C33] px-4 py-3 flex justify-between items-center flex-shrink-0 border-b border-[#2A3942]">
               <div className="flex items-center gap-3">
-                {/* Botão Salvar */}
+                <div>
+                  <h2 className="text-base font-semibold text-[#E9EDEF]">
+                    {editingLocation.id ? 'Editar Escola' : 'Nova Escola'}
+                  </h2>
+                  {editingLocation.Escola && (
+                    <p className="text-[#8696A0] text-xs">{editingLocation.Escola}</p>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {/* Botão Salvar - Estilo WhatsApp Dark Mode */}
                 <button
                   onClick={handleSaveEscola}
                   disabled={isSaving}
-                  className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                  className="px-4 py-2 bg-[#075E54] hover:bg-[#0C7A6B] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#075E54]/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-xs font-medium"
                 >
                   {isSaving ? (
-                    <div className="flex items-center gap-2">
+                    <>
+                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
                       Salvando...
-                    </div>
+                    </>
                   ) : (
-                    <div className="flex items-center gap-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       Salvar
-                    </div>
+                    </>
                   )}
                 </button>
                 
-                {/* Botão Fechar */}
+                {/* Botão Fechar - Estilo WhatsApp Dark Mode */}
                 <button
                   onClick={() => setEditingLocation(null)}
-                  className="px-4 py-3 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-xl transition-colors"
+                  className="p-2 text-[#8696A0] hover:text-[#E9EDEF] hover:bg-[#2A3942] rounded-full transition-colors"
+                  aria-label="Fechar"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -678,35 +522,37 @@ const AdminPanelContent = () => {
               </div>
             </div>
 
-            {/* Mensagens de feedback */}
-            {saveSuccess && (
-              <div className="mb-6 p-4 bg-green-900/50 border border-green-700/50 text-green-200 rounded-xl backdrop-blur-sm">
-                <div className="flex items-center gap-3">
-                  <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="font-semibold">Escola salva com sucesso!</span>
-                </div>
-              </div>
-            )}
-            
-            {saveError && (
-              <div className="mb-6 p-4 bg-red-900/50 border border-red-700/50 text-red-200 rounded-xl backdrop-blur-sm">
-                <div className="flex items-center gap-3">
-                  <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div>
-                    <span className="font-semibold">Erro ao salvar:</span>
-                    <p className="text-red-300">{saveError}</p>
+            {/* Mensagens de feedback - Simplificado */}
+            <div className="px-4 pt-3 flex-shrink-0">
+              {saveSuccess && (
+                <div className="mb-4 p-3 bg-[#1C2B32] rounded-lg border-l-4 border-[#00A884]">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-[#00A884]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="font-medium text-[#E9EDEF] text-sm">Escola salva com sucesso!</span>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+              
+              {saveError && (
+                <div className="mb-4 p-3 bg-[#2A1F1F] rounded-lg border-l-4 border-[#F15C6D]">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-[#F15C6D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <span className="font-medium text-[#F15C6D] text-sm">Erro ao salvar:</span>
+                      <p className="text-[#E9EDEF] text-xs mt-1">{saveError}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
-            {/* Navegação por abas */}
-            <div className="border-b border-gray-800 mb-6 flex-shrink-0 bg-gray-800/50 rounded-t-xl relative">
-              <nav className="-mb-px flex space-x-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 tabs-container">
+            {/* Navegação por abas - Simplificada */}
+            <div className="bg-[#111B21] border-b border-[#2A3942] flex-shrink-0">
+              <nav className="flex flex-wrap gap-1 px-3 py-2">
                 {ADMIN_TABS.map((tab) => {
                   const isActive = (editingLocation.activeTab || FORM_CONFIG.DEFAULT_ACTIVE_TAB) === tab.id;
                   const hasMissing = hasMissingInfo(tab.id, editingLocation);
@@ -716,64 +562,88 @@ const AdminPanelContent = () => {
                       key={tab.id}
                       type="button"
                       onClick={() => setEditingLocation({ ...editingLocation, activeTab: tab.id })}
-                      className={`whitespace-nowrap py-3 px-3 sm:px-4 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 rounded-t-lg flex-shrink-0 min-w-fit relative ${
+                      className={`whitespace-nowrap py-1.5 px-3 rounded text-xs font-medium transition-all duration-200 ${
                         isActive
-                          ? 'border-green-400 text-green-300 bg-gray-900 shadow-lg'
+                          ? 'bg-[#00A884] text-white'
                           : hasMissing
-                          ? 'border-orange-400 text-orange-300 bg-orange-900/20 hover:text-orange-200 hover:bg-orange-800/30'
-                          : 'border-transparent text-gray-400 hover:text-green-200 hover:bg-gray-700/50'
+                          ? 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
+                          : 'bg-[#202C33] text-[#8696A0] hover:bg-[#2A3942] hover:text-[#E9EDEF]'
                       }`}
                     >
-                      <div className="flex items-center gap-2">
+                      <span className="flex items-center gap-1.5">
                         {tab.label}
                         {hasMissing && !isActive && (
-                          <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+                          <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
                         )}
-                      </div>
+                      </span>
                     </button>
                   );
                 })}
               </nav>
             </div>
 
-            {/* Conteúdo da aba ativa */}
-            <div className="scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
-              {renderActiveTab()}
+            {/* Conteúdo da aba ativa - Sem scroll interno */}
+            <div className="flex-grow bg-[#0B141A] p-4">
+              {renderActiveTab(editingLocation, setEditingLocation)}
             </div>
           </div>
         )}
+
+        {/* Modal de Metadados - Aparece após salvar com sucesso */}
+        <MetadadosModal
+          isOpen={showMetadadosModal}
+          onClose={() => {
+            setShowMetadadosModal(false);
+            setEscolaSalvaId(null);
+            setEscolaSalvaNome(null);
+            setCamposAlterados([]);
+            setDadosOriginais(null);
+          }}
+          onSave={handleMetadadosSaved}
+          escolaId={escolaSalvaId}
+          escolaNome={escolaSalvaNome}
+          camposAlterados={camposAlterados}
+        />
 
         {/* Dashboard de Completude quando nenhuma escola está selecionada */}
         {!editingLocation && !escolasLoading && (
           <div className="space-y-8">
             {/* Dashboard de Completude - só aparece quando solicitado */}
             {showCompletenessDashboard && (
-              <CompletenessDashboard />
+              <Suspense fallback={
+                <div className="flex items-center justify-center p-8 bg-gray-900/80 backdrop-blur-sm rounded-2xl">
+                  <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
+                    <p className="text-gray-300">Carregando dashboard de completude...</p>
+                  </div>
+                </div>
+              }>
+                <CompletenessDashboard />
+              </Suspense>
+            )}
+            
+            {/* Configuração Global de Visibilidade de Cards */}
+            {showGlobalCardVisibility && (
+              <GlobalCardVisibilitySettings />
             )}
             
             {/* Ações do Painel */}
             <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800/50 p-6">
               <div className="text-center mb-8">
-                <div className="w-24 h-24 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                  </svg>
-                </div>
+                <img 
+                  src={`${import.meta.env.BASE_URL || '/opin'}/logo_index.png`}
+                  alt="OPIN - Observatório dos Professores Indígenas"
+                  className="w-32 h-32 mx-auto mb-6 object-contain"
+                />
                 <h3 className="text-xl font-semibold text-gray-200 mb-2">
-                  Ações do Painel de Administração
+                  Painel de Administração
                 </h3>
-                <p className="text-gray-400 mb-8">
-                  Escolha uma ação para gerenciar as escolas indígenas. Você pode criar novas escolas, editar dados em tabelas, fazer backup ou remover escolas.
+                <p className="text-gray-400 mb-8 max-w-xl mx-auto text-sm">
+                  Gerencie escolas indígenas, dados e configurações do sistema.
                 </p>
               </div>
               {/* Grid de Ações */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
                 {/* Ações Principais */}
                 <div className="space-y-3">
@@ -807,17 +677,7 @@ const AdminPanelContent = () => {
                       Editar em Tabela
                     </div>
                   </button>
-                </div>
 
-                {/* Análise e Relatórios */}
-                <div className="space-y-3">
-                  <h4 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
-                    <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    Análise e Relatórios
-                  </h4>
-                  
                   <button
                     onClick={() => setShowCompletenessDashboard(!showCompletenessDashboard)}
                     className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border text-sm ${
@@ -830,18 +690,18 @@ const AdminPanelContent = () => {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                       </svg>
-                      {showCompletenessDashboard ? 'Ocultar Dashboard' : 'Ver Dashboard'}
+                      Ver Dashboard
                     </div>
                   </button>
                 </div>
 
-                {/* Backup de Mídia */}
+                {/* Mídia e Backup */}
                 <div className="space-y-3">
                   <h4 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
                     <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
-                    Backup de Mídia
+                    Mídia e Backup
                   </h4>
                   
                   <button
@@ -852,21 +712,10 @@ const AdminPanelContent = () => {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                       </svg>
-                      Download Imagens
+                      Download de Imagens
                     </div>
                   </button>
-                </div>
 
-                {/* Administração do Sistema */}
-                <div className="space-y-3">
-                  <h4 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
-                    <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    Administração
-                  </h4>
-                  
                   <button
                     onClick={() => setShowBackupModal(true)}
                     className="w-full px-4 py-3 bg-gray-800 text-gray-100 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border border-gray-600 text-sm"
@@ -878,7 +727,35 @@ const AdminPanelContent = () => {
                       Backup dos Dados
                     </div>
                   </button>
+                </div>
 
+                {/* Administração */}
+                <div className="space-y-3">
+                  <h4 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
+                    <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Administração
+                  </h4>
+                  
+                  <button
+                    onClick={() => setShowGlobalCardVisibility(!showGlobalCardVisibility)}
+                    className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border text-sm ${
+                      showGlobalCardVisibility 
+                        ? 'bg-blue-800 text-blue-100 border-blue-600 hover:bg-blue-700' 
+                        : 'bg-gray-800 text-gray-100 border-gray-600 hover:bg-gray-700'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 justify-center">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      Visibilidade dos Cards
+                    </div>
+                  </button>
+                  
                   <button
                     onClick={() => setShowDeleteModal(true)}
                     className="w-full px-4 py-3 bg-red-800 text-red-100 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border border-red-600 text-sm"
@@ -897,151 +774,24 @@ const AdminPanelContent = () => {
         )}
 
         {/* Modal de Backup */}
-        {showBackupModal && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-gray-900/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800/50 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-              {/* Header da Modal */}
-              <div className="flex justify-between items-center p-6 border-b border-gray-800/50 flex-shrink-0">
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-500 p-3 rounded-lg">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-100">Backup dos Dados do Site</h2>
-                    <p className="text-sm text-gray-400">Gerencie backups das tabelas e arquivos</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowBackupModal(false)}
-                  className="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-lg transition-colors"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Conteúdo da Modal */}
-              <div className="flex-1 overflow-y-auto p-6">
-                <TabelasIntegraisTab />
-              </div>
-            </div>
-          </div>
-        )}
+        <BackupModal
+          isOpen={showBackupModal}
+          onClose={() => setShowBackupModal(false)}
+        />
 
         {/* Modal de Remoção de Escola */}
-        {showDeleteModal && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-gray-900/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800/50 w-full max-w-md">
-              {/* Header da Modal */}
-              <div className="flex justify-between items-center p-6 border-b border-gray-800/50">
-                <div className="flex items-center gap-3">
-                  <div className="bg-red-500 p-3 rounded-lg">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-100">Remover Escola</h2>
-                    <p className="text-sm text-gray-400">Selecione uma escola para remover</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowDeleteModal(false)}
-                  className="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-lg transition-colors"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Conteúdo da Modal */}
-              <div className="p-6">
-                {!escolaToDelete ? (
-                  <div className="space-y-4">
-                    <p className="text-gray-300 mb-4">
-                      Selecione uma escola da lista para remover:
-                    </p>
-                    <div className="max-h-64 overflow-y-auto space-y-2">
-                      {filteredEscolas.map(escola => (
-                        <button
-                          key={escola.id}
-                          onClick={() => setEscolaToDelete(escola)}
-                          className="w-full text-left p-4 rounded-xl hover:bg-gray-800/50 transition-all duration-200 border border-transparent hover:border-gray-700/50 text-gray-200 hover:text-white"
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-medium truncate text-gray-200">
-                                {escola.Escola}
-                              </h3>
-                              {escola['Município'] && (
-                                <p className="text-sm text-gray-400 truncate mt-1">
-                                  {escola['Município']}
-                                </p>
-                              )}
-                            </div>
-                            <div className="ml-2 flex-shrink-0">
-                              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                            </div>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-6">
-                    <div className="bg-red-900/20 border border-red-700/50 rounded-xl p-4">
-                      <div className="flex items-center gap-3 mb-3">
-                        <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                        </svg>
-                        <h3 className="font-semibold text-red-200">Confirmar Remoção</h3>
-                      </div>
-                      <p className="text-red-300 text-sm">
-                        Você está prestes a remover a escola <strong>"{escolaToDelete.Escola}"</strong> de <strong>"{escolaToDelete['Município']}"</strong>.
-                      </p>
-                      <p className="text-red-400 text-sm mt-2">
-                        ⚠️ Esta ação é irreversível e removerá todos os dados da escola do sistema.
-                      </p>
-                    </div>
-
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() => setEscolaToDelete(null)}
-                        className="flex-1 px-4 py-3 bg-gray-700 text-gray-200 rounded-xl hover:bg-gray-600 transition-colors"
-                      >
-                        Cancelar
-                      </button>
-            <button
-                        onClick={handleConfirmarRemocao}
-                        disabled={isDeleting}
-                        className="flex-1 px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                      >
-                        {isDeleting ? (
-                          <div className="flex items-center gap-2 justify-center">
-                            Removendo...
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2 justify-center">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                            Confirmar Remoção
-                          </div>
-                        )}
-            </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+        <DeleteEscolaModal
+          isOpen={showDeleteModal}
+          onClose={() => {
+            setShowDeleteModal(false);
+            setEscolaToDelete(null);
+          }}
+          escolas={filteredEscolas}
+          escolaToDelete={escolaToDelete}
+          setEscolaToDelete={setEscolaToDelete}
+          onConfirmDelete={handleConfirmarRemocao}
+          isDeleting={isDeleting}
+        />
       </main>
     </div>
   );

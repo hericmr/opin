@@ -43,9 +43,6 @@
   transform: translateX(0);
 }
 
-/* Importar estilos modulares para controles de mapa */
-@import './styles/map-controls.css';
-
 /* Força a barra de rolagem no painel de dados */
 .dashboard-scroll {
   overflow-y: scroll !important;

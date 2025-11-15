@@ -4,6 +4,7 @@ import { supabase } from '../../../supabaseClient';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
 import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
+import { formatDateForDisplay } from '../../../utils/dateUtils';
 
 const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, showSchool = true, scrollProgress, headerUrl, onCurrentItemChange }) => {
   // Initialize with header image if available to show it immediately
@@ -254,7 +255,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
                     filter: 'saturate(1.3)'
                   }}
                   loading="eager"
-                  fetchPriority="high"
+                  fetchpriority="high"
                   decoding="async"
                   onLoad={handleImageLoad}
                 />
@@ -309,7 +310,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
                 {currentItem.origem && <span className="capitalize">{currentItem.origem}</span>}
                 {currentItem.autor && <span>Por: {currentItem.autor}</span>}
                 {currentItem.dataFoto && (
-                  <span>{new Date(currentItem.dataFoto).toLocaleDateString('pt-BR')}</span>
+                  <span>{formatDateForDisplay(currentItem.dataFoto)}</span>
                 )}
               </div>
               {currentItem.descricao && (

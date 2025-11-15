@@ -258,7 +258,7 @@ const Avatar = ({
           onLoad={handleImageLoad}
           onError={handleImageError}
           loading={lazy ? 'lazy' : 'eager'}
-          {...(priority && { fetchPriority: 'high' })}
+          {...(priority && { fetchpriority: 'high' })}
         />
       )}
 

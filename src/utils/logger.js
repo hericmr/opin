@@ -7,7 +7,7 @@
  * @module utils/logger
  */
 
-const isDevelopment = process.env.NODE_ENV === 'development';
+const isDevelopment = import.meta.env.MODE === 'development' || import.meta.env.DEV;
 
 /**
  * Níveis de log disponíveis
@@ -98,6 +98,17 @@ export const logger = {
 };
 
 export default logger;
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,8 +1,13 @@
-export { default as AlunosVsDocentesChart } from './AlunosVsDocentesChart';
-export { default as AlunosPorEscolaChart } from './AlunosPorEscolaChart';
-export { default as DistribuicaoAlunosChart } from './DistribuicaoAlunosChart';
-export { default as DistribuicaoAlunosModalidadeChart } from './DistribuicaoAlunosModalidadeChart';
-export { default as DistribuicaoEscolasCombinadoChart } from './DistribuicaoEscolasCombinadoChart';
-export { default as EquipamentosChart } from './EquipamentosChart';
-export { default as EscolasPorDiretoriaChart } from './EscolasPorDiretoriaChart';
-export { default as TiposEnsinoChart } from './TiposEnsinoChart';
+// Lazy loading dos componentes de gráficos para reduzir bundle size inicial
+// Os gráficos usam recharts, uma biblioteca pesada que só é necessária no Dashboard
+// React.lazy está disponível globalmente no React 17+
+import { lazy } from 'react';
+
+export const AlunosVsDocentesChart = lazy(() => import('./AlunosVsDocentesChart'));
+export const AlunosPorEscolaChart = lazy(() => import('./AlunosPorEscolaChart'));
+export const DistribuicaoAlunosChart = lazy(() => import('./DistribuicaoAlunosChart'));
+export const DistribuicaoAlunosModalidadeChart = lazy(() => import('./DistribuicaoAlunosModalidadeChart'));
+export const DistribuicaoEscolasCombinadoChart = lazy(() => import('./DistribuicaoEscolasCombinadoChart'));
+export const EquipamentosChart = lazy(() => import('./EquipamentosChart'));
+export const EscolasPorDiretoriaChart = lazy(() => import('./EscolasPorDiretoriaChart'));
+export const TiposEnsinoChart = lazy(() => import('./TiposEnsinoChart'));

@@ -3,6 +3,8 @@ import { getHistoriasProfessor, createHistoriaProfessor, updateHistoriaProfessor
 import FotoProfessorService from '../../../services/fotoProfessorService';
 import RichTextEditor from './RichTextEditor';
 import { Upload, X, User, AlertCircle } from 'lucide-react';
+import CardVisibilityToggle from '../components/CardVisibilityToggle';
+import logger from '../../../utils/logger';
 
 const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
   const [historias, setHistorias] = useState([]);
@@ -12,6 +14,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [photoError, setPhotoError] = useState('');
   const [photoSuccess, setPhotoSuccess] = useState('');
+  const [newItemKey, setNewItemKey] = useState(0);
 
   const loadHistorias = useCallback(async () => {
     if (!editingLocation?.id) return;
@@ -21,7 +24,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
       const data = await getHistoriasProfessor(editingLocation.id);
       setHistorias(data || []);
     } catch (error) {
-      console.error('Erro ao carregar histórias:', error);
+      logger.error('Erro ao carregar histórias:', error);
     } finally {
       setLoading(false);
     }
@@ -56,7 +59,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
       setEditingHistoria(null);
       setIsCreating(false);
     } catch (error) {
-      console.error('Erro ao salvar história:', error);
+      logger.error('Erro ao salvar história:', error);
       alert('Erro ao salvar história: ' + error.message);
     }
   };
@@ -68,14 +71,25 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
       await deleteHistoriaProfessor(historiaId);
       await loadHistorias();
     } catch (error) {
-      console.error('Erro ao deletar história:', error);
+      logger.error('Erro ao deletar história:', error);
       alert('Erro ao deletar história: ' + error.message);
     }
   };
 
   const handleEditHistoria = (historia) => {
-    setEditingHistoria(historia);
+    // Criar uma cópia do objeto para garantir que o estado seja atualizado
+    setEditingHistoria({
+      ...historia,
+      historia: historia.historia || '' // Garantir que o campo historia existe
+    });
     setIsCreating(false);
+    // Scroll para o formulário de edição
+    setTimeout(() => {
+      const formElement = document.querySelector('[data-edit-form]');
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   const handleNewHistoria = () => {
@@ -84,6 +98,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
       historia: ''
     });
     setIsCreating(true);
+    setNewItemKey(prev => prev + 1); // Incrementar para forçar remount do editor
   };
 
   const handleCancelEdit = () => {
@@ -118,10 +133,10 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
       setPhotoSuccess('');
 
       // Fazer upload da foto
-      console.log('=== HistoriaProfessoresTab.handlePhotoUpload ===');
-      console.log('Arquivo:', file.name);
-      console.log('Nome Professor:', editingHistoria?.nome_professor || 'professor');
-      console.log('Escola ID:', editingLocation.id);
+      logger.debug('=== HistoriaProfessoresTab.handlePhotoUpload ===');
+      logger.debug('Arquivo:', file.name);
+      logger.debug('Nome Professor:', editingHistoria?.nome_professor || 'professor');
+      logger.debug('Escola ID:', editingLocation.id);
       
       const result = await FotoProfessorService.uploadFotoProfessor(
         file, 
@@ -129,14 +144,14 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
         editingLocation.id
       );
 
-      console.log('Resultado do upload:', result);
+      logger.debug('Resultado do upload:', result);
       
       if (result.success) {
-        console.log('Atualizando editingHistoria com URL:', result.url);
-        console.log('Estado atual editingHistoria:', editingHistoria);
+        logger.debug('Atualizando editingHistoria com URL:', result.url);
+        logger.debug('Estado atual editingHistoria:', editingHistoria);
         
         const novoEstado = { ...editingHistoria, foto_rosto: result.url };
-        console.log('Novo estado que será definido:', novoEstado);
+        logger.debug('Novo estado que será definido:', novoEstado);
         
         // Atualizar editingHistoria com a URL da foto
         setEditingHistoria(novoEstado);
@@ -144,7 +159,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
         
         // Verificar se o estado foi atualizado
         setTimeout(() => {
-          console.log('Estado após atualização (deve mostrar foto_rosto):', editingHistoria);
+          logger.debug('Estado após atualização (deve mostrar foto_rosto):', editingHistoria);
         }, 100);
         
         // Limpar mensagem de sucesso após 3 segundos
@@ -153,7 +168,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
         setPhotoError(result.error || 'Erro ao fazer upload da foto');
       }
     } catch (error) {
-      console.error('Erro no upload da foto:', error);
+      logger.error('Erro no upload da foto:', error);
       setPhotoError('Erro inesperado ao fazer upload da foto');
     } finally {
       setUploadingPhoto(false);
@@ -177,6 +192,14 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
 
   return (
     <div className="space-y-6">
+      {/* Toggle de Visibilidade */}
+      <CardVisibilityToggle
+        cardId="historiaProfessor"
+        editingLocation={editingLocation}
+        setEditingLocation={setEditingLocation}
+        label="Visibilidade do Card: História dos Professores"
+      />
+      
       {/* Cabeçalho */}
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-200">Depoimentos dos Professores</h3>
@@ -190,12 +213,12 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
 
       {/* Formulário de edição/criação */}
       {editingHistoria && (
-        <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
-          <h4 className="text-md font-medium text-gray-200 mb-4">
+        <div className="space-y-4" data-edit-form>
+          <h4 className="text-sm font-medium text-gray-200 mb-3">
             {isCreating ? 'Nova História do Professor' : 'Editar História do Professor'}
           </h4>
           
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Nome do Professor */}
             <div>
               <label className="block text-sm font-medium text-gray-200 mb-2">
@@ -311,6 +334,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
                 Depoimento/História
               </label>
               <RichTextEditor
+                key={editingHistoria?.id || `new-${newItemKey}`}
                 value={editingHistoria.historia || ''}
                 onChange={(value) => setEditingHistoria({
                   ...editingHistoria,
@@ -341,10 +365,10 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
 
       {/* Lista de histórias existentes */}
       {historias.length > 0 && (
-        <div className="space-y-4">
-          <h4 className="text-md font-medium text-gray-200">Histórias Existentes</h4>
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-200">Histórias Existentes</h4>
           {historias.map((historia) => (
-            <div key={historia.id} className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+            <div key={historia.id} className="space-y-2 pb-3 border-b border-gray-700">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   {historia.nome_professor && (

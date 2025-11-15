@@ -5,7 +5,8 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { gerarUrlEscola, gerarTituloEscola, gerarDescricaoEscola, gerarKeywordsEscola, DEFAULT_META_CONFIG } from '../../utils/metaTags';
+import { gerarUrlEscola, gerarTituloEscola, gerarDescricaoEscola, gerarKeywordsEscola } from '../../utils/metaTags';
+import { META_TAGS_CONFIG } from '../../config/metaTagsConfig';
 
 const GoogleSEOTags = ({ escola }) => {
   if (!escola) return null;
@@ -21,7 +22,7 @@ const GoogleSEOTags = ({ escola }) => {
       <title>{title}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
-      <meta name="author" content={DEFAULT_META_CONFIG.siteName} />
+      <meta name="author" content={META_TAGS_CONFIG.site.name} />
       <meta name="robots" content="index, follow" />
       <meta name="googlebot" content="index, follow" />
       

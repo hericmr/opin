@@ -1,10 +1,6 @@
 import React, { memo } from 'react';
 import {
-  Target,
-  BookOpen,
   GraduationCap,
-  Users,
-  Heart,
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import NativeLandCard from '../NativeLandCard';
@@ -14,29 +10,9 @@ const ProjetosParcerias = memo(({ escola }) => {
 
   const projectsData = [
     {
-      field: 'projetos_andamento',
-      icon: BookOpen,
-      label: 'Projetos em andamento',
-    },
-    {
       field: 'parcerias_universidades',
       icon: GraduationCap,
       label: 'Parcerias com universidades',
-    },
-    {
-      field: 'acoes_ongs',
-      icon: Users,
-      label: 'Ações com ONGs ou coletivos',
-    },
-    {
-      field: 'desejos_comunidade',
-      icon: Heart,
-      label: 'Desejos da comunidade para a escola',
-    },
-    {
-      field: 'parcerias_municipio',
-      icon: Target,
-      label: 'Parcerias com o município',
     },
   ];
 
@@ -47,14 +23,14 @@ const ProjetosParcerias = memo(({ escola }) => {
   if (availableProjects.length === 0) return null;
 
   return (
-    <InfoSection title="Projetos e Parcerias" icon={Target}>
-      <div className="grid grid-cols-1 gap-4 items-stretch overflow-visible" style={{ paddingTop: '12px', paddingLeft: '12px' }}>
+    <InfoSection>
+      <div className="grid grid-cols-1 gap-3 items-stretch overflow-visible">
         {availableProjects.map((project) => {
           const value = escola[project.field];
           const isNegative = value?.trim().toLowerCase() === 'não';
           
           return (
-            <div key={project.field} className="relative mt-3">
+            <div key={project.field} className="relative">
               <NativeLandCard
                 icon={project.icon}
                 label={project.label}

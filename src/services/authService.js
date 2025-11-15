@@ -1,8 +1,9 @@
 import { SignJWT, jwtVerify } from 'jose';
+import logger from '../utils/logger';
 
 // Chave secreta para assinar os JWTs (em produção, deve vir de variável de ambiente)
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.REACT_APP_JWT_SECRET || 'opin-admin-secret-key-2024'
+  import.meta.env.REACT_APP_JWT_SECRET || import.meta.env.VITE_JWT_SECRET || 'opin-admin-secret-key-2024'
 );
 
 // Configurações do JWT
@@ -39,7 +40,7 @@ export class AuthService {
 
       return token;
     } catch (error) {
-      console.error('Erro ao gerar token JWT:', error);
+      logger.error('Erro ao gerar token JWT:', error);
       throw new Error('Falha na geração do token de autenticação');
     }
   }
@@ -60,7 +61,7 @@ export class AuthService {
 
       return payload;
     } catch (error) {
-      console.warn('Token JWT inválido ou expirado:', error.message);
+      logger.warn('Token JWT inválido ou expirado:', error.message);
       return null;
     }
   }
@@ -73,9 +74,18 @@ export class AuthService {
   static async authenticate(password) {
     try {
       // Verificar senha (em produção, usar hash + salt)
-      const validPassword = process.env.REACT_APP_ADMIN_PASSWORD || 'admin123';
+      const validPassword = import.meta.env.REACT_APP_ADMIN_PASSWORD || import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
       
-      if (password !== validPassword) {
+      // Debug: remover espaços em branco e comparar
+      const trimmedPassword = password?.trim();
+      const trimmedValidPassword = validPassword?.trim();
+      
+      // Log para debug (apenas em desenvolvimento)
+      logger.debug('Debug auth - Password recebida:', `"${trimmedPassword}"`, 'Length:', trimmedPassword?.length);
+      logger.debug('Debug auth - Password esperada:', `"${trimmedValidPassword}"`, 'Length:', trimmedValidPassword?.length);
+      logger.debug('Debug auth - REACT_APP_ADMIN_PASSWORD definida?', !!(import.meta.env.REACT_APP_ADMIN_PASSWORD || import.meta.env.VITE_ADMIN_PASSWORD));
+      
+      if (trimmedPassword !== trimmedValidPassword) {
         return {
           success: false,
           error: 'Senha incorreta'
@@ -94,7 +104,7 @@ export class AuthService {
         }
       };
     } catch (error) {
-      console.error('Erro na autenticação:', error);
+      logger.error('Erro na autenticação:', error);
       return {
         success: false,
         error: 'Erro interno de autenticação'
@@ -119,7 +129,7 @@ export class AuthService {
       
       return false;
     } catch (error) {
-      console.error('Erro ao verificar autenticação:', error);
+      logger.error('Erro ao verificar autenticação:', error);
       return false;
     }
   }
@@ -143,7 +153,7 @@ export class AuthService {
       
       return null;
     } catch (error) {
-      console.error('Erro ao obter usuário atual:', error);
+      logger.error('Erro ao obter usuário atual:', error);
       return null;
     }
   }
@@ -193,7 +203,7 @@ export class AuthService {
       
       return false;
     } catch (error) {
-      console.error('Erro ao verificar expiração do token:', error);
+      logger.error('Erro ao verificar expiração do token:', error);
       return false;
     }
   }
@@ -217,7 +227,7 @@ export class AuthService {
       
       return null;
     } catch (error) {
-      console.error('Erro ao renovar token:', error);
+      logger.error('Erro ao renovar token:', error);
       return null;
     }
   }

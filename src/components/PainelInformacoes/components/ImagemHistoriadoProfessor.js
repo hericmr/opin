@@ -5,6 +5,7 @@ import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService'
 import ReusableImageZoom from '../../ReusableImageZoom';
 import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
+import { formatDateForDisplay } from '../../../utils/dateUtils';
 import '../../ReusableImageZoom.css';
 
 const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = false, hideInlineMedia = false }) => {
@@ -135,7 +136,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
         {imagens.map((img, index) => (
           <figure
             key={img.id}
-            className="rounded-lg overflow-hidden bg-white shadow-sm flex flex-col cursor-pointer transition hover:shadow-md"
+            className="rounded-lg overflow-hidden bg-white shadow-sm flex flex-col cursor-pointer"
             onClick={() => {
               if (img.publicURL) {
                 setCurrentImageIndex(index);
@@ -147,7 +148,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
               <OptimizedImage
                 src={img.publicURL}
                 alt={img.legenda}
-                className="w-full h-full object-cover object-center transition-transform duration-200 hover:scale-105"
+                className="w-full h-full object-cover object-center"
                 isPreloaded={isImagePreloaded(img.publicURL)}
                 style={{ maxHeight: '350px' }}
               />
@@ -171,7 +172,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
                     <span>Por: {img.autor}</span>
                   )}
                   {img.dataFoto && (
-                    <span>{new Date(img.dataFoto).toLocaleDateString('pt-BR')}</span>
+                    <span>{formatDateForDisplay(img.dataFoto)}</span>
                   )}
                 </div>
                 

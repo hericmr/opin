@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '../supabaseClient';
+import logger from '../utils/logger';
 
 /**
  * Hook para preload de imagens antecipado
@@ -24,7 +25,7 @@ const useImagePreloader = (escolaId, enabled = true) => {
   const preloadImages = async (urls) => {
     const promises = urls.map(url => 
       preloadImage(url).catch(error => {
-        console.warn('Erro ao preload da imagem:', url, error);
+        logger.warn('Erro ao preload da imagem:', url, error);
         return null; // Continua mesmo se uma imagem falhar
       })
     );
@@ -38,7 +39,7 @@ const useImagePreloader = (escolaId, enabled = true) => {
     if (!escolaId || !enabled) return;
 
     setIsPreloading(true);
-    console.log('🖼️ Iniciando preload de imagens para escola:', escolaId);
+    logger.debug('🖼️ Iniciando preload de imagens para escola:', escolaId);
 
     try {
       // Preload de imagens da escola
@@ -73,7 +74,7 @@ const useImagePreloader = (escolaId, enabled = true) => {
         });
       }
 
-      console.log(`🖼️ Preload: ${urlsToPreload.length} imagens encontradas`);
+      logger.debug(`🖼️ Preload: ${urlsToPreload.length} imagens encontradas`);
 
       if (urlsToPreload.length > 0) {
         // Preload em lotes para não sobrecarregar
@@ -87,7 +88,7 @@ const useImagePreloader = (escolaId, enabled = true) => {
         // Processar lotes com delay entre eles
         for (let i = 0; i < batches.length; i++) {
           const batch = batches[i];
-          console.log(`🖼️ Preload lote ${i + 1}/${batches.length}: ${batch.length} imagens`);
+          logger.debug(`🖼️ Preload lote ${i + 1}/${batches.length}: ${batch.length} imagens`);
           
           await preloadImages(batch);
           
@@ -104,11 +105,11 @@ const useImagePreloader = (escolaId, enabled = true) => {
         });
         setPreloadedImages(preloadedMap);
 
-        console.log('✅ Preload concluído:', urlsToPreload.length, 'imagens');
+        logger.debug('✅ Preload concluído:', urlsToPreload.length, 'imagens');
       }
 
     } catch (error) {
-      console.error('❌ Erro durante preload:', error);
+      logger.error('❌ Erro durante preload:', error);
     } finally {
       setIsPreloading(false);
     }

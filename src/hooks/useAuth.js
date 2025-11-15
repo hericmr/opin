@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AuthService } from '../services/authService';
+import logger from '../utils/logger';
 
 /**
  * Hook para gerenciar autenticação
@@ -35,7 +36,7 @@ export const useAuth = () => {
         setTokenExpiringSoon(false);
       }
     } catch (error) {
-      console.error('Erro ao verificar autenticação:', error);
+      logger.error('Erro ao verificar autenticação:', error);
       setIsAuthenticated(false);
       setUser(null);
     } finally {
@@ -58,7 +59,7 @@ export const useAuth = () => {
         return { success: false, error: result.error };
       }
     } catch (error) {
-      console.error('Erro no login:', error);
+      logger.error('Erro no login:', error);
       return { success: false, error: 'Erro interno de autenticação' };
     }
   }, []);

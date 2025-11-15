@@ -42,12 +42,25 @@ Mapa interativo com base em imagem de satélite e três camadas principais:
 
 ---
 
+## Tecnologias
+
+- **React 18** - Biblioteca JavaScript para interfaces
+- **Vite** - Build tool e dev server (migrado de Create React App)
+- **Tailwind CSS** - Framework CSS utilitário
+- **OpenLayers** - Biblioteca para mapas interativos
+- **Supabase** - Backend como serviço (BaaS)
+- **Jest** - Framework de testes
+
 ## Documentação
 
 ### Para Desenvolvedores
 Se você quer clonar este repositório e executar o projeto localmente:
 
 **[Guia para Instalação](Guia%20para%20Instalação.md)**
+
+### Migração para Vite
+
+Este projeto foi migrado de `react-scripts` (Create React App) para **Vite** para melhorar performance, reduzir dependências e permitir atualizações futuras. Veja [planning.md](planning.md) para detalhes da migração.
 
 ### Para Administradores
 Se você é administrador do OPIN e tem alguma dúvida, provavelmente ela será respondida nesta documentação:

@@ -2,10 +2,24 @@ import React from "react";
 import { X, Maximize2, Minimize2, MapPin } from "lucide-react";
 import { capitalizeWords } from "../utils/textFormatting";
 import MinimalShareButtons from "./MinimalShareButtons";
+import { BREAKPOINTS } from '../constants/breakpoints';
 
 // Função para formatar o título da escola
 const formatarTituloEscola = (titulo) => {
   if (!titulo) return '';
+  
+  // Normalizar variações de "EEI" no início do título (E.e.i., E.E.I., eei, etc.)
+  // Regex para detectar "E.e.i.", "E.E.I.", "eei", "EEI", etc. no início
+  // Aceita com ou sem pontos, e com ou sem espaço após
+  const eeiPattern = /^([Ee]\.?[Ee]\.?[Ii]\.?)\s*/i;
+  const match = titulo.match(eeiPattern);
+  
+  if (match) {
+    // Encontrar onde começa o resto do título (após "EEI" e espaços)
+    const restoTitulo = titulo.replace(eeiPattern, '').trim();
+    // Normalizar "EEI" para sempre ser "E.E.I." (maiúsculas, com pontos)
+    return `E.E.I. ${capitalizeWords(restoTitulo)}`;
+  }
   
   // Converter para minúsculas para facilitar a busca
   const tituloLower = titulo.toLowerCase();
@@ -21,7 +35,7 @@ const formatarTituloEscola = (titulo) => {
     if (indiceAldeia !== -1 && indiceAldeia < partes.length - 1) {
       // Pegar a parte da aldeia (pode ter mais de uma palavra)
       const nomeAldeia = partes.slice(indiceAldeia + 1).join(' ');
-      return `E.E.I ${capitalizeWords(nomeAldeia)}`;
+      return `E.E.I. ${capitalizeWords(nomeAldeia)}`;
     }
   }
   
@@ -30,7 +44,7 @@ const formatarTituloEscola = (titulo) => {
 };
 
 const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagemHeader, shareUrl, shareTitle }) => {
-  const isMobile = window.innerWidth <= 768;
+  const isMobile = window.innerWidth <= BREAKPOINTS.mobile;
   const isMobileLandscape = isMobile && window.innerWidth > window.innerHeight;
 
   const shouldUseHalfHeader = isMaximized && (!isMobile || isMobileLandscape);
@@ -69,7 +83,13 @@ const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagem
             </div>
           )}
           <button
-            onClick={closePainel}
+            onClick={(e) => {
+              e.stopPropagation();
+              closePainel();
+            }}
+            onMouseDown={(e) => {
+              e.stopPropagation();
+            }}
             className="p-1.5 text-gray-700 hover:text-gray-900 hover:bg-green-100 transition-colors duration-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
             aria-label="Fechar painel"
             style={{ zIndex: 1005 }}
@@ -103,7 +123,13 @@ const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagem
           </button>
         )}
         <button
-          onClick={closePainel}
+          onClick={(e) => {
+            e.stopPropagation();
+            closePainel();
+          }}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+          }}
           className="p-2 text-gray-700 hover:text-gray-900 hover:bg-green-100 transition-colors duration-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           aria-label="Fechar painel"
           style={{ zIndex: 1005 }}

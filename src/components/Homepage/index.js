@@ -207,7 +207,7 @@ const HomepageSearch = ({ dataPoints }) => {
 };
 
 export default function Homepage({ dataPoints = [] }) {
-  const bgUrl = (process.env.PUBLIC_URL || '') + '/site_bg.png';
+  const bgUrl = (import.meta.env.BASE_URL || '/opin') + '/site_bg.png';
   const textRef = useRef(null);
   const [logoWidth, setLogoWidth] = useState(null);
 
@@ -240,7 +240,7 @@ export default function Homepage({ dataPoints = [] }) {
             {/* Logo OPIN maior */}
             <div className="mb-2" style={{ width: logoWidth ? `${logoWidth}px` : 'auto', marginLeft: 0, paddingLeft: 0, textAlign: 'left' }}>
               <img 
-                src={`${process.env.PUBLIC_URL || ''}/logo_index.png`}
+                src={`${import.meta.env.BASE_URL || '/opin'}/logo_index.png`}
                 alt="OPIN - Observatório dos Professores Indígenas"
                 className="h-20 md:h-28 lg:h-36 xl:h-44 object-contain object-left"
                 style={{ width: logoWidth ? `${logoWidth}px` : 'auto', maxWidth: '100%', display: 'block', marginLeft: 0, paddingLeft: 0, marginRight: 'auto', objectPosition: 'left' }}
@@ -265,9 +265,12 @@ export default function Homepage({ dataPoints = [] }) {
               <div className="col-span-1 lg:col-span-4">
                 <HomepageSearch dataPoints={dataPoints} />
               </div>
-              <div className="col-span-1 lg:col-span-2">
+              <div className="col-span-1 lg:col-span-2 flex flex-col gap-3">
                 <Link to="/mapa" className="block rounded-full bg-green-500 text-green-950 font-semibold px-4 py-2.5 text-center hover:bg-green-400 transition">
                   Explorar Mapa
+                </Link>
+                <Link to="/dashboard" className="block rounded-full bg-green-600 text-white font-semibold px-4 py-2.5 text-center hover:bg-green-500 transition">
+                  Alguns dados
                 </Link>
               </div>
             </div>

@@ -12,7 +12,7 @@ import { Style, Icon } from 'ol/style';
 import 'ol/ol.css';
 
 // Caminho para o marcador SVG
-const MARKER_SVG_PATH = `${process.env.PUBLIC_URL || ''}/map-marker.svg`;
+const MARKER_SVG_PATH = `${import.meta.env.BASE_URL || '/opin'}/map-marker.svg`;
 
 const CoordenadasTab = ({ editingLocation, setEditingLocation }) => {
   const mapRef = useRef(null);

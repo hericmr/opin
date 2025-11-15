@@ -272,9 +272,10 @@ export const CACHE_CONFIG = {
 };
 
 // Configurações de debug
+const isDevelopment = import.meta.env.MODE === 'development' || import.meta.env.DEV;
 export const DEBUG_CONFIG = {
-  enableLogging: process.env.NODE_ENV === 'development',
-  enablePerformanceMonitoring: process.env.NODE_ENV === 'development',
-  enableFeatureCount: process.env.NODE_ENV === 'development',
-  logLevel: process.env.NODE_ENV === 'development' ? 'debug' : 'error'
+  enableLogging: isDevelopment,
+  enablePerformanceMonitoring: isDevelopment,
+  enableFeatureCount: isDevelopment,
+  logLevel: isDevelopment ? 'debug' : 'error'
 }; 

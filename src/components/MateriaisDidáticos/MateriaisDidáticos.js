@@ -1,61 +1,47 @@
-import React from 'react';
-import { BookOpen, ChevronRight } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { useEscolasData } from '../../hooks/useEscolasData';
 import PageHeader from '../PageHeader';
+import DashboardBreadcrumbs from '../Dashboard/DashboardBreadcrumbs';
 
 const MateriaisDidáticos = () => {
-  // Breadcrumbs de Navegação
-  const breadcrumbs = [
+  const { dataPoints } = useEscolasData();
+
+  // Breadcrumbs de Navegação - memoizado para evitar recriação
+  const breadcrumbs = useMemo(() => [
     { label: 'Início', path: '/', active: false },
     { label: 'Materiais Didáticos', path: '/conteudo', active: true }
-  ];
+  ], []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-amber-50 pt-16 sm:pt-20">
-      {/* Breadcrumbs de Navegação */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <nav className="flex items-center space-x-2 text-sm">
-            {breadcrumbs.map((crumb, index) => (
-              <div key={index} className="flex items-center">
-                {index > 0 && (
-                  <ChevronRight className="w-4 h-4 text-gray-400 mx-2" />
-                )}
-                {crumb.path ? (
-                  <button
-                    onClick={() => window.location.href = crumb.path}
-                    className="text-gray-600 hover:text-green-700 transition-colors"
-                  >
-                    {crumb.label}
-                  </button>
-                ) : (
-                  <span className={`font-medium ${crumb.active ? 'text-green-700' : 'text-gray-900'}`}>
-                    {crumb.label}
-                  </span>
-                )}
-              </div>
-            ))}
-          </nav>
-        </div>
-      </div>
-
-      {/* Cabeçalho com design indígena */}
+    <div className="min-h-screen dashboard-scroll relative">
+      {/* Cabeçalho com design indígena - Hero image começa do topo */}
       <PageHeader
-        title="Materiais Didaticos"
-        titleSize="text-3xl md:text-4xl lg:text-5xl"
-        descriptionSize="text-base md:text-lg"
-        description="Conteúdos produzidos por professores indígenas sobre línguas, histórias, plantas medicinais, cantos e jogos."
-      />
-
-      {/* Mensagem de desenvolvimento */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center">
-          <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl mx-auto">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <BookOpen className="w-8 h-8 text-green-600" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        title="Materiais Didáticos"
+        showNavbar={true}
+        dataPoints={dataPoints || []}
+      >
+        <DashboardBreadcrumbs breadcrumbs={breadcrumbs} />
+      </PageHeader>
+      
+      {/* Conteúdo principal com espaçamento para o hero - será ajustado dinamicamente */}
+      <div className="relative z-10 hero-content-spacer" style={{ marginTop: '300px' }}>
+        {/* Descrição da página - Abaixo do hero, estilo Native Land Digital */}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+          <div className="prose prose-lg sm:prose-xl max-w-none" style={{
+            fontSize: '1.125rem',
+            lineHeight: '1.75',
+            color: '#374151',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+          }}>
+            <p className="mb-6 text-center" style={{
+              fontSize: '1.5rem',
+              lineHeight: '1.75',
+              color: '#374151',
+              letterSpacing: '-0.01em',
+              fontWeight: 'bold'
+            }}>
               Página em Desenvolvimento
-            </h2>
+            </p>
           </div>
         </div>
       </div>

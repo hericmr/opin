@@ -5,7 +5,7 @@ const HistoriaEscolaHeader = () => (
     <div className="flex items-center gap-3">
       <span className="bg-green-200 rounded-full flex items-center justify-center w-16 h-16 sm:w-28 sm:h-28">
         <img 
-          src={`${process.env.PUBLIC_URL}/onca.svg`} 
+          src={`${import.meta.env.BASE_URL || '/opin'}/onca.svg`} 
           alt="Ícone de onça" 
           className="w-18 h-18 sm:w-36 sm:h-36" 
           style={{ 
