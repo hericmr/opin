@@ -34,7 +34,7 @@ const AppContent = () => {
   const isMapRoute = React.useMemo(() => {
     const routerPath = location?.pathname?.replace(/\/$/, '') || '';
     return routerPath.includes('/mapa');
-  }, [location?.pathname]);
+  }, [location.pathname]);
 
   // Verificação para rotas que usam navbar integrada no Hero (showNavbar={true})
   const isHeroNavbarRoute = React.useMemo(() => {
