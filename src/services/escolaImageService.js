@@ -1,6 +1,11 @@
 import { supabase } from '../supabaseClient';
 import logger from '../utils/logger';
 
+// Obter URL do Supabase das variáveis de ambiente
+const getSupabaseUrl = () => {
+  return import.meta.env.REACT_APP_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL || '';
+};
+
 // Configurações para imagens das escolas
 const ESCOLA_IMAGE_CONFIG = {
   BUCKET_NAME: 'imagens-das-escolas',
@@ -214,10 +219,22 @@ export const getEscolaImages = async (escolaId, bucketName = ESCOLA_IMAGE_CONFIG
         .from(bucketName)
         .getPublicUrl(filePath);
 
+      // Garantir que a URL pública seja válida
+      // Se publicUrl não estiver disponível, construir manualmente
+      let finalPublicUrl = publicUrl;
+      if (!finalPublicUrl) {
+        const baseUrl = getSupabaseUrl().replace(/\/$/, '');
+        if (baseUrl) {
+          finalPublicUrl = `${baseUrl}/storage/v1/object/public/${bucketName}/${filePath}`;
+        } else {
+          logger.warn(`Não foi possível construir URL pública para ${filePath}`);
+        }
+      }
+
       return {
         id: index + 1, // ID temporário
         url: filePath,
-        publicUrl,
+        publicUrl: finalPublicUrl,
         descricao: `Imagem ${index + 1}`,
         created_at: file.created_at || new Date().toISOString()
       };

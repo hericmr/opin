@@ -849,9 +849,19 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
                 {/* Imagem */}
                 <div className="relative group">
                 <img
-                  src={image.publicUrl}
+                  src={image.publicUrl || image.url}
                   alt={image.descricao || 'Imagem da escola'}
-                    className="w-full h-48 object-cover"
+                  className="w-full h-48 object-cover"
+                  onError={(e) => {
+                    console.error('Erro ao carregar imagem:', image.publicUrl || image.url);
+                    // Tentar usar URL alternativa se disponível
+                    if (image.url && image.publicUrl !== image.url) {
+                      e.target.src = image.url;
+                    } else {
+                      e.target.style.display = 'none';
+                    }
+                  }}
+                  loading="lazy"
                 />
                 
                 {/* Badge de imagem do header */}
