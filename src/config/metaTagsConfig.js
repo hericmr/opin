@@ -86,7 +86,7 @@ export const META_TAGS_CONFIG = {
 
   // Configurações de debug
   debug: {
-    enabled: process.env.NODE_ENV === 'development',
+    enabled: import.meta.env.MODE === 'development' || import.meta.env.DEV,
     logMetaTags: true,
     showTestComponent: false
   }
