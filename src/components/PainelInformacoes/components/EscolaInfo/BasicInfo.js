@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import NativeLandCard from '../NativeLandCard';
+import { getPovoIndigenaLabel } from '../../../../utils/povoIndigenaLabel';
 
 const capitalize = (str) => {
   if (!str) return '';
@@ -216,7 +217,7 @@ const getGridCols = (count) => {
       {escola.povos_indigenas && (
         <div className="mb-4">
           <div className="text-lg sm:text-xl font-bold text-gray-900 leading-tight">
-            Povos Indígenas: <span className="font-semibold text-gray-900">{escola.povos_indigenas}</span>
+            {getPovoIndigenaLabel(escola.povos_indigenas)}: <span className="font-semibold text-gray-900">{escola.povos_indigenas}</span>
           </div>
         </div>
       )}

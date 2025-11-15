@@ -1,3 +1,5 @@
+import { getPovoIndigenaLabel } from '../../../utils/povoIndigenaLabel';
+
 // Utility functions for formatting escola data
 export const formatters = {
   informacoesBasicas: (escola) => ({
@@ -11,7 +13,7 @@ export const formatters = {
   }),
 
   povosELinguas: (escola) => ({
-    "Povos Indígenas": escola.povos_indigenas,
+    [getPovoIndigenaLabel(escola.povos_indigenas)]: escola.povos_indigenas,
     "Línguas Faladas": escola.linguas_faladas
   }),
 
