@@ -47,12 +47,13 @@ jobs:
       env:
         CI: false
         NODE_ENV: production
-        # Variáveis de ambiente do Supabase (usando apenas VITE_* como primário)
+        # Variáveis de ambiente do Supabase (usando VITE_* como primário)
+        # Se VITE_SUPABASE_ANON_KEY não existir, usa REACT_APP_SUPABASE_ANON_KEY
         VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-        VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-        # Fallback REACT_APP_* para compatibilidade (usa os mesmos valores de VITE_*)
+        VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || secrets.REACT_APP_SUPABASE_ANON_KEY }}
+        # REACT_APP_* para compatibilidade (usa os mesmos valores)
         REACT_APP_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-        REACT_APP_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        REACT_APP_SUPABASE_ANON_KEY: ${{ secrets.REACT_APP_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
         REACT_APP_ADMIN_PASSWORD: ${{ secrets.REACT_APP_ADMIN_PASSWORD }}
         
     - name: Setup Pages
