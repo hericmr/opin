@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { isGoogleDriveLink } from '../../../services/documentoService';
 
 /**
  * DocumentViewer
@@ -13,11 +14,22 @@ import React, { useRef, useState, useEffect } from 'react';
 const transformarLinkGoogleDrive = (link) => {
   if (!link || typeof link !== 'string') return null;
   
-  const match = link.match(/\/d\/([a-zA-Z0-9-_]+)/);
-  if (!match) return null;
+  // Suporta diferentes formatos de links do Google Drive
+  const patterns = [
+    /\/d\/([a-zA-Z0-9-_]+)/,  // drive.google.com/file/d/ID
+    /id=([a-zA-Z0-9-_]+)/,     // drive.google.com/open?id=ID
+    /document\/d\/([a-zA-Z0-9-_]+)/  // docs.google.com/document/d/ID
+  ];
   
-  const fileId = match[1];
-  return `https://docs.google.com/gview?url=https://drive.google.com/uc?id=${fileId}&embedded=true`;
+  for (const pattern of patterns) {
+    const match = link.match(pattern);
+    if (match) {
+      const fileId = match[1];
+      return `https://docs.google.com/gview?url=https://drive.google.com/uc?id=${fileId}&embedded=true`;
+    }
+  }
+  
+  return null;
 };
 
 /**
@@ -187,11 +199,11 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
   const renderDocumentViewer = () => {
     if (!selectedDoc) return null;
 
-    const isGoogleDriveLink = selectedDoc.link_pdf.includes('drive.google.com/file/d/');
+    const isGoogleLink = isGoogleDriveLink(selectedDoc.link_pdf);
 
     return (
       <div className="rounded-lg overflow-hidden shadow-lg bg-white">
-        {isGoogleDriveLink ? (
+        {isGoogleLink ? (
           <>
             {!useGoogleDocsViewer ? (
               <iframe 
