@@ -100,6 +100,16 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
     }
   }, [documentos, selectedDoc]);
 
+  // Update selectedDoc when documentos change (to keep title in sync)
+  useEffect(() => {
+    if (selectedDoc && documentos?.length > 0) {
+      const updatedDoc = documentos.find(doc => doc.id === selectedDoc.id);
+      if (updatedDoc && updatedDoc.titulo !== selectedDoc.titulo) {
+        setSelectedDoc(updatedDoc);
+      }
+    }
+  }, [documentos, selectedDoc]);
+
   // Handle iframe events
   useEffect(() => {
     const iframe = iframeRef.current;
@@ -289,17 +299,19 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
     );
   };
 
+  // Mostrar título do documento selecionado ou primeiro documento se houver apenas um
+  const displayTitle = selectedDoc?.titulo || (documentos.length === 1 ? documentos[0]?.titulo : null);
+
   return (
     <div className="mt-8 max-w-4xl mx-auto">
-      {title && (
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-semibold text-green-800">{title}:</h3>
-          {documentos.length > 1 && (
-            <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} />
-          )}
+      {/* Título minimalista do documento */}
+      {displayTitle && (
+        <div className="mb-4">
+          <h4 className="text-sm font-medium text-gray-600">{displayTitle}</h4>
         </div>
       )}
-      {!title && documentos.length > 1 && (
+      
+      {documentos.length > 1 && (
         <div className="flex items-center justify-end mb-4">
           <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} />
         </div>
