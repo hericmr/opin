@@ -23,8 +23,26 @@ const ImageActions = ({
   loading = false,
 }) => {
   return (
-    <div className="absolute inset-0 z-10 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center pointer-events-none">
-      <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-auto">
+    <div 
+      className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center pointer-events-none"
+      style={{
+        // CRÍTICO: Garantir que quando não está em hover, não bloqueie NADA
+        pointerEvents: 'none',
+        // Garantir que não interfira visualmente quando transparente
+        willChange: 'opacity',
+        // z-index menor que a imagem quando não está em hover (imagem tem zIndex: 1)
+        // Quando em hover, o CSS group-hover pode aumentar se necessário
+        zIndex: 0
+      }}
+      aria-hidden="true"
+    >
+      <div 
+        className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-20"
+        style={{
+          // Só permitir pointer events quando visível (hover) - controlado pelo parent
+          pointerEvents: 'inherit'
+        }}
+      >
         {/* Button to set as header */}
         {!isHeader && onSetHeader && (
           <button
