@@ -28,6 +28,18 @@ const ImageActions = ({
   onRemoveDrawing,
   loading = false,
 }) => {
+  // Debug: verificar se handlers estão disponíveis
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[ImageActions] Handlers disponíveis:', {
+      hasOnSetHeader: !!onSetHeader,
+      hasOnRemoveHeader: !!onRemoveHeader,
+      hasOnAddDrawing: !!onAddDrawing,
+      hasOnRemoveDrawing: !!onRemoveDrawing,
+      isHeader,
+      isDrawing
+    });
+  }
+
   return (
     <div 
       className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center pointer-events-none"
@@ -46,15 +58,24 @@ const ImageActions = ({
         className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-20"
         style={{
           // Só permitir pointer events quando visível (hover) - controlado pelo parent
-          pointerEvents: 'inherit'
+          pointerEvents: 'inherit',
+          // Garantir que botões sejam sempre clicáveis quando visíveis
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          alignItems: 'center'
         }}
       >
-        {/* Button to set as header */}
+        {/* Classification Buttons - Header */}
+        {/* Button to set as header - SEMPRE mostrar se handler disponível */}
         {!isHeader && onSetHeader && (
           <button
-            onClick={() => onSetHeader(image.publicURL)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSetHeader(image.publicURL);
+            }}
             disabled={loading}
-            className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-700 disabled:opacity-50"
+            className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-lg"
             title="Usar como imagem do header"
             type="button"
           >
@@ -62,12 +83,15 @@ const ImageActions = ({
           </button>
         )}
         
-        {/* Button to remove from header */}
+        {/* Button to remove from header - SEMPRE mostrar se é header e handler disponível */}
         {isHeader && onRemoveHeader && (
           <button
-            onClick={onRemoveHeader}
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemoveHeader();
+            }}
             disabled={loading}
-            className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-700 disabled:opacity-50"
+            className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-700 disabled:opacity-50 transition-colors shadow-lg"
             title="Remover do header"
             type="button"
           >
@@ -75,12 +99,16 @@ const ImageActions = ({
           </button>
         )}
         
-        {/* Button to add to drawings */}
+        {/* Classification Buttons - Drawings */}
+        {/* Button to add to drawings - SEMPRE mostrar se handler disponível */}
         {!isDrawing && onAddDrawing && (
           <button
-            onClick={() => onAddDrawing(image.publicURL)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddDrawing(image.publicURL);
+            }}
             disabled={loading}
-            className="p-2 bg-purple-500 text-white rounded-full hover:bg-purple-700 disabled:opacity-50"
+            className="p-2 bg-purple-500 text-white rounded-full hover:bg-purple-700 disabled:opacity-50 transition-colors shadow-lg"
             title="Adicionar aos Desenhos"
             type="button"
           >
@@ -88,12 +116,15 @@ const ImageActions = ({
           </button>
         )}
         
-        {/* Button to remove from drawings */}
+        {/* Button to remove from drawings - SEMPRE mostrar se é drawing e handler disponível */}
         {isDrawing && onRemoveDrawing && (
           <button
-            onClick={() => onRemoveDrawing(image.publicURL)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemoveDrawing(image.publicURL);
+            }}
             disabled={loading}
-            className="p-2 bg-purple-600 text-white rounded-full hover:bg-purple-800 disabled:opacity-50"
+            className="p-2 bg-purple-600 text-white rounded-full hover:bg-purple-800 disabled:opacity-50 transition-colors shadow-lg"
             title="Remover dos Desenhos"
             type="button"
           >
