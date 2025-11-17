@@ -70,8 +70,9 @@ const NativeLandCard = memo(({
         textValue = textValue.replace(/\n\s*$/, '').replace(/\s+$/, '').trim();
         const isLongText = textValue.length > 30;
         const isShortText = textValue.length <= 30; // Consider text up to 30 chars as short for spacing purposes
+        // For short text, use normal whitespace instead of pre-line to avoid extra spacing
         return (
-          <div className={`text-sm text-gray-800 ${isLongText ? 'text-left' : 'text-center'} w-full font-medium leading-relaxed whitespace-pre-line break-words ${isShortText ? 'px-1 py-0' : 'px-2'}`} style={{ lineHeight: '1.6' }}>
+          <div className={`text-sm text-gray-800 ${isLongText ? 'text-left' : 'text-center'} w-full font-medium ${isShortText ? 'leading-normal' : 'leading-relaxed'} ${isLongText ? 'whitespace-pre-line' : 'whitespace-normal'} break-words ${isShortText ? 'px-1 py-0' : 'px-2'}`} style={{ lineHeight: isShortText ? '1.4' : '1.6' }}>
             {textValue}
           </div>
         );
@@ -208,13 +209,16 @@ const NativeLandCard = memo(({
   }
   
   const hasCustomHeight = cleanedClassName.includes('h-[') || cleanedClassName.includes('h-auto') || cleanedClassName.includes('min-h-[');
-  const cardHeightClass = hasCustomHeight 
-    ? '' 
-    : (hasDescription && !isShortContent || needsFlexibleLayout) 
-      ? 'min-h-[120px]' 
-      : isShortText || isShortContent
-        ? '' // Sem altura mínima para texto curto - deixa crescer naturalmente
-        : 'min-h-[90px]';
+  // For short content, never apply minimum height - let it be compact
+  const cardHeightClass = isShortContent && !hasDescription
+    ? '' // No minimum height for short content without description
+    : hasCustomHeight 
+      ? '' 
+      : (hasDescription && !isShortContent || needsFlexibleLayout) 
+        ? 'min-h-[120px]' 
+        : isShortText || isShortContent
+          ? '' // Sem altura mínima para texto curto - deixa crescer naturalmente
+          : 'min-h-[90px]';
 
   return (
     <div 
@@ -224,7 +228,7 @@ const NativeLandCard = memo(({
         overflow-visible
         card-container
         relative
-        ${isShortContent ? '' : 'h-full'}
+        ${isShortContent && !hasDescription ? 'h-auto' : isShortContent ? '' : 'h-full'}
         ${cleanedClassName}
       `}
       style={{ border: 'none', outline: 'none', backgroundColor: '#D1FAE5' }}
@@ -261,7 +265,7 @@ const NativeLandCard = memo(({
 
       {/* Conteúdo interno do card - flexível para permitir expansão */}
       {/* Quando conteúdo é curto, manter conteúdo compacto sem espaçamento excessivo */}
-      <div className={`flex flex-col relative z-20 ${isShortContent ? 'justify-start' : 'h-full'}`}>
+      <div className={`flex flex-col relative z-20 ${isShortContent && !hasDescription ? 'h-auto' : isShortContent ? 'justify-start' : 'h-full'}`}>
         {/* Título centralizado - aproveitando melhor o espaço */}
         <div className={`flex items-center justify-center flex-shrink-0 relative z-20 ${hasDescription && !isShortContent || needsFlexibleLayout ? 'mb-1' : isShortContent ? 'mb-0' : 'mb-0.5'}`}>
           <div className="text-xs text-gray-700 font-semibold leading-tight text-center uppercase tracking-wide break-words relative z-20" style={{ lineHeight: '1.3' }}>
@@ -270,8 +274,8 @@ const NativeLandCard = memo(({
         </div>
         
         {/* Conteúdo do valor - flexível para textos longos */}
-        {/* Quando conteúdo é curto, manter centralizado verticalmente */}
-        <div className={`${needsFlexibleLayout ? 'flex-grow flex items-start justify-center' : isShortContent ? 'flex items-center justify-center flex-shrink-0 w-full' : (hasDescription ? 'flex-1 flex items-center justify-center' : 'flex items-center justify-center')} relative z-20`}>
+        {/* Quando conteúdo é curto, manter compacto sem espaçamento */}
+        <div className={`${needsFlexibleLayout ? 'flex-grow flex items-start justify-center' : isShortContent && !hasDescription ? 'flex items-center justify-center flex-shrink-0 w-full py-0' : isShortContent ? 'flex items-center justify-center flex-shrink-0 w-full' : (hasDescription ? 'flex-1 flex items-center justify-center' : 'flex items-center justify-center')} relative z-20`}>
           {renderValue()}
         </div>
         
