@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Upload, File, X, AlertCircle } from 'lucide-react';
+import { Upload, File, X, AlertCircle, Link as LinkIcon } from 'lucide-react';
 import { uploadPDF } from '../../../services/uploadService';
 import { FILE_RESTRICTIONS } from '../../../config/storage';
+import { isGoogleDriveLink, validateGoogleDriveLink } from '../../../services/documentoService';
 
 const PDFUploadSection = ({ onUploadComplete, onRemove, existingUrls = [] }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [previewUrls, setPreviewUrls] = useState(existingUrls);
+  const [googleDocsLink, setGoogleDocsLink] = useState('');
+  const [showLinkInput, setShowLinkInput] = useState(false);
 
   const handleFileSelect = async (event) => {
     const files = Array.from(event.target.files);
@@ -59,13 +62,33 @@ const PDFUploadSection = ({ onUploadComplete, onRemove, existingUrls = [] }) => 
     onRemove(newUrls);
   };
 
+  const handleAddGoogleDocsLink = () => {
+    if (!googleDocsLink.trim()) {
+      setError('Por favor, insira um link do Google Drive ou Google Docs');
+      return;
+    }
+
+    const validation = validateGoogleDriveLink(googleDocsLink.trim());
+    if (!validation.isValid) {
+      setError(validation.error);
+      return;
+    }
+
+    const allUrls = [...previewUrls, googleDocsLink.trim()];
+    setPreviewUrls(allUrls);
+    onUploadComplete(allUrls);
+    setGoogleDocsLink('');
+    setShowLinkInput(false);
+    setError(null);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <label className="block font-medium text-gray-800">
-          Documentos PDF
+          Documentos PDF e Links do Google Drive
           <span className="text-sm text-gray-500 ml-2">
-            (Máx. {FILE_RESTRICTIONS.PDF.MAX_SIZE / (1024 * 1024)}MB cada arquivo)
+            (Máx. {FILE_RESTRICTIONS.PDF.MAX_SIZE / (1024 * 1024)}MB cada arquivo PDF)
           </span>
         </label>
         {error && (
@@ -75,6 +98,60 @@ const PDFUploadSection = ({ onUploadComplete, onRemove, existingUrls = [] }) => 
           </div>
         )}
       </div>
+
+      {/* Botão para adicionar link do Google Docs */}
+      {!showLinkInput && (
+        <button
+          type="button"
+          onClick={() => setShowLinkInput(true)}
+          className="flex items-center gap-2 px-4 py-2 border-2 border-dashed border-green-300 rounded-lg text-green-600 hover:border-green-400 hover:bg-green-50 transition-colors"
+        >
+          <LinkIcon size={18} />
+          <span>Adicionar link do Google Drive/Docs</span>
+        </button>
+      )}
+
+      {/* Input para link do Google Docs */}
+      {showLinkInput && (
+        <div className="space-y-2 p-4 border-2 border-dashed border-green-300 rounded-lg bg-green-50">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Link do Google Drive ou Google Docs
+          </label>
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={googleDocsLink}
+              onChange={(e) => {
+                setGoogleDocsLink(e.target.value);
+                setError(null);
+              }}
+              placeholder="https://drive.google.com/file/d/..."
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            <button
+              type="button"
+              onClick={handleAddGoogleDocsLink}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Adicionar
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setShowLinkInput(false);
+                setGoogleDocsLink('');
+                setError(null);
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Cancelar
+            </button>
+          </div>
+          <p className="text-xs text-gray-500">
+            Cole o link completo do documento no Google Drive ou Google Docs
+          </p>
+        </div>
+      )}
 
       {/* File Input */}
       <div className="grid grid-cols-1 gap-4">
@@ -137,14 +214,19 @@ const PDFUploadSection = ({ onUploadComplete, onRemove, existingUrls = [] }) => 
               {previewUrls.map((url, index) => (
                 <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded">
                   <div className="flex items-center gap-2">
-                    <File size={16} className="text-gray-500" />
+                    {isGoogleDriveLink(url) ? (
+                      <LinkIcon size={16} className="text-green-600" />
+                    ) : (
+                      <File size={16} className="text-gray-500" />
+                    )}
                     <a
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-blue-600 hover:underline"
+                      className="text-sm text-blue-600 hover:underline truncate"
+                      title={url}
                     >
-                      Documento {index + 1}
+                      {isGoogleDriveLink(url) ? 'Google Drive/Docs' : 'PDF'} - Documento {index + 1}
                     </a>
                   </div>
                   <button
