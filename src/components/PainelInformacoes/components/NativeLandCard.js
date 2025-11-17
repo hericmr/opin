@@ -224,7 +224,7 @@ const NativeLandCard = memo(({
         overflow-visible
         card-container
         relative
-        h-full
+        ${isShortContent ? '' : 'h-full'}
         ${cleanedClassName}
       `}
       style={{ border: 'none', outline: 'none', backgroundColor: '#D1FAE5' }}
@@ -260,8 +260,8 @@ const NativeLandCard = memo(({
       )}
 
       {/* Conteúdo interno do card - flexível para permitir expansão */}
-      {/* Quando conteúdo é curto, manter conteúdo no topo mas permitir que o card estique */}
-      <div className={`flex flex-col relative z-20 ${isShortContent ? 'justify-start' : ''} h-full`}>
+      {/* Quando conteúdo é curto, manter conteúdo compacto sem espaçamento excessivo */}
+      <div className={`flex flex-col relative z-20 ${isShortContent ? 'justify-start' : 'h-full'}`}>
         {/* Título centralizado - aproveitando melhor o espaço */}
         <div className={`flex items-center justify-center flex-shrink-0 relative z-20 ${hasDescription && !isShortContent || needsFlexibleLayout ? 'mb-1' : isShortContent ? 'mb-0' : 'mb-0.5'}`}>
           <div className="text-xs text-gray-700 font-semibold leading-tight text-center uppercase tracking-wide break-words relative z-20" style={{ lineHeight: '1.3' }}>
