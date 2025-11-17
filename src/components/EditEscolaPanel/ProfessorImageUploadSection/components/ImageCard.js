@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { GripVertical, Check } from 'lucide-react';
-import OptimizedImage from '../../../shared/OptimizedImage';
 import ImageActions from './ImageActions';
 import LegendForm from './LegendForm';
 import useImagePreloader from '../../../../hooks/useImagePreloader';
+import { supabase } from '../../../../supabaseClient';
 
 /**
  * Individual image card component with all functionality
@@ -62,6 +62,33 @@ const ImageCard = ({
   const isDragged = dragHandlers?.draggedIndex === index;
   const isDragOver = dragHandlers?.dragOverIndex === index;
 
+  // Get image URL - use helper to ensure Vite compatibility
+  const imageUrl = (() => {
+    const url = image.publicURL || image.publicUrl;
+    if (!url) return '';
+    
+    // If it's already a full URL (http/https), return as is
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    
+    // If it's a relative path, prepend BASE_URL for Vite compatibility
+    const baseUrl = import.meta.env.BASE_URL || '/opin/';
+    const normalizedUrl = url.startsWith('/') ? url : `/${url}`;
+    return `${baseUrl.replace(/\/$/, '')}${normalizedUrl}`;
+  })();
+  
+  // Debug log to verify URL is available
+  if (!imageUrl && image.id) {
+    console.warn('[ImageCard] Missing URL for image:', {
+      id: image.id,
+      url: image.url,
+      publicURL: image.publicURL,
+      publicUrl: image.publicUrl,
+      image: image
+    });
+  }
+
   return (
     <div
       key={image.id}
@@ -80,53 +107,67 @@ const ImageCard = ({
       }`}
     >
       {/* Image Container - EXATAMENTE como painel de informações */}
-      <div className="relative w-full aspect-[4/3] bg-gray-100">
-        {/* Drag Handle */}
-        <div className="absolute top-2 right-2 z-10 bg-gray-900/80 p-1 rounded cursor-grab active:cursor-grabbing">
-          <GripVertical className="w-4 h-4 text-gray-400" />
-        </div>
-        
+      <div 
+        className="relative w-full aspect-[4/3] bg-gray-100 overflow-hidden"
+        style={{
+          position: 'relative',
+          width: '100%',
+          minHeight: '200px',
+          display: 'block'
+        }}
+      >
         {/* Renderizar imagem EXATAMENTE como no painel de informações */}
-        <div className="w-full aspect-[4/3] bg-gray-100 flex items-center justify-center relative">
-          {(() => {
-            // Try multiple URL sources - exactly like information panel
-            const imageUrl = image.publicURL || image.publicUrl || image.url;
-            
-            if (!imageUrl) {
-              console.warn('[ImageCard] No URL found for image:', image);
-              return (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                  <div className="text-center">
-                    <p className="text-sm">Sem URL da imagem</p>
-                    <p className="text-xs text-gray-500 mt-1">ID: {image.id}</p>
-                    <p className="text-xs text-gray-500">URL: {image.url || 'N/A'}</p>
-                    <p className="text-xs text-gray-500">publicURL: {image.publicURL || 'N/A'}</p>
-                    <p className="text-xs text-gray-500">publicUrl: {image.publicUrl || 'N/A'}</p>
-                  </div>
-                </div>
-              );
-            }
-            
-            return (
-              <OptimizedImage
-                src={imageUrl}
-                alt={image.descricao || image.legendaData?.legenda || 'Imagem da escola'}
-                className="w-full h-full object-cover object-center"
-                isPreloaded={isImagePreloaded(imageUrl)}
-                style={{ maxHeight: '350px', display: 'block' }}
-                onError={(e) => {
-                  console.error('[ImageCard] Error loading image:', {
-                    src: imageUrl,
-                    image: image,
-                    error: e
-                  });
-                }}
-                onLoad={() => {
-                  console.log('[ImageCard] Image loaded successfully:', imageUrl);
-                }}
-              />
-            );
-          })()}
+        {!imageUrl ? (
+          <div className="absolute inset-0 flex items-center justify-center text-gray-400 bg-gray-800 z-0">
+            <div className="text-center">
+              <p className="text-sm">Sem URL da imagem</p>
+              <p className="text-xs text-gray-500 mt-1">ID: {image.id}</p>
+            </div>
+          </div>
+        ) : (
+          <img
+            src={imageUrl}
+            alt={image.descricao || image.legendaData?.legenda || 'Imagem do professor'}
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            loading={isImagePreloaded(imageUrl) ? "eager" : "lazy"}
+            style={{ 
+              display: 'block',
+              visibility: 'visible',
+              opacity: 1,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1,
+              // Garantir que imagem fique acima de qualquer overlay quando necessário
+              pointerEvents: 'auto'
+            }}
+            onError={(e) => {
+              console.error('[ImageCard] Error loading image:', {
+                src: imageUrl,
+                imageId: image.id,
+                publicURL: image.publicURL,
+                publicUrl: image.publicUrl,
+                url: image.url
+              });
+              e.target.style.opacity = '0.5';
+            }}
+            onLoad={(e) => {
+              console.log('[ImageCard] Image loaded successfully:', {
+                imageUrl,
+                naturalWidth: e.target.naturalWidth,
+                naturalHeight: e.target.naturalHeight
+              });
+              e.target.style.opacity = '1';
+              e.target.style.display = 'block';
+            }}
+          />
+        )}
+        
+        {/* Drag Handle */}
+        <div className="absolute top-2 right-2 z-30 bg-gray-900/80 p-1 rounded cursor-grab active:cursor-grabbing">
+          <GripVertical className="w-4 h-4 text-gray-400" />
         </div>
         
         {/* Header Badge */}
@@ -137,15 +178,23 @@ const ImageCard = ({
           </div>
         )}
         
-        {/* Actions Overlay */}
-        <ImageActions
-          image={image}
-          isHeader={isHeader}
-          onDelete={onDelete}
-          onReplace={handleReplace}
-          onSetHeader={onSetHeader}
-          onRemoveHeader={onRemoveHeader}
-        />
+        {/* Actions Overlay - Só interage quando em hover, não bloqueia imagem */}
+        <div 
+          className="group-hover:pointer-events-auto pointer-events-none"
+          style={{
+            // CRÍTICO: Garantir que não bloqueie quando não está em hover
+            pointerEvents: 'none'
+          }}
+        >
+          <ImageActions
+            image={image}
+            isHeader={isHeader}
+            onDelete={onDelete}
+            onReplace={handleReplace}
+            onSetHeader={onSetHeader}
+            onRemoveHeader={onRemoveHeader}
+          />
+        </div>
       </div>
       
       {/* Caption below thumbnail */}

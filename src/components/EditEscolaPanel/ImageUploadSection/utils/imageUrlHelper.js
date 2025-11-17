@@ -1,6 +1,27 @@
 import { supabase } from '../../../../supabaseClient';
 
 /**
+ * Helper function to normalize image URL for Vite compatibility
+ * Ensures URLs are properly formatted for use in img src attributes
+ * @param {string} url - Image URL (can be full URL or relative path)
+ * @returns {string} Normalized URL
+ */
+export const normalizeImageUrl = (url) => {
+  if (!url) return '';
+  
+  // If it's already a full URL (http/https), return as is
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  
+  // If it's a relative path, prepend BASE_URL
+  const baseUrl = import.meta.env.BASE_URL || '/opin/';
+  // Remove trailing slash from baseUrl if present, and ensure url starts with /
+  const normalizedUrl = url.startsWith('/') ? url : `/${url}`;
+  return `${baseUrl.replace(/\/$/, '')}${normalizedUrl}`;
+};
+
+/**
  * Helper function to get valid image URL
  * Handles both publicURL (uppercase) and publicUrl (lowercase) for compatibility
  * @param {Object} image - Image object
@@ -9,25 +30,23 @@ import { supabase } from '../../../../supabaseClient';
  */
 export const getImageUrl = (image, bucketName = 'imagens-das-escolas') => {
   // Use publicURL (uppercase) first, exactly like information panel does
-  if (image.publicURL) {
-    return image.publicURL;
-  }
-  
-  // Fallback to lowercase for compatibility
-  if (image.publicUrl) {
-    return image.publicUrl;
-  }
+  let url = image.publicURL || image.publicUrl;
   
   // If not available, construct it from the file path (same as info panel)
-  if (image.url) {
+  if (!url && image.url) {
     const { data: { publicUrl } } = supabase.storage
       .from(bucketName)
       .getPublicUrl(image.url);
-    return publicUrl;
+    url = publicUrl;
   }
   
-  console.warn('Image missing URL:', image);
-  return '';
+  if (!url) {
+    console.warn('Image missing URL:', image);
+    return '';
+  }
+  
+  // Normalize URL for Vite compatibility (handles both full URLs and relative paths)
+  return normalizeImageUrl(url);
 };
 
 /**
@@ -45,4 +64,8 @@ export const normalizeImage = (image, bucketName = 'imagens-das-escolas') => {
     publicUrl: publicURL, // Ensure both formats exist
   };
 };
+
+
+
+
 
