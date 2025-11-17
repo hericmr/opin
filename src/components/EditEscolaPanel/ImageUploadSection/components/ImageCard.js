@@ -118,7 +118,7 @@ const ImageCard = ({
         style={{
           position: 'relative',
           width: '100%',
-          minHeight: '200px',
+          minHeight: '150px',
           display: 'block'
         }}
       >
