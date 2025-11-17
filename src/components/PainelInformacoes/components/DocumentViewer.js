@@ -213,7 +213,7 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
                   .replace('/view', '/preview')
                   .replace('/edit', '/preview')}
                 width="100%" 
-                height="500px"
+                height="400px"
                 allow="autoplay"
                 loading="lazy"
                 title={selectedDoc.titulo}
@@ -225,7 +225,7 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
                 ref={iframeRef}
                 src={transformarLinkGoogleDrive(selectedDoc.link_pdf)}
                 width="100%"
-                height="500px"
+                height="400px"
                 allow="autoplay"
                 loading="lazy"
                 title={`${selectedDoc.titulo} (Google Docs Viewer)`}
