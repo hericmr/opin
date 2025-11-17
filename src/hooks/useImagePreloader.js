@@ -46,11 +46,11 @@ const useImagePreloader = (escolaId, enabled = true) => {
       return;
     }
 
-    // Skip if already completed (optional: remove this if you want to re-preload on re-render)
-    // if (completedPreloadsRef.current.has(targetEscolaId)) {
-    //   logger.debug('🖼️ Preload já concluído para escola:', targetEscolaId);
-    //   return;
-    // }
+    // Skip if already completed (CRÍTICO: proteção contra re-execução no React 19 Strict Effects)
+    if (completedPreloadsRef.current.has(targetEscolaId)) {
+      logger.debug('🖼️ Preload já concluído para escola:', targetEscolaId);
+      return;
+    }
 
     preloadingEscolaIdRef.current = targetEscolaId;
     setIsPreloading(true);
@@ -138,11 +138,19 @@ const useImagePreloader = (escolaId, enabled = true) => {
   };
 
   // Iniciar preload quando escolaId mudar
+  // Proteção contra múltiplas execuções no React 19 Strict Effects
   useEffect(() => {
     if (!escolaId || !enabled) return;
 
     // Skip if already preloading or completed for this escolaId
     if (preloadingEscolaIdRef.current === escolaId) {
+      logger.debug('🖼️ Preload já em progresso, ignorando...');
+      return;
+    }
+
+    // Skip if already completed (proteção contra re-execução no React 19)
+    if (completedPreloadsRef.current.has(escolaId)) {
+      logger.debug('🖼️ Preload já concluído para escola:', escolaId);
       return;
     }
 

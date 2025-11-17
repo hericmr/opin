@@ -277,12 +277,12 @@
   opacity: 1 !important;
   max-width: 100% !important;
   pointer-events: auto !important;
-  /* Allow height to be set via inline styles or classes */
+  /* Não forçar position - deixar componente controlar */
+  /* Não forçar max-height - deixar aspect-ratio controlar */
 }
 
 /* Specific rule for images in aspect ratio containers */
-/* REMOVIDO: position: absolute estava causando problemas de renderização */
-/* As imagens agora usam layout normal como no painel de informações */
+/* CORRIGIDO: Permitir position absolute para imagens dentro de containers com aspect-ratio */
 .ImageUploadSection .aspect-\[4\/3\] img,
 .ProfessorImageUploadSection .aspect-\[4\/3\] img,
 .ImageUploadSection [class*="aspect"] img,
@@ -294,10 +294,8 @@
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  /* position: absolute REMOVIDO - estava causando problemas */
-  /* top: 0 REMOVIDO */
-  /* left: 0 REMOVIDO */
-  z-index: 1 !important;
+  /* position pode ser absolute ou relative - deixar componente decidir */
+  /* z-index controlado pelo componente */
 }
 
 /* Ensure image containers have proper dimensions */
@@ -306,6 +304,38 @@
   position: relative !important;
   width: 100% !important;
   min-height: 200px !important;
+  /* Garantir que imagens dentro sejam visíveis */
+}
+
+/* Garantir que imagens dentro de containers aspect-ratio sejam sempre visíveis */
+.ImageUploadSection .aspect-\[4\/3\] > img,
+.ProfessorImageUploadSection .aspect-\[4\/3\] > img {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+/* CRÍTICO: Garantir que overlays não bloqueiem imagens quando não estão em hover */
+.ImageUploadSection .aspect-\[4\/3\] > div[aria-hidden="true"],
+.ProfessorImageUploadSection .aspect-\[4\/3\] > div[aria-hidden="true"] {
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Overlay pode aparecer acima apenas quando em hover */
+.ImageUploadSection .group:hover .aspect-\[4\/3\] > div[aria-hidden="true"],
+.ProfessorImageUploadSection .group:hover .aspect-\[4\/3\] > div[aria-hidden="true"] {
+  z-index: 10 !important;
 }
 
 /* Print styles */

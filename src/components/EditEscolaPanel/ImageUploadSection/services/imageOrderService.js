@@ -43,15 +43,22 @@ export const loadImageOrder = async (images, escolaId, tipoFoto = 'escola') => {
       }
     });
     
-    // Sort images based on database order - PRESERVE ALL PROPERTIES
-    const sortedImages = images.map(img => ({ ...img })).sort((a, b) => {
+    // Sort images based on database order - PRESERVE ALL PROPERTIES INCLUDING publicURL
+    const sortedImages = images.map(img => {
+      // Explicitly preserve publicURL and publicUrl
+      return {
+        ...img,
+        publicURL: img.publicURL || img.publicUrl, // Ensure uppercase version exists
+        publicUrl: img.publicURL || img.publicUrl, // Ensure lowercase version exists
+      };
+    }).sort((a, b) => {
       const orderA = orderMap.get(a.url) ?? Infinity;
       const orderB = orderMap.get(b.url) ?? Infinity;
       return orderA - orderB;
     });
     
     // Verify if publicURL was preserved (React 19 compatibility)
-    const missingUrls = sortedImages.filter(img => !img.publicURL);
+    const missingUrls = sortedImages.filter(img => !img.publicURL && !img.publicUrl);
     if (missingUrls.length > 0) {
       console.warn('[imageOrderService] ⚠️ publicURL perdido após ordenação:', missingUrls.length, 'imagens');
       // Recreate publicURL if it was lost
@@ -62,6 +69,7 @@ export const loadImageOrder = async (images, escolaId, tipoFoto = 'escola') => {
             .from(bucketName)
             .getPublicUrl(img.url);
           img.publicURL = publicUrl;
+          img.publicUrl = publicUrl;
         }
       });
     }
