@@ -63,10 +63,15 @@ const NativeLandCard = memo(({
           return value;
         }
         // Textos completos com quebra de linha - permite expansão e preserva quebras de linha
-        const textValue = String(value || '');
+        // Trim trailing whitespace/newlines to avoid excessive spacing
+        // Remove trailing newlines and whitespace from each line, then trim the whole string
+        let textValue = String(value || '').trim();
+        // Remove trailing newlines and spaces from the end
+        textValue = textValue.replace(/\n\s*$/, '').replace(/\s+$/, '').trim();
         const isLongText = textValue.length > 30;
+        const isShortText = textValue.length <= 30; // Consider text up to 30 chars as short for spacing purposes
         return (
-          <div className={`text-sm text-gray-800 ${isLongText ? 'text-left' : 'text-center'} w-full font-medium leading-relaxed whitespace-pre-line break-words px-2`} style={{ lineHeight: '1.6' }}>
+          <div className={`text-sm text-gray-800 ${isLongText ? 'text-left' : 'text-center'} w-full font-medium leading-relaxed whitespace-pre-line break-words ${isShortText ? 'px-1 py-0' : 'px-2'}`} style={{ lineHeight: '1.6' }}>
             {textValue}
           </div>
         );
@@ -168,33 +173,59 @@ const NativeLandCard = memo(({
 
   // Layout vertical (padrão)
   // Cards são flexíveis por padrão - altura mínima reduzida para evitar espaçamento excessivo
-  // Se className já especifica altura, usa ela; caso contrário, usa min-h para permitir expansão
-  const hasCustomHeight = className.includes('h-[') || className.includes('h-auto') || className.includes('min-h-[');
-  
   // Determina se precisa de layout flexível para textos longos
   const isTextType = type === 'text' || (!type || type === 'default');
   const isStringValue = value && typeof value === 'string';
-  const isLongText = isTextType && isStringValue && String(value).trim().length > 20;
+  // Trim value consistently - remove trailing newlines and whitespace like in renderValue
+  let trimmedValue = '';
+  if (isStringValue) {
+    trimmedValue = String(value).trim();
+    // Remove trailing newlines and spaces from the end (same logic as renderValue)
+    trimmedValue = trimmedValue.replace(/\n\s*$/, '').replace(/\s+$/, '').trim();
+  }
+  
+  // Check if value is short - either short string or React element (like boolean status)
+  // Text up to 30 characters is considered "short" for spacing purposes (single line or short multi-line)
+  const isReactElement = React.isValidElement(value);
+  const isShortValue = isTextType && isStringValue && trimmedValue.length <= 30;
+  const isShortContent = isShortValue || (isReactElement && type !== 'number'); // React elements like boolean status are short
+  
+  // Only text longer than 30 characters needs flexible layout
+  const isLongText = isTextType && isStringValue && trimmedValue.length > 30;
   const needsFlexibleLayout = isLongText;
   
   // Altura mínima reduzida para cards simples (sem descrição e sem texto longo)
   // Cards com descrição ou texto longo mantêm altura maior
+  // Cards com texto curto (até 30 caracteres) não precisam de altura mínima - deixar crescer naturalmente
   const hasDescription = description && description.trim();
+  const isShortText = isTextType && isStringValue && trimmedValue.length <= 30;
+  
+  // Remove min-h from className if content is short - override forced heights
+  let cleanedClassName = className;
+  if (isShortContent) {
+    // Remove min-h-[XXX] patterns from className when content is short
+    cleanedClassName = cleanedClassName.replace(/\bmin-h-\[[^\]]+\]/g, '').replace(/\bh-\[[^\]]+\]/g, '').trim();
+  }
+  
+  const hasCustomHeight = cleanedClassName.includes('h-[') || cleanedClassName.includes('h-auto') || cleanedClassName.includes('min-h-[');
   const cardHeightClass = hasCustomHeight 
     ? '' 
-    : (hasDescription || needsFlexibleLayout) 
+    : (hasDescription && !isShortContent || needsFlexibleLayout) 
       ? 'min-h-[120px]' 
-      : 'min-h-[90px]';
+      : isShortText || isShortContent
+        ? '' // Sem altura mínima para texto curto - deixa crescer naturalmente
+        : 'min-h-[90px]';
 
   return (
     <div 
       className={`
-        rounded-xl p-3 
+        rounded-xl ${isShortContent ? 'p-2' : 'p-3'}
         ${cardHeightClass} flex flex-col
         overflow-visible
         card-container
         relative
-        ${className}
+        h-full
+        ${cleanedClassName}
       `}
       style={{ border: 'none', outline: 'none', backgroundColor: '#D1FAE5' }}
     >
@@ -229,22 +260,24 @@ const NativeLandCard = memo(({
       )}
 
       {/* Conteúdo interno do card - flexível para permitir expansão */}
-      <div className="flex flex-col relative z-20">
+      {/* Quando conteúdo é curto, manter conteúdo no topo mas permitir que o card estique */}
+      <div className={`flex flex-col relative z-20 ${isShortContent ? 'justify-start' : ''} h-full`}>
         {/* Título centralizado - aproveitando melhor o espaço */}
-        <div className={`flex items-center justify-center flex-shrink-0 relative z-20 ${hasDescription || needsFlexibleLayout ? 'mb-1' : 'mb-0.5'}`}>
+        <div className={`flex items-center justify-center flex-shrink-0 relative z-20 ${hasDescription && !isShortContent || needsFlexibleLayout ? 'mb-1' : isShortContent ? 'mb-0' : 'mb-0.5'}`}>
           <div className="text-xs text-gray-700 font-semibold leading-tight text-center uppercase tracking-wide break-words relative z-20" style={{ lineHeight: '1.3' }}>
             {label}
           </div>
         </div>
         
         {/* Conteúdo do valor - flexível para textos longos */}
-        <div className={`${needsFlexibleLayout ? 'flex-grow flex items-start justify-center' : (hasDescription ? 'flex-1 flex items-center justify-center' : 'flex items-center justify-center')} relative z-20`}>
+        {/* Quando conteúdo é curto, manter centralizado verticalmente */}
+        <div className={`${needsFlexibleLayout ? 'flex-grow flex items-start justify-center' : isShortContent ? 'flex items-center justify-center flex-shrink-0 w-full' : (hasDescription ? 'flex-1 flex items-center justify-center' : 'flex items-center justify-center')} relative z-20`}>
           {renderValue()}
         </div>
         
         {/* Descrição opcional */}
         {description && (
-          <div className="text-sm text-gray-700 leading-relaxed mt-1 pt-1 whitespace-pre-line break-words relative z-20" style={{ lineHeight: '1.5' }}>
+          <div className={`text-sm text-gray-700 leading-relaxed whitespace-pre-line break-words relative z-20 flex-shrink-0 ${isShortContent ? 'mt-0.5 pt-0.5' : 'mt-1 pt-1'}`} style={{ lineHeight: '1.5' }}>
             {description}
           </div>
         )}
