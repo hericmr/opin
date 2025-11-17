@@ -28,18 +28,6 @@ const ImageActions = ({
   onRemoveDrawing,
   loading = false,
 }) => {
-  // Debug: verificar se handlers estão disponíveis
-  if (process.env.NODE_ENV === 'development') {
-    console.log('[ImageActions] Handlers disponíveis:', {
-      hasOnSetHeader: !!onSetHeader,
-      hasOnRemoveHeader: !!onRemoveHeader,
-      hasOnAddDrawing: !!onAddDrawing,
-      hasOnRemoveDrawing: !!onRemoveDrawing,
-      isHeader,
-      isDrawing
-    });
-  }
-
   return (
     <div 
       className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center pointer-events-none"
