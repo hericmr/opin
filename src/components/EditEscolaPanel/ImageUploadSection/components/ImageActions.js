@@ -30,14 +30,13 @@ const ImageActions = ({
 }) => {
   return (
     <div 
-      className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center pointer-events-none"
+      className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center pointer-events-none group-hover:pointer-events-auto"
       style={{
         // CRÍTICO: Garantir que quando não está em hover, não bloqueie NADA
-        pointerEvents: 'none',
-        // Garantir que não interfira visualmente quando transparente
+        // Mas permitir pointer-events quando em hover via CSS group-hover
         willChange: 'opacity',
         // z-index menor que a imagem quando não está em hover (imagem tem zIndex: 1)
-        // Quando em hover, o CSS group-hover pode aumentar se necessário
+        // Quando em hover, o CSS group-hover aumenta para z-index: 10
         zIndex: 0
       }}
       aria-hidden="true"
@@ -45,13 +44,12 @@ const ImageActions = ({
       <div 
         className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-20"
         style={{
-          // Só permitir pointer events quando visível (hover) - controlado pelo parent
-          pointerEvents: 'inherit',
-          // Garantir que botões sejam sempre clicáveis quando visíveis
+          // Botões devem ser clicáveis quando overlay está visível (hover)
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
+          pointerEvents: 'auto'
         }}
       >
         {/* Classification Buttons - Header */}

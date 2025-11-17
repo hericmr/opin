@@ -193,25 +193,17 @@ const ImageCard = ({
         )}
         
         {/* Actions Overlay - Só interage quando em hover, não bloqueia imagem */}
-        <div 
-          className="group-hover:pointer-events-auto pointer-events-none"
-          style={{
-            // CRÍTICO: Garantir que não bloqueie quando não está em hover
-            pointerEvents: 'none'
-          }}
-        >
-          <ImageActions
-            image={image}
-            isHeader={isHeader}
-            isDrawing={isDrawing}
-            onDelete={onDelete}
-            onReplace={handleReplace}
-            onSetHeader={onSetHeader}
-            onRemoveHeader={onRemoveHeader}
-            onAddDrawing={onAddDrawing}
-            onRemoveDrawing={onRemoveDrawing}
-          />
-        </div>
+        <ImageActions
+          image={image}
+          isHeader={isHeader}
+          isDrawing={isDrawing}
+          onDelete={onDelete}
+          onReplace={handleReplace}
+          onSetHeader={onSetHeader}
+          onRemoveHeader={onRemoveHeader}
+          onAddDrawing={onAddDrawing}
+          onRemoveDrawing={onRemoveDrawing}
+        />
       </div>
       
       {/* Caption below thumbnail */}

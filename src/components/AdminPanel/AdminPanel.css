@@ -332,10 +332,18 @@
   pointer-events: none !important;
 }
 
-/* Overlay pode aparecer acima apenas quando em hover */
+/* Overlay pode aparecer acima apenas quando em hover - CRÍTICO: permitir pointer-events */
 .ImageUploadSection .group:hover .aspect-\[4\/3\] > div[aria-hidden="true"],
 .ProfessorImageUploadSection .group:hover .aspect-\[4\/3\] > div[aria-hidden="true"] {
   z-index: 10 !important;
+  pointer-events: auto !important;
+}
+
+/* Garantir que botões dentro do overlay sejam clicáveis quando overlay está visível */
+.ImageUploadSection .group:hover .aspect-\[4\/3\] > div[aria-hidden="true"] button,
+.ProfessorImageUploadSection .group:hover .aspect-\[4\/3\] > div[aria-hidden="true"] button {
+  pointer-events: auto !important;
+  cursor: pointer !important;
 }
 
 /* Print styles */
