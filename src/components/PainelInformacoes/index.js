@@ -157,14 +157,6 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
           isMaximized={isMaximized}
           shouldHideInlineMedia={useSplitLayout}
         />
-        {/* Documentos */}
-        {isCardVisible(cardsVisibilidade, 'documentos', globalVisibility) && 
-         documentos && documentos.length > 0 && (
-          <DocumentViewer 
-            documentos={documentos}
-            title="Produções e materiais da escola"
-          />
-        )}
         {/* Vídeos */}
         {isCardVisible(cardsVisibilidade, 'videos', globalVisibility) && 
          ((painelInfo.link_para_videos) || hasVideos) && (
@@ -198,11 +190,20 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
           </div>
         )}
         
-        {/* Desenhos - Displayed after videos */}
+        {/* Desenhos */}
         <DrawingsSection 
           escolaId={painelInfo.id}
           refreshKey={refreshKey}
         />
+        
+        {/* Documentos - Displayed last, after drawings */}
+        {isCardVisible(cardsVisibilidade, 'documentos', globalVisibility) && 
+         documentos && documentos.length > 0 && (
+          <DocumentViewer 
+            documentos={documentos}
+            title=""
+          />
+        )}
       </div>
     );
   };
