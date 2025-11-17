@@ -208,7 +208,10 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
             {!useGoogleDocsViewer ? (
               <iframe 
                 ref={iframeRef}
-                src={selectedDoc.link_pdf.replace('/view?usp=sharing', '/preview')}
+                src={selectedDoc.link_pdf
+                  .replace('/view?usp=sharing', '/preview')
+                  .replace('/view', '/preview')
+                  .replace('/edit', '/preview')}
                 width="100%" 
                 height="500px"
                 allow="autoplay"
