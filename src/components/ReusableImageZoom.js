@@ -228,9 +228,9 @@ const ReusableImageZoom = ({
         {/* Legenda - estilo minimalista igual às legendas laterais */}
         {showCaption && (currentImage.descricao || currentImage.descricao_imagem || currentImage.legenda) && (
           <div className="image-zoom-caption">
-            <h4 className="font-medium text-gray-900 text-sm mb-1">
+            <p className="font-medium text-gray-900 text-sm mb-1 leading-tight">
               {currentImage.descricao || currentImage.descricao_imagem || currentImage.legenda}
-            </h4>
+            </p>
             
             {/* Informações adicionais */}
             <div className="flex items-center gap-4 text-xs text-gray-500">
