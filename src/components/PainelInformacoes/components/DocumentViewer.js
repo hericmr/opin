@@ -291,12 +291,19 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
 
   return (
     <div className="mt-8 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-semibold text-green-800">{title}:</h3>
-        {documentos.length > 1 && (
+      {title && (
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-semibold text-green-800">{title}:</h3>
+          {documentos.length > 1 && (
+            <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} />
+          )}
+        </div>
+      )}
+      {!title && documentos.length > 1 && (
+        <div className="flex items-center justify-end mb-4">
           <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} />
-        )}
-      </div>
+        </div>
+      )}
       
       {documentos.length > 1 && (
         <div className="mb-6">
