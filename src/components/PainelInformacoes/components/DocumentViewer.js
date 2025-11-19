@@ -307,7 +307,7 @@ const DocumentViewer = ({ documentos, title = "Documentos" }) => {
       {/* Título minimalista do documento */}
       {displayTitle && (
         <div className="mb-4">
-          <h4 className="text-sm font-medium text-gray-600">{displayTitle}</h4>
+          <p className="text-sm text-gray-500">{displayTitle}</p>
         </div>
       )}
       

@@ -12,6 +12,7 @@ import ToastProvider from './components/Toast';
 import { SkipLink } from './components/Accessibility';
 import { useEscolasData } from './hooks/useEscolasData';
 import { MetaTagsDetector } from './components/MetaTags';
+import GlobalAdminShortcut from './components/GlobalAdminShortcut';
 
 // Expose dev helpers in browser console (no UI impact)
 // (dev helpers removed)
@@ -242,6 +243,7 @@ function AppRoutes() {
   return (
     <>
       <SkipLink targetId="main-content" />
+      <GlobalAdminShortcut />
       <AppContent />
     </>
   );

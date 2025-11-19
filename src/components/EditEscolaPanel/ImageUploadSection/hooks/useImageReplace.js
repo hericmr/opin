@@ -34,12 +34,16 @@ export const useImageReplace = (escolaId, bucketName = 'imagens-das-escolas') =>
     try {
       setUploading(true);
       
+      // Determine tipoFoto based on bucket
+      const tipoFoto = bucketName === 'imagens-professores' ? 'professor' : 'escola';
+      
       const newImage = await replaceImageService(
         replacementFile,
         oldFilePath,
         escolaId,
         bucketName,
-        descricao
+        descricao,
+        { tipoFoto }
       );
 
       // Clear state
