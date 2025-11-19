@@ -9,6 +9,13 @@ import useImagePreloader from '../../../hooks/useImagePreloader';
 import { formatDateForDisplay } from '../../../utils/dateUtils';
 import '../../ReusableImageZoom.css';
 
+// Helper function to check if a value has actual content
+const hasContent = (value) => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'string' && value.trim() === '') return false;
+  return true;
+};
+
 const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hideInlineMedia = false }) => {
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -137,13 +144,16 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
               }
             }
 
+            // Only set descricao if there's actual content, otherwise null (don't show default)
+            const descricao = hasContent(legenda?.legenda) ? legenda.legenda.trim() : null;
+            
             return {
               id: `${escola_id}-${file.name}`,
               publicURL: publicUrl,
               filePath: filePath,
-              descricao: legenda?.legenda || `Imagem ${index + 1}`,
-              descricaoDetalhada: legenda?.descricao_detalhada,
-              autor: legenda?.autor_foto,
+              descricao: descricao,
+              descricaoDetalhada: hasContent(legenda?.descricao_detalhada) ? legenda.descricao_detalhada.trim() : null,
+              autor: hasContent(legenda?.autor_foto) ? legenda.autor_foto.trim() : null,
               dataFoto: legenda?.data_foto,
               categoria: legenda?.categoria,
               ordem: legenda?.ordem !== null && legenda?.ordem !== undefined ? legenda.ordem : Infinity,
@@ -251,25 +261,27 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
               />
             </div>
             
-            {/* Legenda da imagem */}
-            {img.descricao && (
+            {/* Legenda da imagem - só mostra se tiver conteúdo real */}
+            {hasContent(img.descricao) && (
               <figcaption className="p-3 bg-white">
-                <p className="text-sm text-gray-600 mb-1">
+                <p className="text-sm text-black mb-1">
                   {img.descricao}
                 </p>
                 
                 {/* Informações adicionais */}
-                <div className="flex items-center gap-4 text-xs text-gray-500">
-                  {img.autor && (
-                    <span>Por: {img.autor}</span>
-                  )}
-                  {img.dataFoto && (
-                    <span>{formatDateForDisplay(img.dataFoto)}</span>
-                  )}
-                </div>
+                {(hasContent(img.autor) || img.dataFoto) && (
+                  <div className="flex items-center gap-4 text-xs text-gray-500">
+                    {hasContent(img.autor) && (
+                      <span>Por: {img.autor}</span>
+                    )}
+                    {img.dataFoto && (
+                      <span>{formatDateForDisplay(img.dataFoto)}</span>
+                    )}
+                  </div>
+                )}
                 
                 {/* Descrição detalhada */}
-                {img.descricaoDetalhada && (
+                {hasContent(img.descricaoDetalhada) && (
                   <p className="text-xs text-gray-500 mt-2 line-clamp-2">
                     {img.descricaoDetalhada}
                   </p>

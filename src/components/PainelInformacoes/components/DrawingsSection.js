@@ -7,6 +7,13 @@ import useImagePreloader from '../../../hooks/useImagePreloader';
 import ReusableImageZoom from '../../ReusableImageZoom';
 import '../../ReusableImageZoom.css';
 
+// Helper function to check if a value has actual content
+const hasContent = (value) => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'string' && value.trim() === '') return false;
+  return true;
+};
+
 /**
  * Component to display drawings section
  * Shows images in large format similar to YouTube video player (16:9 aspect ratio)
@@ -70,8 +77,8 @@ const DrawingsSection = ({ escolaId, refreshKey = 0 }) => {
             return {
               url: imageUrl,
               filePath: filePath,
-              legenda: legenda?.legenda || null,
-              descricaoDetalhada: legenda?.descricao_detalhada || null,
+              legenda: hasContent(legenda?.legenda) ? legenda.legenda.trim() : null,
+              descricaoDetalhada: hasContent(legenda?.descricao_detalhada) ? legenda.descricao_detalhada.trim() : null,
             };
           })
         );
@@ -104,9 +111,9 @@ const DrawingsSection = ({ escolaId, refreshKey = 0 }) => {
   const imagesForZoom = drawingsData.map(drawing => ({
     url: drawing.url,
     publicURL: drawing.url,
-    descricao: drawing.legenda || '',
-    descricao_imagem: drawing.legenda || '',
-    descricaoDetalhada: drawing.descricaoDetalhada || '',
+    descricao: drawing.legenda || null,
+    descricao_imagem: drawing.legenda || null,
+    descricaoDetalhada: drawing.descricaoDetalhada || null,
   }));
 
   return (
@@ -138,13 +145,13 @@ const DrawingsSection = ({ escolaId, refreshKey = 0 }) => {
               />
             </div>
             
-            {/* Legenda do desenho - minimalista e inline */}
-            {drawing.legenda && (
+            {/* Legenda do desenho - minimalista e inline - só mostra se tiver conteúdo real */}
+            {hasContent(drawing.legenda) && (
               <div className="px-4 pt-2 pb-3">
-                <p className="text-sm text-gray-600 font-normal leading-relaxed">
+                <p className="text-sm text-black font-normal leading-relaxed">
                   {drawing.legenda}
                 </p>
-                {drawing.descricaoDetalhada && (
+                {hasContent(drawing.descricaoDetalhada) && (
                   <p className="text-xs text-gray-500 mt-1 leading-relaxed">
                     {drawing.descricaoDetalhada}
                   </p>
