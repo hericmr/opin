@@ -61,13 +61,21 @@ const Infraestrutura = memo(({ escola }) => {
   const items = [
     {
       icon: Droplet,
-      label: 'Acesso à Água',
-      value: escola.acesso_agua,
+      label: (
+        <>
+          Acesso à<br />Água
+        </>
+      ),
+      value: <BooleanValue value={escola.acesso_agua} />,
     },
     {
       icon: Trash2,
-      label: 'Coleta de Lixo',
-      value: escola.coleta_lixo,
+      label: (
+        <>
+          Coleta de<br />Lixo
+        </>
+      ),
+      value: <BooleanValue value={escola.coleta_lixo} />,
     },
     {
       icon: Wifi,

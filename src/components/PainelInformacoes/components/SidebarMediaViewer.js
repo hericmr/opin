@@ -6,15 +6,22 @@ import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 import { formatDateForDisplay } from '../../../utils/dateUtils';
 
+// Helper function to check if a value has actual content
+const hasContent = (value) => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'string' && value.trim() === '') return false;
+  return true;
+};
+
 const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, showSchool = true, scrollProgress, headerUrl, onCurrentItemChange }) => {
   // Initialize with header image if available to show it immediately
   const initialHeaderItem = headerUrl ? [{
     id: `header-${escolaId || 'temp'}`,
     url: headerUrl,
-    titulo: '',
-    descricao: '',
-    autor: '',
-    dataFoto: '',
+    titulo: null,
+    descricao: null,
+    autor: null,
+    dataFoto: null,
     origem: 'capa',
   }] : [];
   
@@ -43,14 +50,15 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
             tipo_foto: categoria,
           });
         } catch (_) {}
+        // Only set values if there's actual content (not empty strings or whitespace)
         return {
           id: `${bucket}-${file.name}`,
           url: publicUrl,
           filePath: filePath,
-          titulo: legenda?.legenda || `Imagem ${index + 1}`,
-          descricao: legenda?.descricao_detalhada || '',
-          autor: legenda?.autor_foto || '',
-          dataFoto: legenda?.data_foto || '',
+          titulo: hasContent(legenda?.legenda) ? legenda.legenda.trim() : null,
+          descricao: hasContent(legenda?.descricao_detalhada) ? legenda.descricao_detalhada.trim() : null,
+          autor: hasContent(legenda?.autor_foto) ? legenda.autor_foto.trim() : null,
+          dataFoto: legenda?.data_foto || null,
           origem: categoria,
           ordem: legenda?.ordem || Infinity, // Usar Infinity se não tiver ordem
         };
@@ -73,15 +81,15 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
   // Update items immediately when headerUrl changes to show image instantly
   useEffect(() => {
     if (headerUrl) {
-      const headerItem = {
-        id: `header-${escolaId || 'temp'}`,
-        url: headerUrl,
-        titulo: '',
-        descricao: '',
-        autor: '',
-        dataFoto: '',
-        origem: 'capa',
-      };
+        const headerItem = {
+          id: `header-${escolaId || 'temp'}`,
+          url: headerUrl,
+          titulo: null,
+          descricao: null,
+          autor: null,
+          dataFoto: null,
+          origem: 'capa',
+        };
       setItems(prev => {
         // Check if header already exists
         const exists = prev.some(i => i.origem === 'capa' && i.url === headerUrl);
@@ -119,10 +127,10 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
           const headerItem = {
             id: `header-${escolaId}`,
             url: headerUrl,
-            titulo: '',
-            descricao: '',
-            autor: '',
-            dataFoto: '',
+            titulo: null,
+            descricao: null,
+            autor: null,
+            dataFoto: null,
             origem: 'capa',
           };
           combined = exists ? combined : [headerItem, ...combined];
@@ -303,16 +311,18 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
                 maxWidth: '80%',
               }}
             >
-              {currentItem.titulo && (
+              {hasContent(currentItem.titulo) && (
                 <h4 className="text-sm font-semibold m-0">{currentItem.titulo}</h4>
               )}
-              <div className="text-[11px] mt-0.5 space-x-2">
-                {currentItem.autor && <span>Por: {currentItem.autor}</span>}
-                {currentItem.dataFoto && (
-                  <span>{formatDateForDisplay(currentItem.dataFoto)}</span>
-                )}
-              </div>
-              {currentItem.descricao && (
+              {(hasContent(currentItem.autor) || currentItem.dataFoto) && (
+                <div className="text-[11px] mt-0.5 space-x-2">
+                  {hasContent(currentItem.autor) && <span>Por: {currentItem.autor}</span>}
+                  {currentItem.dataFoto && (
+                    <span>{formatDateForDisplay(currentItem.dataFoto)}</span>
+                  )}
+                </div>
+              )}
+              {hasContent(currentItem.descricao) && (
                 <p className="text-xs mt-1 m-0">
                   {currentItem.descricao}
                 </p>
