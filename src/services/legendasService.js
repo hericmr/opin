@@ -242,6 +242,71 @@ export const deleteLegendaFoto = async (legendaId) => {
 };
 
 /**
+ * Transferir legenda de uma URL antiga para uma nova URL (útil quando imagem é substituída)
+ * @param {string} oldImageUrl - URL antiga da imagem
+ * @param {string} newImageUrl - Nova URL da imagem
+ * @param {number} escolaId - ID da escola
+ * @param {string} tipoFoto - Tipo da foto ('escola' ou 'professor')
+ * @returns {Promise<Object|null>} Legenda transferida ou null se não havia legenda
+ */
+export const transferLegendaToNewUrl = async (oldImageUrl, newImageUrl, escolaId, tipoFoto = 'escola') => {
+  try {
+    // Buscar legenda da imagem antiga
+    const legenda = await getLegendaByImageUrl(oldImageUrl, escolaId, { 
+      tipo_foto: tipoFoto,
+      ativo: false // Buscar mesmo se inativa
+    });
+
+    if (!legenda) {
+      logger.debug(`Nenhuma legenda encontrada para transferir de ${oldImageUrl} para ${newImageUrl}`);
+      return null;
+    }
+
+    // Verificar se já existe legenda para a nova URL
+    const existingLegenda = await getLegendaByImageUrl(newImageUrl, escolaId, { 
+      tipo_foto: tipoFoto,
+      ativo: false
+    });
+
+    if (existingLegenda) {
+      // Se já existe, atualizar a existente com os dados da antiga (preservando ordem se existir)
+      const updateData = {
+        legenda: legenda.legenda || existingLegenda.legenda,
+        descricao_detalhada: legenda.descricao_detalhada || existingLegenda.descricao_detalhada,
+        autor_foto: legenda.autor_foto || existingLegenda.autor_foto,
+        data_foto: legenda.data_foto || existingLegenda.data_foto,
+        categoria: legenda.categoria || existingLegenda.categoria,
+        ordem: legenda.ordem !== null && legenda.ordem !== undefined ? legenda.ordem : existingLegenda.ordem,
+        ativo: true,
+        updated_at: new Date().toISOString()
+      };
+
+      const updated = await updateLegendaFoto(existingLegenda.id, updateData);
+      
+      // Deletar a legenda antiga se for diferente
+      if (legenda.id !== existingLegenda.id) {
+        await deleteLegendaFoto(legenda.id);
+      }
+
+      logger.debug(`Legenda transferida e mesclada de ${oldImageUrl} para ${newImageUrl}`);
+      return updated;
+    } else {
+      // Se não existe, atualizar a legenda antiga com a nova URL
+      const updated = await updateLegendaFoto(legenda.id, {
+        imagem_url: newImageUrl,
+        updated_at: new Date().toISOString()
+      });
+
+      logger.debug(`Legenda transferida de ${oldImageUrl} para ${newImageUrl}`);
+      return updated;
+    }
+  } catch (error) {
+    logger.error('Erro ao transferir legenda:', error);
+    throw error;
+  }
+};
+
+/**
  * Buscar todas as legendas de uma escola
  * @param {number} escolaId - ID da escola
  * @param {string} categoria - Categoria das imagens (opcional)

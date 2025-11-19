@@ -10,6 +10,20 @@ config({ path: '.env.local' });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// Plugin para corrigir caminhos duplicados no HTML durante desenvolvimento
+const fixManifestPathPlugin = () => {
+  return {
+    name: 'fix-manifest-path',
+    transformIndexHtml(html) {
+      // Corrigir caminhos duplicados do manifest e outros recursos
+      return html
+        .replace(/href="\/opin\/opin\//g, 'href="/opin/')
+        .replace(/src="\/opin\/opin\//g, 'src="/opin/');
+    },
+  };
+};
+
+
 // https://vitejs.dev/config/
 export default defineConfig({
   // Expor variáveis de ambiente com prefixo REACT_APP_ e VITE_
@@ -20,6 +34,7 @@ export default defineConfig({
       include: '**/*.{jsx,js}',
     }),
     tailwindcss(), // Tailwind CSS 4 plugin
+    fixManifestPathPlugin(), // Plugin para corrigir caminhos duplicados
   ],
   esbuild: {
     loader: 'jsx',

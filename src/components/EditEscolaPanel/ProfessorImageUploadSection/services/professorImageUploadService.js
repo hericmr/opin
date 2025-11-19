@@ -50,6 +50,9 @@ export const uploadProfessorImages = async (files, escolaId, onProgress) => {
  * @returns {Promise<Object>} New image object
  */
 export const replaceProfessorImage = async (newFile, oldFilePath, escolaId, descricao = '') => {
-  return await replaceImageService(newFile, oldFilePath, escolaId, 'imagens-professores', descricao);
+  return await replaceImageService(newFile, oldFilePath, escolaId, 'imagens-professores', descricao, {
+    transferLegend: true,
+    tipoFoto: 'professor'
+  });
 };
 

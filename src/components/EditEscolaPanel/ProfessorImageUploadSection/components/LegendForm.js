@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Save, Settings, ChevronUp } from 'lucide-react';
 import LegendFields from './LegendFields';
+import AutocompleteInput from '../../ImageUploadSection/components/AutocompleteInput';
+import { useFieldMemory } from '../../ImageUploadSection/hooks/useFieldMemory';
 
 /**
  * Complete legend form component
@@ -14,6 +16,29 @@ import LegendFields from './LegendFields';
  * @param {Function} props.onToggleExpand - Toggle expand handler
  */
 const LegendForm = ({ image, legendData, onChange, onSave, expanded, onToggleExpand }) => {
+  const { getSuggestions, saveToMemory } = useFieldMemory();
+
+  // Handle save and store values in memory
+  const handleSave = () => {
+    // Save all fields to memory before calling onSave
+    if (legendData?.legenda) {
+      saveToMemory('legenda', legendData.legenda);
+    }
+    if (legendData?.autor_foto) {
+      saveToMemory('autor_foto', legendData.autor_foto);
+    }
+    if (legendData?.data_foto) {
+      saveToMemory('data_foto', legendData.data_foto);
+    }
+    if (legendData?.descricao_detalhada) {
+      saveToMemory('descricao_detalhada', legendData.descricao_detalhada);
+    }
+    if (legendData?.categoria) {
+      saveToMemory('categoria', legendData.categoria);
+    }
+    onSave();
+  };
+
   return (
     <div className="p-4 space-y-2">
       <div className="flex items-center justify-between mb-2">
@@ -34,22 +59,31 @@ const LegendForm = ({ image, legendData, onChange, onSave, expanded, onToggleExp
         </button>
       </div>
       
-      <input
-        type="text"
-        className="w-full bg-gray-700 border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-gray-100"
+      <AutocompleteInput
         value={legendData?.legenda || ''}
-        onChange={e => onChange('legenda', e.target.value)}
+        onChange={(value) => onChange('legenda', value)}
+        onSave={() => {
+          if (legendData?.legenda) {
+            saveToMemory('legenda', legendData.legenda);
+          }
+        }}
+        suggestions={getSuggestions('legenda', legendData?.legenda)}
         placeholder="Digite a legenda da imagem..."
       />
       
       {/* Detailed fields - Appear only when expanded */}
       {expanded && (
-        <LegendFields legendData={legendData} onChange={onChange} />
+        <LegendFields 
+          legendData={legendData} 
+          onChange={onChange}
+          getSuggestions={getSuggestions}
+          saveToMemory={saveToMemory}
+        />
       )}
       
       <div className="flex gap-2 pt-2">
         <button
-          onClick={onSave}
+          onClick={handleSave}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
           type="button"
         >
