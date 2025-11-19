@@ -67,3 +67,4 @@ export const validateImageFiles = (files, config = {}) => {
   return { validFiles, errors };
 };
 
+

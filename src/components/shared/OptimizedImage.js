@@ -35,9 +35,24 @@ const OptimizedImage = ({
       src={src}
       alt={alt || ''}
       className={`w-full h-full object-cover ${className}`}
-      onLoad={onLoad}
-      onError={onError}
+      onLoad={(e) => {
+        // Ensure image is visible when loaded
+        e.target.style.opacity = '1';
+        e.target.style.display = 'block';
+        if (onLoad) onLoad(e);
+      }}
+      onError={(e) => {
+        // Hide broken image and show error
+        e.target.style.display = 'none';
+        console.error('[OptimizedImage] Failed to load image:', src);
+        if (onError) onError(e);
+      }}
       loading={isPreloaded ? "eager" : "lazy"}
+      style={{
+        opacity: 1,
+        display: 'block',
+        ...props.style
+      }}
       {...props}
     />
   );

@@ -36,9 +36,15 @@ export const uploadImages = async (files, escolaId, onProgress) => {
  * @param {string|number} escolaId - School ID
  * @param {string} bucketName - Storage bucket name
  * @param {string} descricao - Description for new image
+ * @param {Object} options - Additional options
+ * @param {string} options.tipoFoto - Photo type ('escola' or 'professor')
  * @returns {Promise<Object>} New image object
  */
-export const replaceImage = async (newFile, oldFilePath, escolaId, bucketName, descricao = '') => {
-  return await replaceImageService(newFile, oldFilePath, escolaId, bucketName, descricao);
+export const replaceImage = async (newFile, oldFilePath, escolaId, bucketName, descricao = '', options = {}) => {
+  const tipoFoto = options.tipoFoto || (bucketName === 'imagens-professores' ? 'professor' : 'escola');
+  return await replaceImageService(newFile, oldFilePath, escolaId, bucketName, descricao, {
+    transferLegend: true,
+    tipoFoto
+  });
 };
 

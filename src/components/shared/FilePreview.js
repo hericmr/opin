@@ -36,3 +36,10 @@ FilePreview.propTypes = {
 
 export default FilePreview;
 
+
+
+
+
+
+
+

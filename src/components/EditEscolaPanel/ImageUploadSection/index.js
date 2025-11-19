@@ -151,15 +151,32 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
     if (!image) return;
 
     try {
+      // Preserve legend data before replacement
+      const oldLegendData = image.legendaData || {};
+      const oldUrl = image.url;
+
       const newImage = await imageReplace.replaceImage(
         imageReplace.replacingImageId,
         image.url,
         image.descricao || ''
       );
 
-      // Refresh images
-      await imageManagement.refresh();
-      setSuccess('Imagem substituída com sucesso!');
+      // Update local state immediately with new image, preserving legend
+      imageManagement.updateImageLocal(imageReplace.replacingImageId, (img) => ({
+        ...img,
+        url: newImage.url,
+        publicURL: newImage.publicUrl,
+        publicUrl: newImage.publicUrl,
+        // Preserve legend data locally until refresh confirms it
+        legendaData: oldLegendData
+      }));
+
+      // Refresh images in background (without showing loading) to sync with database
+      imageManagement.refresh(false).catch(err => {
+        console.warn('Erro ao atualizar lista de imagens (não crítico):', err);
+      });
+      
+      setSuccess('Imagem substituída com sucesso! A legenda foi preservada.');
 
       if (onImagesUpdate) {
         onImagesUpdate();
@@ -280,8 +297,10 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       
       setSuccess('Legenda salva com sucesso!');
       
-      // Refresh to ensure sync with database
-      await imageManagement.refresh();
+      // Refresh in background (without showing loading) to ensure sync with database
+      imageManagement.refresh(false).catch(err => {
+        console.warn('Erro ao atualizar lista de imagens (não crítico):', err);
+      });
       
       if (onImagesUpdate) {
         onImagesUpdate();

@@ -254,9 +254,9 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
             {/* Legenda da imagem */}
             {img.descricao && (
               <figcaption className="p-3 bg-white">
-                <h4 className="font-medium text-gray-900 text-sm mb-1">
+                <p className="text-sm text-gray-600 mb-1">
                   {img.descricao}
-                </h4>
+                </p>
                 
                 {/* Informações adicionais */}
                 <div className="flex items-center gap-4 text-xs text-gray-500">
@@ -270,7 +270,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
                 
                 {/* Descrição detalhada */}
                 {img.descricaoDetalhada && (
-                  <p className="text-xs text-gray-600 mt-2 line-clamp-2">
+                  <p className="text-xs text-gray-500 mt-2 line-clamp-2">
                     {img.descricaoDetalhada}
                   </p>
                 )}

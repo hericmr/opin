@@ -76,3 +76,5 @@ export function validateGoogleDriveLink(url) {
   return { isValid: false, error: 'Formato de URL do Google Drive inválido' };
 }
 
+
+

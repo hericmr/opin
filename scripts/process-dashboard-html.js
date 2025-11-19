@@ -39,34 +39,36 @@ function processDashboardHtml() {
     process.exit(1);
   }
 
-  // Usar o primeiro script principal (geralmente main.*.js)
-  const scriptSrc = scripts.find(s => s.includes('main.')) || scripts[0];
-  // Usar o primeiro CSS principal (geralmente main.*.css)
-  const cssHref = cssFiles.find(c => c.includes('main.')) || cssFiles[0];
-
   // Ler o dashboard/index.html
   let dashboardHtml = fs.readFileSync(dashboardIndexPath, 'utf8');
 
   // Substituir %PUBLIC_URL% por /opin
   dashboardHtml = dashboardHtml.replace(/%PUBLIC_URL%/g, '/opin');
 
-  // Adicionar os scripts antes do fechamento do </body>
+  // Adicionar todos os CSS no <head> antes do </head> (se não existirem)
+  const cssTagsToAdd = cssFiles
+    .filter(cssHref => !dashboardHtml.includes(cssHref))
+    .map(cssHref => `    <link href="${cssHref}" rel="stylesheet">`)
+    .join('\n');
+  
+  if (cssTagsToAdd) {
+    dashboardHtml = dashboardHtml.replace('</head>', `${cssTagsToAdd}\n</head>`);
+  }
+  
+  // Adicionar todos os scripts antes do fechamento do </body>
   // Verificar se os scripts já não estão presentes
-  if (!dashboardHtml.includes(scriptSrc)) {
-    const scriptTag = `    <script defer="defer" src="${scriptSrc}"></script>`;
-    const cssTag = `    <link href="${cssHref}" rel="stylesheet">`;
-    
-    // Inserir CSS no <head> antes do </head> (se não existir)
-    if (!dashboardHtml.includes(cssHref)) {
-      dashboardHtml = dashboardHtml.replace('</head>', `    ${cssTag}\n</head>`);
-    }
-    
-    // Inserir script antes do último </body> ou antes do último script existente
+  const scriptTagsToAdd = scripts
+    .filter(scriptSrc => !dashboardHtml.includes(scriptSrc))
+    .map(scriptSrc => `    <script defer="defer" src="${scriptSrc}"></script>`)
+    .join('\n');
+  
+  if (scriptTagsToAdd) {
+    // Inserir scripts antes do último </body>
     if (dashboardHtml.includes('</body>')) {
-      dashboardHtml = dashboardHtml.replace('</body>', `    ${scriptTag}\n</body>`);
+      dashboardHtml = dashboardHtml.replace('</body>', `${scriptTagsToAdd}\n</body>`);
     } else {
       // Se não houver </body>, adicionar antes do fechamento do HTML
-      dashboardHtml = dashboardHtml.replace('</html>', `    ${scriptTag}\n</html>`);
+      dashboardHtml = dashboardHtml.replace('</html>', `${scriptTagsToAdd}\n</html>`);
     }
   }
 
@@ -74,8 +76,8 @@ function processDashboardHtml() {
   fs.writeFileSync(dashboardIndexPath, dashboardHtml, 'utf8');
   
   console.log('✅ build/dashboard/index.html processado com sucesso!');
-  console.log(`   - Script adicionado: ${scriptSrc}`);
-  console.log(`   - CSS adicionado: ${cssHref}`);
+  console.log(`   - Scripts adicionados: ${scripts.length}`);
+  console.log(`   - CSS adicionados: ${cssFiles.length}`);
 }
 
 // Executar o script

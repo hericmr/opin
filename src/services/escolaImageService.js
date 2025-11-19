@@ -312,10 +312,14 @@ export const updateImageDescription = async (imageId, descricao) => {
  * @param {number} escolaId - ID da escola
  * @param {string} bucketName - Nome do bucket
  * @param {string} descricao - Descrição da nova imagem
+ * @param {Object} options - Opções adicionais
+ * @param {boolean} options.transferLegend - Se deve transferir a legenda da imagem antiga (padrão: true)
+ * @param {string} options.tipoFoto - Tipo da foto ('escola' ou 'professor', padrão: 'escola')
  * @returns {Promise<Object>} Dados da nova imagem
  */
-export const replaceImage = async (newFile, oldFilePath, escolaId, bucketName, descricao = '') => {
+export const replaceImage = async (newFile, oldFilePath, escolaId, bucketName, descricao = '', options = {}) => {
   try {
+    const { transferLegend = true, tipoFoto = 'escola' } = options;
     const config = bucketName === PROFESSOR_IMAGE_CONFIG.BUCKET_NAME 
       ? PROFESSOR_IMAGE_CONFIG 
       : ESCOLA_IMAGE_CONFIG;
@@ -350,7 +354,18 @@ export const replaceImage = async (newFile, oldFilePath, escolaId, bucketName, d
       .from(bucketName)
       .getPublicUrl(newFilePath);
 
-    // 3. Deletar a imagem antiga
+    // 3. Transferir legenda da imagem antiga para a nova (se solicitado)
+    if (transferLegend) {
+      try {
+        const { transferLegendaToNewUrl } = await import('./legendasService');
+        await transferLegendaToNewUrl(oldFilePath, newFilePath, escolaId, tipoFoto);
+      } catch (legendError) {
+        logger.warn('Erro ao transferir legenda (não crítico):', legendError);
+        // Não falha a operação se não conseguir transferir a legenda
+      }
+    }
+
+    // 4. Deletar a imagem antiga
     const { error: deleteError } = await supabase.storage
       .from(bucketName)
       .remove([oldFilePath]);

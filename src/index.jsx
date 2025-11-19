@@ -1,3 +1,7 @@
+// IMPORTANTE: Importar o polyfill ANTES de qualquer outra coisa
+// Isso garante que react-dom seja patcheado antes de react-quill ser carregado
+import "./utils/findDOMNodePolyfill";
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
