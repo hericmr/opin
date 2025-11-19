@@ -3,6 +3,13 @@ import PropTypes from 'prop-types';
 import { X, ZoomIn, ZoomOut, RotateCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatDateForDisplay } from '../utils/dateUtils';
 
+// Helper function to check if a value has actual content
+const hasContent = (value) => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'string' && value.trim() === '') return false;
+  return true;
+};
+
 const ReusableImageZoom = ({ 
   images = [], 
   currentImageIndex = 0, 
@@ -225,25 +232,27 @@ const ReusableImageZoom = ({
           />
         </div>
 
-        {/* Legenda - estilo minimalista igual às legendas laterais */}
-        {showCaption && (currentImage.descricao || currentImage.descricao_imagem || currentImage.legenda) && (
+        {/* Legenda - estilo minimalista igual às legendas laterais - só mostra se tiver conteúdo real */}
+        {showCaption && (hasContent(currentImage.descricao) || hasContent(currentImage.descricao_imagem) || hasContent(currentImage.legenda)) && (
           <div className="image-zoom-caption">
-            <p className="text-sm text-gray-600 mb-1 leading-tight">
+            <p className="text-sm text-black mb-1 leading-tight">
               {currentImage.descricao || currentImage.descricao_imagem || currentImage.legenda}
             </p>
             
             {/* Informações adicionais */}
-            <div className="flex items-center gap-4 text-xs text-gray-500">
-              {currentImage.autor && (
-                <span>Por: {currentImage.autor}</span>
-              )}
-              {currentImage.dataFoto && (
-                <span>{formatDateForDisplay(currentImage.dataFoto)}</span>
-              )}
-            </div>
+            {(hasContent(currentImage.autor) || currentImage.dataFoto) && (
+              <div className="flex items-center gap-4 text-xs text-gray-500">
+                {hasContent(currentImage.autor) && (
+                  <span>Por: {currentImage.autor}</span>
+                )}
+                {currentImage.dataFoto && (
+                  <span>{formatDateForDisplay(currentImage.dataFoto)}</span>
+                )}
+              </div>
+            )}
             
             {/* Descrição detalhada */}
-            {currentImage.descricaoDetalhada && (
+            {hasContent(currentImage.descricaoDetalhada) && (
               <p className="text-xs text-gray-500 mt-2 leading-relaxed">
                 {currentImage.descricaoDetalhada}
               </p>

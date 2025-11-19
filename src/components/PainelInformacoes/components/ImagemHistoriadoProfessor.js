@@ -8,6 +8,13 @@ import useImagePreloader from '../../../hooks/useImagePreloader';
 import { formatDateForDisplay } from '../../../utils/dateUtils';
 import '../../ReusableImageZoom.css';
 
+// Helper function to check if a value has actual content
+const hasContent = (value) => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'string' && value.trim() === '') return false;
+  return true;
+};
+
 const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = false, hideInlineMedia = false }) => {
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -83,7 +90,8 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
               console.warn('Erro ao buscar legenda:', error);
             }
 
-            const legendaFinal = legenda?.legenda || null;
+            // Only set legendaFinal if there's actual content (not empty string or whitespace)
+            const legendaFinal = hasContent(legenda?.legenda) ? legenda.legenda.trim() : null;
 
             return {
               id: idx + 1,
@@ -154,25 +162,27 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
               />
             </div>
             
-            {/* Legenda da imagem */}
-            {img.legenda && (
+            {/* Legenda da imagem - só mostra se tiver conteúdo real */}
+            {hasContent(img.legenda) && (
               <figcaption className="p-3 bg-white">
-                <p className="text-sm text-gray-600 mb-1">
+                <p className="text-sm text-black mb-1">
                   {img.legenda}
                 </p>
                 
                 {/* Informações adicionais */}
-                <div className="flex items-center gap-4 text-xs text-gray-500">
-                  {img.autor && (
-                    <span>Por: {img.autor}</span>
-                  )}
-                  {img.dataFoto && (
-                    <span>{formatDateForDisplay(img.dataFoto)}</span>
-                  )}
-                </div>
+                {(hasContent(img.autor) || img.dataFoto) && (
+                  <div className="flex items-center gap-4 text-xs text-gray-500">
+                    {hasContent(img.autor) && (
+                      <span>Por: {img.autor}</span>
+                    )}
+                    {img.dataFoto && (
+                      <span>{formatDateForDisplay(img.dataFoto)}</span>
+                    )}
+                  </div>
+                )}
                 
                 {/* Descrição detalhada */}
-                {img.descricaoDetalhada && (
+                {hasContent(img.descricaoDetalhada) && (
                   <p className="text-xs text-gray-500 mt-2 line-clamp-2">
                     {img.descricaoDetalhada}
                   </p>
