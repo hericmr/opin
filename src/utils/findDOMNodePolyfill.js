@@ -209,12 +209,34 @@ export const setupFindDOMNodePolyfill = () => {
     return null;
   };
 
-  // Patchear react-dom diretamente
-  ReactDOM.findDOMNode = findDOMNodeImpl;
+  // Patchear react-dom usando Object.defineProperty para contornar imutabilidade de imports
+  try {
+    Object.defineProperty(ReactDOM, 'findDOMNode', {
+      value: findDOMNodeImpl,
+      writable: true,
+      configurable: true,
+    });
+  } catch (e) {
+    // Se Object.defineProperty falhar, tentar atribuição direta (pode funcionar em alguns ambientes)
+    try {
+      // Usar bracket notation para contornar restrições de imutabilidade
+      ReactDOM['findDOMNode'] = findDOMNodeImpl;
+    } catch (e2) {
+      console.warn('Não foi possível patchear ReactDOM.findDOMNode:', e2);
+    }
+  }
   
   // Também patchear no default se existir
   if (ReactDOM.default) {
-    ReactDOM.default.findDOMNode = findDOMNodeImpl;
+    try {
+      Object.defineProperty(ReactDOM.default, 'findDOMNode', {
+        value: findDOMNodeImpl,
+        writable: true,
+        configurable: true,
+      });
+    } catch (e) {
+      // Ignorar erro
+    }
   }
   
   // Patchear no módulo global também (para garantir que todas as importações vejam)
