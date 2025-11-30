@@ -17,14 +17,8 @@ import GlobalAdminShortcut from './components/GlobalAdminShortcut';
 // Expose dev helpers in browser console (no UI impact)
 // (dev helpers removed)
 
-// Lazy loading dos componentes
-const MapaEscolasIndigenas = React.lazy(() => import("./components/MapaEscolasIndigenas"));
-const Homepage = React.lazy(() => import("./components/Homepage"));
-const MateriaisDidáticos = React.lazy(() => import("./components/MateriaisDidáticos/MateriaisDidáticos"));
-const AdminPanel = React.lazy(() => import("./components/AdminPanel"));
-const SearchResults = React.lazy(() => import("./components/SearchResults"));
-const TestLegendas = React.lazy(() => import("./components/TestLegendas"));
-const Dashboard = React.lazy(() => import("./components/Dashboard"));
+// Import routes configuration
+import { createRoutes } from "./router";
 
 const AppContent = () => {
   const { dataPoints, loading, error } = useEscolasData();
@@ -164,75 +158,9 @@ const AppContent = () => {
         )
       }>
         <Routes>
-          <Route 
-            path="/" 
-            element={
-              <main id="main-content" className="flex-grow">
-                <Homepage dataPoints={dataPoints} />
-              </main>
-            } 
-          />
-          <Route 
-            path="/mapa" 
-            element={
-              <main id="main-content" className="flex-grow">
-                <MapaEscolasIndigenas 
-                  dataPoints={dataPoints}
-                  onPainelOpen={handlePainelOpenFunction}
-                  isLoading={loading}
-                />
-              </main>
-            } 
-          />
-          <Route 
-            path="/conteudo" 
-            element={
-              <main id="main-content" className="flex-grow">
-                <MateriaisDidáticos locations={dataPoints} />
-              </main>
-            } 
-          />
-          <Route 
-            path="/search" 
-            element={
-              <main id="main-content" className="flex-grow">
-                <SearchResults dataPoints={dataPoints} />
-              </main>
-            } 
-          />
-          <Route 
-            path="/admin" 
-            element={
-              <main id="main-content" className="flex-grow">
-                <AdminPanel />
-              </main>
-            } 
-          />
-          <Route 
-            path="/dashboard" 
-            element={
-              <main id="main-content" className="flex-grow" style={{ height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
-                <Dashboard />
-              </main>
-            } 
-          />
-          <Route 
-            path="/painel-dados" 
-            element={
-              <main id="main-content" className="flex-grow" style={{ height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
-                <Dashboard />
-              </main>
-            } 
-          />
-          <Route 
-            path="/dados-escolas-indigenas" 
-            element={
-              <main id="main-content" className="flex-grow" style={{ height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
-                <Dashboard />
-              </main>
-            } 
-          />
-          <Route path="/test-legendas" element={<TestLegendas />} />
+          {createRoutes(dataPoints, loading, handlePainelOpenFunction).map((route, index) => (
+            <Route key={index} path={route.path} element={route.element} />
+          ))}
         </Routes>
       </Suspense>
     </div>
