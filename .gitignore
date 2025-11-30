@@ -35,3 +35,6 @@ yarn-error.log*
 *.v3-backup
 *.react18-backup
 *.react-scripts-backup
+
+# Backup directories
+/backups/

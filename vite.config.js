@@ -41,10 +41,20 @@ export default defineConfig({
     include: /src\/.*\.jsx?$/,
     exclude: [],
   },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx',
+      },
+    },
+  },
   base: '/opin/',
   build: {
     outDir: 'build',
     sourcemap: false,
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
   },
   resolve: {
     alias: {
