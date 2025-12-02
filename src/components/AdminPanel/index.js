@@ -5,7 +5,7 @@ import { ADMIN_TABS, UI_CONFIG, FORM_CONFIG } from './constants/adminConstants';
 import AdminSidebar from './AdminSidebar';
 import AdminToolbar from './AdminToolbar';
 import ProtectedRoute from '../Auth/ProtectedRoute';
-import { supabase } from '../../supabaseClient';
+import { supabase } from '../../dbClient';
 import './AdminPanel.css';
 // Imports de tabs movidos para tabRenderer.js
 import TabelaEditavelTab from './tabs/TabelaEditavelTab';

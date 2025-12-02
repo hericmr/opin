@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { supabase } from '../../../supabaseClient';
+import { supabase } from '../../../dbClient';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
 import ReusableImageZoom from '../../ReusableImageZoom';
 import OptimizedImage from '../../shared/OptimizedImage';

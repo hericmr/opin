@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient';
+import { supabase } from '../dbClient';
 import logger from '../utils/logger';
 
 // Configurações para imagens das histórias do professor

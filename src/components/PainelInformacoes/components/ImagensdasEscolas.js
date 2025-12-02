@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { RefreshCw } from 'lucide-react';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
-import { supabase } from '../../../supabaseClient';
+import { supabase } from '../../../dbClient';
 import ReusableImageZoom from '../../ReusableImageZoom';
 import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';

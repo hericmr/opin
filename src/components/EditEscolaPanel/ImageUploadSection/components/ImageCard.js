@@ -4,7 +4,7 @@ import { GripVertical, Check } from 'lucide-react';
 import ImageActions from './ImageActions';
 import LegendForm from './LegendForm';
 import useImagePreloader from '../../../../hooks/useImagePreloader';
-import { supabase } from '../../../../supabaseClient';
+import { supabase } from '../../../../dbClient';
 
 /**
  * Individual image card component with all functionality
