@@ -1,4 +1,4 @@
-import { supabase } from '../../../../supabaseClient';
+import { supabase } from '../../../../dbClient';
 
 /**
  * Helper function to normalize image URL for Vite compatibility

@@ -1,67 +1,58 @@
-import { SignJWT, jwtVerify } from 'jose';
 import logger from '../utils/logger';
 
-// Chave secreta para assinar os JWTs (em produção, deve vir de variável de ambiente)
-const JWT_SECRET = new TextEncoder().encode(
-  import.meta.env.REACT_APP_JWT_SECRET || import.meta.env.VITE_JWT_SECRET || 'opin-admin-secret-key-2024'
-);
-
-// Configurações do JWT
-const JWT_CONFIG = {
-  issuer: 'opin-admin',
-  audience: 'opin-users',
-  expiresIn: '24h' // Token expira em 24 horas
+// Configurações do Token
+const TOKEN_CONFIG = {
+  expiresIn: 24 * 60 * 60 * 1000 // 24 horas em milissegundos
 };
 
 /**
- * Serviço de autenticação seguro usando JWT
+ * Serviço de autenticação simplificado (sem JWT)
  */
 export class AuthService {
-  
+
   /**
-   * Gerar token JWT após autenticação bem-sucedida
+   * Gerar token simples (Base64) após autenticação bem-sucedida
    * @param {string} username - Nome do usuário
    * @param {string} role - Papel do usuário (admin, editor, etc.)
-   * @returns {Promise<string>} Token JWT
+   * @returns {Promise<string>} Token
    */
   static async generateToken(username, role = 'admin') {
     try {
-      const token = await new SignJWT({ 
-        username, 
+      const payload = {
+        username,
         role,
-        loginTime: Date.now()
-      })
-        .setProtectedHeader({ alg: 'HS256' })
-        .setIssuedAt()
-        .setExpirationTime(JWT_CONFIG.expiresIn)
-        .setIssuer(JWT_CONFIG.issuer)
-        .setAudience(JWT_CONFIG.audience)
-        .sign(JWT_SECRET);
+        loginTime: Date.now(),
+        exp: Date.now() + TOKEN_CONFIG.expiresIn
+      };
 
-      return token;
+      // Codificar em Base64 simples para persistência local
+      return btoa(JSON.stringify(payload));
     } catch (error) {
-      logger.error('Erro ao gerar token JWT:', error);
+      logger.error('Erro ao gerar token:', error);
       throw new Error('Falha na geração do token de autenticação');
     }
   }
 
   /**
-   * Verificar e decodificar token JWT
-   * @param {string} token - Token JWT
+   * Verificar e decodificar token
+   * @param {string} token - Token
    * @returns {Promise<Object|null>} Payload do token ou null se inválido
    */
   static async verifyToken(token) {
     try {
       if (!token) return null;
 
-      const { payload } = await jwtVerify(token, JWT_SECRET, {
-        issuer: JWT_CONFIG.issuer,
-        audience: JWT_CONFIG.audience,
-      });
+      // Decodificar Base64
+      const payload = JSON.parse(atob(token));
+
+      // Verificar expiração
+      if (payload.exp < Date.now()) {
+        return null;
+      }
 
       return payload;
     } catch (error) {
-      logger.warn('Token JWT inválido ou expirado:', error.message);
+      // Silenciosamente falhar para tokens inválidos (sem log de aviso)
       return null;
     }
   }
@@ -75,16 +66,14 @@ export class AuthService {
     try {
       // Verificar senha (em produção, usar hash + salt)
       const validPassword = import.meta.env.REACT_APP_ADMIN_PASSWORD || import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
-      
+
       // Debug: remover espaços em branco e comparar
       const trimmedPassword = password?.trim();
       const trimmedValidPassword = validPassword?.trim();
-      
+
       // Log para debug (apenas em desenvolvimento)
       logger.debug('Debug auth - Password recebida:', `"${trimmedPassword}"`, 'Length:', trimmedPassword?.length);
-      logger.debug('Debug auth - Password esperada:', `"${trimmedValidPassword}"`, 'Length:', trimmedValidPassword?.length);
-      logger.debug('Debug auth - REACT_APP_ADMIN_PASSWORD definida?', !!(import.meta.env.REACT_APP_ADMIN_PASSWORD || import.meta.env.VITE_ADMIN_PASSWORD));
-      
+
       if (trimmedPassword !== trimmedValidPassword) {
         return {
           success: false,
@@ -94,7 +83,7 @@ export class AuthService {
 
       // Gerar token se senha estiver correta
       const token = await this.generateToken('admin', 'admin');
-      
+
       return {
         success: true,
         token,
@@ -120,16 +109,8 @@ export class AuthService {
     try {
       const token = localStorage.getItem('opin_admin_token');
       const payload = await this.verifyToken(token);
-      
-      if (payload) {
-        // Verificar se token não expirou
-        const now = Math.floor(Date.now() / 1000);
-        return payload.exp > now;
-      }
-      
-      return false;
+      return !!payload;
     } catch (error) {
-      logger.error('Erro ao verificar autenticação:', error);
       return false;
     }
   }
@@ -142,7 +123,7 @@ export class AuthService {
     try {
       const token = localStorage.getItem('opin_admin_token');
       const payload = await this.verifyToken(token);
-      
+
       if (payload) {
         return {
           username: payload.username,
@@ -150,10 +131,9 @@ export class AuthService {
           loginTime: payload.loginTime
         };
       }
-      
+
       return null;
     } catch (error) {
-      logger.error('Erro ao obter usuário atual:', error);
       return null;
     }
   }
@@ -170,7 +150,7 @@ export class AuthService {
 
   /**
    * Armazenar token no localStorage
-   * @param {string} token - Token JWT
+   * @param {string} token - Token
    */
   static setToken(token) {
     localStorage.setItem('opin_admin_token', token);
@@ -192,18 +172,17 @@ export class AuthService {
     try {
       const token = this.getToken();
       const payload = await this.verifyToken(token);
-      
+
       if (payload) {
-        const now = Math.floor(Date.now() / 1000);
+        const now = Date.now();
         const timeUntilExpiry = payload.exp - now;
-        const twoHours = 2 * 60 * 60; // 2 horas em segundos
-        
+        const twoHours = 2 * 60 * 60 * 1000; // 2 horas em ms
+
         return timeUntilExpiry < twoHours;
       }
-      
+
       return false;
     } catch (error) {
-      logger.error('Erro ao verificar expiração do token:', error);
       return false;
     }
   }
@@ -215,7 +194,7 @@ export class AuthService {
   static async refreshTokenIfNeeded() {
     try {
       const isExpiringSoon = await this.isTokenExpiringSoon();
-      
+
       if (isExpiringSoon) {
         const currentUser = await this.getCurrentUser();
         if (currentUser) {
@@ -224,10 +203,9 @@ export class AuthService {
           return newToken;
         }
       }
-      
+
       return null;
     } catch (error) {
-      logger.error('Erro ao renovar token:', error);
       return null;
     }
   }

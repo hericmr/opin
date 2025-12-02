@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient';
+import { supabase } from '../dbClient';
 
 // Buscar todos os vídeos de uma escola
 export async function getVideosEscola(escolaId) {

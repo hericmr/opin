@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../supabaseClient';
+import { supabase } from '../../dbClient';
 
 const useDocumentosEscola = (escolaId) => {
   const [documentos, setDocumentos] = useState([]);

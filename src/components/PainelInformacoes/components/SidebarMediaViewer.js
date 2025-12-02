@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { supabase } from '../../../supabaseClient';
+import { supabase } from '../../../dbClient';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
 import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';

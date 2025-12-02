@@ -1,4 +1,4 @@
-import { supabase } from '../../../../supabaseClient';
+import { supabase } from '../../../../dbClient';
 
 /**
  * Helper function to get valid image URL

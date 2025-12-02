@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient';
+import { supabase } from '../dbClient';
 
 export const addProfessorImageMeta = async (meta) => {
   const { data, error } = await supabase
