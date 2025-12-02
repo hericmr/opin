@@ -56,7 +56,9 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "optimize-images": "node scripts/optimize-images.js",
-    "process-dashboard": "node scripts/process-dashboard-html.js"
+    "process-dashboard": "node scripts/process-dashboard-html.js",
+    "db:migrate": "knex migrate:latest --knexfile knexfile.cjs",
+    "db:rollback": "knex migrate:rollback --knexfile knexfile.cjs"
   },
   "browserslist": {
     "production": [
@@ -93,6 +95,8 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "knex": "^3.1.0",
+    "pg": "^8.12.0",
     "tailwindcss": "^4.1.17",
     "vite": "^7.2.2"
   },

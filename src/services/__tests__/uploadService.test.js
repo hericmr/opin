@@ -1,5 +1,5 @@
 import { uploadFile, uploadImage, uploadAudio, uploadPDF, deleteFile } from '../uploadService';
-import { supabase } from '../../supabaseClient';
+import { supabase } from '../../dbClient';
 import { STORAGE_BUCKETS, FILE_RESTRICTIONS } from '../../config/storage';
 
 // Mock do Supabase
@@ -7,7 +7,7 @@ const mockUpload = jest.fn();
 const mockGetPublicUrl = jest.fn();
 const mockRemove = jest.fn();
 
-jest.mock('../../supabaseClient', () => ({
+jest.mock('../../dbClient', () => ({
   supabase: {
     storage: {
       from: jest.fn(() => ({

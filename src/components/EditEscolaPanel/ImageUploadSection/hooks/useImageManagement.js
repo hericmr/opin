@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { supabase } from '../../../../supabaseClient';
+import { supabase } from '../../../../dbClient';
 import { deleteImage } from '../../../../services/escolaImageService';
 import { transformFilesToImages, mergeLegendsIntoImages } from '../utils/imageTransformers';
 import { useImageOrder } from './useImageOrder';

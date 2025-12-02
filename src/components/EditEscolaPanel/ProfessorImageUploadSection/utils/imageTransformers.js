@@ -1,4 +1,4 @@
-import { supabase } from '../../../../supabaseClient';
+import { supabase } from '../../../../dbClient';
 
 /**
  * Transform file list from Supabase storage to image objects

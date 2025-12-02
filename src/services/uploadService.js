@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient';
+import { supabase } from '../dbClient';
 import { 
   STORAGE_BUCKETS, 
   FILE_PATHS, 

@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient';
+import { supabase } from '../dbClient';
 import logger from '../utils/logger';
 
 // Obter URL do Supabase das variáveis de ambiente

@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient';
+import { supabase } from '../dbClient';
 import { AuthService } from './authService';
 import logger from '../utils/logger';
 

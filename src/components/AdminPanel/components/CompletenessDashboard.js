@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../../../supabaseClient';
+import { supabase } from '../../../dbClient';
 import logger from '../../../utils/logger';
 import { fieldCategories } from '../constants/completenessConstants';
 import { useCompletenessCalculations } from '../hooks/useCompletenessCalculations';

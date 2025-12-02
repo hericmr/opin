@@ -48,7 +48,7 @@ Mapa interativo com base em imagem de satélite e três camadas principais:
 - **Vite** - Build tool e dev server (migrado de Create React App)
 - **Tailwind CSS 4** - Framework CSS utilitário (atualizado de Tailwind 3)
 - **OpenLayers** - Biblioteca para mapas interativos
-- **Supabase** - Backend como serviço (BaaS)
+- **Banco de Dados Local** - PostgreSQL (anteriormente Supabase)
 - **Jest** - Framework de testes
 
 ## Documentação

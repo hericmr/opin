@@ -161,3 +161,5 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
 // Export directly - React.lazy handles code splitting
 export default MapaEscolasIndigenas;
 
+
+
