@@ -41,45 +41,7 @@ console.log('=== DEBUG: Criando cliente do Banco de Dados ===');
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 console.log('Cliente do Banco de Dados criado com sucesso');
 
-// Teste inicial de conexão com mais detalhes (não bloqueante)
-// Executar de forma assíncrona e não bloquear a inicialização
-setTimeout(() => {
-  console.log("=== DEBUG: Testando conexão com PostgreSQL Local ===");
-  console.log('Tentando acessar a tabela escolas_completa...');
-
-  // Primeiro, vamos verificar se podemos listar as tabelas
-  supabase.from('escolas_completa').select('count').single()
-    .then(({ data, error }) => {
-      if (error) {
-        // Não logar como erro crítico, apenas como aviso
-        console.warn('Aviso ao testar conexão com a tabela:', error.message || error);
-
-        // Se for erro de permissão, dar dica específica
-        if (error.code === '42501') {
-          console.warn('AVISO DE PERMISSÃO: A tabela existe mas você não tem permissão para acessá-la.');
-          console.warn('Por favor, verifique as políticas de segurança (RLS) no painel do Supabase.');
-        }
-      } else {
-        console.log('Conexão com a tabela estabelecida. Contagem de registros:', data);
-
-        // Se conseguimos contar, vamos tentar buscar alguns dados
-        return supabase.from('escolas_completa').select('*').limit(1);
-      }
-    })
-    .then((result) => {
-      if (result) {
-        const { data, error } = result;
-        if (error) {
-          console.warn('Aviso ao buscar dados de teste:', error.message || error);
-        } else if (data) {
-          console.log('Dados de teste encontrados:', data.length > 0 ? 'OK' : 'Tabela vazia');
-        }
-      }
-    })
-    .catch(err => {
-      // Não bloquear por erros de teste
-      console.warn('Aviso no teste de conexão (não crítico):', err.message || err);
-    });
-}, 1000); // Aguardar 1 segundo antes de testar
+// Teste inicial de conexão removido para evitar warnings de JSON.parse no DevTools
+// e requisições extras desnecessárias durante o desenvolvimento.
 
 export { supabase };

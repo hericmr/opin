@@ -1,0 +1,1 @@
+INSERT INTO "public"."documentos_escola" ("id", "escola_id", "titulo", "link_pdf", "autoria", "tipo", "created_at") VALUES ('78061669-9c05-4913-9de7-c226ed776750', '1', 'Trabalho readizado por Jorge Werá Xunũ na LINDI', 'https://drive.google.com/file/d/1T5vIbG4neJQMj69EME3D0hvGozgDD_CK/view?usp=sharing', null, 'Google Drive', '2025-11-17 16:58:27.064051+00');

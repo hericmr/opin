@@ -24,7 +24,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
     dataFoto: null,
     origem: 'capa',
   }] : [];
-  
+
   const [items, setItems] = useState(initialHeaderItem);
   const [current, setCurrent] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -34,62 +34,102 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
   // Track image aspect ratios to determine if image is tall/narrow
   const [imageAspectRatios, setImageAspectRatios] = useState(new Map());
 
-  const fetchBucketList = useCallback(async (bucket, categoria) => {
-    const { data: files, error: listErr } = await supabase.storage.from(bucket).list(`${escolaId}/`);
-    if (listErr) throw listErr;
-    if (!files || files.length === 0) return [];
+  // URL base do storage remoto (produção)
+  const REMOTE_STORAGE_URL = 'https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/';
 
-    const mapped = await Promise.all(
-      files.map(async (file, index) => {
-        const filePath = `${escolaId}/${file.name}`;
-        const { data: { publicUrl } } = supabase.storage.from(bucket).getPublicUrl(filePath);
-        let legenda = null;
-        try {
-          legenda = await getLegendaByImageUrlFlexivel(filePath, escolaId, {
-            categoria,
-            tipo_foto: categoria,
-          });
-        } catch (_) {}
-        // Only set values if there's actual content (not empty strings or whitespace)
+  const fetchBucketList = useCallback(async (bucket, categoria) => {
+    let mapped = [];
+
+    if (categoria === 'escola') {
+      // Buscar da tabela legendas_fotos
+      const { data: legendas, error } = await supabase
+        .from('legendas_fotos')
+        .select('*')
+        .eq('escola_id', escolaId)
+        .eq('tipo_foto', 'escola')
+        .eq('ativo', true)
+        .order('ordem', { ascending: true, nullsFirst: false })
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+      if (!legendas) return [];
+
+      mapped = legendas.map((legenda, index) => {
+        let publicUrl = null;
+        if (legenda.imagem_url) {
+          if (legenda.imagem_url.startsWith('http')) {
+            publicUrl = legenda.imagem_url;
+          } else {
+            // Construir URL usando o bucket remoto e o nome do bucket correto
+            publicUrl = `${REMOTE_STORAGE_URL}imagens-das-escolas/${legenda.imagem_url}`;
+          }
+        }
+
         return {
-          id: `${bucket}-${file.name}`,
+          id: legenda.id || `escola-${index}`,
           url: publicUrl,
-          filePath: filePath,
-          titulo: hasContent(legenda?.legenda) ? legenda.legenda.trim() : null,
-          descricao: hasContent(legenda?.descricao_detalhada) ? legenda.descricao_detalhada.trim() : null,
-          autor: hasContent(legenda?.autor_foto) ? legenda.autor_foto.trim() : null,
-          dataFoto: legenda?.data_foto || null,
-          origem: categoria,
-          ordem: legenda?.ordem || Infinity, // Usar Infinity se não tiver ordem
+          filePath: legenda.imagem_url,
+          titulo: hasContent(legenda.legenda) ? legenda.legenda.trim() : null,
+          descricao: hasContent(legenda.descricao_detalhada) ? legenda.descricao_detalhada.trim() : null,
+          autor: hasContent(legenda.autor_foto) ? legenda.autor_foto.trim() : null,
+          dataFoto: legenda.data_foto,
+          origem: 'escola',
+          ordem: legenda.ordem !== null && legenda.ordem !== undefined ? legenda.ordem : index,
         };
-      })
-    );
-    
-    // Ordenar por ordem (do banco de dados)
-    mapped.sort((a, b) => {
-      // Primeiro ordenar por ordem (menor primeiro)
-      if (a.ordem !== b.ordem) {
-        return a.ordem - b.ordem;
-      }
-      // Se ordem for igual ou não existir, manter ordem original
-      return 0;
-    });
-    
+      });
+
+    } else if (categoria === 'professor') {
+      // Buscar da tabela imagens_professores
+      const { data: imgsProf, error } = await supabase
+        .from('imagens_professores')
+        .select('*')
+        .eq('escola_id', escolaId)
+        .eq('ativo', true)
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+      if (!imgsProf) return [];
+
+      mapped = imgsProf.map((img, index) => {
+        let publicUrl = null;
+        if (img.imagem_url) {
+          if (img.imagem_url.startsWith('http')) {
+            publicUrl = img.imagem_url;
+          } else {
+            // Construir URL usando o bucket remoto
+            publicUrl = `${REMOTE_STORAGE_URL}imagens-professores/${img.imagem_url}`;
+          }
+        }
+
+        return {
+          id: img.id || `prof-${index}`,
+          url: publicUrl,
+          filePath: img.imagem_url,
+          titulo: null, // Tabela imagens_professores não tem título/legenda explícita além de nome_arquivo ou autor
+          descricao: null,
+          autor: img.autor,
+          dataFoto: img.created_at, // Usando created_at como data da foto
+          origem: 'professor',
+          ordem: index + 1000, // Colocar depois das escolas se não tiver ordem
+        };
+      });
+    }
+
     return mapped;
   }, [escolaId]);
 
   // Update items immediately when headerUrl changes to show image instantly
   useEffect(() => {
     if (headerUrl) {
-        const headerItem = {
-          id: `header-${escolaId || 'temp'}`,
-          url: headerUrl,
-          titulo: null,
-          descricao: null,
-          autor: null,
-          dataFoto: null,
-          origem: 'capa',
-        };
+      const headerItem = {
+        id: `header-${escolaId || 'temp'}`,
+        url: headerUrl,
+        titulo: null,
+        descricao: null,
+        autor: null,
+        dataFoto: null,
+        origem: 'capa',
+      };
       setItems(prev => {
         // Check if header already exists
         const exists = prev.some(i => i.origem === 'capa' && i.url === headerUrl);
@@ -110,10 +150,10 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
     }
     setLoading(true);
     setError('');
-    
+
     // Show header image immediately if available (already in items state)
     // This prevents the delay when maximizing the panel
-    
+
     (async () => {
       try {
         const promises = [];
@@ -160,7 +200,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
     if (!hasItems || current < 0 || current >= items.length) return null;
     return items[current] || null;
   }, [items, current, hasItems]);
-  
+
   // Detect if current image is tall/narrow (portrait orientation)
   const isTallImage = useMemo(() => {
     if (!currentItem || !currentItem.url) return false;
@@ -168,7 +208,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
     // If height > width, it's a tall image (aspect ratio < 1 means portrait)
     return aspectRatio !== undefined && aspectRatio < 1;
   }, [currentItem, imageAspectRatios]);
-  
+
   // Handler to detect image dimensions when image loads
   const handleImageLoad = useCallback((e) => {
     if (!currentItem || !currentItem.url) return;
@@ -213,12 +253,12 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
   if (error && !hasItems) {
     return <div className="text-red-600">{error}</div>;
   }
-  
+
   // Show "no items" only if not loading and no items
   if (!loading && !hasItems) {
     return <div className="text-gray-600">Nenhuma imagem disponível.</div>;
   }
-  
+
   // If loading but we have items (e.g., header image), show the viewer with loading indicator
 
   return (
@@ -254,10 +294,10 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
                   src={currentItem.url}
                   alt={currentItem.titulo || 'Imagem'}
                   className={isTallImage ? 'w-full object-contain' : 'w-full h-full object-cover'}
-                  style={{ 
+                  style={{
                     maxHeight: isTallImage ? 'none' : '100%',
                     minHeight: isTallImage ? '100%' : 'auto',
-                    maxWidth: '100%', 
+                    maxWidth: '100%',
                     display: 'block',
                     objectPosition: isTallImage ? 'top center' : 'center center',
                     filter: 'saturate(1.3)'
@@ -274,7 +314,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
                   className={isTallImage ? 'w-full object-contain' : 'w-full h-full object-cover'}
                   isPreloaded={isImagePreloaded(currentItem.url)}
                   priority="high"
-                  style={{ 
+                  style={{
                     maxHeight: isTallImage ? 'none' : '100%',
                     minHeight: isTallImage ? '100%' : 'auto',
                     maxWidth: '100%',
