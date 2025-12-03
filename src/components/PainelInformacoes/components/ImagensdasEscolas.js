@@ -80,10 +80,10 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
 
     const buscarImagens = async () => {
       console.log('Buscando imagens para escola', escola_id, 'refreshKey:', refreshKey);
-      
+
       try {
-        // Primeiro, buscar todas as legendas da escola ordenadas por ordem
-        const { data: legendas, error: legendasError } = await supabase
+        // Buscar imagens da tabela legendas_fotos (que contém os caminhos das imagens)
+        const { data: legendas, error } = await supabase
           .from('legendas_fotos')
           .select('*')
           .eq('escola_id', escola_id)
@@ -92,77 +92,52 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
           .order('ordem', { ascending: true, nullsFirst: false })
           .order('created_at', { ascending: true });
 
-        // Criar mapa de filePath para legenda
-        const legendasMap = new Map();
-        if (legendas && !legendasError) {
-          legendas.forEach(legenda => {
-            // Normalizar o caminho para fazer match
-            const path = legenda.imagem_url;
-            legendasMap.set(path, legenda);
-          });
-        }
-
-        // Usar a mesma abordagem do painel de edição: listar arquivos do bucket
-        const { data: files, error } = await supabase.storage
-          .from('imagens-das-escolas')
-          .list(`${escola_id}/`);
-
         if (error) {
           throw error;
         }
 
-        if (!files || files.length === 0) {
-          console.log('Nenhum arquivo encontrado para escola', escola_id);
+        if (!legendas || legendas.length === 0) {
+          console.log('Nenhuma imagem encontrada em legendas_fotos para escola', escola_id);
           setImagens([]);
           setLoading(false);
           return;
         }
 
-        console.log('Arquivos encontrados:', files.length);
+        console.log('Imagens encontradas em legendas_fotos:', legendas.length);
 
-        // Processar cada arquivo encontrado
-        const imagensEncontradas = await Promise.all(
-          files.map(async (file, index) => {
-            const filePath = `${escola_id}/${file.name}`;
-            const { data: { publicUrl } } = supabase.storage
-              .from('imagens-das-escolas')
-              .getPublicUrl(filePath);
+        // URL base do storage remoto (produção)
+        const REMOTE_STORAGE_URL = 'https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-das-escolas/';
 
-            // Buscar legenda do mapa primeiro, depois tentar busca flexível se não encontrar
-            let legenda = legendasMap.get(filePath);
-            
-            if (!legenda) {
-              try {
-                console.log('Buscando legenda para:', filePath);
-                legenda = await getLegendaByImageUrlFlexivel(filePath, escola_id, {
-                  categoria: 'escola',
-                  tipo_foto: 'escola'
-                });
-                console.log('Legenda encontrada:', legenda);
-              } catch (error) {
-                console.warn('Erro ao buscar legenda para', filePath, ':', error);
-              }
+        // Processar cada imagem encontrada
+        const imagensEncontradas = legendas.map((legenda, index) => {
+          let publicUrl = null;
+
+          if (legenda.imagem_url) {
+            if (legenda.imagem_url.startsWith('http')) {
+              publicUrl = legenda.imagem_url;
+            } else {
+              // Construir URL usando o bucket remoto
+              publicUrl = `${REMOTE_STORAGE_URL}${legenda.imagem_url}`;
             }
+          }
 
-            // Only set descricao if there's actual content, otherwise null (don't show default)
-            const descricao = hasContent(legenda?.legenda) ? legenda.legenda.trim() : null;
-            
-            return {
-              id: `${escola_id}-${file.name}`,
-              publicURL: publicUrl,
-              filePath: filePath,
-              descricao: descricao,
-              descricaoDetalhada: hasContent(legenda?.descricao_detalhada) ? legenda.descricao_detalhada.trim() : null,
-              autor: hasContent(legenda?.autor_foto) ? legenda.autor_foto.trim() : null,
-              dataFoto: legenda?.data_foto,
-              categoria: legenda?.categoria,
-              ordem: legenda?.ordem !== null && legenda?.ordem !== undefined ? legenda.ordem : Infinity,
-              urlError: null,
-            };
-          })
-        );
+          return {
+            id: legenda.id || `${escola_id}-${index}`,
+            publicURL: publicUrl,
+            filePath: legenda.imagem_url,
+            descricao: hasContent(legenda.legenda) ? legenda.legenda.trim() : null,
+            descricaoDetalhada: hasContent(legenda.descricao_detalhada) ? legenda.descricao_detalhada.trim() : null,
+            autor: hasContent(legenda.autor_foto) ? legenda.autor_foto.trim() : null,
+            dataFoto: legenda.data_foto,
+            categoria: legenda.categoria,
+            ordem: legenda.ordem !== null && legenda.ordem !== undefined ? legenda.ordem : index,
+            urlError: null,
+          };
+        });
 
-        // Ordenar imagens por ordem (do banco de dados)
+        // A ordenação já é feita na query do banco de dados, mas mantemos aqui para consistência
+        // com a lógica anterior, caso a ordem do banco não seja suficiente ou para fallback.
+        // No entanto, com a ordenação na query, esta etapa pode ser menos crítica.
         imagensEncontradas.sort((a, b) => {
           // Primeiro ordenar por ordem (menor primeiro)
           if (a.ordem !== b.ordem) {
@@ -174,17 +149,17 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
 
         console.log('Imagens processadas e ordenadas:', imagensEncontradas.length);
         console.log('Ordem das imagens:', imagensEncontradas.map(img => ({ file: img.filePath.split('/').pop(), ordem: img.ordem })));
-        
+
         // Salvar no cache com versão
         cacheRef.current[cacheKey] = imagensEncontradas;
         setImagens(imagensEncontradas);
-        
+
         if (imagensEncontradas.length === 0) {
           setError('Nenhuma imagem encontrada para esta escola.');
         }
       } catch (error) {
         console.error('Erro ao processar imagens:', error);
-        setError('Erro ao carregar imagens da escola.');
+        setError(`Erro ao carregar imagens da escola: ${error.message || JSON.stringify(error)}`);
       } finally {
         setLoading(false);
       }
@@ -205,7 +180,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
     return (
       <div className="text-red-600 flex items-center gap-2">
         <span>{error}</span>
-        <button 
+        <button
           onClick={limparCacheERecarregar}
           className="text-blue-600 hover:text-blue-800"
           title="Tentar novamente"
@@ -220,7 +195,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
     return (
       <div className="text-yellow-700 flex items-center gap-2">
         <span>Nenhuma imagem encontrada para esta escola.</span>
-        <button 
+        <button
           onClick={limparCacheERecarregar}
           className="text-blue-600 hover:text-blue-800"
           title="Tentar novamente"
@@ -260,14 +235,14 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
                 style={{ maxHeight: '350px' }}
               />
             </div>
-            
+
             {/* Legenda da imagem - só mostra se tiver conteúdo real */}
             {hasContent(img.descricao) && (
               <figcaption className="p-3 bg-white">
                 <p className="text-sm text-black mb-1">
                   {img.descricao}
                 </p>
-                
+
                 {/* Informações adicionais */}
                 {(hasContent(img.autor) || img.dataFoto) && (
                   <div className="flex items-center gap-4 text-xs text-gray-500">
@@ -279,7 +254,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
                     )}
                   </div>
                 )}
-                
+
                 {/* Descrição detalhada */}
                 {hasContent(img.descricaoDetalhada) && (
                   <p className="text-xs text-gray-500 mt-2 line-clamp-2">

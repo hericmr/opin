@@ -1,4 +1,5 @@
 import { uploadEscolaImage, replaceImage as replaceImageService } from '../../../../services/escolaImageService';
+import { addLegendaFoto } from '../../../../services/legendasService';
 
 /**
  * Service for uploading images
@@ -13,19 +14,32 @@ import { uploadEscolaImage, replaceImage as replaceImageService } from '../../..
  */
 export const uploadImages = async (files, escolaId, onProgress) => {
   const uploadedImages = [];
-  
+
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const progress = ((i + 1) / files.length) * 100;
-    
+
     if (onProgress) {
       onProgress(progress);
     }
-    
+
     const uploadedImage = await uploadEscolaImage(file, escolaId);
+
+    // Create database record
+    await addLegendaFoto({
+      escola_id: escolaId,
+      imagem_url: uploadedImage.url,
+      legenda: uploadedImage.descricao,
+      ativo: true,
+      tipo_foto: 'escola',
+      categoria: 'geral',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    });
+
     uploadedImages.push(uploadedImage);
   }
-  
+
   return uploadedImages;
 };
 

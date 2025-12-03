@@ -39,3 +39,4 @@ yarn-error.log*
 # Backup directories
 /backups/
 postgres_data/
+storage_backup/
