@@ -55,7 +55,7 @@ const validateImageDimensions = (file) => {
     const img = new Image();
     img.onload = () => {
       const isValid = img.width >= HISTORIA_PROFESSOR_CONFIG.MIN_DIMENSIONS.width &&
-                     img.height >= HISTORIA_PROFESSOR_CONFIG.MIN_DIMENSIONS.height;
+        img.height >= HISTORIA_PROFESSOR_CONFIG.MIN_DIMENSIONS.height;
       resolve(isValid);
     };
     img.onerror = () => resolve(false);
@@ -100,13 +100,19 @@ export const getHistoriasProfessor = async (escolaId) => {
       return [];
     }
 
+    // URL base do storage remoto (produção)
+    const REMOTE_STORAGE_URL = 'https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/';
+
     // Adicionar URLs públicas das imagens
     const historiasComImagens = data.map((historia) => {
       if (historia.imagem_url) {
         try {
-          const { data: { publicUrl } } = supabase.storage
-            .from(HISTORIA_PROFESSOR_CONFIG.BUCKET_NAME)
-            .getPublicUrl(historia.imagem_url);
+          let publicUrl = historia.imagem_url;
+
+          if (publicUrl && !publicUrl.startsWith('http')) {
+            // Construir URL usando o bucket remoto
+            publicUrl = `${REMOTE_STORAGE_URL}${HISTORIA_PROFESSOR_CONFIG.BUCKET_NAME}/${historia.imagem_url}`;
+          }
 
           return { ...historia, imagem_public_url: publicUrl };
         } catch (err) {

@@ -62,8 +62,39 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    // Usar uma porta diferente da API PostgREST (que roda em 3000)
+    // para evitar conflito entre o Vite dev server e o backend.
+    port: 5173,
     open: false,
+    proxy: {
+      '/opin/rest/v1': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/opin\/rest\/v1/, ''),
+        configure: (proxy, _options) => {
+          proxy.on('proxyReq', (proxyReq, _req, _res) => {
+            // Remove o cabeçalho Authorization para evitar erro "Server lacks JWT secret"
+            // já que não estamos usando JWT e o PostgREST assume anon role (postgres)
+            proxyReq.removeHeader('Authorization');
+          });
+        },
+      },
+      '/opin/storage/v1': {
+        target: 'http://localhost:3000', // Dummy target, we will intercept
+        bypass: (req, res, _proxyOptions) => {
+          // Intercepta requisições de storage e retorna array vazio para evitar erro de JSON parse
+          if (req.url.includes('/list/')) {
+            res.setHeader('Content-Type', 'application/json');
+            res.end('[]');
+            return false;
+          }
+          // Para outras requisições de storage, retorna 404 ou vazio
+          res.setHeader('Content-Type', 'application/json');
+          res.end('{}');
+          return false;
+        },
+      },
+    },
   },
   // Configuração para variáveis de ambiente e compatibilidade com CRA
   define: {

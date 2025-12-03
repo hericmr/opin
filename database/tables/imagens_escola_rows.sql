@@ -1,0 +1,1 @@
+INSERT INTO "public"."imagens_escola" ("id", "escola_id", "url", "descricao", "tipo", "created_at") VALUES ('1', '20', 'https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-professores/20/1Z8C9569.jpg', null, null, '2025-06-18 23:44:58.045925+00'), ('20', '20', '20/abilio_fernandes.png', null, null, '2025-06-17 10:58:19.558741+00');

@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../../../../dbClient';
 import { deleteImage } from '../../../../services/escolaImageService';
-import { transformFilesToImages, mergeLegendsIntoImages } from '../utils/imageTransformers';
+import { getLegendasByEscolaOrdered, deleteLegendaFoto } from '../../../../services/legendasService';
+import { getProfessorImagesByEscola, deleteProfessorImageMeta } from '../../../../services/professorImageMetaService';
 import { useImageOrder } from './useImageOrder';
 import { useImageLegends } from './useImageLegends';
 
@@ -23,8 +24,8 @@ export const useImageManagement = (escolaId, bucketName = 'imagens-das-escolas',
   const lastFetchedBucketRef = useRef(null);
   const hasInitialLoadRef = useRef(false);
 
-  const { loadOrder, saveOrder } = useImageOrder(escolaId, tipoFoto);
-  const { fetchLegends } = useImageLegends(escolaId, tipoFoto);
+  const { saveOrder } = useImageOrder(escolaId, tipoFoto);
+  const { saveLegend } = useImageLegends(escolaId, tipoFoto);
 
   const fetchImages = useCallback(async (showLoading = true) => {
     if (!escolaId) return;
@@ -36,12 +37,12 @@ export const useImageManagement = (escolaId, bucketName = 'imagens-das-escolas',
     }
 
     // Proteção contra re-execução desnecessária (React 19 Strict Effects)
-    const cacheKey = `${escolaId}-${bucketName}`;
-    if (hasInitialLoadRef.current && 
-        lastFetchedEscolaIdRef.current === escolaId && 
-        lastFetchedBucketRef.current === bucketName) {
-      console.log('[useImageManagement] Já carregado para este escolaId/bucket, ignorando re-execução...');
-      return;
+    // Se já carregamos e os parâmetros são os mesmos, e não estamos forçando (showLoading=false costuma ser refresh)
+    if (hasInitialLoadRef.current &&
+      lastFetchedEscolaIdRef.current === escolaId &&
+      lastFetchedBucketRef.current === bucketName &&
+      showLoading === true) { // Apenas evita se for load inicial
+      // Mas se for refresh explícito (showLoading=false), deixamos passar
     }
 
     isFetchingRef.current = true;
@@ -54,75 +55,58 @@ export const useImageManagement = (escolaId, bucketName = 'imagens-das-escolas',
       }
       setError(null);
 
-      // List files from storage
-      const { data: files, error: storageError } = await supabase.storage
-        .from(bucketName)
-        .list(`${escolaId}/`);
+      let dbImages = [];
 
-      if (storageError) {
-        throw storageError;
+      if (tipoFoto === 'professor' || bucketName === 'imagens-professores') {
+        // Buscar imagens de professores
+        dbImages = await getProfessorImagesByEscola(escolaId);
+      } else {
+        // Buscar imagens da escola (legendas_fotos)
+        dbImages = await getLegendasByEscolaOrdered(escolaId, tipoFoto);
       }
 
-      if (!files || files.length === 0) {
-        setImages([]);
-        hasInitialLoadRef.current = true;
-        if (showLoading) {
-          setLoading(false);
-        }
-        return;
-      }
+      console.log('[useImageManagement] DB Images:', dbImages.length);
 
-      // Transform files to image objects
-      const imageObjects = transformFilesToImages(files, escolaId, bucketName);
-      
-      console.log('[useImageManagement] Images after transform:', imageObjects.map(img => ({
-        id: img.id,
-        url: img.url,
-        publicURL: img.publicURL || 'MISSING',
-        hasPublicURL: !!img.publicURL
-      })));
+      // Mapear para estrutura esperada pelo componente
+      const mappedImages = dbImages.map(img => {
+        // Determinar campos baseados na origem (legendas_fotos ou imagens_professores)
+        const isProfessorTable = !!img.nome_arquivo; // imagens_professores tem nome_arquivo
 
-      // Load order from database
-      const orderedImages = await loadOrder(imageObjects);
-      
-      console.log('[useImageManagement] Images after ordering:', orderedImages.map(img => ({
-        id: img.id,
-        url: img.url,
-        publicURL: img.publicURL || 'MISSING',
-        hasPublicURL: !!img.publicURL
-      })));
-
-      // Fetch legends for images
-      const imageUrls = orderedImages.map(img => img.url);
-      const legendsMap = await fetchLegends(imageUrls);
-
-      // Merge legends into images
-      const imagesWithLegends = mergeLegendsIntoImages(orderedImages, legendsMap);
-      
-      console.log('[useImageManagement] Final images:', imagesWithLegends.map(img => ({
-        id: img.id,
-        url: img.url,
-        publicURL: img.publicURL || 'MISSING',
-        hasPublicURL: !!img.publicURL
-      })));
+        return {
+          id: img.id,
+          url: img.imagem_url,
+          publicURL: img.publicUrl, // Enriquecido pelo service
+          publicUrl: img.publicUrl,
+          filePath: img.imagem_url, // Usado para deleção no storage
+          descricao: img.legenda || img.nome_arquivo || 'Imagem',
+          created_at: img.created_at,
+          legendaData: {
+            legenda: img.legenda || '',
+            descricao_detalhada: img.descricao_detalhada || '',
+            autor_foto: isProfessorTable ? img.autor : (img.autor_foto || ''),
+            data_foto: img.data_foto || '',
+            categoria: img.categoria || 'geral',
+          }
+        };
+      });
 
       // CRÍTICO: Só atualizar estado se realmente mudou (proteção contra sobrescrita)
       setImages(prevImages => {
         // Se já temos imagens carregadas e são as mesmas, não sobrescrever
         if (hasInitialLoadRef.current && prevImages.length > 0) {
           const prevIds = new Set(prevImages.map(img => img.id));
-          const newIds = new Set(imagesWithLegends.map(img => img.id));
-          
+          const newIds = new Set(mappedImages.map(img => img.id));
+
           // Se os IDs são os mesmos, preservar o estado anterior (evita re-render desnecessário)
-          if (prevIds.size === newIds.size && 
-              [...prevIds].every(id => newIds.has(id))) {
+          if (prevIds.size === newIds.size &&
+            [...prevIds].every(id => newIds.has(id))) {
             console.log('[useImageManagement] Imagens já carregadas, preservando estado anterior');
             return prevImages;
           }
         }
-        
+
         hasInitialLoadRef.current = true;
-        return imagesWithLegends;
+        return mappedImages;
       });
     } catch (err) {
       console.error('Erro ao buscar imagens:', err);
@@ -133,53 +117,52 @@ export const useImageManagement = (escolaId, bucketName = 'imagens-das-escolas',
         setLoading(false);
       }
     }
-  }, [escolaId, bucketName, loadOrder, fetchLegends]);
+  }, [escolaId, bucketName, tipoFoto]);
 
   // Efeito inicial - só roda quando escolaId ou bucketName mudarem
   useEffect(() => {
     // Reset flags quando escolaId ou bucketName mudarem
-    if (lastFetchedEscolaIdRef.current !== escolaId || 
-        lastFetchedBucketRef.current !== bucketName) {
+    if (lastFetchedEscolaIdRef.current !== escolaId ||
+      lastFetchedBucketRef.current !== bucketName) {
       hasInitialLoadRef.current = false;
       isFetchingRef.current = false;
     }
 
     fetchImages(true); // Show loading on initial fetch
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [escolaId, bucketName]); // Removido fetchImages das dependências para evitar loops
+  }, [escolaId, bucketName]);
 
   const deleteImageById = useCallback(async (imageId, filePath) => {
     try {
+      // 1. Deletar do Storage (arquivo físico)
+      // Nota: deleteImage do service espera filePath relativo ao bucket
       await deleteImage(imageId, filePath, bucketName);
-      
+
+      // 2. Deletar do Banco de Dados (metadados)
+      if (tipoFoto === 'professor' || bucketName === 'imagens-professores') {
+        await deleteProfessorImageMeta(imageId);
+      } else {
+        await deleteLegendaFoto(imageId);
+      }
+
       // Refresh images list
-      await fetchImages();
+      await fetchImages(false);
     } catch (err) {
       console.error('Erro ao deletar imagem:', err);
       throw err;
     }
-  }, [bucketName, fetchImages]);
+  }, [bucketName, tipoFoto, fetchImages]);
 
   const addImages = useCallback(async (newImages) => {
-    // Add new images to the list
-    setImages(prevImages => {
-      const updatedImages = [...prevImages, ...newImages];
-      // Save order async (não bloquear)
-      saveOrder(updatedImages).catch(err => {
-        console.error('Erro ao salvar ordem:', err);
-      });
-      return updatedImages;
-    });
-    
-    // Refresh legends in background (sem sobrescrever imagens já carregadas)
-    // Não chamar fetchImages() completo para evitar sobrescrita
-  }, [saveOrder]);
+    // Refresh completo para pegar os IDs do banco
+    await fetchImages(false);
+  }, [fetchImages]);
 
   const updateImages = useCallback(async (updatedImages) => {
     try {
       // Save order first
       await saveOrder(updatedImages);
-      
+
       // Then update state
       setImages(updatedImages);
     } catch (err) {

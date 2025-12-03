@@ -12,7 +12,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./database/migrations/20251202200000_full_setup.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/init_full.sql:/docker-entrypoint-initdb.d/init.sql
       - opin_postgres_data:/var/lib/postgresql/data
 
   api:

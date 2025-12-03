@@ -15,12 +15,12 @@ export const testLegendasTable = async () => {
       .from('legendas_fotos')
       .select('count')
       .limit(1);
-    
+
     if (error) {
       logger.warn('Tabela legendas_fotos não encontrada ou sem permissão:', error.message);
       return false;
     }
-    
+
     logger.debug('Tabela legendas_fotos acessível');
     return true;
   } catch (error) {
@@ -51,11 +51,11 @@ export const getLegendaByImageUrl = async (imageUrl, escolaId, options = {}) => 
     if (options.ativo !== false) { // Por padrão, busca apenas ativas
       query = query.eq('ativo', true);
     }
-    
+
     if (options.categoria) {
       query = query.eq('categoria', options.categoria);
     }
-    
+
     if (options.tipo_foto) {
       query = query.eq('tipo_foto', options.tipo_foto);
     }
@@ -87,7 +87,7 @@ export const getLegendaByImageUrl = async (imageUrl, escolaId, options = {}) => 
 export const getLegendaByImageUrlFlexivel = async (imageUrl, escolaId, preferencias = {}) => {
   try {
     logger.debug(`🔍 Buscando legenda flexível para: ${imageUrl} (escola: ${escolaId})`);
-    
+
     // Estratégia 1: Busca com preferências específicas
     if (preferencias.categoria || preferencias.tipo_foto) {
       logger.debug('  📋 Tentativa 1: Busca com preferências específicas');
@@ -252,7 +252,7 @@ export const deleteLegendaFoto = async (legendaId) => {
 export const transferLegendaToNewUrl = async (oldImageUrl, newImageUrl, escolaId, tipoFoto = 'escola') => {
   try {
     // Buscar legenda da imagem antiga
-    const legenda = await getLegendaByImageUrl(oldImageUrl, escolaId, { 
+    const legenda = await getLegendaByImageUrl(oldImageUrl, escolaId, {
       tipo_foto: tipoFoto,
       ativo: false // Buscar mesmo se inativa
     });
@@ -263,7 +263,7 @@ export const transferLegendaToNewUrl = async (oldImageUrl, newImageUrl, escolaId
     }
 
     // Verificar se já existe legenda para a nova URL
-    const existingLegenda = await getLegendaByImageUrl(newImageUrl, escolaId, { 
+    const existingLegenda = await getLegendaByImageUrl(newImageUrl, escolaId, {
       tipo_foto: tipoFoto,
       ativo: false
     });
@@ -282,7 +282,7 @@ export const transferLegendaToNewUrl = async (oldImageUrl, newImageUrl, escolaId
       };
 
       const updated = await updateLegendaFoto(existingLegenda.id, updateData);
-      
+
       // Deletar a legenda antiga se for diferente
       if (legenda.id !== existingLegenda.id) {
         await deleteLegendaFoto(legenda.id);
@@ -304,6 +304,29 @@ export const transferLegendaToNewUrl = async (oldImageUrl, newImageUrl, escolaId
     logger.error('Erro ao transferir legenda:', error);
     throw error;
   }
+};
+
+// URL base do storage remoto (produção)
+const REMOTE_STORAGE_URL = 'https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/';
+
+/**
+ * Helper para adicionar URL pública ao item
+ */
+const enrichWithPublicUrl = (item) => {
+  if (!item) return item;
+
+  let publicUrl = item.imagem_url;
+  if (publicUrl && !publicUrl.startsWith('http')) {
+    // Determinar bucket baseado na categoria ou tipo
+    let bucket = 'imagens-das-escolas'; // Padrão
+    if (item.categoria === 'professor' || item.tipo_foto === 'professor') {
+      bucket = 'imagens-professores';
+    }
+
+    publicUrl = `${REMOTE_STORAGE_URL}${bucket}/${item.imagem_url}`;
+  }
+
+  return { ...item, publicUrl };
 };
 
 /**
@@ -329,7 +352,7 @@ export const getLegendasByEscola = async (escolaId, categoria = null) => {
       throw error;
     }
 
-    return data || [];
+    return (data || []).map(enrichWithPublicUrl);
   } catch (error) {
     logger.error('Erro ao buscar legendas da escola:', error);
     throw error;
@@ -360,7 +383,7 @@ export const getTituloByVideoUrl = async (videoUrl, escolaId) => {
       throw error;
     }
 
-    return data;
+    return enrichWithPublicUrl(data);
   } catch (error) {
     logger.warn('Erro ao buscar título do vídeo:', error.message);
     return null;
@@ -378,7 +401,7 @@ export const updateImageOrder = async (imageUrl, escolaId, ordem) => {
   try {
     // Primeiro, buscar a legenda existente
     const legenda = await getLegendaByImageUrl(imageUrl, escolaId, { ativo: false });
-    
+
     if (legenda) {
       // Se existe, atualizar apenas a ordem
       const { data, error } = await supabase
@@ -389,13 +412,13 @@ export const updateImageOrder = async (imageUrl, escolaId, ordem) => {
         .single();
 
       if (error) throw error;
-      return data;
+      return enrichWithPublicUrl(data);
     } else {
       // Se não existe, criar uma entrada básica com ordem
       // Extrair nome do arquivo para usar como legenda padrão
       const fileName = imageUrl.split('/').pop() || 'Imagem';
       const legendaPadrao = fileName.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ') || 'Imagem';
-      
+
       const { data, error } = await supabase
         .from('legendas_fotos')
         .insert([{
@@ -413,7 +436,7 @@ export const updateImageOrder = async (imageUrl, escolaId, ordem) => {
         .single();
 
       if (error) throw error;
-      return data;
+      return enrichWithPublicUrl(data);
     }
   } catch (error) {
     logger.error('Erro ao atualizar ordem da imagem:', error);
@@ -430,7 +453,7 @@ export const updateImageOrder = async (imageUrl, escolaId, ordem) => {
 export const updateMultipleImageOrders = async (imageOrders, escolaId) => {
   try {
     const updates = await Promise.all(
-      imageOrders.map(({ imageUrl, ordem }) => 
+      imageOrders.map(({ imageUrl, ordem }) =>
         updateImageOrder(imageUrl, escolaId, ordem)
       )
     );
@@ -462,7 +485,7 @@ export const getLegendasByEscolaOrdered = async (escolaId, tipoFoto = 'escola') 
       throw error;
     }
 
-    return data || [];
+    return (data || []).map(enrichWithPublicUrl);
   } catch (error) {
     logger.error('Erro ao buscar legendas ordenadas da escola:', error);
     throw error;
