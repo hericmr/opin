@@ -295,23 +295,32 @@ class CSVDataService {
         alunosPorEscola[cie] = parseInt(escola.Total_Alunos) || 0;
       });
 
-      // Calcula o total de turmas por escola e o total de alunos
-      let totalTurmas = 0;
-      let totalAlunos = 0;
+      // Calcula o total de turmas e alunos da amostra (escolas com dados de turmas)
+      let totalTurmasAmostra = 0;
+      let totalAlunosAmostra = 0;
 
       turmasData.forEach(escola => {
         const cie = escola.CIE_Escola.toString();
         const alunosEscola = alunosPorEscola[cie] || 0;
-        totalAlunos += alunosEscola;
 
-        Object.keys(columnMapping).forEach(column => {
-          const turmas = parseInt(escola[column]) || 0;
-          totalTurmas += turmas;
-        });
+        // Só conta processa se a escola existir na lista de indígenas
+        if (alunosPorEscola[cie] !== undefined) {
+          totalAlunosAmostra += alunosEscola;
+
+          Object.keys(columnMapping).forEach(column => {
+            const turmas = parseInt(escola[column]) || 0;
+            totalTurmasAmostra += turmas;
+          });
+        }
       });
 
-      // Se não houver turmas ou alunos, retorna valores padrão
-      if (totalTurmas === 0 || totalAlunos === 0) {
+      // Calcula o total REAL de alunos em TODAS as escolas indígenas (para extrapolação)
+      const totalAlunosReal = escolasIndigenas.reduce((sum, escola) => {
+        return sum + (parseInt(escola.Total_Alunos) || 0);
+      }, 0);
+
+      // Se não houver turmas ou alunos na amostra, retorna valores padrão
+      if (totalTurmasAmostra === 0 || totalAlunosAmostra === 0) {
         return [
           { name: 'Anos Iniciais', value: 654 },
           { name: 'Anos Finais', value: 568 },
@@ -323,12 +332,16 @@ class CSVDataService {
         ].filter(item => item.value > 0);
       }
 
-      // Calcula alunos por modalidade proporcionalmente às turmas
-      const alunosPorModalidade = {};
-      const alunosPorTurma = totalAlunos / totalTurmas;
+      // Calcula fator de extrapolação (para projetar a amostra para o total real)
+      // Se totalAlunosAmostra for 912 e totalAlunosReal for 1688, fator será ~1.85
+      const fatorExtrapolacao = totalAlunosReal / totalAlunosAmostra;
+      const alunosPorTurma = totalAlunosAmostra / totalTurmasAmostra;
 
+      const alunosPorModalidade = {};
       Object.entries(turmasPorModalidade).forEach(([modalidade, turmas]) => {
-        alunosPorModalidade[modalidade] = Math.round(turmas * alunosPorTurma);
+        // Calcula base da amostra e multiplica pelo fator de extrapolação
+        const alunosAmostra = turmas * alunosPorTurma;
+        alunosPorModalidade[modalidade] = Math.round(alunosAmostra * fatorExtrapolacao);
       });
 
       // Retorna os dados calculados, filtrando modalidades com valor zero
