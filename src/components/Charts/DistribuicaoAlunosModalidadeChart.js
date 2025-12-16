@@ -64,11 +64,11 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
     return (
-      <text 
-        x={x} 
-        y={y} 
-        fill="#1f2937" 
-        textAnchor={x > cx ? 'start' : 'end'} 
+      <text
+        x={x}
+        y={y}
+        fill="#1f2937"
+        textAnchor={x > cx ? 'start' : 'end'}
         dominantBaseline="central"
         fontSize={12}
         fontWeight="normal"
@@ -80,8 +80,8 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
 
   // Calcula o total para percentuais
   const total = data.reduce((sum, item) => sum + item.value, 0);
-  const dataWithPercentual = data.map(item => ({ 
-    ...item, 
+  const dataWithPercentual = data.map(item => ({
+    ...item,
     percentual: ((item.value / total) * 100).toFixed(1)
   }));
 
@@ -92,7 +92,8 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
   const ejaAnosIniciais = data.find(item => item.name === 'EJA Anos Iniciais')?.value || 0;
   const ejaAnosFinais = data.find(item => item.name === 'EJA Anos Finais')?.value || 0;
   const ejaEnsinoMedio = data.find(item => item.name === 'EJA Ensino Médio')?.value || 0;
-  
+  const ensinoInfantil = data.find(item => item.name === 'Ensino Infantil')?.value || 0;
+
   const totalEJA = ejaAnosIniciais + ejaAnosFinais + ejaEnsinoMedio;
   const totalFundamental = anosIniciais + anosFinais;
   const percentualFundamental = total > 0 ? ((totalFundamental / total) * 100).toFixed(1) : '0.0';
@@ -100,6 +101,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
   const percentualAnosFinais = total > 0 ? ((anosFinais / total) * 100).toFixed(1) : '0.0';
   const percentualEnsinoMedio = total > 0 ? ((ensinoMedio / total) * 100).toFixed(1) : '0.0';
   const percentualEJA = total > 0 ? ((totalEJA / total) * 100).toFixed(1) : '0.0';
+  const percentualEnsinoInfantil = total > 0 ? ((ensinoInfantil / total) * 100).toFixed(1) : '0.0';
 
   return (
     <div className="p-4 sm:p-6">
@@ -111,7 +113,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
       }}>
         Distribuição de Alunos por Modalidade de Ensino
       </h3>
-      
+
       {/* Texto introdutório */}
       <div className="mb-6 p-4 sm:p-6">
         <div className="max-w-4xl mx-auto">
@@ -136,16 +138,19 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
                 A maior parte das matrículas está no Ensino Fundamental, que reúne {percentualFundamental}% dos alunos. Os anos iniciais concentram {anosIniciais.toLocaleString()} estudantes ({percentualAnosIniciais}%), seguidos pelos anos finais, com {anosFinais.toLocaleString()} alunos ({percentualAnosFinais}%).
               </>
             )}
+            {totalEJA > 0 && (
+              <> A EJA conta com {totalEJA.toLocaleString()} estudantes ({percentualEJA}%).</>
+            )}
             {ensinoMedio > 0 && (
               <> O Ensino Médio responde por {ensinoMedio.toLocaleString()} matrículas ({percentualEnsinoMedio}%).</>
             )}
-            {totalEJA > 0 && (
-              <> A EJA conta com {totalEJA.toLocaleString()} estudantes ({percentualEJA}%).</>
+            {ensinoInfantil > 0 && (
+              <> O Ensino Infantil atende {ensinoInfantil.toLocaleString()} crianças, representando {percentualEnsinoInfantil}% do total.</>
             )}
           </p>
         </div>
       </div>
-      
+
       {/* Informações gerais */}
       <div className="mb-6 p-4">
         <div className="text-center">
@@ -169,7 +174,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
 
       {/* Grid de gráficos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
+
         {/* Gráfico de Barras */}
         <div>
           <h4 className="font-semibold mb-4 text-gray-700 text-center" style={{
@@ -192,28 +197,28 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
                   }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis 
-                    dataKey="name" 
+                  <XAxis
+                    dataKey="name"
                     tick={{ fontSize: 11, fill: '#374151' }}
                     angle={-45}
                     textAnchor="end"
                     height={120}
                     interval={0}
                   />
-                  <YAxis 
+                  <YAxis
                     tick={{ fontSize: 12, fill: '#374151' }}
                     label={{ value: 'Número de Alunos', angle: -90, position: 'insideLeft', style: { fontSize: '0.875rem', fill: '#374151' } }}
                   />
                   <Tooltip content={<CustomTooltip />} />
-                  <Bar 
-                    dataKey="value" 
+                  <Bar
+                    dataKey="value"
                     radius={[4, 4, 0, 0]}
                     stroke="#ffffff"
                     strokeWidth={2}
                   >
                     {dataWithPercentual.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
+                      <Cell
+                        key={`cell-${index}`}
                         fill={getColorForModalidade(entry.name, index)}
                         stroke="#ffffff"
                         strokeWidth={2}
@@ -250,8 +255,8 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
                     dataKey="value"
                   >
                     {dataWithPercentual.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
+                      <Cell
+                        key={`cell-${index}`}
                         fill={getColorForModalidade(entry.name, index)}
                         stroke="#ffffff"
                         strokeWidth={2}
@@ -259,8 +264,8 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
                     ))}
                   </Pie>
                   <Tooltip content={<CustomPieTooltip />} />
-                  <Legend 
-                    verticalAlign="bottom" 
+                  <Legend
+                    verticalAlign="bottom"
                     height={36}
                     formatter={(value) => (
                       <span style={{ color: '#374151' }}>
@@ -279,8 +284,8 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
       <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
         {dataWithPercentual.map((item, index) => (
           <div key={index} className="text-center p-2">
-            <div 
-              className="w-4 h-4 rounded-full mx-auto mb-2 border-2 border-white" 
+            <div
+              className="w-4 h-4 rounded-full mx-auto mb-2 border-2 border-white"
               style={{ backgroundColor: getColorForModalidade(item.name, index) }}
             ></div>
             <p className="font-semibold text-gray-800" style={{ fontSize: '0.875rem', lineHeight: '1.5' }}>{item.name}</p>
