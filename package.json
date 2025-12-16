@@ -47,7 +47,7 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "build": "vite build && node scripts/process-dashboard-html.js",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -56,7 +56,6 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "optimize-images": "node scripts/optimize-images.js",
-    "process-dashboard": "node scripts/process-dashboard-html.js",
     "db:migrate": "knex migrate:latest --knexfile knexfile.cjs",
     "db:rollback": "knex migrate:rollback --knexfile knexfile.cjs"
   },
