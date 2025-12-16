@@ -14,13 +14,13 @@ class CSVDataService {
 
     try {
       const response = await fetch(`./data/${filename}`);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const csvText = await response.text();
-      
+
       return new Promise((resolve, reject) => {
         Papa.parse(csvText, {
           header: true,
@@ -104,7 +104,7 @@ class CSVDataService {
       const cie = escola.CIE.toString();
       const alunos = parseInt(escola.Total_Alunos) || 0;
       const docentes = docentesPorEscola[cie] ? docentesPorEscola[cie].size : 0;
-      
+
       return {
         nome: escola.Nome,
         alunos: alunos,
@@ -119,7 +119,7 @@ class CSVDataService {
   // Processa dados para gráfico de alunos por escola
   async getAlunosPorEscolaData() {
     const escolasData = await this.loadEscolasData();
-    
+
     // Filtra apenas escolas indígenas
     const escolasIndigenas = escolasData
       .filter(escola => escola.Tipo === 'EEI - INDIGENA')
@@ -137,10 +137,10 @@ class CSVDataService {
   // Processa dados para gráfico de distribuição de alunos
   async getDistribuicaoAlunosData() {
     const escolasData = await this.loadEscolasData();
-    
+
     const bins = [0, 10, 25, 50, 100, Infinity];
     const labels = ['Até 10 alunos', '11 a 25 alunos', '26 a 50 alunos', '51 a 100 alunos', 'Mais de 100 alunos'];
-    
+
     const distribuicao = {};
     labels.forEach(label => distribuicao[label] = 0);
 
@@ -163,7 +163,7 @@ class CSVDataService {
   // Processa dados para gráfico de equipamentos
   async getEquipamentosData() {
     const equipamentosData = await this.loadEquipamentosData();
-    
+
     const equipamentosPorTipo = {};
     equipamentosData.forEach(equipamento => {
       if (!equipamentosPorTipo[equipamento.Equipamento]) {
@@ -184,7 +184,7 @@ class CSVDataService {
   // Processa dados para gráfico de escolas por diretoria
   async getEscolasPorDiretoriaData() {
     const escolasData = await this.loadEscolasData();
-    
+
     // Conta TODAS as escolas por diretoria (não apenas indígenas)
     const escolasPorDiretoria = {};
     escolasData.forEach(escola => {
@@ -207,10 +207,11 @@ class CSVDataService {
   // Processa dados para gráfico de tipos de ensino
   async getTiposEnsinoData() {
     const turmasData = await this.loadTurmasPorTipoData();
-    
+
     const tiposEnsino = [
       'Anos_Iniciais',
       'Anos_Finais',
+      'Ensino_Medio',
       'EJA_Anos_Iniciais',
       'EJA_Anos_Finais',
       'EJA_Ensino_Medio',
@@ -220,6 +221,7 @@ class CSVDataService {
     const labelMapping = {
       'Anos_Iniciais': 'Anos Iniciais',
       'Anos_Finais': 'Anos Finais',
+      'Ensino_Medio': 'Ensino Médio',
       'EJA_Anos_Iniciais': 'EJA Anos Iniciais',
       'EJA_Anos_Finais': 'EJA Anos Finais',
       'EJA_Ensino_Medio': 'EJA Ensino Médio',
@@ -248,11 +250,12 @@ class CSVDataService {
     try {
       // Carrega os dados reais do CSV turmas_por_tipo.csv
       const turmasData = await this.loadTurmasPorTipoData();
-      
+
       // Mapeamento direto das colunas do CSV para modalidades
       const columnMapping = {
         'Anos_Iniciais': 'Anos Iniciais',
         'Anos_Finais': 'Anos Finais',
+        'Ensino_Medio': 'Ensino Médio',
         'EJA_Anos_Iniciais': 'EJA Anos Iniciais',
         'EJA_Anos_Finais': 'EJA Anos Finais',
         'EJA_Ensino_Medio': 'EJA Ensino Médio',
@@ -284,7 +287,7 @@ class CSVDataService {
       // e distribui proporcionalmente às turmas
       const escolasData = await this.loadEscolasData();
       const escolasIndigenas = escolasData.filter(escola => escola.Tipo === 'EEI - INDIGENA');
-      
+
       // Cria um mapa de CIE para total de alunos
       const alunosPorEscola = {};
       escolasIndigenas.forEach(escola => {
@@ -295,12 +298,12 @@ class CSVDataService {
       // Calcula o total de turmas por escola e o total de alunos
       let totalTurmas = 0;
       let totalAlunos = 0;
-      
+
       turmasData.forEach(escola => {
         const cie = escola.CIE_Escola.toString();
         const alunosEscola = alunosPorEscola[cie] || 0;
         totalAlunos += alunosEscola;
-        
+
         Object.keys(columnMapping).forEach(column => {
           const turmas = parseInt(escola[column]) || 0;
           totalTurmas += turmas;
@@ -323,7 +326,7 @@ class CSVDataService {
       // Calcula alunos por modalidade proporcionalmente às turmas
       const alunosPorModalidade = {};
       const alunosPorTurma = totalAlunos / totalTurmas;
-      
+
       Object.entries(turmasPorModalidade).forEach(([modalidade, turmas]) => {
         alunosPorModalidade[modalidade] = Math.round(turmas * alunosPorTurma);
       });
