@@ -14,6 +14,11 @@ services:
     volumes:
       - ./database/init_full.sql:/docker-entrypoint-initdb.d/init.sql
       - opin_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d opin_local" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   api:
     image: postgrest/postgrest
@@ -28,7 +33,8 @@ services:
       PGRST_OPENAPI_SERVER_PROXY_URI: http://localhost:3000
       PGRST_JWT_SECRET: "this-is-a-super-secret-jwt-key-for-local-development-12345"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   frontend:
     build: .
