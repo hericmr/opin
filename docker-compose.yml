@@ -3,7 +3,7 @@ version: "3.8"
 services:
   db:
     image: postgres:16
-    container_name: opin_postgres
+    container_name: opin_db
     restart: unless-stopped
     environment:
       POSTGRES_DB: opin_local
@@ -13,7 +13,7 @@ services:
       - "5432:5432"
     volumes:
       - ./database/init_full.sql:/docker-entrypoint-initdb.d/init.sql
-      - opin_postgres_data:/var/lib/postgresql/data
+      - opin_db_data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d opin_local" ]
       interval: 10s
@@ -36,9 +36,9 @@ services:
       db:
         condition: service_healthy
 
-  frontend:
+  front:
     build: .
-    container_name: opin_frontend
+    container_name: opin_front
     restart: unless-stopped
     ports:
       - "8080:80"
@@ -46,5 +46,5 @@ services:
       - api
 
 volumes:
-  opin_postgres_data:
+  opin_db_data:
     driver: local
