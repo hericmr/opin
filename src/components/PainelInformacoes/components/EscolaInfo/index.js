@@ -5,6 +5,7 @@ import { useGlobalCardVisibility } from '../../../../hooks/useGlobalCardVisibili
 // Import all section components
 import BasicInfo from './BasicInfo';
 import HistoriaEscola from './HistoriaEscola';
+import HistoriaTerraIndigena from './HistoriaTerraIndigena';
 import Modalidades from './Modalidades';
 import Infraestrutura from './Infraestrutura';
 import GestaoProfessores from './GestaoProfessores';
@@ -60,10 +61,10 @@ const GridLayoutWrapper = memo(({ children, shouldUseGrid }) => {
 
 const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0, sectionRefs, isMaximized = false, shouldHideInlineMedia = false }) => {
   console.log("EscolaInfo recebeu:", escola);
-  
+
   // Buscar configuração global
   const { globalVisibility } = useGlobalCardVisibility();
-  
+
   if (!escola) {
     console.log("EscolaInfo: escola é null ou undefined");
     return null;
@@ -95,18 +96,25 @@ const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0, sectio
         </div>
       )}
 
+      {/* História da Terra Indígena em destaque */}
+      {isCardVisible(cardsVisibilidade, 'historiaEscola', globalVisibility) && (
+        <>
+          <HistoriaTerraIndigena escola={escola} />
+        </>
+      )}
+
       {/* História da Escola em destaque */}
       {isCardVisible(cardsVisibilidade, 'historiaEscola', globalVisibility) && (
         <div ref={(el) => sectionRefs && (sectionRefs.historia = el)}>
           <HistoriaEscola escola={escola} refreshKey={refreshKey} isMaximized={isMaximized} />
         </div>
       )}
-      
+
       {/* Imagens da escola, agora renderizadas independentemente da história */}
       {isCardVisible(cardsVisibilidade, 'imagensEscola', globalVisibility) && (
-        <ImagensdasEscolas 
-          escola_id={escola.id} 
-          refreshKey={refreshKey} 
+        <ImagensdasEscolas
+          escola_id={escola.id}
+          refreshKey={refreshKey}
           isMaximized={isMaximized}
           hideInlineMedia={shouldHideInlineMedia}
         />
@@ -115,9 +123,9 @@ const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0, sectio
       {/* História dos Professores */}
       {isCardVisible(cardsVisibilidade, 'historiaProfessor', globalVisibility) && (
         <div ref={(el) => sectionRefs && (sectionRefs.depoimentos = el)}>
-          <HistoriadoProfessor 
-            escola={escola} 
-            refreshKey={refreshKey} 
+          <HistoriadoProfessor
+            escola={escola}
+            refreshKey={refreshKey}
             isMaximized={isMaximized}
             shouldHideInlineMedia={shouldHideInlineMedia}
           />

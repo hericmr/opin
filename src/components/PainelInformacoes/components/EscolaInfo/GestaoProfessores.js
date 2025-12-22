@@ -6,7 +6,6 @@ import {
   UserCheck,
   UserMinus,
   MessageCircle,
-  NotebookPen,
   Check,
   X,
 } from 'lucide-react';
@@ -14,43 +13,10 @@ import {
 import InfoSection from '../InfoSection';
 import NativeLandCard from '../NativeLandCard';
 
-// const formatarNomeProfessor = (nome) => { // Removido - não utilizado
-//   if (!nome) return nome;
-
-//   const padroesIndigenas = [
-//     /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+\(([^)]+)\)/,
-//     /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+-\s+([^)]+)/,
-//     /^([A-Z][a-z]+)\s+([A-Z][a-z]+)\s+ou\s+([^)]+)/,
-//   ];
-
-//   for (const padrao of padroesIndigenas) {
-//     const match = nome.match(padrao);
-//     if (match) {
-//       const nomeIndigena = `${match[1]} ${match[2]}`;
-//       const nomePortugues = match[3];
-//       return `${nomeIndigena} (${nomePortugues})`;
-//     }
-//   }
-
-//   return nome.includes('(') && nome.includes(')') ? nome : nome;
-// };
-
 const formatarFormacaoProfessores = (formacao) => {
   if (!formacao) return null;
 
   const [status, ...resto] = formacao.split('/');
-  const descricao = resto.join('/').trim();
-
-  return {
-    status: status.trim().toLowerCase() === 'sim' ? 'Sim' : status.trim(),
-    descricao: descricao || null,
-  };
-};
-
-const formatarFormacaoContinuada = (valor) => {
-  if (!valor) return null;
-
-  const [status, ...resto] = valor.split('/');
   const descricao = resto.join('/').trim();
 
   return {
@@ -115,7 +81,6 @@ const GestaoProfessores = memo(({ escola }) => {
   if (!escola) return null;
 
   const formacao = formatarFormacaoProfessores(escola.formacao_professores);
-  const continuada = formatarFormacaoContinuada(escola.formacao_continuada);
 
   // Filter empty values
   const professoresCards = [
@@ -144,7 +109,7 @@ const GestaoProfessores = memo(({ escola }) => {
       {(() => {
         const longContentCards = professoresCards.filter(item => hasLongContent(item.value));
         const normalCards = professoresCards.filter(item => !hasLongContent(item.value));
-        
+
         return (
           <>
             {/* Cards com muito conteúdo - linha inteira (1 coluna) */}
@@ -162,7 +127,7 @@ const GestaoProfessores = memo(({ escola }) => {
                 ))}
               </div>
             )}
-            
+
             {/* Cards normais - grid de 3 colunas */}
             {normalCards.length > 0 && (
               <div className={`grid ${getGridCols(normalCards.length)} gap-3 ${longContentCards.length > 0 ? 'mb-3' : 'mb-3'} items-stretch overflow-visible`}>
@@ -181,7 +146,7 @@ const GestaoProfessores = memo(({ escola }) => {
           </>
         );
       })()}
-      
+
       {/* Cards adicionais - cada um ocupa uma linha inteira */}
       {(() => {
         const additionalCards = [
@@ -201,13 +166,6 @@ const GestaoProfessores = memo(({ escola }) => {
             icon: UsersRound,
             label: "Outros Funcionários",
             value: escola.outros_funcionarios
-          },
-          continuada?.status && {
-            icon: NotebookPen,
-            label: "Visitas de Supervisores e Formação Continuada",
-            value: renderBooleanStatus(continuada.status),
-            description: continuada.descricao,
-            className: "h-auto min-h-[140px]"
           }
         ].filter(Boolean);
 

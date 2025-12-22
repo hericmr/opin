@@ -1,12 +1,8 @@
 import React, { memo } from 'react';
 import {
-  Home,
-  Droplet,
-  Trash2,
   Wifi,
   Monitor,
-  MapPin,
-  ChefHat,
+  Layout,
 } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import BooleanValue from '../BooleanValue';
@@ -49,7 +45,7 @@ const Infraestrutura = memo(({ escola }) => {
 
   // Adicionar espaço escolar como primeiro item se existir
   const allItems = [];
-  
+
   if (escola.espaco_escolar && !isEmptyValue(escola.espaco_escolar)) {
     allItems.push({
       icon: Home,
@@ -60,22 +56,9 @@ const Infraestrutura = memo(({ escola }) => {
 
   const items = [
     {
-      icon: Droplet,
-      label: (
-        <>
-          Acesso à<br />Água
-        </>
-      ),
-      value: <BooleanValue value={escola.acesso_agua} />,
-    },
-    {
-      icon: Trash2,
-      label: (
-        <>
-          Coleta de<br />Lixo
-        </>
-      ),
-      value: <BooleanValue value={escola.coleta_lixo} />,
+      icon: Layout,
+      label: 'Salas Vinculadas',
+      value: escola.salas_vinculadas,
     },
     {
       icon: Wifi,
@@ -86,16 +69,6 @@ const Infraestrutura = memo(({ escola }) => {
       icon: Monitor,
       label: 'Equipamentos Tecnológicos',
       value: escola.equipamentos,
-    },
-    {
-      icon: MapPin,
-      label: 'Modo de Acesso à Escola',
-      value: escola.modo_acesso,
-    },
-    {
-      icon: ChefHat,
-      label: 'Merenda Diferenciada',
-      value: <BooleanValue value={escola.diferenciada} />,
     },
   ].filter(item => !isEmptyValue(item.value));
 
@@ -124,7 +97,7 @@ const Infraestrutura = memo(({ escola }) => {
           ))}
         </div>
       )}
-      
+
       {/* Cards normais - grid de 3 colunas */}
       {normalCards.length > 0 && (
         <div className={`grid ${getGridCols(normalCards.length)} gap-3 ${longContentCards.length > 0 ? '' : ''} items-stretch overflow-visible`}>
