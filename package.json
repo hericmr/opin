@@ -56,8 +56,8 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "optimize-images": "node scripts/optimize-images.js",
-    "db:migrate": "knex migrate:latest --knexfile knexfile.cjs",
-    "db:rollback": "knex migrate:rollback --knexfile knexfile.cjs"
+    "db:migrate": "knex migrate:latest --knexfile config/knexfile.cjs",
+    "db:rollback": "knex migrate:rollback --knexfile config/knexfile.cjs"
   },
   "browserslist": {
     "production": [
