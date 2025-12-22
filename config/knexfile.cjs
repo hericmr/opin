@@ -3,6 +3,8 @@
 
 require("dotenv").config();
 
+const path = require("path");
+
 /** @type {import("knex").Knex.Config} */
 const config = {
   client: "pg",
@@ -16,7 +18,7 @@ const config = {
       database: process.env.DB_NAME || "opin_local",
     },
   migrations: {
-    directory: "./migrations",
+    directory: path.join(__dirname, "../migrations"),
     tableName: "knex_migrations",
   },
 };

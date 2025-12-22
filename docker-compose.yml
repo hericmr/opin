@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./database/init_full.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./data/database/init_full.sql:/docker-entrypoint-initdb.d/init.sql
       - opin_db_data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d opin_local" ]
