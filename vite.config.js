@@ -80,18 +80,18 @@ export default defineConfig({
         },
       },
       '/opin/storage/v1': {
-        target: 'http://localhost:3000', // Dummy target, we will intercept
-        bypass: (req, res, _proxyOptions) => {
-          // Intercepta requisições de storage e retorna array vazio para evitar erro de JSON parse
-          if (req.url.includes('/list/')) {
-            res.setHeader('Content-Type', 'application/json');
-            res.end('[]');
-            return false;
-          }
-          // Para outras requisições de storage, retorna 404 ou vazio
+        target: 'http://localhost:3000', // Dummy target
+        changeOrigin: true,
+        bypass: (req, res, _options) => {
+          // Intercepta TODAS as requisições para storage
           res.setHeader('Content-Type', 'application/json');
-          res.end('{}');
-          return false;
+
+          if (req.url.includes('/list/')) {
+            res.end('[]');
+          } else {
+            res.end('{}');
+          }
+          return req.url; // Retorna URL para garantir que o bypass funcione sem tentar proxy
         },
       },
     },
