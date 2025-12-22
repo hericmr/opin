@@ -1,0 +1,37 @@
+import React, { memo } from 'react';
+import HistoriaEscolaContent from './HistoriaEscolaContent';
+import HistoriaTerraIndigenaHeader from './HistoriaTerraIndigenaHeader';
+import './HistoriaEscola.css'; // Reusing same styles
+
+const HistoriaTerraIndigena = memo(({ escola }) => {
+    if (!escola?.historia_terra_indigena) return null;
+
+    // Utilize same content renderer as School History
+    const htmlContent = escola.historia_terra_indigena;
+
+    return (
+        <div className="mt-8 mb-12 flex flex-col items-center w-full">
+            {/* Header externo ao card - mantém largura máxima sempre */}
+            <header className="historia-escola-header mb-6 sm:mb-8 w-full max-w-4xl mx-auto">
+                <HistoriaTerraIndigenaHeader />
+                <div className="h-1 w-20 sm:w-24 bg-green-300 rounded-full" />
+            </header>
+
+            {/* Card com conteúdo - sem borda, inline com o resto, largura otimizada para leitura */}
+            <article
+                className="
+          prose prose-sm sm:prose-base md:prose-lg lg:prose-xl
+          prose-headings:text-green-900 prose-p:text-black prose-p:leading-relaxed prose-p:text-justify
+          prose-img:rounded-xl prose-img:shadow-lg
+          prose-a:text-green-700 prose-a:no-underline prose-a:border-b-2 prose-a:border-green-100 hover:prose-a:border-green-600
+          max-w-3xl mx-auto w-full
+        "
+                style={{ maxWidth: '65ch' }}
+            >
+                <HistoriaEscolaContent htmlContent={htmlContent} />
+            </article>
+        </div>
+    );
+});
+
+export default HistoriaTerraIndigena;
