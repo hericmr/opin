@@ -11,7 +11,7 @@ const GestaoProfessoresTab = ({ editingLocation, setEditingLocation }) => {
         setEditingLocation={setEditingLocation}
         label="Visibilidade do Card: Equipe"
       />
-      
+
       {/* Gestão/Nome */}
       <div>
         <label className="block text-sm font-medium text-gray-200 mb-2 text-base">
@@ -78,18 +78,7 @@ const GestaoProfessoresTab = ({ editingLocation, setEditingLocation }) => {
         />
       </div>
 
-      {/* Formação Continuada */}
-      <div>
-        <label className="block text-sm font-medium text-gray-200 mb-2 text-base">
-          Formação Continuada
-        </label>
-        <textarea
-          className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 h-32 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-gray-100 placeholder-gray-400 text-base"
-          value={editingLocation['Formação continuada oferecida'] || ''}
-          onChange={e => setEditingLocation({ ...editingLocation, 'Formação continuada oferecida': e.target.value })}
-          placeholder="Descreva a formação continuada oferecida aos professores..."
-        />
-      </div>
+
     </div>
   );
 };

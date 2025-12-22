@@ -1,6 +1,5 @@
-// Importar react-dom diretamente para garantir que patcheamos o módulo correto
-// Este import deve acontecer ANTES de qualquer outro código que use react-dom
-import * as ReactDOM from 'react-dom';
+// Importar react-dom via default import para permitir patching de propriedades (se objeto não estiver congelado)
+import ReactDOM from 'react-dom';
 
 /**
  * Polyfill para findDOMNode que foi removido no React 19
@@ -41,10 +40,10 @@ export const setupFindDOMNodePolyfill = () => {
       if (componentOrElement._element && typeof componentOrElement._element.nodeType === 'number') {
         return componentOrElement._element;
       }
-      
+
       // Tentar encontrar através de propriedades comuns do ReactQuill
       // ReactQuill geralmente armazena referências ao elemento DOM
-      
+
       // Verificar se tem uma propriedade que é um elemento DOM
       const possibleProps = ['element', 'el', '_node', 'domNode', 'node'];
       for (const prop of possibleProps) {
@@ -102,7 +101,7 @@ export const setupFindDOMNodePolyfill = () => {
         let fiber = componentOrElement._reactInternalFiber || componentOrElement._reactInternalInstance;
         let depth = 0;
         const maxDepth = 10; // Limitar profundidade para evitar loops infinitos
-        
+
         while (fiber && depth < maxDepth) {
           if (fiber.stateNode) {
             // Se stateNode é um elemento DOM, retornar
@@ -120,7 +119,7 @@ export const setupFindDOMNodePolyfill = () => {
               }
             }
           }
-          
+
           // Navegar pela árvore de fiber
           if (fiber.child) {
             fiber = fiber.child;
@@ -139,28 +138,28 @@ export const setupFindDOMNodePolyfill = () => {
       if (componentOrElement.quill && componentOrElement.quill.root) {
         return componentOrElement.quill.root;
       }
-      
+
       // Tentar encontrar através do editor se disponível
       if (componentOrElement.editor && componentOrElement.editor.root) {
         return componentOrElement.editor.root;
       }
-      
+
       // Tentar encontrar através do elemento raiz do ReactQuill
       // ReactQuill pode ter uma referência ao elemento DOM em _element ou similar
       if (componentOrElement._element && typeof componentOrElement._element.nodeType === 'number') {
         return componentOrElement._element;
       }
-      
+
       // Tentar encontrar através de _domNode (armazenado pelo QuillEditor)
       if (componentOrElement._domNode && typeof componentOrElement._domNode.nodeType === 'number') {
         return componentOrElement._domNode;
       }
-      
+
       // Tentar encontrar através da referência _quillRootElement que adicionamos no QuillEditor
       if (componentOrElement._quillRootElement && typeof componentOrElement._quillRootElement.nodeType === 'number') {
         return componentOrElement._quillRootElement;
       }
-      
+
       // Tentar encontrar através do editor.root se disponível
       if (componentOrElement.getEditor && typeof componentOrElement.getEditor === 'function') {
         try {
@@ -177,7 +176,7 @@ export const setupFindDOMNodePolyfill = () => {
           // Ignorar erros
         }
       }
-      
+
       // Para ReactQuill: tentar encontrar o elemento .quill no DOM
       // Isso funciona quando o componente já foi renderizado
       if (typeof document !== 'undefined') {
@@ -189,7 +188,7 @@ export const setupFindDOMNodePolyfill = () => {
             return element;
           }
         }
-        
+
         // Se não encontramos através das referências, buscar no DOM
         // Buscar elementos quill que foram criados recentemente
         const quillElements = Array.from(document.querySelectorAll('.quill'));
@@ -197,7 +196,7 @@ export const setupFindDOMNodePolyfill = () => {
           // Tentar encontrar o elemento quill que está dentro do container mais próximo
           // ou retornar o último elemento quill (provavelmente o mais recente)
           const lastQuill = quillElements[quillElements.length - 1];
-          
+
           // Verificar se este elemento quill está relacionado ao componente
           // procurando por um container pai que possa estar relacionado
           return lastQuill;
@@ -209,36 +208,24 @@ export const setupFindDOMNodePolyfill = () => {
     return null;
   };
 
-  // Patchear react-dom usando Object.defineProperty para contornar imutabilidade de imports
+  // Patchear react-dom
   try {
-    Object.defineProperty(ReactDOM, 'findDOMNode', {
-      value: findDOMNodeImpl,
-      writable: true,
-      configurable: true,
-    });
+    // Tentar definir diretamente se possível
+    ReactDOM.findDOMNode = findDOMNodeImpl;
   } catch (e) {
-    // Se Object.defineProperty falhar, tentar atribuição direta (pode funcionar em alguns ambientes)
+    console.warn('Falha ao definir ReactDOM.findDOMNode diretamente:', e);
+    // Tentar Object.defineProperty como fallback
     try {
-      // Usar bracket notation para contornar restrições de imutabilidade
-      ReactDOM['findDOMNode'] = findDOMNodeImpl;
-    } catch (e2) {
-      console.warn('Não foi possível patchear ReactDOM.findDOMNode:', e2);
-    }
-  }
-  
-  // Também patchear no default se existir
-  if (ReactDOM.default) {
-    try {
-      Object.defineProperty(ReactDOM.default, 'findDOMNode', {
+      Object.defineProperty(ReactDOM, 'findDOMNode', {
         value: findDOMNodeImpl,
         writable: true,
         configurable: true,
       });
-    } catch (e) {
-      // Ignorar erro
+    } catch (e2) {
+      console.warn('Não foi possível patchear ReactDOM.findDOMNode:', e2);
     }
   }
-  
+
   // Patchear no módulo global também (para garantir que todas as importações vejam)
   if (typeof window !== 'undefined') {
     window.__REACT_DOM_FIND_DOM_NODE__ = findDOMNodeImpl;

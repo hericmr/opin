@@ -19,11 +19,11 @@ const useSearch = (dataPoints) => {
 
     lastSearchTerm.current = searchTerm;
     setIsSearching(true);
-    
+
     try {
       // Simular delay de busca apenas se necessário
       const startTime = Date.now();
-      
+
       const term = searchTerm.toLowerCase();
       const results = [];
 
@@ -31,7 +31,7 @@ const useSearch = (dataPoints) => {
       if (dataPoints && dataPoints.length > 0) {
         dataPoints.forEach(school => {
           const matches = [];
-          
+
           // === INFORMAÇÕES BÁSICAS ===
           if (school.titulo && school.titulo.toLowerCase().includes(term)) {
             matches.push('nome');
@@ -79,9 +79,7 @@ const useSearch = (dataPoints) => {
           if (school.povos_indigenas && school.povos_indigenas.toLowerCase().includes(term)) {
             matches.push('povos');
           }
-          if (school.linguas_faladas && school.linguas_faladas.toLowerCase().includes(term)) {
-            matches.push('línguas');
-          }
+
 
           // === ENSINO ===
           if (school.modalidade_ensino && school.modalidade_ensino.toLowerCase().includes(term)) {
@@ -98,21 +96,15 @@ const useSearch = (dataPoints) => {
           if (school.espaco_escolar && school.espaco_escolar.toLowerCase().includes(term)) {
             matches.push('espaço escolar');
           }
-          if (school.acesso_agua && school.acesso_agua.toLowerCase().includes(term)) {
-            matches.push('água');
-          }
-          if (school.coleta_lixo && school.coleta_lixo.toLowerCase().includes(term)) {
-            matches.push('lixo');
-          }
+
+
           if (school.acesso_internet && school.acesso_internet.toLowerCase().includes(term)) {
             matches.push('internet');
           }
           if (school.equipamentos && school.equipamentos.toLowerCase().includes(term)) {
             matches.push('equipamentos');
           }
-          if (school.modo_acesso && school.modo_acesso.toLowerCase().includes(term)) {
-            matches.push('acesso escola');
-          }
+
 
           // === GESTÃO E PROFESSORES ===
           if (school.gestao && school.gestao.toLowerCase().includes(term)) {
@@ -133,9 +125,7 @@ const useSearch = (dataPoints) => {
           if (school.formacao_professores && school.formacao_professores.toLowerCase().includes(term)) {
             matches.push('formação professores');
           }
-          if (school.formacao_continuada && school.formacao_continuada.toLowerCase().includes(term)) {
-            matches.push('formação continuada');
-          }
+
 
           // === PROJETO PEDAGÓGICO ===
           if (school.ppp_comunidade && school.ppp_comunidade.toLowerCase().includes(term)) {
@@ -149,18 +139,7 @@ const useSearch = (dataPoints) => {
           }
 
           // === PROJETOS E PARCERIAS ===
-          if (school.projetos_andamento && school.projetos_andamento.toLowerCase().includes(term)) {
-            matches.push('projetos');
-          }
-          if (school.parcerias_universidades && school.parcerias_universidades.toLowerCase().includes(term)) {
-            matches.push('parcerias universidades');
-          }
-          if (school.acoes_ongs && school.acoes_ongs.toLowerCase().includes(term)) {
-            matches.push('ongs');
-          }
-          if (school.desejos_comunidade && school.desejos_comunidade.toLowerCase().includes(term)) {
-            matches.push('desejos comunidade');
-          }
+
 
           // === REDES SOCIAIS E MÍDIA ===
           if (school.usa_redes_sociais && school.usa_redes_sociais.toLowerCase().includes(term)) {
@@ -171,6 +150,9 @@ const useSearch = (dataPoints) => {
           }
           if (school.historia_da_escola && school.historia_da_escola.toLowerCase().includes(term)) {
             matches.push('história escola');
+          }
+          if (school.historia_terra_indigena && school.historia_terra_indigena.toLowerCase().includes(term)) {
+            matches.push('história terra indígena');
           }
 
           // === MÍDIA ===
@@ -223,11 +205,11 @@ const useSearch = (dataPoints) => {
         // Priorizar matches no nome
         const aNameMatch = a.matches.includes('nome') ? 1 : 0;
         const bNameMatch = b.matches.includes('nome') ? 1 : 0;
-        
+
         if (aNameMatch !== bNameMatch) {
           return bNameMatch - aNameMatch;
         }
-        
+
         // Depois por número de matches
         return b.matches.length - a.matches.length;
       });
@@ -256,7 +238,7 @@ const useSearch = (dataPoints) => {
 
   const getSearchSuggestions = useCallback((term) => {
     if (!term || term.length < 2) return [];
-    
+
     const suggestions = new Set();
     const searchTerm = term.toLowerCase();
 
@@ -266,12 +248,12 @@ const useSearch = (dataPoints) => {
         if (school.municipio && school.municipio.toLowerCase().includes(searchTerm)) {
           suggestions.add(school.municipio);
         }
-        
+
         // Sugestões de terras indígenas
         if (school.terra_indigena && school.terra_indigena.toLowerCase().includes(searchTerm)) {
           suggestions.add(school.terra_indigena);
         }
-        
+
         // Sugestões de povos
         if (school.povos_indigenas && school.povos_indigenas.toLowerCase().includes(searchTerm)) {
           const povos = school.povos_indigenas.split(',').map(p => p.trim());
@@ -282,15 +264,7 @@ const useSearch = (dataPoints) => {
           });
         }
 
-        // Sugestões de línguas
-        if (school.linguas_faladas && school.linguas_faladas.toLowerCase().includes(searchTerm)) {
-          const linguas = school.linguas_faladas.split(',').map(l => l.trim());
-          linguas.forEach(lingua => {
-            if (lingua.toLowerCase().includes(searchTerm)) {
-              suggestions.add(lingua);
-            }
-          });
-        }
+
 
         // Sugestões de modalidades
         if (school.modalidade_ensino && school.modalidade_ensino.toLowerCase().includes(searchTerm)) {
@@ -302,10 +276,7 @@ const useSearch = (dataPoints) => {
           suggestions.add(school.gestao);
         }
 
-        // Sugestões de projetos
-        if (school.projetos_andamento && school.projetos_andamento.toLowerCase().includes(searchTerm)) {
-          suggestions.add(school.projetos_andamento);
-        }
+
       });
     }
 
