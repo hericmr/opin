@@ -35,7 +35,11 @@ services:
         condition: service_healthy
 
   front:
-    build: .
+    build:
+      context: .
+      args:
+        - VITE_SUPABASE_URL=/opin
+        - VITE_SUPABASE_ANON_KEY=local-dev-key-ignore-auth
     container_name: opin_front
     restart: unless-stopped
     ports:

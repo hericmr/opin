@@ -66,35 +66,8 @@ export default defineConfig({
     // para evitar conflito entre o Vite dev server e o backend.
     port: 5173,
     open: false,
-    proxy: {
-      '/opin/rest/v1': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/opin\/rest\/v1/, ''),
-        configure: (proxy, _options) => {
-          proxy.on('proxyReq', (proxyReq, _req, _res) => {
-            // Remove o cabeçalho Authorization para evitar erro "Server lacks JWT secret"
-            // já que não estamos usando JWT e o PostgREST assume anon role (postgres)
-            proxyReq.removeHeader('Authorization');
-          });
-        },
-      },
-      '/opin/storage/v1': {
-        target: 'http://localhost:3000', // Dummy target
-        changeOrigin: true,
-        bypass: (req, res, _options) => {
-          // Intercepta TODAS as requisições para storage
-          res.setHeader('Content-Type', 'application/json');
-
-          if (req.url.includes('/list/')) {
-            res.end('[]');
-          } else {
-            res.end('{}');
-          }
-          return req.url; // Retorna URL para garantir que o bypass funcione sem tentar proxy
-        },
-      },
-    },
+    // Proxy removido: Em dev, conecta direto ao Supabase via URL.
+    // Em produção (Docker), o Nginx faz o proxy reverso.
   },
   // Configuração para variáveis de ambiente e compatibilidade com CRA
   define: {
