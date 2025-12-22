@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import {
+  Home,
   Wifi,
   Monitor,
   Layout,
