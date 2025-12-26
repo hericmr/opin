@@ -239,13 +239,13 @@ const AdminPanelContent = () => {
 
     const fieldMappings = {
       'dados-basicos': ['Escola', 'Município', 'Endereço', 'Terra Indigena (TI)', 'Diretoria de Ensino'],
-      'povos-linguas': ['Povos indigenas', 'Linguas faladas'],
+      'povos-linguas': ['Povos indigenas'],
       'modalidades': ['Modalidade de Ensino/turnos de funcionamento', 'Numero de alunos'],
-      'infraestrutura': ['Espaço escolar e estrutura', 'Acesso à água', 'Acesso à internet'],
+      'infraestrutura': ['Espaço escolar e estrutura', 'Acesso à internet'],
       'gestao-professores': ['Gestão/Nome', 'Quantidade de professores indígenas', 'Quantidade de professores não indígenas'],
       'funcionarios': ['Outros funcionários'],
       'material-pedagogico': ['Material pedagógico indígena'],
-      'projetos-parcerias': ['Projetos em andamento', 'Parcerias com universidades?'],
+      'projetos-parcerias': ['outras_informacoes'],
       'redes-sociais': ['Escola utiliza redes sociais?', 'Links das redes sociais'],
       'video': ['link_para_videos'],
       'historias': ['historia_da_escola'],
@@ -559,10 +559,10 @@ const AdminPanelContent = () => {
                       type="button"
                       onClick={() => setEditingLocation({ ...editingLocation, activeTab: tab.id })}
                       className={`whitespace-nowrap py-1.5 px-3 rounded text-xs font-medium transition-all duration-200 ${isActive
-                          ? 'bg-[#00A884] text-white'
-                          : hasMissing
-                            ? 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
-                            : 'bg-[#202C33] text-[#8696A0] hover:bg-[#2A3942] hover:text-[#E9EDEF]'
+                        ? 'bg-[#00A884] text-white'
+                        : hasMissing
+                          ? 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
+                          : 'bg-[#202C33] text-[#8696A0] hover:bg-[#2A3942] hover:text-[#E9EDEF]'
                         }`}
                     >
                       <span className="flex items-center gap-1.5">
@@ -676,8 +676,8 @@ const AdminPanelContent = () => {
                   <button
                     onClick={() => setShowCompletenessDashboard(!showCompletenessDashboard)}
                     className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border text-sm ${showCompletenessDashboard
-                        ? 'bg-green-800 text-green-100 border-green-600 hover:bg-green-700'
-                        : 'bg-gray-800 text-gray-100 border-gray-600 hover:bg-gray-700'
+                      ? 'bg-green-800 text-green-100 border-green-600 hover:bg-green-700'
+                      : 'bg-gray-800 text-gray-100 border-gray-600 hover:bg-gray-700'
                       }`}
                   >
                     <div className="flex items-center gap-2 justify-center">
@@ -736,8 +736,8 @@ const AdminPanelContent = () => {
                   <button
                     onClick={() => setShowGlobalCardVisibility(!showGlobalCardVisibility)}
                     className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border text-sm ${showGlobalCardVisibility
-                        ? 'bg-blue-800 text-blue-100 border-blue-600 hover:bg-blue-700'
-                        : 'bg-gray-800 text-gray-100 border-gray-600 hover:bg-gray-700'
+                      ? 'bg-blue-800 text-blue-100 border-blue-600 hover:bg-blue-700'
+                      : 'bg-gray-800 text-gray-100 border-gray-600 hover:bg-gray-700'
                       }`}
                   >
                     <div className="flex items-center gap-2 justify-center">
