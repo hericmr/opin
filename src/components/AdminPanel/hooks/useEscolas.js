@@ -15,14 +15,14 @@ export const useEscolas = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const { data, error } = await supabase
         .from('escolas_completa')
         .select('*')
         .order('Escola', { ascending: true });
 
       if (error) throw error;
-      
+
       // Mapear os dados para usar os nomes originais das colunas
       const escolasMapeadas = data.map(escola => ({
         ...escola,
@@ -34,7 +34,7 @@ export const useEscolas = () => {
         cep: escola.cep || '',
         estado: escola.estado || 'SP'
       }));
-      
+
       setEscolas(escolasMapeadas);
     } catch (err) {
       logger.error('Erro ao buscar escolas:', err);
@@ -48,7 +48,7 @@ export const useEscolas = () => {
 
   // Atualizar escola na lista local
   const updateEscolaInList = useCallback((escolaId, updatedData) => {
-    setEscolas(prev => prev.map(escola => 
+    setEscolas(prev => prev.map(escola =>
       escola.id === escolaId ? { ...escola, ...updatedData } : escola
     ));
   }, []);
@@ -70,7 +70,7 @@ export const useEscolas = () => {
 
   // Buscar escola por nome
   const getEscolaByName = useCallback((nome) => {
-    return escolas.find(escola => 
+    return escolas.find(escola =>
       escola.Escola?.toLowerCase() === nome.toLowerCase()
     );
   }, [escolas]);
@@ -79,7 +79,7 @@ export const useEscolas = () => {
   const saveEscola = useCallback(async (escolaData, metadados = null) => {
     try {
       setError(null);
-      
+
       if (escolaData.id) {
         // Atualizar escola existente
         const { data, error } = await supabase
@@ -98,6 +98,7 @@ export const useEscolas = () => {
             'Modalidade de Ensino/turnos de funcionamento': escolaData['Modalidade de Ensino/turnos de funcionamento'],
             'Numero de alunos': escolaData['Numero de alunos'],
             'turnos_funcionamento': escolaData['turnos_funcionamento'],
+            'salas_vinculadas': escolaData['salas_vinculadas'],
             'Espaço escolar e estrutura': escolaData['Espaço escolar e estrutura'],
             'Acesso à água': escolaData['Acesso à água'],
             'Tem coleta de lixo?': escolaData['Tem coleta de lixo?'],
@@ -140,10 +141,10 @@ export const useEscolas = () => {
           .select();
 
         if (error) throw error;
-        
+
         // Atualizar na lista local
         updateEscolaInList(escolaData.id, data[0]);
-        
+
         // Registrar versão de dados apenas se metadados foram fornecidos
         // Se metadados for null, o modal será responsável por registrar depois
         if (metadados !== null) {
@@ -160,7 +161,7 @@ export const useEscolas = () => {
             logger.warn('Erro ao registrar versão de dados (não crítico):', versionError);
           }
         }
-        
+
         return { success: true, data: data[0] };
       } else {
         // Criar nova escola
@@ -180,6 +181,7 @@ export const useEscolas = () => {
             'Modalidade de Ensino/turnos de funcionamento': escolaData['Modalidade de Ensino/turnos de funcionamento'],
             'Numero de alunos': escolaData['Numero de alunos'],
             'turnos_funcionamento': escolaData['turnos_funcionamento'],
+            'salas_vinculadas': escolaData['salas_vinculadas'],
             'Espaço escolar e estrutura': escolaData['Espaço escolar e estrutura'],
             'Acesso à água': escolaData['Acesso à água'],
             'Tem coleta de lixo?': escolaData['Tem coleta de lixo?'],
@@ -221,10 +223,10 @@ export const useEscolas = () => {
           .select();
 
         if (error) throw error;
-        
+
         // Adicionar à lista local
         addEscolaToList(data[0]);
-        
+
         // Registrar versão de dados apenas se metadados foram fornecidos
         // Se metadados for null, o modal será responsável por registrar depois
         if (metadados !== null) {
@@ -241,7 +243,7 @@ export const useEscolas = () => {
             logger.warn('Erro ao registrar versão de dados (não crítico):', versionError);
           }
         }
-        
+
         return { success: true, data: data[0] };
       }
     } catch (err) {
@@ -255,14 +257,14 @@ export const useEscolas = () => {
   const deleteEscola = useCallback(async (escolaId) => {
     try {
       setError(null);
-      
+
       const { error } = await supabase
         .from('escolas_completa')
         .delete()
         .eq('id', escolaId);
 
       if (error) throw error;
-      
+
       // Remover da lista local
       removeEscolaFromList(escolaId);
       return { success: true };
@@ -285,7 +287,7 @@ export const useEscolas = () => {
     error,
     searchTerm,
     selectedType,
-    
+
     // Ações
     setSearchTerm,
     setSelectedType,
@@ -295,7 +297,7 @@ export const useEscolas = () => {
     removeEscolaFromList,
     saveEscola,
     deleteEscola,
-    
+
     // Utilitários
     getEscolaById,
     getEscolaByName,

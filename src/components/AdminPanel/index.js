@@ -41,13 +41,13 @@ const AdminPanelContent = () => {
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= UI_CONFIG.MOBILE_BREAKPOINT;
 
   // Hooks customizados
-  const { 
+  const {
     escolas,
-    loading: escolasLoading, 
+    loading: escolasLoading,
     error: escolasError,
-    searchTerm, 
-    setSearchTerm, 
-    selectedType, 
+    searchTerm,
+    setSearchTerm,
+    selectedType,
     setSelectedType,
     saveEscola,
     deleteEscola
@@ -83,7 +83,7 @@ const AdminPanelContent = () => {
   const openEditModal = (escola) => {
     // Carregar modalidades existentes
     loadExistingModalidades(escola['Modalidade de Ensino/turnos de funcionamento']);
-    
+
     // Garantir que apenas os campos originais do banco sejam usados
     const escolaOriginal = {
       id: escola.id,
@@ -99,6 +99,7 @@ const AdminPanelContent = () => {
       'Modalidade de Ensino/turnos de funcionamento': escola['Modalidade de Ensino/turnos de funcionamento'],
       'Numero de alunos': escola['Numero de alunos'],
       'turnos_funcionamento': escola['turnos_funcionamento'] || '',
+      'salas_vinculadas': escola['salas_vinculadas'] || '',
       'Espaço escolar e estrutura': escola['Espaço escolar e estrutura'],
       'Acesso à água': escola['Acesso à água'],
       'Tem coleta de lixo?': escola['Tem coleta de lixo?'],
@@ -142,7 +143,7 @@ const AdminPanelContent = () => {
       diferenciada: escola.diferenciada,
       activeTab: FORM_CONFIG.DEFAULT_ACTIVE_TAB
     };
-    
+
     // Salvar dados originais para comparação posterior
     setDadosOriginais({ ...escolaOriginal });
     setEditingLocation(escolaOriginal);
@@ -161,7 +162,7 @@ const AdminPanelContent = () => {
   const criarNovaEscolaVazia = () => {
     // Limpar modalidades
     clearModalidades();
-    
+
     return {
       Escola: '',
       'Município': '',
@@ -175,6 +176,7 @@ const AdminPanelContent = () => {
       'Modalidade de Ensino/turnos de funcionamento': '',
       'Numero de alunos': null,
       'turnos_funcionamento': '',
+      'salas_vinculadas': '',
       'Espaço escolar e estrutura': '',
       'Acesso à água': '',
       'Tem coleta de lixo?': '',
@@ -255,7 +257,7 @@ const AdminPanelContent = () => {
     };
 
     const fields = fieldMappings[tabId] || [];
-    
+
     return fields.some(field => {
       const value = escola[field];
       return value === null || value === undefined || value === '' || value === 'null';
@@ -268,7 +270,7 @@ const AdminPanelContent = () => {
       // Criar um arquivo ZIP com todas as imagens
       const JSZip = (await import('jszip')).default;
       const zip = new JSZip();
-      
+
       // Buscar todas as imagens do bucket 'imagens'
       const { data: imagens, error } = await supabase
         .storage
@@ -304,7 +306,7 @@ const AdminPanelContent = () => {
       // Baixar cada imagem e adicionar ao ZIP
       for (let i = 0; i < imagens.length; i++) {
         const imagem = imagens[i];
-        
+
         try {
           const { data: imageData, error: downloadError } = await supabase
             .storage
@@ -318,7 +320,7 @@ const AdminPanelContent = () => {
 
           // Adicionar ao ZIP
           zip.file(imagem.name, imageData);
-          
+
           // Atualizar progresso
           loadingMessage.innerHTML = `
             <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
@@ -335,7 +337,7 @@ const AdminPanelContent = () => {
 
       // Gerar e baixar o ZIP
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      
+
       // Criar link de download
       const url = URL.createObjectURL(zipBlob);
       const a = document.createElement('a');
@@ -348,9 +350,9 @@ const AdminPanelContent = () => {
 
       // Remover loading
       document.body.removeChild(loadingMessage);
-      
+
       alert(`Download concluído! ${imagens.length} imagens foram baixadas em um arquivo ZIP.`);
-      
+
     } catch (error) {
       logger.error('Erro ao fazer download das imagens:', error);
       alert('Erro ao fazer download das imagens: ' + error.message);
@@ -364,7 +366,7 @@ const AdminPanelContent = () => {
     setIsDeleting(true);
     try {
       const result = await deleteEscola(escolaToDelete.id);
-      
+
       if (result.success) {
         setShowDeleteModal(false);
         setEscolaToDelete(null);
@@ -414,7 +416,7 @@ const AdminPanelContent = () => {
             Painel de Administração
           </h1>
         </div>
-        
+
         {/* Toolbar */}
         <AdminToolbar
           searchTerm={searchTerm}
@@ -451,7 +453,7 @@ const AdminPanelContent = () => {
         {/* Tabela Editável em Tela Cheia */}
         {editingLocation && editingLocation.activeTab === 'tabela-editavel' && (
           <div className="fixed inset-0 bg-gray-900 z-40 overflow-hidden" style={{ top: '72px' }}>
-            <TabelaEditavelTab 
+            <TabelaEditavelTab
               setEditingLocation={setEditingLocation}
               onShowMetadadosModal={(escolaId, escolaNome, camposAlterados) => {
                 setEscolaSalvaId(escolaId);
@@ -502,7 +504,7 @@ const AdminPanelContent = () => {
                     </>
                   )}
                 </button>
-                
+
                 {/* Botão Fechar - Estilo WhatsApp Dark Mode */}
                 <button
                   onClick={() => setEditingLocation(null)}
@@ -528,7 +530,7 @@ const AdminPanelContent = () => {
                   </div>
                 </div>
               )}
-              
+
               {saveError && (
                 <div className="mb-4 p-3 bg-[#2A1F1F] rounded-lg border-l-4 border-[#F15C6D]">
                   <div className="flex items-center gap-2">
@@ -550,19 +552,18 @@ const AdminPanelContent = () => {
                 {ADMIN_TABS.map((tab) => {
                   const isActive = (editingLocation.activeTab || FORM_CONFIG.DEFAULT_ACTIVE_TAB) === tab.id;
                   const hasMissing = hasMissingInfo(tab.id, editingLocation);
-                  
+
                   return (
                     <button
                       key={tab.id}
                       type="button"
                       onClick={() => setEditingLocation({ ...editingLocation, activeTab: tab.id })}
-                      className={`whitespace-nowrap py-1.5 px-3 rounded text-xs font-medium transition-all duration-200 ${
-                        isActive
+                      className={`whitespace-nowrap py-1.5 px-3 rounded text-xs font-medium transition-all duration-200 ${isActive
                           ? 'bg-[#00A884] text-white'
                           : hasMissing
-                          ? 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
-                          : 'bg-[#202C33] text-[#8696A0] hover:bg-[#2A3942] hover:text-[#E9EDEF]'
-                      }`}
+                            ? 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
+                            : 'bg-[#202C33] text-[#8696A0] hover:bg-[#2A3942] hover:text-[#E9EDEF]'
+                        }`}
                     >
                       <span className="flex items-center gap-1.5">
                         {tab.label}
@@ -615,16 +616,16 @@ const AdminPanelContent = () => {
                 <CompletenessDashboard />
               </Suspense>
             )}
-            
+
             {/* Configuração Global de Visibilidade de Cards */}
             {showGlobalCardVisibility && (
               <GlobalCardVisibilitySettings />
             )}
-            
+
             {/* Ações do Painel */}
             <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800/50 p-6">
               <div className="text-center mb-8">
-                <img 
+                <img
                   src={`${import.meta.env.BASE_URL || '/opin'}/logo_index.png`}
                   alt="OPIN - Observatório dos Professores Indígenas"
                   className="w-32 h-32 mx-auto mb-6 object-contain"
@@ -638,7 +639,7 @@ const AdminPanelContent = () => {
               </div>
               {/* Grid de Ações */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
+
                 {/* Ações Principais */}
                 <div className="space-y-3">
                   <h4 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
@@ -647,7 +648,7 @@ const AdminPanelContent = () => {
                     </svg>
                     Ações Principais
                   </h4>
-                  
+
                   <button
                     onClick={handleNovaEscola}
                     className="w-full px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 shadow-lg hover:shadow-xl text-sm"
@@ -674,11 +675,10 @@ const AdminPanelContent = () => {
 
                   <button
                     onClick={() => setShowCompletenessDashboard(!showCompletenessDashboard)}
-                    className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border text-sm ${
-                      showCompletenessDashboard 
-                        ? 'bg-green-800 text-green-100 border-green-600 hover:bg-green-700' 
+                    className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border text-sm ${showCompletenessDashboard
+                        ? 'bg-green-800 text-green-100 border-green-600 hover:bg-green-700'
                         : 'bg-gray-800 text-gray-100 border-gray-600 hover:bg-gray-700'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-2 justify-center">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -697,7 +697,7 @@ const AdminPanelContent = () => {
                     </svg>
                     Mídia e Backup
                   </h4>
-                  
+
                   <button
                     onClick={handleDownloadImages}
                     className="w-full px-4 py-3 bg-gray-800 text-gray-100 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border border-gray-600 text-sm"
@@ -732,14 +732,13 @@ const AdminPanelContent = () => {
                     </svg>
                     Administração
                   </h4>
-                  
+
                   <button
                     onClick={() => setShowGlobalCardVisibility(!showGlobalCardVisibility)}
-                    className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border text-sm ${
-                      showGlobalCardVisibility 
-                        ? 'bg-blue-800 text-blue-100 border-blue-600 hover:bg-blue-700' 
+                    className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border text-sm ${showGlobalCardVisibility
+                        ? 'bg-blue-800 text-blue-100 border-blue-600 hover:bg-blue-700'
                         : 'bg-gray-800 text-gray-100 border-gray-600 hover:bg-gray-700'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-2 justify-center">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -749,7 +748,7 @@ const AdminPanelContent = () => {
                       Visibilidade dos Cards
                     </div>
                   </button>
-                  
+
                   <button
                     onClick={() => setShowDeleteModal(true)}
                     className="w-full px-4 py-3 bg-red-800 text-red-100 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border border-red-600 text-sm"
