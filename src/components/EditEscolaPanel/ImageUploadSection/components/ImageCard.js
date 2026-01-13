@@ -5,6 +5,7 @@ import ImageActions from './ImageActions';
 import LegendForm from './LegendForm';
 import useImagePreloader from '../../../../hooks/useImagePreloader';
 import { supabase } from '../../../../dbClient';
+import { getLocalImageUrl } from '../../../../utils/imageUtils';
 
 /**
  * Individual image card component with all functionality
@@ -70,20 +71,24 @@ const ImageCard = ({
 
   // Get image URL - use helper to ensure Vite compatibility
   const imageUrl = (() => {
+    // Try local resolution first
     const url = image.publicURL || image.publicUrl;
+    const localUrl = getLocalImageUrl(url);
+    if (localUrl !== url) return localUrl;
+
     if (!url) return '';
-    
+
     // If it's already a full URL (http/https), return as is
     if (url.startsWith('http://') || url.startsWith('https://')) {
       return url;
     }
-    
+
     // If it's a relative path, prepend BASE_URL for Vite compatibility
     const baseUrl = import.meta.env.BASE_URL || '/opin/';
     const normalizedUrl = url.startsWith('/') ? url : `/${url}`;
     return `${baseUrl.replace(/\/$/, '')}${normalizedUrl}`;
   })();
-  
+
   // Debug log to verify URL is available
   if (!imageUrl && image.id) {
     console.warn('[ImageCard] Missing URL for image:', {
@@ -104,16 +109,13 @@ const ImageCard = ({
       onDragLeave={dragHandlers?.handleDragLeave}
       onDrop={(e) => dragHandlers?.handleDrop(e, index)}
       onDragEnd={dragHandlers?.handleDragEnd}
-      className={`relative bg-gray-800/50 border border-gray-700/50 rounded-lg overflow-hidden shadow-sm transition-all cursor-move group ${
-        isHeader ? 'ring-2 ring-blue-400' : ''
-      } ${
-        isDragged ? 'opacity-50 scale-95' : ''
-      } ${
-        isDragOver ? 'ring-2 ring-blue-500 scale-105' : ''
-      }`}
+      className={`relative bg-gray-800/50 border border-gray-700/50 rounded-lg overflow-hidden shadow-sm transition-all cursor-move group ${isHeader ? 'ring-2 ring-blue-400' : ''
+        } ${isDragged ? 'opacity-50 scale-95' : ''
+        } ${isDragOver ? 'ring-2 ring-blue-500 scale-105' : ''
+        }`}
     >
       {/* Image Container - EXATAMENTE como painel de informações */}
-      <div 
+      <div
         className="relative w-full aspect-[4/3] bg-gray-100 overflow-hidden"
         style={{
           position: 'relative',
@@ -136,7 +138,7 @@ const ImageCard = ({
             alt={image.descricao || image.legendaData?.legenda || 'Imagem da escola'}
             className="absolute inset-0 w-full h-full object-cover object-center"
             loading={isImagePreloaded(imageUrl) ? "eager" : "lazy"}
-            style={{ 
+            style={{
               display: 'block',
               visibility: 'visible',
               opacity: 1,
@@ -170,12 +172,12 @@ const ImageCard = ({
             }}
           />
         )}
-        
+
         {/* Drag Handle */}
         <div className="absolute top-2 right-2 z-30 bg-gray-900/80 p-1 rounded cursor-grab active:cursor-grabbing">
           <GripVertical className="w-4 h-4 text-gray-400" />
         </div>
-        
+
         {/* Header Badge */}
         {isHeader && (
           <div className="absolute top-2 left-2 z-20 bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
@@ -183,7 +185,7 @@ const ImageCard = ({
             Header
           </div>
         )}
-        
+
         {/* Drawing Badge */}
         {isDrawing && (
           <div className="absolute top-2 left-2 z-20 bg-purple-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
@@ -191,7 +193,7 @@ const ImageCard = ({
             Desenho
           </div>
         )}
-        
+
         {/* Actions Overlay - Só interage quando em hover, não bloqueia imagem */}
         <ImageActions
           image={image}
@@ -205,7 +207,7 @@ const ImageCard = ({
           onRemoveDrawing={onRemoveDrawing}
         />
       </div>
-      
+
       {/* Caption below thumbnail */}
       {(image.legendaData?.legenda || image.descricao) && (
         <div className="px-4 pb-2 pt-1">

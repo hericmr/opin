@@ -51,6 +51,18 @@ Mapa interativo com base em imagem de satélite e três camadas principais:
 - **Banco de Dados Local** - PostgreSQL (anteriormente Supabase)
 - **Jest** - Framework de testes
 
+## Imagens e Armazenamento
+
+O projeto utiliza um sistema híbrido para imagens:
+- **Imagens Locais**: Imagens pré-existentes são servidas da pasta `public/images/local` para performance e disponibilidade offline.
+- **Novos Uploads**: Novas imagens adicionadas pelo painel administrativo são enviadas para o Supabase.
+
+Para sincronizar novas imagens do Supabase para o local (em ambiente de desenvolvimento):
+```bash
+node scripts/download_images.js
+```
+Isso baixa as novas imagens e atualiza o `src/data/image_map.json`.
+
 ## Documentação
 
 ### Para Desenvolvedores
