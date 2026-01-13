@@ -63,6 +63,27 @@ node scripts/download_images.js
 ```
 Isso baixa as novas imagens e atualiza o `src/data/image_map.json`.
 
+## Ambiente Docker
+
+Para facilitar o desenvolvimento local, o projeto oferece suporte a contêineres Docker, incluindo banco de dados (PostgreSQL), API (PostgREST) e front-end.
+
+### Pré-requisitos
+- Docker Desktop ou Docker Engine + Docker Compose
+
+### Comandos Rápidos
+O projeto inclui um `Makefile` para facilitar os comandos mais comuns:
+
+- **Iniciar o ambiente**: `make up` (ou `make up-d` para rodar em background)
+  - Acesse o site em: http://localhost:8080/opin/
+  - API disponível em: http://localhost:8080/opin/rest/v1/
+
+- **Parar o ambiente**: `make down`
+
+- **Resetar banco de dados**: `make reset-db`
+  - Isso **apaga** todos os dados locais e reinicia o banco a partir do dump SQL original. Use com cuidado!
+
+- **Ver logs**: `make logs-f`
+
 ## Documentação
 
 ### Para Desenvolvedores
