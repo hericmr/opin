@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { RefreshCw } from 'lucide-react';
+import { getLocalImageUrl, isLocalImage } from '../../../utils/imageUtils';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
 import { supabase } from '../../../dbClient';
 import ReusableImageZoom from '../../ReusableImageZoom';
@@ -147,15 +148,35 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
           return 0;
         });
 
-        console.log('Imagens processadas e ordenadas:', imagensEncontradas.length);
-        console.log('Ordem das imagens:', imagensEncontradas.map(img => ({ file: img.filePath.split('/').pop(), ordem: img.ordem })));
+
+
+        // Filtrar apenas imagens que existem localmente (para evitar flash de imagens deletadas)
+        // Isso assume que o download_images.js rodou e baixou tudo que era válido.
+        // Se uma imagem não está no mapa, assumimos que ela foi deletada ou não existe.
+        const imagensValidas = imagensEncontradas.filter(img => {
+          // Se tiver URL pública, verifique se temos mapeamento local
+          if (img.publicURL) {
+            return isLocalImage(img.publicURL);
+          }
+          // Fallback para check no filePath se necessário
+          if (img.filePath) {
+            return isLocalImage(img.filePath);
+          }
+          return false;
+        });
+
+        console.log('Imagens processadas, ordenadas e VALIDADAS:', imagensValidas.length);
 
         // Salvar no cache com versão
-        cacheRef.current[cacheKey] = imagensEncontradas;
-        setImagens(imagensEncontradas);
+        cacheRef.current[cacheKey] = imagensValidas;
+        setImagens(imagensValidas);
 
-        if (imagensEncontradas.length === 0) {
-          setError('Nenhuma imagem encontrada para esta escola.');
+        if (imagensValidas.length === 0) {
+          // Se encontrou no banco mas nenhuma válida localmente
+          if (imagensEncontradas.length > 0) {
+            console.log('Imagens existem no banco mas não localmente (provavelmente deletadas).');
+          }
+          setError('Nenhuma imagem disponível para esta escola.');
         }
       } catch (error) {
         console.error('Erro ao processar imagens:', error);

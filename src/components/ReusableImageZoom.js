@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { X, ZoomIn, ZoomOut, RotateCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatDateForDisplay } from '../utils/dateUtils';
+import { getLocalImageUrl } from '../utils/imageUtils';
 
 // Helper function to check if a value has actual content
 const hasContent = (value) => {
@@ -10,10 +11,10 @@ const hasContent = (value) => {
   return true;
 };
 
-const ReusableImageZoom = ({ 
-  images = [], 
-  currentImageIndex = 0, 
-  isOpen = false, 
+const ReusableImageZoom = ({
+  images = [],
+  currentImageIndex = 0,
+  isOpen = false,
   onClose,
   onImageChange,
   showNavigation = true,
@@ -66,7 +67,7 @@ const ReusableImageZoom = ({
     const handleEsc = (e) => {
       if (e.key === 'Escape') fecharZoom();
     };
-    
+
     if (isOpen) {
       window.addEventListener('keydown', handleEsc);
       return () => window.removeEventListener('keydown', handleEsc);
@@ -77,7 +78,7 @@ const ReusableImageZoom = ({
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!isOpen) return;
-      
+
       switch (e.key) {
         case 'ArrowLeft':
           e.preventDefault();
@@ -217,7 +218,7 @@ const ReusableImageZoom = ({
       <div className="image-zoom-container">
         <div className="image-zoom-image-wrapper">
           <img
-            src={currentImage.url || currentImage.publicURL || currentImage.imagem_public_url}
+            src={getLocalImageUrl(currentImage.url || currentImage.publicURL || currentImage.imagem_public_url)}
             alt={currentImage.descricao || currentImage.descricao_imagem || 'Imagem'}
             className="image-zoom-image"
             style={{
@@ -238,7 +239,7 @@ const ReusableImageZoom = ({
             <p className="text-sm text-black mb-1 leading-tight">
               {currentImage.descricao || currentImage.descricao_imagem || currentImage.legenda}
             </p>
-            
+
             {/* Informações adicionais */}
             {(hasContent(currentImage.autor) || currentImage.dataFoto) && (
               <div className="flex items-center gap-4 text-xs text-gray-500">
@@ -250,7 +251,7 @@ const ReusableImageZoom = ({
                 )}
               </div>
             )}
-            
+
             {/* Descrição detalhada */}
             {hasContent(currentImage.descricaoDetalhada) && (
               <p className="text-xs text-gray-500 mt-2 leading-relaxed">

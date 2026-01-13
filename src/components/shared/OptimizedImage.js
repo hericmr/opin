@@ -1,21 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { getLocalImageUrl } from '../../utils/imageUtils';
 
 /**
  * Componente de imagem otimizada - Versão simplificada
  * Funciona exatamente como no painel de informações
  * Sem lógica complexa de estado - apenas renderiza a imagem
  */
-const OptimizedImage = ({ 
-  src, 
-  alt, 
-  className = '', 
+const OptimizedImage = ({
+  src,
+  alt,
+  className = '',
   isPreloaded = false,
   placeholder = null,
   onLoad,
   onError,
-  ...props 
+  ...props
 }) => {
+  const localSrc = getLocalImageUrl(src);
+
   // Se não há src válido, mostrar placeholder
   if (!src || typeof src !== 'string' || src.trim() === '') {
     if (placeholder) return placeholder;
@@ -32,7 +35,7 @@ const OptimizedImage = ({
   // Sem wrapper div extra, sem condições, apenas a imagem
   return (
     <img
-      src={src}
+      src={localSrc}
       alt={alt || ''}
       className={`w-full h-full object-cover ${className}`}
       onLoad={(e) => {
