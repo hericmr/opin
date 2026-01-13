@@ -36,11 +36,24 @@ help:
 	@echo "  make logs         - Mostra logs dos containers"
 	@echo "  make logs-f       - Mostra logs em tempo real"
 	@echo "  make ps           - Lista containers do projeto"
+	@echo ""
+	@echo "$(YELLOW)Manutenção:$(NC)"
+	@echo "  make reset-db     - PARA TUDO e remove o volume do banco (reset total)"
+
+	@echo "  make prod-up      - Inicia ambiente de PRODUÇÃO (usa .env)"
+	@echo ""
 
 ## Inicia os containers em foreground (desenvolvimento)
 up:
 	@echo "$(GREEN)Iniciando containers em foreground...$(NC)"
 	$(DOCKER_COMPOSE) up
+
+## Inicia ambiente de produção
+prod-up:
+	@echo "$(RED)Iniciando em MODO PRODUÇÃO...$(NC)"
+	@if [ ! -f .env ]; then echo "$(RED)Erro: Arquivo .env não encontrado. Copie .env.example e configure.$(NC)"; exit 1; fi
+	$(DOCKER_COMPOSE) -f docker-compose.prod.yml --env-file .env up -d
+	@echo "$(GREEN)Produção iniciada na porta 80 (ou definida em .env).$(NC)"
 
 ## Inicia os containers em background
 up-d:
@@ -92,3 +105,8 @@ logs-f:
 ps:
 	@echo "$(GREEN)Listando containers do projeto...$(NC)"
 	$(DOCKER_COMPOSE) ps
+## Reseta o banco de dados (CUIDADO: APAGA DADOS)
+reset-db:
+	@echo "$(RED)Parando containers e removendo volume do banco...$(NC)"
+	$(DOCKER_COMPOSE) down -v
+	@echo "$(GREEN)Volume removido. Na próxima vez que subir (make up), o banco será recriado do zero.$(NC)"
