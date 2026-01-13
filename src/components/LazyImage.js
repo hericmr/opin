@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { getLocalImageUrl } from '../utils/imageUtils';
 
-const LazyImage = ({ 
-  src, 
-  alt, 
-  className, 
+const LazyImage = ({
+  src,
+  alt,
+  className,
   placeholder = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YwZjBmMCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5jYXJyZWdhbmRvLi4uPC90ZXh0Pjwvc3ZnPg==',
   onLoad,
-  ...props 
+  ...props
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
@@ -45,10 +46,10 @@ const LazyImage = ({
   };
 
   return (
-    <div 
+    <div
       ref={imgRef}
       className={`relative overflow-hidden ${className}`}
-      style={{ 
+      style={{
         transition: 'opacity 0.3s ease-in-out'
       }}
     >
@@ -62,11 +63,10 @@ const LazyImage = ({
       )}
       {isInView && (
         <img
-          src={src}
+          src={getLocalImageUrl(src)}
           alt={alt}
-          className={`w-full h-full object-contain transition-opacity duration-300 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={`w-full h-full object-contain transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
           onLoad={handleLoad}
           {...props}
         />

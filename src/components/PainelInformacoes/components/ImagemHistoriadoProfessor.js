@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { supabase } from '../../../dbClient';
+import { getLocalImageUrl, isLocalImage } from '../../../utils/imageUtils';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
 import ReusableImageZoom from '../../ReusableImageZoom';
 import OptimizedImage from '../../shared/OptimizedImage';
@@ -133,7 +134,14 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
             };
           }));
 
-          setImagens(imagensComUrl);
+          // Filtrar apenas imagens que existem localmente (consistência com ImagensdasEscolas)
+          const imagensValidas = imagensComUrl.filter(img => {
+            if (img.publicURL) return isLocalImage(img.publicURL);
+            return false;
+          });
+
+          console.log('Arquivos de professores VALIDADOS:', imagensValidas.length);
+          setImagens(imagensValidas);
         } else {
           setImagens([]);
         }
