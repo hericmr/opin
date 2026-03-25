@@ -11,7 +11,8 @@ const BookGallery = () => {
   useEffect(() => {
     const fetchCatalog = async () => {
       try {
-        const baseUrl = import.meta.env.BASE_URL || '/opin';
+        const rawBaseUrl = process.env.PUBLIC_URL || '/opin';
+        const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl.slice(0, -1) : rawBaseUrl;
         const response = await fetch(`${baseUrl}/materiais/catalog.json`);
         if (!response.ok) {
           throw new Error('Não foi possível carregar o catálogo de materiais.');
