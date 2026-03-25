@@ -51,7 +51,7 @@ const BookCard = ({ book }) => {
 
         <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between text-gray-500">
           <span className="text-xs font-medium">
-            {book.volume ? `Volume ${book.volume}` : 'Edição Única'}
+            {book.volume ? `Volume ${book.volume}` : ''}
           </span>
 
           <div className="flex gap-3">
