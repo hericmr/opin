@@ -9,7 +9,7 @@ import { Facebook, Twitter, MessageCircle, Copy as LinkIcon, Check } from 'lucid
 const MinimalShareButtons = ({ url, title, description = '' }) => {
   const [copied, setCopied] = useState(false);
   const shareUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
-  const shareText = title || 'OPIN - Observatório Dos Professores Indígenas';
+  const shareText = title || 'OPIN - Observatório dos Professores Indígenas';
 
   const handleCopyLink = async () => {
     try {
@@ -39,7 +39,7 @@ const MinimalShareButtons = ({ url, title, description = '' }) => {
       >
         <Facebook className="w-4 h-4" />
       </FacebookShareButton>
-      
+
       <TwitterShareButton
         url={shareUrl}
         title={shareText}
@@ -48,7 +48,7 @@ const MinimalShareButtons = ({ url, title, description = '' }) => {
       >
         <Twitter className="w-4 h-4" />
       </TwitterShareButton>
-      
+
       <WhatsappShareButton
         url={shareUrl}
         title={shareText}
@@ -57,7 +57,7 @@ const MinimalShareButtons = ({ url, title, description = '' }) => {
       >
         <MessageCircle className="w-4 h-4" />
       </WhatsappShareButton>
-      
+
       <button
         onClick={handleCopyLink}
         className="shareIcon blackHover"
