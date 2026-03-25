@@ -63,7 +63,7 @@ const BookGallery = () => {
           Saberes Indígenas na Escola
         </h2>
         <p className="text-lg text-gray-600 leading-relaxed">
-          Livros produzidos por educadores indígenas no âmbito da ação Saberes Indígenas na Escola, em parceria com a UNIFESP no estado de São Paulo.
+          Livros produzidos no âmbito da ação Saberes Indígenas na Escola, em parceria com a UNIFESP no estado de São Paulo.
         </p>
       </div>
 
