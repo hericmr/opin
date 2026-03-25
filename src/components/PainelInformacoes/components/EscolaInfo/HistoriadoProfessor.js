@@ -143,7 +143,7 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false,
       {/* Card com conteúdo - sem borda, inline com o resto, largura otimizada para leitura */}
       <article
         className="
-          prose prose-sm sm:prose-base md:prose-lg lg:prose-xl
+          prose prose-lg
           prose-headings:text-green-900 prose-p:text-black prose-p:leading-relaxed prose-p:text-justify
           prose-img:rounded-xl prose-img:shadow-lg
           prose-a:text-green-700 prose-a:no-underline prose-a:border-b-2 prose-a:border-green-100 hover:prose-a:border-green-600
@@ -153,7 +153,7 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false,
       >
 
         {/* Conteúdo da história atual */}
-        <section className="text-base sm:text-lg leading-relaxed text-neutral-800">
+        <section className="text-lg leading-relaxed text-neutral-800">
           {currentHistoria.nome_professor && (
             <div className="flex flex-col items-center mb-6">
               <div className="flex-shrink-0">
@@ -170,7 +170,7 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false,
                   {currentHistoria.nome_professor}
                 </h3>
                 <div
-                  className="historia-professor-content prose prose-sm sm:prose-base md:prose-lg lg:prose-xl max-w-none
+                  className="historia-professor-content prose prose-lg max-w-none
                   prose-headings:text-green-900 prose-p:text-black prose-p:leading-relaxed prose-p:text-justify
                   prose-img:rounded-xl prose-img:shadow-lg
                   prose-a:text-green-700 prose-a:no-underline prose-a:border-b-2 prose-a:border-green-100 hover:prose-a:border-green-600
@@ -185,7 +185,7 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false,
           )}
           {!currentHistoria.nome_professor && (
             <div
-              className="historia-professor-content prose prose-sm sm:prose-base md:prose-lg lg:prose-xl max-w-none
+              className="historia-professor-content prose prose-lg max-w-none
               prose-headings:text-green-900 prose-p:text-black prose-p:leading-relaxed prose-p:text-justify
               prose-img:rounded-xl prose-img:shadow-lg
               prose-a:text-green-700 prose-a:no-underline prose-a:border-b-2 prose-a:border-green-100 hover:prose-a:border-green-600
