@@ -30,7 +30,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
       const data = payload[0].payload;
       return (
         <div className="bg-white p-4 border border-gray-300 rounded-lg shadow-lg" style={{
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+          fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
         }}>
           <p className="font-semibold mb-1" style={{ fontSize: '1rem', lineHeight: '1.5', color: '#111827' }}>{data.name}</p>
           <p style={{ fontSize: '0.9375rem', lineHeight: '1.5', color: '#374151' }}>Alunos: {data.value.toLocaleString()}</p>
@@ -46,7 +46,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
       const data = payload[0].payload;
       return (
         <div className="bg-white p-4 border border-gray-300 rounded-lg shadow-lg" style={{
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+          fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
         }}>
           <p className="font-semibold mb-1" style={{ fontSize: '1rem', lineHeight: '1.5', color: '#111827' }}>{data.name}</p>
           <p style={{ fontSize: '0.9375rem', lineHeight: '1.5', color: '#374151' }}>Alunos: {data.value.toLocaleString()}</p>
@@ -108,7 +108,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
       <h3 className="font-bold mb-6 text-gray-800 text-center" style={{
         fontSize: '1.5rem',
         lineHeight: '1.75',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         letterSpacing: '-0.01em'
       }}>
         Distribuição de Alunos por Modalidade de Ensino
@@ -121,7 +121,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
             fontSize: '1.125rem',
             lineHeight: '1.75',
             color: '#374151',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
             letterSpacing: '0.01em'
           }}>
             Segundo os dados da SEDUC, em 2025, existem 42 escolas estaduais indígenas no estado de São Paulo, distribuídas entre a capital, o interior e o litoral, atendendo {total.toLocaleString()} estudantes. Essas escolas oferecem os anos iniciais e finais do Ensino Fundamental, o Ensino Médio e a Educação de Jovens e Adultos (EJA).
@@ -130,7 +130,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
             fontSize: '1.125rem',
             lineHeight: '1.75',
             color: '#374151',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
             letterSpacing: '0.01em'
           }}>
             {totalFundamental > 0 && (
@@ -157,7 +157,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
           <p className="font-semibold text-gray-800" style={{
             fontSize: '1.25rem',
             lineHeight: '1.75',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+            fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
           }}>
             Total de Alunos: <span className="text-teal-700">{total.toLocaleString()}</span>
           </p>
@@ -165,7 +165,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
             fontSize: '0.9375rem',
             lineHeight: '1.5',
             color: '#4b5563',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+            fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
           }}>
             Escolas Indígenas do Estado de São Paulo
           </p>
@@ -180,7 +180,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
           <h4 className="font-semibold mb-4 text-gray-700 text-center" style={{
             fontSize: '1.125rem',
             lineHeight: '1.75',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+            fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
           }}>
             Distribuição por Quantidade
           </h4>
@@ -236,7 +236,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
           <h4 className="font-semibold mb-4 text-gray-700 text-center" style={{
             fontSize: '1.125rem',
             lineHeight: '1.75',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+            fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
           }}>
             Distribuição Percentual
           </h4>
@@ -302,7 +302,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
         fontSize: '0.9375rem',
         lineHeight: '1.5',
         color: '#4b5563',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
       }}>
         Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2025
       </p>

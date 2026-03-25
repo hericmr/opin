@@ -21,6 +21,8 @@
 .historia-escola-content h6 {
   color: #166534;
   font-weight: 600;
+  font-family: 'Sora', sans-serif !important;
+
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
 }
@@ -141,10 +143,12 @@
   background-color: #f9fafb;
   font-weight: 600;
   color: #374151;
+  font-family: 'Noto Sans', sans-serif !important;
 }
 
 .historia-escola-content td {
   color: #374151;
+  font-family: 'Noto Sans', sans-serif !important;
 }
 
 /* Estilos para imagens */
@@ -187,6 +191,7 @@
 .historia-escola-content big {
   font-size: 1.125em;
   color: #374151;
+  font-family: 'Noto Sans', sans-serif !important;
 }
 
 /* Estilos para marcações */

@@ -8,7 +8,7 @@ const EquipamentosChart = ({ data }) => {
       const data = payload[0].payload;
       return (
         <div className="bg-white p-4 border border-gray-300 rounded shadow-lg" style={{
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+          fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
         }}>
           <p className="font-semibold mb-1" style={{ fontSize: '1rem', lineHeight: '1.5', color: '#111827' }}>{data.equipamento}</p>
           <p style={{ fontSize: '0.9375rem', lineHeight: '1.5', color: '#374151' }}>Quantidade: {data.quantidade}</p>
@@ -42,7 +42,7 @@ const EquipamentosChart = ({ data }) => {
         <h4 className="font-semibold mb-4 sm:mb-6 text-gray-800 text-center" style={{
           fontSize: '1.25rem',
           lineHeight: '1.75',
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
           letterSpacing: '-0.01em'
         }}>
           Infraestrutura Tecnológica
@@ -54,7 +54,7 @@ const EquipamentosChart = ({ data }) => {
               fontSize: '1.125rem',
               lineHeight: '1.75',
               color: '#374151',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+              fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
               letterSpacing: '0.01em'
             }}>
               A infraestrutura tecnológica das escolas estaduais indígenas evidencia desigualdades significativas no acesso a equipamentos e conectividade. O recurso mais presente é o tablet para alunos, disponível em 653 unidades, seguido por computadores portáteis (110) e computadores destinados aos alunos (98).
@@ -63,7 +63,7 @@ const EquipamentosChart = ({ data }) => {
               fontSize: '1.125rem',
               lineHeight: '1.75',
               color: '#374151',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+              fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
               letterSpacing: '0.01em'
             }}>
               Outros recursos, como aparelhos de TV (57), computadores para uso administrativo (56), aparelhos de Wi-Fi/access points (33) e rede local (18), estão presentes em proporções muito inferiores.
@@ -72,7 +72,7 @@ const EquipamentosChart = ({ data }) => {
               fontSize: '1.125rem',
               lineHeight: '1.75',
               color: '#374151',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+              fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
               letterSpacing: '0.01em'
             }}>
               O acesso à internet é muito restrito. Para uso pedagógico e administrativo, está disponível em apenas 22 escolas. Para uso pelos alunos, são apenas 19 escolas. Isso mostra que a maior parte das escolas ainda não dispõe de conectividade adequada para práticas digitais.
@@ -81,7 +81,7 @@ const EquipamentosChart = ({ data }) => {
               fontSize: '1.125rem',
               lineHeight: '1.75',
               color: '#374151',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+              fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
               letterSpacing: '0.01em'
             }}>
               Embora a tecnologia esteja presente em diversas escolas, seu uso pedagógico efetivo continua limitado. Essa limitação compromete a qualidade do ensino e dificulta a inclusão digital de professores e estudantes.
@@ -93,7 +93,7 @@ const EquipamentosChart = ({ data }) => {
       <h3 className="font-bold mb-6 text-gray-800 text-center" style={{
         fontSize: '1.5rem',
         lineHeight: '1.75',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         letterSpacing: '-0.01em'
       }}>
         Distribuição de Equipamentos nas Escolas
@@ -138,7 +138,7 @@ const EquipamentosChart = ({ data }) => {
         fontSize: '0.9375rem',
         lineHeight: '1.5',
         color: '#4b5563',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
       }}>
         Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2025
       </p>
