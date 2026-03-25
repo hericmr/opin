@@ -20,7 +20,7 @@ const HistoriaTerraIndigena = memo(({ escola }) => {
             {/* Card com conteúdo - sem borda, inline com o resto, largura otimizada para leitura */}
             <article
                 className="
-          prose prose-sm sm:prose-base md:prose-lg lg:prose-xl
+          prose prose-lg
           prose-headings:text-green-900 prose-p:text-black prose-p:leading-relaxed prose-p:text-justify
           prose-img:rounded-xl prose-img:shadow-lg
           prose-a:text-green-700 prose-a:no-underline prose-a:border-b-2 prose-a:border-green-100 hover:prose-a:border-green-600

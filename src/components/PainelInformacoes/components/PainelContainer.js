@@ -146,7 +146,7 @@ const PainelContainer = ({
             }}
           >
             <div className={`${isMobilePortrait ? 'p-3 sm:p-4' : 'p-6'} space-y-4 sm:space-y-5`}>
-              <div className="prose prose-sm sm:prose-base md:prose-lg lg:prose-xl max-w-none mj-prose">
+              <div className="prose prose-lg max-w-none mj-prose">
                 {content}
               </div>
             </div>
@@ -162,7 +162,7 @@ const PainelContainer = ({
             />
           )}
           <div className={`${isMobilePortrait ? 'p-3 sm:p-4' : 'p-6'} space-y-4 sm:space-y-5 -mt-2`}>
-            <div className="prose prose-sm sm:prose-base md:prose-lg lg:prose-xl max-w-none mj-prose">
+            <div className="prose prose-lg max-w-none mj-prose">
               {content}
             </div>
           </div>

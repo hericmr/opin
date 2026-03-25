@@ -30,11 +30,7 @@ const Dashboard = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="mt-4 text-xl text-gray-700" style={{
-            fontSize: '1.25rem',
-            lineHeight: '1.75',
-            fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
-          }}>
+          <p className="mt-4 text-xl text-gray-700 font-sans">
             Carregando dados dos gráficos...
           </p>
         </div>

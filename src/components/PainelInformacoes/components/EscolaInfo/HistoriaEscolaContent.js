@@ -6,7 +6,7 @@ const HistoriaEscolaContent = ({ htmlContent }) => {
   
   return (
     <div
-      className="historia-escola-content prose prose-sm sm:prose-base md:prose-lg lg:prose-xl max-w-none
+      className="historia-escola-content prose prose-lg max-w-none
         prose-headings:text-green-900 prose-p:text-black prose-p:leading-relaxed prose-p:text-justify
         prose-img:rounded-xl prose-img:shadow-lg
         prose-a:text-green-700 prose-a:no-underline prose-a:border-b-2 prose-a:border-green-100 hover:prose-a:border-green-600
