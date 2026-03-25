@@ -163,7 +163,7 @@ export const useMapEvents = (map, mapContainer, onPainelOpen) => {
     element.style.padding = '6px 10px';
     element.style.borderRadius = '6px';
     element.style.fontSize = '12px';
-    element.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+    element.style.fontFamily = '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
     element.style.fontWeight = '400'; // Peso mais leve, não bold
     element.style.maxWidth = '250px';
     element.style.whiteSpace = 'nowrap';
@@ -198,7 +198,7 @@ export const useMapEvents = (map, mapContainer, onPainelOpen) => {
     element.style.padding = '6px 10px';
     element.style.borderRadius = '6px';
     element.style.fontSize = '12px';
-    element.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+    element.style.fontFamily = '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
     element.style.fontWeight = '400'; // Peso mais leve, não bold
     element.style.maxWidth = '200px';
     element.style.whiteSpace = 'nowrap';

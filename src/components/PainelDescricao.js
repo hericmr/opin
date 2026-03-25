@@ -80,7 +80,7 @@ const PainelDescricao = ({ descricao, className = "" }) => {
           '--tw-prose-td-borders': '#e5e7eb',
           lineHeight: '1.8',
           fontSize: '1.125rem',
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
           letterSpacing: '0.015em',
         }}
         dangerouslySetInnerHTML={{ __html: sanitizedHTML }}

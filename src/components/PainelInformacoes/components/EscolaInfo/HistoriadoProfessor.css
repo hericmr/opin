@@ -3,6 +3,7 @@
   /* Estilos base para o conteúdo */
   line-height: 1.6;
   color: #374151;
+  font-family: 'Noto Sans', sans-serif !important;
 }
 
 /* Estilos para parágrafos */
@@ -20,6 +21,8 @@
 .historia-professor-content h6 {
   color: #166534;
   font-weight: 600;
+  font-family: 'Sora', sans-serif !important;
+
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
 }
@@ -74,6 +77,7 @@
 .historia-professor-content li {
   margin-bottom: 0.5rem;
   color: #374151;
+  font-family: 'Noto Sans', sans-serif !important;
 }
 
 .historia-professor-content ul li {
@@ -140,10 +144,12 @@
   background-color: #f9fafb;
   font-weight: 600;
   color: #374151;
+  font-family: 'Noto Sans', sans-serif !important;
 }
 
 .historia-professor-content td {
   color: #374151;
+  font-family: 'Noto Sans', sans-serif !important;
 }
 
 /* Estilos para imagens */
@@ -186,6 +192,7 @@
 .historia-professor-content big {
   font-size: 1.125em;
   color: #374151;
+  font-family: 'Noto Sans', sans-serif !important;
 }
 
 /* Estilos para marcações */

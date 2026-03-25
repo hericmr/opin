@@ -44,6 +44,8 @@
 .mj-panel .mj-prose h4 {
   color: #166534; /* Green-800 for headings - matches theme */
   font-weight: 700;
+  font-family: 'Sora', sans-serif !important;
+
   line-height: 1.3; /* Tighter for headings */
   margin-top: 1.5em;
   margin-bottom: 0.75em;
