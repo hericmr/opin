@@ -136,23 +136,39 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
   }, [location.hash, location.pathname, location.search, location.state, navigate]);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
-      {/* Novo mapa sem gaps */}
-      <MapSelector
-        dataPoints={escolasVisiveis}
-        onPainelOpen={abrirPainel}
-        painelAberto={!!painelInfo}
-        className="h-full w-full"
-        isMainLoading={isLoading}
-      />
-
-      {/* Painel de informações */}
-      {painelInfo && (
-        <PainelInformacoes 
-          painelInfo={painelInfo} 
-          closePainel={fecharPainel} 
-          refreshKey={refreshKey}
+    <div className="fixed inset-0 w-screen h-screen overflow-hidden bg-white">
+      {/* Container do Mapa - Ocupa 100% da tela em background */}
+      <div className="absolute inset-0 z-0" style={{ width: '100vw', height: '100vh' }}>
+        <MapSelector
+          dataPoints={escolasVisiveis}
+          onPainelOpen={abrirPainel}
+          painelAberto={!!painelInfo}
+          className="h-full w-full"
+          isMainLoading={isLoading}
         />
+      </div>
+
+      {/* Camada do Painel de Informações - Sobreposta ao mapa */}
+      {painelInfo && (
+        <div className="absolute inset-0 z-10 pointer-events-none">
+          <div className="h-full w-full pointer-events-auto">
+            <PainelInformacoes 
+              painelInfo={painelInfo} 
+              closePainel={fecharPainel} 
+              refreshKey={refreshKey}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Overlay de carregamento para transições de busca */}
+      {isLoading && (
+        <div className="absolute inset-0 z-[10001] flex items-center justify-center bg-green-50/50 backdrop-blur-sm transition-opacity duration-300">
+          <div className="bg-white p-4 rounded-xl shadow-xl flex items-center gap-3">
+            <div className="w-5 h-5 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-green-800 font-medium">Carregando mapa...</span>
+          </div>
+        </div>
       )}
     </div>
   );
