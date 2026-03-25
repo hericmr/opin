@@ -14,7 +14,7 @@ const EscolaHeaderImage = ({ imagemUrl, className = '', isPreloaded = false }) =
   };
 
   // Se não há URL ou houve erro, não renderiza nada
-  if (!imagemUrl || imageError) {
+  if (!imagemUrl || typeof imagemUrl !== 'string' || imagemUrl.trim() === '' || imageError) {
     return null;
   }
 

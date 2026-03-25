@@ -54,14 +54,16 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
       if (error) throw error;
       if (!legendas) return [];
 
-      mapped = legendas.map((legenda, index) => {
+      mapped = legendas
+        .filter(legenda => hasContent(legenda.imagem_url))
+        .map((legenda, index) => {
         let publicUrl = null;
         if (legenda.imagem_url) {
-          if (legenda.imagem_url.startsWith('http')) {
-            publicUrl = legenda.imagem_url;
+          if (legenda.imagem_url.trim().startsWith('http')) {
+            publicUrl = legenda.imagem_url.trim();
           } else {
             // Construir URL usando o bucket remoto e o nome do bucket correto
-            publicUrl = `${REMOTE_STORAGE_URL}imagens-das-escolas/${legenda.imagem_url}`;
+            publicUrl = `${REMOTE_STORAGE_URL}imagens-das-escolas/${legenda.imagem_url.trim()}`;
           }
         }
 
@@ -90,14 +92,16 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
       if (error) throw error;
       if (!imgsProf) return [];
 
-      mapped = imgsProf.map((img, index) => {
+      mapped = imgsProf
+        .filter(img => hasContent(img.imagem_url))
+        .map((img, index) => {
         let publicUrl = null;
         if (img.imagem_url) {
-          if (img.imagem_url.startsWith('http')) {
-            publicUrl = img.imagem_url;
+          if (img.imagem_url.trim().startsWith('http')) {
+            publicUrl = img.imagem_url.trim();
           } else {
             // Construir URL usando o bucket remoto
-            publicUrl = `${REMOTE_STORAGE_URL}imagens-professores/${img.imagem_url}`;
+            publicUrl = `${REMOTE_STORAGE_URL}imagens-professores/${img.imagem_url.trim()}`;
           }
         }
 
@@ -120,7 +124,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
 
   // Update items immediately when headerUrl changes to show image instantly
   useEffect(() => {
-    if (headerUrl) {
+    if (hasContent(headerUrl)) {
       const headerItem = {
         id: `header-${escolaId || 'temp'}`,
         url: headerUrl,
@@ -162,7 +166,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
         const results = await Promise.all(promises);
         let combined = results.flat();
         // Prepend header image if provided and not already in list
-        if (headerUrl) {
+        if (hasContent(headerUrl)) {
           const exists = combined.some(i => i.url === headerUrl);
           const headerItem = {
             id: `header-${escolaId}`,
