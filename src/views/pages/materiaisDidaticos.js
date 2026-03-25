@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useEscolasData } from '../../hooks/useEscolasData';
 import PageHeader from '../../components/PageHeader';
 import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
+import BookGallery from '../../components/MateriaisDidáticos/components/BookGallery';
 
 const MateriaisDidáticos = () => {
   const { dataPoints } = useEscolasData();
@@ -13,7 +14,7 @@ const MateriaisDidáticos = () => {
   ], []);
 
   return (
-    <div className="min-h-screen dashboard-scroll relative">
+    <div className="min-h-screen dashboard-scroll relative bg-gray-50/30">
       {/* Cabeçalho com design indígena - Hero image começa do topo */}
       <PageHeader
         title="Materiais Didáticos"
@@ -23,26 +24,10 @@ const MateriaisDidáticos = () => {
         <DashboardBreadcrumbs breadcrumbs={breadcrumbs} />
       </PageHeader>
       
-      {/* Conteúdo principal com espaçamento para o hero - será ajustado dinamicamente */}
-      <div className="relative z-10 hero-content-spacer" style={{ marginTop: '300px' }}>
-        {/* Descrição da página - Abaixo do hero, estilo Native Land Digital */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-          <div className="prose prose-lg sm:prose-xl max-w-none" style={{
-            fontSize: '1.125rem',
-            lineHeight: '1.75',
-            color: '#374151',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
-          }}>
-            <p className="mb-6 text-center" style={{
-              fontSize: '1.5rem',
-              lineHeight: '1.75',
-              color: '#374151',
-              letterSpacing: '-0.01em',
-              fontWeight: 'bold'
-            }}>
-              Página em Desenvolvimento
-            </p>
-          </div>
+      {/* Conteúdo principal com espaçamento para o hero */}
+      <div className="relative z-10 hero-content-spacer pb-20" style={{ marginTop: '300px' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <BookGallery />
         </div>
       </div>
     </div>

@@ -38,7 +38,7 @@ import PageHeader from '../PageHeader';
 |------|------|--------|-----------|
 | `title` | string | - | Título da página (obrigatório) |
 | `description` | string/JSX | - | Descrição da página (obrigatório) |
-| `titleFontFamily` | string | `'PapakiloLight, sans-serif'` | Família da fonte do título |
+| `titleFontFamily` | string | `'Nunito, sans-serif'` | Família da fonte do título |
 | `titleSize` | string | `'text-4xl md:text-5xl lg:text-6xl'` | Classes de tamanho do título |
 | `descriptionSize` | string | `'text-sm md:text-base'` | Classes de tamanho da descrição |
 | `className` | string | `''` | Classes CSS adicionais |
