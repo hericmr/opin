@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 import { Search, X, MapPin, BookOpen, Users, FileText, Map } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useSearch from '../../hooks/useSearch';
@@ -232,6 +233,9 @@ export default function Homepage({ dataPoints = [] }) {
 
   return (
     <div className="flex-1 overflow-auto bg-white text-green-900">
+      <Helmet>
+        <title>OPIN - Observatório dos Professores Indígenas no Estado de São Paulo</title>
+      </Helmet>
       {/* Hero inspirado no native-land: fundo, título, busca/CTA */}
       <section className="relative min-h-screen h-screen w-full bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url('${bgUrl}')` }}>
         <div className="absolute inset-0 bg-green-950/40" />
