@@ -49,20 +49,34 @@
   height: 100vh !important;
 }
 
-/* Garante que a barra de rolagem seja sempre visível */
-.dashboard-scroll::-webkit-scrollbar {
-  width: 12px;
+/* Garante que a barra de rolagem seja sempre visível em telas maiores */
+@media (min-width: 768px) {
+  .dashboard-scroll::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 6px;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 }
 
-.dashboard-scroll::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-.dashboard-scroll::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 6px;
-}
-
-.dashboard-scroll::-webkit-scrollbar-thumb:hover {
-  background: #555;
+/* Oculta a barra de rolagem em dispositivos móveis */
+@media (max-width: 767px) {
+  .dashboard-scroll {
+    overflow-y: auto !important;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+  }
+  .dashboard-scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
 }
