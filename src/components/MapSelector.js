@@ -53,11 +53,15 @@ const MapSelector = ({
   // Forçar atualização do mapa ao mudar o estado do painel para evitar tela branca/vazia
   useEffect(() => {
     if (mapInstance) {
-      const timer = setTimeout(() => {
-        logger.debug('[MapSelector] Forçando updateSize do mapa');
-        mapInstance.updateSize();
-      }, 300); // Maior delay para acomodar animações sinuosas
-      return () => clearTimeout(timer);
+      // Múltiplos gatilhos para garantir que o mapa se ajuste a diferentes durações de animação
+      const timers = [100, 300, 500, 800, 1200].map(delay => 
+        setTimeout(() => {
+          logger.debug(`[MapSelector] Gatilho de updateSize (${delay}ms)`);
+          mapInstance.updateSize();
+        }, delay)
+      );
+      
+      return () => timers.forEach(clearTimeout);
     }
   }, [painelAberto, mapInstance]);
 
@@ -76,6 +80,10 @@ const MapSelector = ({
 
   const handleMapReady = useCallback((map) => {
     setMapInstance(map);
+    // Garantir que o mapa tenha o tamanho correto imediatamente
+    if (map) {
+      setTimeout(() => map.updateSize(), 0);
+    }
   }, []);
 
   const handleZoomChange = useCallback((delta) => {
@@ -368,7 +376,7 @@ const MapSelector = ({
         height: '100%', 
         minHeight: '100%', 
         display: 'block',
-        background: '#fff'
+        background: 'transparent'
       }}
     >
       {/* Controles de camadas responsivos */}
@@ -641,6 +649,7 @@ const MapSelector = ({
         // Props para marcadores
         showMarcadores={showMarcadores}
         onMapReady={handleMapReady}
+        isMobile={isMobile}
       />
     </div>
   );

@@ -148,17 +148,14 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
         />
       </div>
 
-      {/* Camada do Painel de Informações - Sobreposta ao mapa */}
+      {/* Painel de Informações - Sobreposto ao mapa */}
+      {/* O PainelContainer já possui 'fixed' e 'z-[9999]', então não precisa de wrappers extras que bloqueiam o mapa */}
       {painelInfo && (
-        <div className="absolute inset-0 z-10 pointer-events-none">
-          <div className="h-full w-full pointer-events-auto">
-            <PainelInformacoes 
-              painelInfo={painelInfo} 
-              closePainel={fecharPainel} 
-              refreshKey={refreshKey}
-            />
-          </div>
-        </div>
+        <PainelInformacoes 
+          painelInfo={painelInfo} 
+          closePainel={fecharPainel} 
+          refreshKey={refreshKey}
+        />
       )}
 
       {/* Overlay de carregamento para transições de busca */}

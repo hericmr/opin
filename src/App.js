@@ -105,9 +105,9 @@ const AppContent = () => {
     }
   }, [navigate, location.pathname]);
 
-  const handlePainelOpenFunction = (openPainelFn) => {
+  const handlePainelOpenFunction = React.useCallback((openPainelFn) => {
     setOpenPainelFunction(() => openPainelFn);
-  };
+  }, []);
 
   if (loading) {
     return (
