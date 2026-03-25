@@ -212,20 +212,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
     );
   }
 
-  if (!imagens.length) {
-    return (
-      <div className="text-yellow-700 flex items-center gap-2">
-        <span>Nenhuma imagem encontrada para esta escola.</span>
-        <button
-          onClick={limparCacheERecarregar}
-          className="text-blue-600 hover:text-blue-800"
-          title="Tentar novamente"
-        >
-          <RefreshCw className="w-5 h-5" />
-        </button>
-      </div>
-    );
-  }
+
 
   // Don't show thumbnails when media is handled by sidebar layout
   if (hideInlineMedia) {

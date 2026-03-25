@@ -151,7 +151,31 @@ const OpenLayersMap = ({
   useEffect(() => {
     initializeMap();
 
+    // ResizeObserver para garantir que o canvas acompanhe o container
+    const observer = new ResizeObserver(() => {
+      if (map.current) {
+        map.current.updateSize();
+      }
+    });
+
+    if (mapContainer.current) {
+      observer.observe(mapContainer.current);
+    }
+
+    // Sequência de gatilhos para garantir que o mapa se ajuste ao layout final
+    // Útil quando o painel abre maximizado com muito conteúdo (fotos/vídeos)
+    const timers = [100, 300, 600, 1000, 2000].map(delay => 
+      setTimeout(() => {
+        if (map.current) {
+          logger.debug(`[OpenLayersMap] Triggering delayed updateSize (${delay}ms)`);
+          map.current.updateSize();
+        }
+      }, delay)
+    );
+
     return () => {
+      observer.disconnect();
+      timers.forEach(clearTimeout);
       if (map.current) {
         map.current.setTarget(undefined);
         if (typeof onMapReady === 'function') {
