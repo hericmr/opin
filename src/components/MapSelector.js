@@ -15,7 +15,7 @@ const MapSelector = ({
   dataPoints, 
   onPainelOpen, 
   painelAberto = false,
-  className = "h-screen w-full",
+  className = "w-full h-full",
   isMainLoading = false
 }) => {
   // Carregar dados GeoJSON
@@ -49,6 +49,30 @@ const MapSelector = ({
     return stored ? parseFloat(stored) : 1;
   });
   const [mapInstance, setMapInstance] = useState(null);
+
+  // Forçar atualização do mapa ao mudar o estado do painel para evitar tela branca/vazia
+  useEffect(() => {
+    if (mapInstance) {
+      const timer = setTimeout(() => {
+        logger.debug('[MapSelector] Forçando updateSize do mapa');
+        mapInstance.updateSize();
+      }, 300); // Maior delay para acomodar animações sinuosas
+      return () => clearTimeout(timer);
+    }
+  }, [painelAberto, mapInstance]);
+
+  // Forçar redimensionamento em intervalos iniciais se abrir maximizado
+  useEffect(() => {
+    if (!mapInstance) return;
+    const interval = setInterval(() => {
+      if (mapInstance.getSize()?.[0] === 0) {
+        mapInstance.updateSize();
+      } else {
+        clearInterval(interval);
+      }
+    }, 250);
+    return () => clearInterval(interval);
+  }, [mapInstance]);
 
   const handleMapReady = useCallback((map) => {
     setMapInstance(map);
@@ -335,7 +359,18 @@ const MapSelector = ({
   });
 
   return (
-    <div className={className} style={{ position: 'relative' }}>
+    <div 
+      id="map" 
+      className={className} 
+      style={{ 
+        position: 'relative', 
+        width: '100%', 
+        height: '100%', 
+        minHeight: '100%', 
+        display: 'block',
+        background: '#fff'
+      }}
+    >
       {/* Controles de camadas responsivos */}
       {isMobile ? (
         // Menu mobile - fixo na parte inferior

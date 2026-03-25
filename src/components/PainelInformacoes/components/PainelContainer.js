@@ -67,17 +67,13 @@ const PainelContainer = ({
       ? `inset-x-0 top-0 w-full h-full`
       : 'top-0 bottom-0 right-0 w-full sm:w-3/4 lg:w-[49%] h-auto'
     }
-    rounded-t-xl shadow-xl z-[9999] transform transition-all duration-500 ease-in-out
+    rounded-t-xl shadow-xl z-[9999] transform
     bg-white border-t-4 border-white mj-panel
   `;
   
   const visibilityClasses = isVisible 
-    ? isMobile 
-      ? "translate-y-0 opacity-100" 
-      : "translate-y-0 opacity-100"
-    : isMobile 
-      ? "translate-y-full opacity-0" 
-      : "translate-y-full opacity-0";
+    ? "translate-y-0 opacity-100" 
+    : "translate-y-full opacity-0";
 
   const layoutInfo = {
     isMobile,
