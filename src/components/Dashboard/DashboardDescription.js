@@ -11,7 +11,7 @@ const DashboardDescription = memo(() => {
         fontSize: '1.125rem',
         lineHeight: '1.75',
         color: '#374151',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
       }}>
         <p className="mb-6" style={{
           fontSize: '1.125rem',

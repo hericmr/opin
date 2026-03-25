@@ -33,7 +33,7 @@ const Dashboard = () => {
           <p className="mt-4 text-xl text-gray-700" style={{
             fontSize: '1.25rem',
             lineHeight: '1.75',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+            fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
           }}>
             Carregando dados dos gráficos...
           </p>

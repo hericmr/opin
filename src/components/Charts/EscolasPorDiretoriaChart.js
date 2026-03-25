@@ -7,7 +7,7 @@ const EscolasPorDiretoriaChart = ({ data }) => {
       const data = payload[0].payload;
       return (
         <div className="bg-white p-4 border border-gray-300 rounded shadow-lg" style={{
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+          fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
         }}>
           <p className="font-semibold mb-1" style={{ fontSize: '1rem', lineHeight: '1.5', color: '#111827' }}>{data.diretoria}</p>
           <p style={{ fontSize: '0.9375rem', lineHeight: '1.5', color: '#374151' }}>Escolas: {data.quantidade}</p>
@@ -40,7 +40,7 @@ const EscolasPorDiretoriaChart = ({ data }) => {
       <h3 className="font-bold mb-6 text-gray-800 text-center" style={{
         fontSize: '1.5rem',
         lineHeight: '1.75',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         letterSpacing: '-0.01em'
       }}>
         Número de Escolas por Diretoria de Ensino
@@ -83,7 +83,7 @@ const EscolasPorDiretoriaChart = ({ data }) => {
         fontSize: '0.9375rem',
         lineHeight: '1.5',
         color: '#4b5563',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
       }}>
         Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2025
       </p>

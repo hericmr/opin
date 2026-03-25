@@ -398,7 +398,7 @@ export class OpenLayersInteractions {
         padding: '6px 10px',
         borderRadius: '6px',
         fontSize: '13px',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         fontWeight: '400', // Peso mais leve, não bold
         color: '#4B5563', // Texto mais claro, não preto
         pointerEvents: 'auto', // IMPORTANTE: Permitir eventos de clique no mobile
@@ -471,7 +471,7 @@ export class OpenLayersInteractions {
         padding: '6px 10px',
         borderRadius: '6px',
         fontSize: '12px',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         fontWeight: '400', // Peso mais leve, não bold
         color: '#4B5563', // Texto mais claro, não preto
         pointerEvents: 'none',
