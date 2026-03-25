@@ -114,6 +114,7 @@ export function useEscolasData() {
           link_para_documentos: e.link_para_documentos,
           link_para_videos: e.link_para_videos,
           imagem_header: e.imagem_header,
+          cards_visibilidade: e.cards_visibilidade,
           tipo: 'educacao',
           pontuacao: 100,
           pontuacaoPercentual: 100

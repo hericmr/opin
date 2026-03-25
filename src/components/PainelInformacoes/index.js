@@ -106,9 +106,10 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
       try {
         setHasVideos(false);
         setVideos([]);
-        const escolaId = painelInfo?.id;
-        if (!escolaId) return;
-        const data = await getVideosEscola(escolaId);
+        const id = painelInfo?.id;
+        if (!id) return;
+        const escolaIdNum = Number(id);
+        const data = await getVideosEscola(escolaIdNum);
         if (!mounted) return;
         if (Array.isArray(data) && data.length > 0) {
           setHasVideos(true);
@@ -159,32 +160,32 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
         />
         {/* Vídeos */}
         {isCardVisible(cardsVisibilidade, 'videos', globalVisibility) && 
-         ((painelInfo.link_para_videos) || hasVideos) && (
+         (hasVideos || painelInfo.link_para_videos) && (
           <div ref={(el) => (sectionRefs.current['videos'] = el)}>
-            {painelInfo.link_para_videos ? (
-              // Legacy: single video from link_para_videos
-              <VideoPlayer 
-                videoUrl={painelInfo.link_para_videos}
-                title={<span style={{ fontSize: '0.75em' }}>{`Produções realizadas na ${painelInfo.titulo}`}</span>}
-                escolaId={painelInfo.id}
-              />
-            ) : (
+            {hasVideos ? (
               // New: multiple videos from database
-              videos.length > 0 && (
-                <div>
-                  <h3 className="text-xl font-semibold text-green-800 mb-4" style={{ fontSize: '0.75em' }}>
-                    {`Produções realizadas na ${painelInfo.titulo}`}
-                  </h3>
-                  {videos.map((video, index) => (
-                    <div key={video.id || index} className={index > 0 ? "mt-8" : ""}>
-                      <VideoPlayer 
-                        videoUrl={video.video_url}
-                        title={video.titulo || <span style={{ fontSize: '0.75em' }}>{`Produções audiovisuais realizadas na ${painelInfo.titulo}`}</span>}
-                        escolaId={painelInfo.id}
-                      />
-                    </div>
-                  ))}
-                </div>
+              <div>
+                <h3 className="text-xl font-semibold text-green-800 mb-4" style={{ fontSize: '0.75em' }}>
+                  {`Produções audiovisuais realizadas na ${painelInfo.titulo}`}
+                </h3>
+                {videos.map((video, index) => (
+                  <div key={video.id || index} className={index > 0 ? "mt-8" : ""}>
+                    <VideoPlayer 
+                      videoUrl={video.video_url}
+                      title={video.titulo || <span style={{ fontSize: '0.75em' }}>{`Produções audiovisuais realizadas na ${painelInfo.titulo}`}</span>}
+                      escolaId={painelInfo.id}
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              // Legacy: single video from link_para_videos (fallback)
+              painelInfo.link_para_videos && (
+                <VideoPlayer 
+                  videoUrl={painelInfo.link_para_videos}
+                  title={<span style={{ fontSize: '0.75em' }}>{`Produções audiovisuais realizadas na ${painelInfo.titulo}`}</span>}
+                  escolaId={painelInfo.id}
+                />
               )
             )}
           </div>
