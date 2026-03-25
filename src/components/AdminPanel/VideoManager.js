@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getVideosEscola, createVideoEscola, updateVideoEscola, deleteVideoEscola } from '../../services/videoService';
 import { Plus, Edit3, Trash2, Save } from 'lucide-react';
+import { useRefresh } from '../../contexts/RefreshContext';
 
 const VideoManager = ({ escolaId }) => {
   const [videos, setVideos] = useState([]);
@@ -9,6 +10,7 @@ const VideoManager = ({ escolaId }) => {
   const [success, setSuccess] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingVideo, setEditingVideo] = useState(null);
+  const { triggerRefresh } = useRefresh();
   const [formData, setFormData] = useState({
     titulo: '',
     video_url: '',
@@ -74,6 +76,7 @@ const VideoManager = ({ escolaId }) => {
       }
       resetForm();
       carregarVideos();
+      triggerRefresh(); // Trigger global refresh
     } catch (err) {
       setError(err.message);
     }
@@ -100,6 +103,7 @@ const VideoManager = ({ escolaId }) => {
       await deleteVideoEscola(id);
       setSuccess('Vídeo excluído com sucesso!');
       carregarVideos();
+      triggerRefresh(); // Trigger global refresh
     } catch (err) {
       setError(err.message);
     }
