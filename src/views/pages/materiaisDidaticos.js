@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useEscolasData } from '../../hooks/useEscolasData';
 import PageHeader from '../../components/PageHeader';
 import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
@@ -13,8 +14,30 @@ const MateriaisDidáticos = () => {
     { label: 'Materiais Didáticos', path: '/conteudo', active: true }
   ], []);
 
+  const siteUrl = 'https://hericmr.github.io/opin';
+  const imageUrl = `${siteUrl}/hero.png`;
+  const pageTitle = 'Materiais Didáticos - OPIN';
+  const pageDescription = 'Materiais didáticos produzidos no âmbito da ação Saberes Indígenas na Escola, em parceria com a UNIFESP no estado de São Paulo.';
+
   return (
     <div className="min-h-screen dashboard-scroll relative bg-gray-50/30">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`${siteUrl}/conteudo`} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:image" content={imageUrl} />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={`${siteUrl}/conteudo`} />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        <meta name="twitter:image" content={imageUrl} />
+      </Helmet>
+      
       {/* Cabeçalho com design indígena - Hero image começa do topo */}
       <PageHeader
         title="Materiais Didáticos"
