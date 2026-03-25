@@ -38,7 +38,8 @@ const OpenLayersMap = ({
   // Props para marcadores
   showMarcadores = true,
   showNomesEscolas = false,
-  onMapReady = null
+  onMapReady = null,
+  isMobile: isMobileProp = null
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -49,8 +50,11 @@ const OpenLayersMap = ({
     zoom: zoom
   });
 
-  // Verificar se é mobile e ajustar configurações
-  const isMobileDevice = useMemo(() => isMobile(), []);
+  // Verificar se é mobile e ajustar configurações - prioriza prop externa se disponível
+  const isMobileDevice = useMemo(() => {
+    if (isMobileProp !== null) return isMobileProp;
+    return isMobile();
+  }, [isMobileProp]);
   const initialCenter = isMobileDevice ? MAP_CONFIG.mobile.center : center;
   const initialZoom = isMobileDevice ? MAP_CONFIG.mobile.zoom : zoom;
 

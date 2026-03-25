@@ -11,7 +11,7 @@ import MinimalLoginModal from '../Auth/MinimalLoginModal';
 const PageHeader = ({ 
   title, 
   description, 
-  titleFontFamily = 'PapakiloLight, sans-serif',
+  titleFontFamily = 'Nunito, sans-serif',
   titleSize = 'text-4xl md:text-5xl lg:text-6xl',
   descriptionSize = 'text-sm md:text-base',
   className = '',
