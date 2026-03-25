@@ -111,21 +111,22 @@ const NativeLandCard = memo(({
           >
             {showIconCircle ? (
               <div 
-                className="rounded-full p-2 flex items-center justify-center"
+                className="rounded-full p-1.5 flex items-center justify-center"
                 style={{ 
-                  backgroundColor: colors.bg,
-                  width: '40px',
-                  height: '40px'
+                  backgroundColor: '#D1FAE5',
+                  width: '32px',
+                  height: '32px',
+                  border: '2px solid white'
                 }}
               >
                 <Icon 
-                  className="w-5 h-5" 
+                  className="w-4 h-4" 
                   style={{ color: colors.icon }}
                 />
               </div>
             ) : (
-              <div className="bg-white rounded-full p-2 border-2 border-gray-200">
-                <Icon className="w-5 h-5 text-gray-700" />
+              <div className="bg-white rounded-full p-1.5 border-2 border-gray-200">
+                <Icon className="w-4 h-4 text-gray-700" />
               </div>
             )}
           </div>
@@ -243,21 +244,22 @@ const NativeLandCard = memo(({
         >
           {showIconCircle ? (
             <div 
-              className="rounded-full p-2 flex items-center justify-center"
+              className="rounded-full p-1.5 flex items-center justify-center"
               style={{ 
-                backgroundColor: colors.bg,
-                width: '40px',
-                height: '40px'
+                backgroundColor: '#D1FAE5',
+                width: '32px',
+                height: '32px',
+                border: '2px solid white'
               }}
             >
               <Icon 
-                className="w-5 h-5" 
+                className="w-4 h-4" 
                 style={{ color: colors.icon }}
               />
             </div>
           ) : (
-            <div className="bg-white rounded-full p-2 border-2 border-gray-200">
-              <Icon className="w-5 h-5 text-gray-700" />
+            <div className="bg-white rounded-full p-1.5 border-2 border-gray-200">
+              <Icon className="w-4 h-4 text-gray-700" />
             </div>
           )}
         </div>
