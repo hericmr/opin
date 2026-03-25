@@ -109,11 +109,11 @@ const MapSelector = ({
       if (foundSchool) {
         onPainelOpen(foundSchool);
         // Centralizar no mapa se tiver coordenadas
-        if (mapInstance && foundSchool.Latitude && foundSchool.Longitude) {
+        if (mapInstance && foundSchool.latitude && foundSchool.longitude) {
           const view = mapInstance.getView();
           if (view) {
             view.animate({
-              center: fromLonLat([foundSchool.Longitude, foundSchool.Latitude]),
+              center: fromLonLat([foundSchool.longitude, foundSchool.latitude]),
               zoom: Math.max(view.getZoom() || 15, 15),
               duration: 500,
             });

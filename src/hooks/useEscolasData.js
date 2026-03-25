@@ -62,6 +62,7 @@ export function useEscolasData() {
           diferenciada = diferenciada?.toLowerCase().startsWith("sim") ? true : diferenciada?.toLowerCase().startsWith("não") ? false : diferenciada;
         }
         return {
+          ...e,
           titulo: e.Escola,
           municipio: e["Município"],
           endereco: e["Endereço"],

@@ -192,8 +192,8 @@ const useSearch = (dataPoints) => {
               data: school,
               subtitle: school.municipio,
               coordinates: {
-                lat: school.Latitude,
-                lng: school.Longitude
+                lat: school.latitude,
+                lng: school.longitude
               }
             });
           }
