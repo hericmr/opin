@@ -11,6 +11,12 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
+    // Se o erro for falha ao carregar um chunk dinâmico (comum após atualizações do site deployadas), forçar reload da página
+    if (error && error.message && error.message.includes('Failed to fetch dynamically imported module')) {
+      window.location.reload();
+      return;
+    }
+
     this.setState({ error, errorInfo });
     // Aqui você pode logar o erro para um serviço externo se desejar
   }

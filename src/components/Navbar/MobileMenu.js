@@ -18,7 +18,7 @@ const MobileMenu = ({
 
   const getActiveStyle = (isActive) => 
     isActive 
-      ? 'bg-green-600 text-white' 
+      ? 'bg-white/15 text-white backdrop-blur-sm' 
       : 'text-white hover:bg-[#215A36]';
 
   return (
