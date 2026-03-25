@@ -1,3 +1,10 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Noto Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-title: 'Sora', sans-serif;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Indie+Flower&family=Kalam:wght@300;400;700&display=swap');
 
 /* Fontes Papakilo personalizadas */
@@ -18,7 +25,7 @@
 /* Estilos base da aplicação */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -26,12 +33,15 @@ body {
   overflow: hidden; /* Impede a rolagem */
 }
 
+h1, h2, h3, h4, h5, h6, .font-title {
+  font-family: 'Sora', sans-serif !important;
+  font-weight: 700 !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-@import "tailwindcss";
 
 /* Suporte para truncamento de texto multiline */
 .line-clamp-1 {
@@ -88,7 +98,7 @@ code {
 
 /* Fonte do logotipo (Papakilo) como classe utilitária */
 .font-papakilo {
-  font-family: 'PapakiloDecorative', 'PapakiloLight', 'Nunito', sans-serif;
+  font-family: 'PapakiloDecorative', 'PapakiloLight', 'Sora', sans-serif;
 }
 
 /* Classe personalizada para o título OPIN com conotação indígena */
