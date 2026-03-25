@@ -272,6 +272,9 @@ export default function Homepage({ dataPoints = [] }) {
                 <Link to="/dashboard" className="block rounded-full bg-green-600 text-white font-semibold px-4 py-2.5 text-center hover:bg-green-500 transition">
                   Alguns dados
                 </Link>
+                <Link to="/conteudo" className="block rounded-full bg-green-700 text-white font-semibold px-4 py-2.5 text-center hover:bg-green-600 transition">
+                  Materiais Didáticos
+                </Link>
               </div>
             </div>
           </div>

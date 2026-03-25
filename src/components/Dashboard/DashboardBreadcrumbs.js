@@ -11,7 +11,7 @@ const DashboardBreadcrumbs = memo(({ breadcrumbs }) => {
 
   return (
     <nav className="flex items-center justify-center space-x-2 text-base sm:text-lg text-white/90" style={{
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
       letterSpacing: '0.01em'
     }}>
       {breadcrumbs.map((crumb, index) => (

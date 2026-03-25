@@ -191,8 +191,8 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                 />
                 <div className="hidden sm:block w-px h-4 sm:h-6 md:h-8 bg-white/30 flex-shrink-0"></div>
                 <div className="hidden md:flex flex-col justify-center min-w-0">
-                  <span className="text-white text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl capitalize truncate" style={{ fontFamily: 'Cinzel, serif' }}>
-                    Observatório Dos Professores Indígenas
+                  <span className="text-white text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl truncate" style={{ fontFamily: 'Cinzel, serif' }}>
+                    Observatório dos Professores Indígenas
                   </span>
                   <p className="text-xs sm:text-sm text-white/80 normal-case truncate">
                     do Estado de São Paulo
