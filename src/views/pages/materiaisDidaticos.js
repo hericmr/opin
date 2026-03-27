@@ -15,7 +15,7 @@ const MateriaisDidáticos = () => {
   ], []);
 
   const siteUrl = 'https://hericmr.github.io/opin';
-  const imageUrl = `${siteUrl}/hero.webp`;
+  const imageUrl = `${siteUrl}/hero_grayscale.webp`;
   const pageTitle = 'Materiais Didáticos - OPIN';
   const pageDescription = 'Materiais didáticos produzidos no âmbito da ação Saberes Indígenas na Escola, em parceria com a UNIFESP no estado de São Paulo.';
 
@@ -24,7 +24,7 @@ const MateriaisDidáticos = () => {
       <Helmet>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
-        
+
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${siteUrl}/conteudo`} />
         <meta property="og:title" content={pageTitle} />
@@ -37,16 +37,18 @@ const MateriaisDidáticos = () => {
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={imageUrl} />
       </Helmet>
-      
+
       {/* Cabeçalho com design indígena - Hero image começa do topo */}
       <PageHeader
         title="Materiais Didáticos"
         showNavbar={true}
         dataPoints={dataPoints || []}
+        overlayColor="rgba(255, 128, 90, 1)"
+        blendMode="color"
       >
         <DashboardBreadcrumbs breadcrumbs={breadcrumbs} />
       </PageHeader>
-      
+
       {/* Conteúdo principal com espaçamento para o hero */}
       <div className="relative z-10 hero-content-spacer pb-20" style={{ marginTop: '300px' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
