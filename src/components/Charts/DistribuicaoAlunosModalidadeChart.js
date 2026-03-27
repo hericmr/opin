@@ -185,8 +185,8 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
             Distribuição por Quantidade
           </h4>
           <ScrollAnimatedWrapper animationType="fadeInLeft" delay={0.2}>
-            <div className="h-80 w-full" style={{ minWidth: '300px', minHeight: '320px', width: '100%', height: '100%' }}>
-              <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={320}>
+            <div className="h-[400px] w-full" style={{ minWidth: '300px', minHeight: '400px', width: '100%', height: '100%' }}>
+              <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={400}>
                 <BarChart
                   data={dataWithPercentual}
                   margin={{
@@ -241,8 +241,8 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
             Distribuição Percentual
           </h4>
           <ScrollAnimatedWrapper animationType="fadeInRight" delay={0.4}>
-            <div className="h-80 w-full" style={{ minWidth: '300px', minHeight: '320px', width: '100%', height: '100%' }}>
-              <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={320}>
+            <div className="h-[400px] w-full" style={{ minWidth: '300px', minHeight: '400px', width: '100%', height: '100%' }}>
+              <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={400}>
                 <PieChart>
                   <Pie
                     data={dataWithPercentual}
@@ -250,7 +250,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
                     cy="50%"
                     labelLine={false}
                     label={CustomLabel}
-                    outerRadius={100}
+                    outerRadius={120}
                     fill="#8884d8"
                     dataKey="value"
                   >
@@ -264,15 +264,6 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
                     ))}
                   </Pie>
                   <Tooltip content={<CustomPieTooltip />} />
-                  <Legend
-                    verticalAlign="bottom"
-                    height={36}
-                    formatter={(value) => (
-                      <span style={{ color: '#374151' }}>
-                        {value}
-                      </span>
-                    )}
-                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -281,7 +272,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
       </div>
 
       {/* Estatísticas detalhadas */}
-      <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+      <div className="mt-7 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
         {dataWithPercentual.map((item, index) => (
           <div key={index} className="text-center p-2">
             <div

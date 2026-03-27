@@ -61,23 +61,23 @@ const HomepageSearch = ({ dataPoints }) => {
     // Se temos dados completos da escola, abrir o painel
     if (result.data && result.coordinates) {
       setSearch(result.title, result.coordinates, result.title);
-      navigate('/mapa', { 
-        state: { 
-          searchTerm: result.title, 
+      navigate('/mapa', {
+        state: {
+          searchTerm: result.title,
           coordinates: result.coordinates,
           highlightSchool: result.title,
           schoolData: result.data // Passar os dados completos da escola
-        } 
+        }
       });
     } else if (result.coordinates) {
       // Fallback: apenas coordenadas sem dados completos
       setSearch(result.title, result.coordinates, result.title);
-      navigate('/mapa', { 
-        state: { 
-          searchTerm: result.title, 
+      navigate('/mapa', {
+        state: {
+          searchTerm: result.title,
           coordinates: result.coordinates,
-          highlightSchool: result.title 
-        } 
+          highlightSchool: result.title
+        }
       });
     } else {
       // Busca simples sem coordenadas
@@ -117,7 +117,7 @@ const HomepageSearch = ({ dataPoints }) => {
     if (!searchTerm) return text;
     const regex = new RegExp(`(${searchTerm})`, 'gi');
     const parts = text.split(regex);
-    return parts.map((part, index) => 
+    return parts.map((part, index) =>
       regex.test(part) ? (
         <span key={index} className="bg-yellow-200 font-semibold">{part}</span>
       ) : part
@@ -243,40 +243,53 @@ export default function Homepage({ dataPoints = [] }) {
           <div className="pt-28 lg:pt-0 text-white" style={{ textAlign: 'left' }}>
             {/* Logo OPIN maior */}
             <div className="mb-2" style={{ width: logoWidth ? `${logoWidth}px` : 'auto', marginLeft: 0, paddingLeft: 0, textAlign: 'left' }}>
-              <img 
+              <img
                 src={`${import.meta.env.BASE_URL || '/opin'}/logo_index.webp`}
                 alt="OPIN - Observatório dos Professores Indígenas"
                 className="h-20 md:h-28 lg:h-36 xl:h-44 object-contain object-left"
                 style={{ width: logoWidth ? `${logoWidth}px` : 'auto', maxWidth: '100%', display: 'block', marginLeft: 0, paddingLeft: 0, marginRight: 'auto', objectPosition: 'left' }}
               />
             </div>
-            
+
             {/* Slogan abaixo do logo */}
             <div className="mt-0.5" style={{ marginLeft: 0, paddingLeft: 0, textAlign: 'left' }}>
-              <p 
+              <p
                 ref={textRef}
-                className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg" 
-                style={{fontFamily: 'Cinzel, serif', marginLeft: 0, paddingLeft: 0, textAlign: 'left'}}
+                className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg"
+                style={{ fontFamily: 'Cinzel, serif', marginLeft: 0, paddingLeft: 0, textAlign: 'left' }}
               >
                 Observatório dos Professores Indígenas
               </p>
-              <p className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg" style={{fontFamily: 'Cinzel, serif'}}>do Estado de São Paulo</p>
+              <p className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg" style={{ fontFamily: 'Cinzel, serif' }}>do Estado de São Paulo</p>
             </div>
             <p className="mt-4 text-green-100/90 text-lg max-w-2xl">
               Um espaço de memória, território e educação. Histórias, escolas e experiências narradas pelos próprios professores e comunidades indígenas do Estado de São Paulo.
             </p>
-            <div className="mt-6 grid grid-cols-1 lg:grid-cols-6 gap-3 w-full">
-              <div className="col-span-1 lg:col-span-4">
+            <div className="mt-10 w-full max-w-4xl">
+              <div className="max-w-2xl">
                 <HomepageSearch dataPoints={dataPoints} />
               </div>
-              <div className="col-span-1 lg:col-span-2 flex flex-col gap-3">
-                <Link to="/mapa" className="block rounded-full bg-green-500 text-green-950 font-semibold px-4 py-2.5 text-center hover:bg-green-400 transition">
+              
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Link 
+                  to="/mapa" 
+                  className="inline-flex items-center gap-2 rounded-full bg-[#9ce66b] text-green-950 font-bold px-5 py-3 text-center hover:bg-[#85d15a] transition-all hover:scale-105 shadow-xl shadow-green-500/10 whitespace-nowrap"
+                >
+                  <Map className="w-5 h-5" />
                   Explorar Mapa
                 </Link>
-                <Link to="/dashboard" className="block rounded-full bg-green-600 text-white font-semibold px-4 py-2.5 text-center hover:bg-green-500 transition">
+                <Link 
+                  to="/dashboard" 
+                  className="inline-flex items-center gap-2 rounded-full bg-[#9ce66b] text-green-950 font-semibold px-5 py-3 text-center hover:bg-[#85d15a] transition-all hover:scale-105 shadow-xl shadow-green-500/10 whitespace-nowrap"
+                >
+                  <Users className="w-5 h-5" />
                   Alguns dados
                 </Link>
-                <Link to="/conteudo" className="block rounded-full bg-green-700 text-white font-semibold px-4 py-2.5 text-center hover:bg-green-600 transition">
+                <Link 
+                  to="/conteudo" 
+                  className="inline-flex items-center gap-2 rounded-full bg-[#9ce66b] text-green-950 font-semibold px-5 py-3 text-center hover:bg-[#85d15a] transition-all hover:scale-105 shadow-xl shadow-green-500/10 whitespace-nowrap"
+                >
+                  <BookOpen className="w-5 h-5" />
                   Materiais Didáticos
                 </Link>
               </div>
