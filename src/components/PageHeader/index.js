@@ -19,9 +19,11 @@ const PageHeader = ({
   showShareButtons = true,
   showNavbar = false,
   dataPoints = [],
-  openPainelFunction = null
+  openPainelFunction = null,
+  overlayColor = 'rgba(20, 81, 45, 0.6)', // Default dark green overlay
+  blendMode = 'normal' // Permite efeitos como 'color', 'screen' ou 'overlay'
 }) => {
-  const heroImageUrl = `${import.meta.env.BASE_URL || '/opin'}/hero.webp`;
+  const heroImageUrl = `${import.meta.env.BASE_URL || '/opin'}/hero_grayscale.webp`;
   const contentRef = React.useRef(null);
   const searchBarRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState('auto');
@@ -125,11 +127,19 @@ const PageHeader = ({
         right: 0,
         width: '100%',
         height: containerHeight,
-        zIndex: 10 // Garantir que fique acima de outros elementos, mas abaixo da navbar se ela aparecer
+        zIndex: 10
       }}
     >
-      {/* Overlay para melhorar legibilidade do texto */}
-      <div className="absolute inset-0 bg-green-900/60"></div>
+      {/* Overlay de cor com modo de mesclagem para colorir a escala de cinza */}
+      <div 
+        className="absolute inset-0 transition-all duration-500" 
+        style={{ 
+          backgroundColor: overlayColor,
+          mixBlendMode: blendMode
+        }}
+      ></div>
+
+
       <div ref={contentRef} className="relative z-10" style={{ paddingTop: showNavbar ? '0' : '80px', paddingBottom: '2rem' }}>
         {/* Navbar integrada no topo do hero - usando os mesmos espaçamentos da navbar original */}
         {showNavbar && (
