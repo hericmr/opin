@@ -153,7 +153,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   const isHomepage = useMemo(() => location.pathname === '/', [location.pathname]);
 
   // URL da imagem hero
-  const heroImageUrl = `${import.meta.env.BASE_URL || '/opin'}/hero.png`;
+  const heroImageUrl = `${import.meta.env.BASE_URL || '/opin'}/hero.webp`;
 
   return (
     <header
@@ -184,7 +184,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
             >
               <div className="flex items-center space-x-1 sm:space-x-2">
                 <img
-                  src={getLocalImageUrl(`${import.meta.env.BASE_URL || '/opin'}/logo_index.png`)}
+                  src={getLocalImageUrl(`${import.meta.env.BASE_URL || '/opin'}/logo_index.webp`)}
                   alt="OPIN - Observatório dos Professores Indígenas"
                   className="h-6 sm:h-7 md:h-8 lg:h-10 xl:h-12 w-auto object-contain object-left"
                   style={{ display: 'block' }}

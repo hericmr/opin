@@ -5,6 +5,10 @@ const sharp = require('sharp');
 
 const DIRECTORIES = [
     {
+        path: path.join(__dirname, '../public'),
+        hasMap: false
+    },
+    {
         path: path.join(__dirname, '../public/images/local'),
         hasMap: true,
         mapPath: path.join(__dirname, '../src/data/image_map.json'),
