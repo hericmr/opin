@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import BookCard from './BookCard';
-import { BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const BookGallery = () => {
@@ -56,12 +55,18 @@ const BookGallery = () => {
   return (
     <div className="space-y-12">
       {/* Intro section */}
-      <div className="max-w-3xl mx-auto text-center space-y-4">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 text-green-800 rounded-full mb-2">
-          <BookOpen className="w-8 h-8" />
+      <div className="max-w-3xl mx-auto text-center space-y-6">
+        <div className="mb-6">
+          <p></p>
+          <img
+            src={`${import.meta.env.BASE_URL || '/opin'}/logo_saberes.webp`}
+            alt="Logo Saberes Indígenas na Escola - UNIFESP"
+            className="h-24 sm:h-32 w-auto mx-auto object-contain"
+          />
         </div>
+        <p></p>
         <h2 className="text-3xl font-bold text-gray-900 tracking-tight">
-          Saberes Indígenas na Escola
+          Saberes Indígenas na Escola - UNIFESP
         </h2>
         <p className="text-lg text-gray-600 leading-relaxed">
           Livros produzidos no âmbito da ação Saberes Indígenas na Escola, em parceria com a UNIFESP no estado de São Paulo.
