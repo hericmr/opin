@@ -61,23 +61,23 @@ const HomepageSearch = ({ dataPoints }) => {
     // Se temos dados completos da escola, abrir o painel
     if (result.data && result.coordinates) {
       setSearch(result.title, result.coordinates, result.title);
-      navigate('/mapa', { 
-        state: { 
-          searchTerm: result.title, 
+      navigate('/mapa', {
+        state: {
+          searchTerm: result.title,
           coordinates: result.coordinates,
           highlightSchool: result.title,
           schoolData: result.data // Passar os dados completos da escola
-        } 
+        }
       });
     } else if (result.coordinates) {
       // Fallback: apenas coordenadas sem dados completos
       setSearch(result.title, result.coordinates, result.title);
-      navigate('/mapa', { 
-        state: { 
-          searchTerm: result.title, 
+      navigate('/mapa', {
+        state: {
+          searchTerm: result.title,
           coordinates: result.coordinates,
-          highlightSchool: result.title 
-        } 
+          highlightSchool: result.title
+        }
       });
     } else {
       // Busca simples sem coordenadas
@@ -117,7 +117,7 @@ const HomepageSearch = ({ dataPoints }) => {
     if (!searchTerm) return text;
     const regex = new RegExp(`(${searchTerm})`, 'gi');
     const parts = text.split(regex);
-    return parts.map((part, index) => 
+    return parts.map((part, index) =>
       regex.test(part) ? (
         <span key={index} className="bg-yellow-200 font-semibold">{part}</span>
       ) : part
@@ -243,29 +243,29 @@ export default function Homepage({ dataPoints = [] }) {
           <div className="pt-28 lg:pt-0 text-white" style={{ textAlign: 'left' }}>
             {/* Logo OPIN maior */}
             <div className="mb-2" style={{ width: logoWidth ? `${logoWidth}px` : 'auto', marginLeft: 0, paddingLeft: 0, textAlign: 'left' }}>
-              <img 
+              <img
                 src={`${import.meta.env.BASE_URL || '/opin'}/logo_index.webp`}
                 alt="OPIN - Observatório dos Professores Indígenas"
                 className="h-20 md:h-28 lg:h-36 xl:h-44 object-contain object-left"
                 style={{ width: logoWidth ? `${logoWidth}px` : 'auto', maxWidth: '100%', display: 'block', marginLeft: 0, paddingLeft: 0, marginRight: 'auto', objectPosition: 'left' }}
               />
             </div>
-            
+
             {/* Slogan abaixo do logo */}
             <div className="mt-0.5" style={{ marginLeft: 0, paddingLeft: 0, textAlign: 'left' }}>
-              <p 
+              <p
                 ref={textRef}
-                className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg" 
-                style={{fontFamily: 'Cinzel, serif', marginLeft: 0, paddingLeft: 0, textAlign: 'left'}}
+                className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg"
+                style={{ fontFamily: 'Cinzel, serif', marginLeft: 0, paddingLeft: 0, textAlign: 'left' }}
               >
                 Observatório dos Professores Indígenas
               </p>
-              <p className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg" style={{fontFamily: 'Cinzel, serif'}}>do Estado de São Paulo</p>
+              <p className="uppercase tracking-wide text-green-100 text-sm md:text-base lg:text-lg" style={{ fontFamily: 'Cinzel, serif' }}>do Estado de São Paulo</p>
             </div>
             <p className="mt-4 text-green-100/90 text-lg max-w-2xl">
               Um espaço de memória, território e educação. Histórias, escolas e experiências narradas pelos próprios professores e comunidades indígenas do Estado de São Paulo.
             </p>
-            <div className="mt-6 grid grid-cols-1 lg:grid-cols-6 gap-3 w-full">
+            <div className="mt-7 grid grid-cols-1 lg:grid-cols-7 gap-3 w-full">
               <div className="col-span-1 lg:col-span-4">
                 <HomepageSearch dataPoints={dataPoints} />
               </div>
@@ -285,16 +285,16 @@ export default function Homepage({ dataPoints = [] }) {
         </div>
       </section>
 
-      
 
-      
 
-      
 
-      
 
-      
-      
+
+
+
+
+
+
     </div>
   );
 }

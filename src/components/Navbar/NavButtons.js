@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { BookOpen, Map, BarChart3 } from 'lucide-react';
+import { prefetchPage } from '../../router';
 
 const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, isMobileLandscape }) => {
   const navigate = useNavigate();
@@ -29,6 +30,8 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
       {/* Botão Home/Mapa */}
       <button
         onClick={() => navigate('/mapa')}
+        onMouseEnter={() => prefetchPage('mapa')}
+        onTouchStart={() => prefetchPage('mapa')}
         className={getButtonStyle(isActive('/mapa'))}
         title="Ir para o mapa das escolas indígenas"
         aria-label="Ir para o mapa das escolas indígenas"
@@ -41,6 +44,8 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
       {/* Botão Materiais Didáticos */}
       <button
         onClick={() => navigate('/conteudo')}
+        onMouseEnter={() => prefetchPage('conteudo')}
+        onTouchStart={() => prefetchPage('conteudo')}
         className={getButtonStyle(isActive('/conteudo'))}
         title="Ver materiais didáticos indígenas"
         aria-label="Ver materiais didáticos indígenas"
@@ -53,6 +58,8 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
       {/* Botão Alguns dados */}
       <button
         onClick={() => navigate('/dashboard')}
+        onMouseEnter={() => prefetchPage('dashboard')}
+        onTouchStart={() => prefetchPage('dashboard')}
         className={getButtonStyle(isActive('/dashboard'))}
         title="Ver dados das escolas indígenas"
         aria-label="Ver dados das escolas indígenas"
