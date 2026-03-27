@@ -6,6 +6,8 @@ import { useBreakpoint } from '../../hooks/responsive/useBreakpoint';
 import { Leaf, Shield } from 'lucide-react';
 import NavButtons from '../Navbar/NavButtons';
 import SearchBar from '../Navbar/SearchBar';
+import MobileToggle from '../Navbar/MobileToggle';
+import MobileMenu from '../Navbar/MobileMenu';
 import MinimalLoginModal from '../Auth/MinimalLoginModal';
 
 const PageHeader = ({
@@ -28,11 +30,21 @@ const PageHeader = ({
   const searchBarRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState('auto');
   const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { setSearch } = useSearch();
   const { isAuthenticated, user, logout } = useAuth();
   const { width } = useBreakpoint();
+
+  const toggleMobileMenu = React.useCallback(() => {
+    setMobileMenuOpen(prev => !prev);
+  }, []);
+
+  const handleNavigation = (path) => {
+    navigate(path);
+    setMobileMenuOpen(false);
+  };
 
   const isMobileLandscape = React.useMemo(() => {
     return width <= 1024 && width > window.innerHeight;
@@ -258,6 +270,24 @@ const PageHeader = ({
                   )}
                 </div>
               </div>
+
+              {/* Mobile - Busca e Botão hambúrguer */}
+              <div className="lg:hidden flex items-center gap-2">
+                <div className="flex-1 max-w-xs">
+                  <SearchBar
+                    onSearch={handleSearch}
+                    onResultClick={handleResultClick}
+                    isMobile={true}
+                    isMobileLandscape={isMobileLandscape}
+                    dataPoints={dataPoints}
+                  />
+                </div>
+                <MobileToggle
+                  mobileMenuOpen={mobileMenuOpen}
+                  toggleMobileMenu={toggleMobileMenu}
+                  isMobileLandscape={isMobileLandscape}
+                />
+              </div>
             </div>
           </div>
         )}
@@ -281,6 +311,19 @@ const PageHeader = ({
           )}
         </div>
       </div>
+
+      {/* Menu Mobile */}
+      <MobileMenu
+        mobileMenuOpen={mobileMenuOpen}
+        isConteudoPage={isConteudoPage}
+        isSearchPage={isSearchPage}
+        isAdminPage={isAdminPage}
+        isDashboardPage={isPainelPage}
+        isAdmin={isAuthenticated}
+        onAdminClick={handleAdminClick}
+        isMobileLandscape={isMobileLandscape}
+        onNavigation={handleNavigation}
+      />
 
       {/* Modal de Login */}
       {showLoginModal && (
