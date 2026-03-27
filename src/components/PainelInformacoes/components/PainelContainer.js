@@ -135,19 +135,24 @@ const PainelContainer = ({
               
             />
           </aside>
-          <div
-            ref={contentRef}
-            className="mj-split-right overflow-y-auto mj-panel-content"
-            onScroll={(e) => {
-              const el = e.currentTarget;
-              const max = el.scrollHeight - el.clientHeight;
-              const ratio = max > 0 ? el.scrollTop / max : 0;
-              setScrollProgress(Math.min(1, Math.max(0, ratio)));
-            }}
-          >
-            <div className={`${isMobilePortrait ? 'p-3 sm:p-4' : 'p-6'} space-y-4 sm:space-y-5`}>
-              <div className="prose prose-lg max-w-none mj-prose">
-                {content}
+          <div className="mj-split-right flex flex-col h-full overflow-hidden">
+            {/* Espaçador para o header absoluto no modo maximizado desktop */}
+            <div className="h-[80px] shrink-0 pointer-events-none" aria-hidden="true" />
+            
+            <div
+              ref={contentRef}
+              className="flex-1 overflow-y-auto mj-panel-content"
+              onScroll={(e) => {
+                const el = e.currentTarget;
+                const max = el.scrollHeight - el.clientHeight;
+                const ratio = max > 0 ? el.scrollTop / max : 0;
+                setScrollProgress(Math.min(1, Math.max(0, ratio)));
+              }}
+            >
+              <div className={`${isMobilePortrait ? 'p-3 sm:p-4' : 'p-6'} space-y-4 sm:space-y-5`}>
+                <div className="prose prose-lg max-w-none mj-prose">
+                  {content}
+                </div>
               </div>
             </div>
           </div>
