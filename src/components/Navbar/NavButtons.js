@@ -18,9 +18,9 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
   };
 
   const getButtonStyle = (active) => {
-    const baseStyle = 'px-3 xl:px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-md active:scale-95 focus:outline-none flex items-center gap-2 relative';
-    const activeStyle = 'bg-white/20 text-white backdrop-blur-sm shadow-sm opacity-100';
-    const inactiveStyle = 'text-white hover:bg-green-700/20';
+    const baseStyle = 'px-3 xl:px-4 py-1.5 text-sm font-medium rounded-lg focus:outline-none flex items-center gap-2 relative';
+    const activeStyle = 'bg-white/20 text-white shadow-sm';
+    const inactiveStyle = 'text-white hover:text-white opacity-80 hover:opacity-100';
     
     return `${baseStyle} ${active ? activeStyle : inactiveStyle}`;
   };
