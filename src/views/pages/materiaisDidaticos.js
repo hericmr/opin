@@ -15,7 +15,7 @@ const MateriaisDidáticos = () => {
   ], []);
 
   const siteUrl = 'https://hericmr.github.io/opin';
-  const imageUrl = `${siteUrl}/hero.png`;
+  const imageUrl = `${siteUrl}/hero.webp`;
   const pageTitle = 'Materiais Didáticos - OPIN';
   const pageDescription = 'Materiais didáticos produzidos no âmbito da ação Saberes Indígenas na Escola, em parceria com a UNIFESP no estado de São Paulo.';
 

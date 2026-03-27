@@ -21,7 +21,7 @@ const PageHeader = ({
   dataPoints = [],
   openPainelFunction = null
 }) => {
-  const heroImageUrl = `${import.meta.env.BASE_URL || '/opin'}/hero.png`;
+  const heroImageUrl = `${import.meta.env.BASE_URL || '/opin'}/hero.webp`;
   const contentRef = React.useRef(null);
   const searchBarRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState('auto');
@@ -144,7 +144,7 @@ const PageHeader = ({
                 >
                   <div className="flex items-center space-x-1 sm:space-x-2">
                     <img
-                      src={`${import.meta.env.BASE_URL || '/opin'}/logo_index.png`}
+                      src={`${import.meta.env.BASE_URL || '/opin'}/logo_index.webp`}
                       alt="OPIN - Observatório dos Professores Indígenas"
                       className="h-6 sm:h-7 md:h-8 lg:h-10 xl:h-12 w-auto object-contain object-left"
                       style={{ display: 'block' }}
