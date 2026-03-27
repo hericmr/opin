@@ -20,6 +20,15 @@ import GlobalAdminShortcut from './components/GlobalAdminShortcut';
 // Import routes configuration
 import { createRoutes } from "./router";
 
+// Componente para restaurar o scroll ao topo em cada mudança de rota
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
 const AppContent = () => {
   const { dataPoints, loading, error } = useEscolasData();
   const [openPainelFunction, setOpenPainelFunction] = useState(null);
@@ -54,49 +63,19 @@ const AppContent = () => {
            routerPath === '/dados-escolas-indigenas';
   }, [location?.pathname]);
 
-  // Verifica se há uma rota inicial definida (para o dashboard estático)
-  React.useEffect(() => {
-    if (window.__INITIAL_ROUTE__) {
-      const initialRoute = window.__INITIAL_ROUTE__;
-      // Limpa a variável global
-      delete window.__INITIAL_ROUTE__;
-      
-      // Aguarda um pouco para garantir que o Router esteja totalmente inicializado
-      const timer = setTimeout(() => {
-        // Verifica se já estamos na rota correta
-        const currentPath = location.pathname.replace(/\/$/, ''); // Remove barra final
-        const targetPath = initialRoute.replace(/\/$/, ''); // Remove barra final
-        
-        if (currentPath !== targetPath && !currentPath.includes(targetPath)) {
-          // Navega para a rota inicial usando React Router (sem reload)
-          navigate(initialRoute, { replace: true });
-        }
-      }, 50);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [navigate, location.pathname]);
-
   // Handler para redirecionamento do GitHub Pages (404.html)
   React.useEffect(() => {
     const githubPagesRedirect = sessionStorage.getItem('githubPagesRedirect');
     if (githubPagesRedirect) {
-      // Remove do sessionStorage
       sessionStorage.removeItem('githubPagesRedirect');
-      
-      // Parse a rota (pode incluir query params e hash)
       const [path, ...rest] = githubPagesRedirect.split('?');
       const queryString = rest.length > 0 ? '?' + rest.join('?') : '';
       const fullPath = path + queryString;
       
-      // Aguarda um pouco para garantir que o Router esteja totalmente inicializado
       const timer = setTimeout(() => {
-        // Verifica se já estamos na rota correta
         const currentPath = location.pathname.replace(/\/$/, '');
         const targetPath = path.replace(/\/$/, '');
-        
         if (currentPath !== targetPath) {
-          // Navega para a rota usando React Router (sem reload)
           navigate(fullPath, { replace: true });
         }
       }, 100);
@@ -135,12 +114,10 @@ const AppContent = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Meta tags automáticas para escolas específicas */}
+    <div className="min-h-screen flex flex-col relative overflow-x-hidden">
+      <ScrollToTop />
       <MetaTagsDetector dataPoints={dataPoints} />
       
-      {/* Navbar só aparece se NÃO for rota de mapa E NÃO for rota que usa navbar integrada no Hero */}
-      {/* Verificação dupla para garantir que não apareça quando acessado diretamente */}
       {!isMapRoute && !isHeroNavbarRoute && (
         <Navbar 
           onConteudoClick={() => navigate('/conteudo')} 
@@ -148,18 +125,18 @@ const AppContent = () => {
           openPainelFunction={openPainelFunction} 
         />
       )}
+
       <Suspense fallback={
-        loading ? null : (
-          <div className="flex items-center justify-center p-8 bg-green-50">
-            <div className="text-center">
-              <p className="text-green-800">Carregando...</p>
-            </div>
+        <div className="fixed inset-0 flex items-center justify-center z-[9999] bg-white/50 backdrop-blur-sm transition-opacity duration-300">
+          <div className="flex flex-col items-center gap-3">
+             <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+             <p className="text-green-800 font-medium text-sm">Carregando...</p>
           </div>
-        )
+        </div>
       }>
         <Routes>
           {createRoutes(dataPoints, loading, handlePainelOpenFunction).map((route, index) => (
-            <Route key={index} path={route.path} element={route.element} />
+            <Route key={route.path} path={route.path} element={route.element} />
           ))}
         </Routes>
       </Suspense>

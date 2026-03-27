@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { BookOpen, Leaf, Shield, LayoutGrid, Map, BarChart3 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { prefetchPage } from '../../router';
 
 const MobileMenu = ({ 
   mobileMenuOpen, 
@@ -41,6 +42,8 @@ const MobileMenu = ({
               
               <button
                 onClick={() => onNavigation('/')}
+                onMouseEnter={() => prefetchPage('mapa')}
+                onTouchStart={() => prefetchPage('mapa')}
                 className={`w-full text-left px-4 py-2.5 font-medium rounded transition-colors ${getActiveStyle(location.pathname === '/')}`}
                 aria-label="Ir para o mapa das escolas indígenas"
                 aria-current={location.pathname === '/' ? 'page' : undefined}
@@ -53,6 +56,8 @@ const MobileMenu = ({
               
               <button
                 onClick={() => onNavigation('/conteudo')}
+                onMouseEnter={() => prefetchPage('conteudo')}
+                onTouchStart={() => prefetchPage('conteudo')}
                 className={`w-full text-left px-4 py-2.5 font-medium rounded transition-colors ${getActiveStyle(isConteudoPage)}`}
                 aria-label="Ver materiais didáticos indígenas"
                 aria-current={isConteudoPage ? 'page' : undefined}
@@ -65,6 +70,8 @@ const MobileMenu = ({
               
               <button
                 onClick={() => onNavigation('/dashboard')}
+                onMouseEnter={() => prefetchPage('dashboard')}
+                onTouchStart={() => prefetchPage('dashboard')}
                 className={`w-full text-left px-4 py-2.5 font-medium rounded transition-colors ${getActiveStyle(isDashboardPage)}`}
                 aria-label="Ver dados das escolas indígenas"
                 aria-current={isDashboardPage ? 'page' : undefined}
@@ -85,6 +92,8 @@ const MobileMenu = ({
               {!isAdmin ? (
                 <button
                   onClick={onAdminClick}
+                  onMouseEnter={() => prefetchPage('admin')}
+                  onTouchStart={() => prefetchPage('admin')}
                   className="w-full text-left px-4 py-2.5 font-medium text-white hover:bg-[#215A36] rounded transition-colors focus:outline-none"
                   aria-label="Acesso administrativo"
                 >
@@ -104,6 +113,8 @@ const MobileMenu = ({
                   
                   <button
                     onClick={() => onNavigation('/admin')}
+                    onMouseEnter={() => prefetchPage('admin')}
+                    onTouchStart={() => prefetchPage('admin')}
                     className={`w-full text-left px-4 py-2.5 font-medium rounded transition-colors ${getActiveStyle(isAdminPage)} focus:outline-none`}
                     aria-label="Painel administrativo"
                     aria-current={isAdminPage ? 'page' : undefined}

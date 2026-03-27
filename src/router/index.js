@@ -14,8 +14,27 @@ const MapaEscolasIndigenas = React.lazy(() => import("../views/pages/mapa"));
 const MateriaisDidáticos = React.lazy(() => import("../views/pages/materiaisDidaticos"));
 const Dashboard = React.lazy(() => import("../views/pages/dashboard"));
 const SearchResults = React.lazy(() => import("../views/pages/search"));
-// AdminPanel permanece em components por ser um painel complexo
 const AdminPanel = React.lazy(() => import("../components/AdminPanel"));
+
+// Mapa para facilitar o prefetch manual se necessário
+const lazyComponents = {
+  homepage: () => import("../views/pages/homepage"),
+  mapa: () => import("../views/pages/mapa"),
+  conteudo: () => import("../views/pages/materiaisDidaticos"),
+  dashboard: () => import("../views/pages/dashboard"),
+  search: () => import("../views/pages/search"),
+  admin: () => import("../components/AdminPanel")
+};
+
+/**
+ * Prefetch a specific page's chunk
+ */
+export const prefetchPage = (pageName) => {
+  if (lazyComponents[pageName]) {
+    lazyComponents[pageName]();
+    console.log(`[Router] Prefetching ${pageName}...`);
+  }
+};
 
 /**
  * Generate route element wrapper
