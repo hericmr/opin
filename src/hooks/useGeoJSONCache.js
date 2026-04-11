@@ -4,9 +4,17 @@ import logger from '../utils/logger';
 // Um objeto simples para armazenar os dados GeoJSON em memória.
 const cache = {};
 
+// Mapeamento de chaves para seus arquivos simplificados (muito menores)
+// SP: 2 MB → 176 KB | terras_indigenas: 944 KB → 196 KB
+const SIMPLIFIED_MAP = {
+  'SP': 'SP_simplified',
+  'terras_indigenas': 'terras_indigenas_simplified',
+};
+
 /**
  * Hook para carregar e cachear dados GeoJSON
- * 
+ * Usa automaticamente versões simplificadas quando disponíveis.
+ *
  * @param {string} key - Chave do arquivo GeoJSON (sem extensão)
  * @returns {Object} Objeto com data, loading e error
  */
@@ -18,27 +26,38 @@ export const useGeoJSONCache = (key) => {
   useEffect(() => {
     if (!key) return;
 
+    // Prefere a versão simplificada quando disponível
+    const resolvedKey = SIMPLIFIED_MAP[key] ?? key;
+
     const fetchGeoJSON = async () => {
-      if (cache[key]) {
-         logger.debug(`useGeoJSONCache: Dados de ${key} encontrados no cache`);
-         setData(cache[key]);
+      if (cache[resolvedKey]) {
+         logger.debug(`useGeoJSONCache: Dados de ${resolvedKey} encontrados no cache`);
+         setData(cache[resolvedKey]);
          return;
       }
       setLoading(true);
       try {
-         const url = `${import.meta.env.BASE_URL || '/opin'}/${key}.geojson`;
-         logger.debug(`useGeoJSONCache: Carregando ${key} de:`, url);
+         const url = `${import.meta.env.BASE_URL || '/opin'}/${resolvedKey}.geojson`;
+         logger.info(`useGeoJSONCache: Iniciando carregamento de ${resolvedKey}. Requisitando: ${url}`);
+         
+         const startTime = Date.now();
          const response = await fetch(url);
          if (!response.ok) throw new Error(`Erro ao buscar GeoJSON (${response.status})`);
+         
          const geoJSON = await response.json();
-         logger.debug(`useGeoJSONCache: ${key} carregado com sucesso:`, {
-           type: geoJSON.type,
-           features: geoJSON.features?.length || 0,
-         });
-         cache[key] = geoJSON;
+         const duration = Date.now() - startTime;
+         
+         const sizeKB = Math.round(JSON.stringify(geoJSON).length / 1024);
+         logger.info(`useGeoJSONCache: ${resolvedKey} carregado em ${duration}ms. Tamanho aproximado: ${sizeKB}KB`);
+         
+         if (sizeKB > 500 && !resolvedKey.includes('simplified')) {
+           logger.warn(`useGeoJSONCache: Detectado GeoJSON grande (${sizeKB}KB) sem versão simplificada: ${resolvedKey}`);
+         }
+
+         cache[resolvedKey] = geoJSON;
          setData(geoJSON);
       } catch (err) {
-         logger.error(`useGeoJSONCache: Erro ao carregar ${key}:`, err);
+         logger.error(`useGeoJSONCache: Erro ao carregar ${resolvedKey}:`, err);
          setError(err);
       } finally {
          setLoading(false);

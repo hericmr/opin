@@ -220,16 +220,16 @@ const useSearch = (dataPoints) => {
         await new Promise(resolve => setTimeout(resolve, 200 - elapsed));
       }
 
-      setSearchResults(sortedResults);
-      return sortedResults;
-    } catch (error) {
-      console.error('Erro na busca:', error);
-      setSearchResults([]);
-      return [];
-    } finally {
-      setIsSearching(false);
-    }
-  }, [dataPoints, searchResults]);
+    setSearchResults(sortedResults);
+    return sortedResults;
+  } catch (error) {
+    console.error('Erro na busca:', error);
+    setSearchResults([]);
+    return [];
+  } finally {
+    setIsSearching(false);
+  }
+}, [dataPoints]); // Removido searchResults dos dependentes para evitar recriações desnecessárias
 
   const clearSearch = useCallback(() => {
     setSearchResults([]);

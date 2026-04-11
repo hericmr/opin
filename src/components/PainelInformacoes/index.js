@@ -5,6 +5,7 @@ import { useClickOutside } from "../hooks/useClickOutside";
 import useDocumentosEscola from "../hooks/useDocumentosEscola";
 import { isCardVisible } from "../../components/AdminPanel/constants/cardVisibilityConfig";
 import { useGlobalCardVisibility } from "../../hooks/useGlobalCardVisibility";
+import { useEscolaDetalhes } from "../../hooks/useEscolaDetalhes";
 
 // Import modular components
 import EscolaInfo from "./components/EscolaInfo";
@@ -25,6 +26,26 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
   
   // Verificar se o painel foi aberto via URL
   const openedFromUrl = useRef(false);
+  // Carregar detalhes on-demand
+  const { data: detalhes, loading: detalhesLoading } = useEscolaDetalhes(painelInfo?.id);
+  
+  // Estado local para a escola (merge de dados básicos + detalhes)
+  const [escolaData, setEscolaData] = useState(painelInfo);
+
+  // Atualizar dados básicos quando painelInfo mudar
+  useEffect(() => {
+    if (painelInfo) {
+      setEscolaData(painelInfo);
+    }
+  }, [painelInfo]);
+
+  // Merge de detalhes quando chegarem
+  useEffect(() => {
+    if (detalhes && escolaData && detalhes.id === escolaData.id) {
+      setEscolaData(prev => ({ ...prev, ...detalhes }));
+    }
+  }, [detalhes]);
+
   useEffect(() => {
     if (painelInfo) {
       const urlParams = new URLSearchParams(window.location.search);
@@ -133,58 +154,59 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
   }
 
   // Determine panel type
-  const isTerraIndigena = painelInfo.tipo === 'terra_indigena';
-  const isIntro = painelInfo.titulo === 'Sobre o site';
+  const isTerraIndigena = escolaData?.tipo === 'terra_indigena';
+  const isIntro = escolaData?.titulo === 'Sobre o site';
 
   const renderContent = (layoutInfo = {}) => {
     const { useSplitLayout = false } = layoutInfo;
-    const cardsVisibilidade = painelInfo?.cards_visibilidade;
+    const cardsVisibilidade = escolaData?.cards_visibilidade;
 
     if (isIntro) {
-      return <IntroPanel painelInfo={painelInfo} />;
+      return <IntroPanel painelInfo={escolaData} />;
     }
     
     if (isTerraIndigena) {
-      return <TerraIndigenaInfo terraIndigena={painelInfo} />;
+      return <TerraIndigenaInfo terraIndigena={escolaData} />;
     }
 
     return (
       <div className="relative">
         <EscolaInfo 
-          escola={painelInfo} 
+          escola={escolaData} 
           shouldUseGrid={true}
           refreshKey={refreshKey}
           sectionRefs={sectionRefs.current}
           isMaximized={isMaximized}
           shouldHideInlineMedia={useSplitLayout}
+          isLoadingDetails={detalhesLoading}
         />
         {/* Vídeos */}
         {isCardVisible(cardsVisibilidade, 'videos', globalVisibility) && 
-         (hasVideos || painelInfo.link_para_videos) && (
+         (hasVideos || escolaData?.link_para_videos) && (
           <div ref={(el) => (sectionRefs.current['videos'] = el)}>
             {hasVideos ? (
               // New: multiple videos from database
               <div>
                 <h3 className="text-xl font-semibold text-green-800 mb-4" style={{ fontSize: '0.75em' }}>
-                  {`Produções audiovisuais realizadas na ${painelInfo.titulo}`}
+                  {`Produções audiovisuais realizadas na ${escolaData?.titulo}`}
                 </h3>
                 {videos.map((video, index) => (
                   <div key={video.id || index} className={index > 0 ? "mt-8" : ""}>
                     <VideoPlayer 
                       videoUrl={video.video_url}
-                      title={video.titulo || <span style={{ fontSize: '0.75em' }}>{`Produções audiovisuais realizadas na ${painelInfo.titulo}`}</span>}
-                      escolaId={painelInfo.id}
+                      title={video.titulo || <span style={{ fontSize: '0.75em' }}>{`Produções audiovisuais realizadas na ${escolaData?.titulo}`}</span>}
+                      escolaId={escolaData?.id}
                     />
                   </div>
                 ))}
               </div>
             ) : (
               // Legacy: single video from link_para_videos (fallback)
-              painelInfo.link_para_videos && (
+              escolaData?.link_para_videos && (
                 <VideoPlayer 
-                  videoUrl={painelInfo.link_para_videos}
-                  title={<span style={{ fontSize: '0.75em' }}>{`Produções audiovisuais realizadas na ${painelInfo.titulo}`}</span>}
-                  escolaId={painelInfo.id}
+                  videoUrl={escolaData.link_para_videos}
+                  title={<span style={{ fontSize: '0.75em' }}>{`Produções audiovisuais realizadas na ${escolaData.titulo}`}</span>}
+                  escolaId={escolaData.id}
                 />
               )
             )}
@@ -193,7 +215,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
         
         {/* Desenhos */}
         <DrawingsSection 
-          escolaId={painelInfo.id}
+          escolaId={escolaData?.id}
           refreshKey={refreshKey}
         />
         
@@ -210,12 +232,12 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
   };
 
   // Generate share URL
-  const shareUrl = painelInfo ? gerarLinkCustomizado() : '';
+  const shareUrl = escolaData ? gerarLinkCustomizado() : '';
 
   return (
     <div ref={painelRef}>
       <PainelContainer
-        painelInfo={painelInfo}
+        painelInfo={escolaData}
         closePainel={closePainel}
         isMaximized={isMaximized}
         onToggleMaximize={toggleMaximize}

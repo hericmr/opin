@@ -59,7 +59,15 @@ const GridLayoutWrapper = memo(({ children, shouldUseGrid }) => {
   );
 });
 
-const EscolaInfo = memo(({ escola, shouldUseGrid = false, refreshKey = 0, sectionRefs, isMaximized = false, shouldHideInlineMedia = false }) => {
+const EscolaInfo = memo(({ 
+  escola, 
+  shouldUseGrid = false, 
+  refreshKey = 0, 
+  sectionRefs, 
+  isMaximized = false, 
+  shouldHideInlineMedia = false,
+  isLoadingDetails = false
+}) => {
   console.log("EscolaInfo recebeu:", escola);
 
   // Buscar configuração global
