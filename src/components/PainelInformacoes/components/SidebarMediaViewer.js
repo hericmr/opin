@@ -6,6 +6,8 @@ import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 import { formatDateForDisplay } from '../../../utils/dateUtils';
 
+import { getLocalImageUrl } from '../../../utils/imageUtils';
+
 // Helper function to check if a value has actual content
 const hasContent = (value) => {
   if (value === null || value === undefined) return false;
@@ -17,7 +19,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
   // Initialize with header image if available to show it immediately
   const initialHeaderItem = headerUrl ? [{
     id: `header-${escolaId || 'temp'}`,
-    url: headerUrl,
+    url: getLocalImageUrl(headerUrl),
     titulo: null,
     descricao: null,
     autor: null,
@@ -33,9 +35,6 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
   const [manualOverrideUntil, setManualOverrideUntil] = useState(0);
   // Track image aspect ratios to determine if image is tall/narrow
   const [imageAspectRatios, setImageAspectRatios] = useState(new Map());
-
-  // URL base do storage remoto (produção)
-  const REMOTE_STORAGE_URL = 'https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/';
 
   const fetchBucketList = useCallback(async (bucket, categoria) => {
     let mapped = [];
@@ -60,10 +59,11 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
         let publicUrl = null;
         if (legenda.imagem_url) {
           if (legenda.imagem_url.trim().startsWith('http')) {
-            publicUrl = legenda.imagem_url.trim();
+            publicUrl = getLocalImageUrl(legenda.imagem_url.trim());
           } else {
-            // Construir URL usando o bucket remoto e o nome do bucket correto
-            publicUrl = `${REMOTE_STORAGE_URL}imagens-das-escolas/${legenda.imagem_url.trim()}`;
+            // Construir URL do Supabase para tentar resolver via mapa local
+            const fullSupabaseUrl = `https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-das-escolas/${legenda.imagem_url.trim()}`;
+            publicUrl = getLocalImageUrl(fullSupabaseUrl);
           }
         }
 
@@ -98,10 +98,11 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
         let publicUrl = null;
         if (img.imagem_url) {
           if (img.imagem_url.trim().startsWith('http')) {
-            publicUrl = img.imagem_url.trim();
+            publicUrl = getLocalImageUrl(img.imagem_url.trim());
           } else {
-            // Construir URL usando o bucket remoto
-            publicUrl = `${REMOTE_STORAGE_URL}imagens-professores/${img.imagem_url.trim()}`;
+            // Construir URL do Supabase para tentar resolver via mapa local
+            const fullSupabaseUrl = `https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-professores/${img.imagem_url.trim()}`;
+            publicUrl = getLocalImageUrl(fullSupabaseUrl);
           }
         }
 

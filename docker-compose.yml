@@ -4,16 +4,16 @@ services:
     container_name: opin_db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: opin_local
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - ./data/database/init_full.sql:/docker-entrypoint-initdb.d/init.sql
       - opin_db_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d opin_local" ]
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -25,9 +25,9 @@ services:
     ports:
       - "3000:3000"
     environment:
-      PGRST_DB_URI: postgres://postgres:password@db:5432/opin_local
+      PGRST_DB_URI: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD_ENCODED:-${POSTGRES_PASSWORD}}@db:5432/${POSTGRES_DB}"
       PGRST_DB_SCHEMA: public
-      PGRST_DB_ANON_ROLE: postgres
+      PGRST_DB_ANON_ROLE: ${POSTGRES_USER}
       PGRST_OPENAPI_SERVER_PROXY_URI: http://localhost:3000
     depends_on:
       db:
@@ -37,12 +37,12 @@ services:
     build:
       context: .
       args:
-        - VITE_SUPABASE_URL=/opin
-        - VITE_SUPABASE_ANON_KEY=local-dev-key-ignore-auth
+        - VITE_SUPABASE_URL=${VITE_SUPABASE_URL:-/opin}
+        - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY:-local-dev-key-ignore-auth}
     container_name: opin_front
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "${PORT:-8080}:80"
     depends_on:
       - api
 

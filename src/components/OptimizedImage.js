@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useImageLoader } from '../hooks/useImageLoader';
+import { getLocalImageUrl } from '../utils/imageUtils';
 
 const OptimizedImage = ({ 
   src, 
@@ -11,6 +12,9 @@ const OptimizedImage = ({
   onError,
   ...props 
 }) => {
+  // Resolve source URL using local mapping if available
+  const resolvedSrc = getLocalImageUrl(src);
+
   const {
     isLoaded,
     hasError,
@@ -19,7 +23,7 @@ const OptimizedImage = ({
     handleLoad,
     handleError,
     loading
-  } = useImageLoader(src, priority);
+  } = useImageLoader(resolvedSrc, priority);
 
   // Mostrar loading apenas se demorar muito (mais de 300ms)
   const [showLoading, setShowLoading] = useState(false);
@@ -50,12 +54,12 @@ const OptimizedImage = ({
     if (hasError) return placeholder;
     
     // Tentar WebP primeiro se suportado
-    if (src && typeof window !== 'undefined' && window.WebP) {
-      const webpSrc = src.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+    if (resolvedSrc && typeof window !== 'undefined' && window.WebP) {
+      const webpSrc = resolvedSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp');
       return webpSrc;
     }
     
-    return src || placeholder;
+    return resolvedSrc || placeholder;
   };
 
   return (
@@ -116,4 +120,4 @@ const OptimizedImage = ({
   );
 };
 
-export default React.memo(OptimizedImage); 
+export default React.memo(OptimizedImage);

@@ -1,5 +1,6 @@
 import { supabase } from '../dbClient';
 import logger from '../utils/logger';
+import { getLocalImageUrl } from '../utils/imageUtils';
 
 // Configurações para imagens das histórias do professor
 const HISTORIA_PROFESSOR_CONFIG = {
@@ -78,7 +79,7 @@ const generateUniqueFileName = (file, escolaId, historiaId) => {
 };
 
 /**
- * Buscar todas as histórias do professor de uma escola
+ * Buscar histórias do professor de uma escola
  * @param {number} escolaId - ID da escola
  * @returns {Promise<Array>} Lista de histórias
  */
@@ -89,8 +90,7 @@ export const getHistoriasProfessor = async (escolaId) => {
       .select('*')
       .eq('escola_id', escolaId)
       .eq('ativo', true)
-      .order('ordem', { ascending: true })
-      .order('created_at', { ascending: true });
+      .order('ordem', { ascending: true });
 
     if (error) {
       throw error;
@@ -100,9 +100,6 @@ export const getHistoriasProfessor = async (escolaId) => {
       return [];
     }
 
-    // URL base do storage remoto (produção)
-    const REMOTE_STORAGE_URL = 'https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/';
-
     // Adicionar URLs públicas das imagens
     const historiasComImagens = data.map((historia) => {
       if (historia.imagem_url) {
@@ -110,8 +107,9 @@ export const getHistoriasProfessor = async (escolaId) => {
           let publicUrl = historia.imagem_url;
 
           if (publicUrl && !publicUrl.startsWith('http')) {
-            // Construir URL usando o bucket remoto
-            publicUrl = `${REMOTE_STORAGE_URL}${HISTORIA_PROFESSOR_CONFIG.BUCKET_NAME}/${historia.imagem_url}`;
+            // Construir URL do Supabase para tentar resolver via mapa local
+            const fullSupabaseUrl = `https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/${HISTORIA_PROFESSOR_CONFIG.BUCKET_NAME}/${historia.imagem_url}`;
+            publicUrl = getLocalImageUrl(fullSupabaseUrl);
           }
 
           return { ...historia, imagem_public_url: publicUrl };
@@ -255,11 +253,6 @@ export const uploadHistoriaProfessorImage = async (file, escolaId, historiaId, d
     if (uploadError) {
       throw new Error(`Erro no upload: ${uploadError.message}`);
     }
-
-    // Obter URL pública - não usado
-    // const { data: { publicUrl } } = supabase.storage
-    //   .from(HISTORIA_PROFESSOR_CONFIG.BUCKET_NAME)
-    //   .getPublicUrl(filePath);
 
     // Atualizar a história com a URL da imagem
     const { data: historia, error: updateError } = await supabase
@@ -414,4 +407,4 @@ export const escolaTemHistoriasProfessor = async (escolaId) => {
     logger.error('Erro ao verificar histórias do professor:', error);
     return false;
   }
-}; 
+};
