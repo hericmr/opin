@@ -306,8 +306,7 @@ export const transferLegendaToNewUrl = async (oldImageUrl, newImageUrl, escolaId
   }
 };
 
-// URL base do storage remoto (produção)
-const REMOTE_STORAGE_URL = 'https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/';
+import { getLocalImageUrl } from '../utils/imageUtils';
 
 /**
  * Helper para adicionar URL pública ao item
@@ -323,7 +322,10 @@ const enrichWithPublicUrl = (item) => {
       bucket = 'imagens-professores';
     }
 
-    publicUrl = `${REMOTE_STORAGE_URL}${bucket}/${item.imagem_url}`;
+    // Tentar resolver via mapeamento local primeiro
+    // Se não estiver no mapa, constrói a URL do Supabase para manter compatibilidade
+    const fullSupabaseUrl = `https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/${bucket}/${item.imagem_url}`;
+    publicUrl = getLocalImageUrl(fullSupabaseUrl);
   }
 
   return { ...item, publicUrl };

@@ -106,19 +106,17 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
 
         console.log('Imagens encontradas em legendas_fotos:', legendas.length);
 
-        // URL base do storage remoto (produção)
-        const REMOTE_STORAGE_URL = 'https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-das-escolas/';
-
         // Processar cada imagem encontrada
         const imagensEncontradas = legendas.map((legenda, index) => {
           let publicUrl = null;
 
           if (legenda.imagem_url) {
             if (legenda.imagem_url.startsWith('http')) {
-              publicUrl = legenda.imagem_url;
+              publicUrl = getLocalImageUrl(legenda.imagem_url);
             } else {
-              // Construir URL usando o bucket remoto
-              publicUrl = `${REMOTE_STORAGE_URL}${legenda.imagem_url}`;
+              // Construir URL do Supabase para tentar resolver via mapa local
+              const fullSupabaseUrl = `https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-das-escolas/${legenda.imagem_url}`;
+              publicUrl = getLocalImageUrl(fullSupabaseUrl);
             }
           }
 
