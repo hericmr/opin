@@ -1,6 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../dbClient';
 
+// Campos leves para listagem no mapa e busca.
+// Dados detalhados (história, projetos, mídia) são carregados on-demand.
+const CAMPOS_LISTAGEM = [
+  'id',
+  'Escola',
+  'Município',
+  'Endereço',
+  'Latitude',
+  'Longitude',
+  'Terra Indigena (TI)',
+  'Povos indigenas',
+  'Diretoria de Ensino',
+  'Modalidade de Ensino/turnos de funcionamento',
+  'imagem_header',
+  'cards_visibilidade',
+].map(f => `"${f}"`).join(', ');
+
 export function useEscolasData() {
   const [dataPoints, setDataPoints] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -10,7 +27,7 @@ export function useEscolasData() {
     try {
       const { data, error } = await supabase
         .from('escolas_completa')
-        .select('*');
+        .select(CAMPOS_LISTAGEM);
       if (error) throw error;
       return data || [];
     } catch (err) {
