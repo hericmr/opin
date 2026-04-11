@@ -1,7 +1,5 @@
 import { supabase } from '../dbClient';
-
-// URL base do storage remoto (produção)
-const REMOTE_STORAGE_URL = 'https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-professores/';
+import { getLocalImageUrl } from '../utils/imageUtils';
 
 export const addProfessorImageMeta = async (meta) => {
   const { data, error } = await supabase
@@ -49,7 +47,8 @@ export const getProfessorImagesByEscola = async (escolaId) => {
   return (data || []).map(img => {
     let publicUrl = img.imagem_url;
     if (publicUrl && !publicUrl.startsWith('http')) {
-      publicUrl = `${REMOTE_STORAGE_URL}${img.imagem_url}`;
+      const fullSupabaseUrl = `https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-professores/${img.imagem_url}`;
+      publicUrl = getLocalImageUrl(fullSupabaseUrl);
     }
     return { ...img, publicUrl };
   });

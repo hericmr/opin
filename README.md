@@ -4,7 +4,6 @@ O OPIN mapeia escolas indígenas no estado de São Paulo, documentando suas real
 
 ![OPIN Logo](public/opin.png)
 
-**Site:** https://hericmr.github.io/opin/
 
 ---
 
