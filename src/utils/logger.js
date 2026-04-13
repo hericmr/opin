@@ -7,7 +7,22 @@
  * @module utils/logger
  */
 
-const isDevelopment = import.meta.env.MODE === 'development' || import.meta.env.DEV;
+// Detectar se estamos em desenvolvimento (compatível com Jest e Vite)
+const isDevelopment = (() => {
+  // Em Jest (modo de teste)
+  if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
+    return true;
+  }
+  // Em Vite (desenvolvimento)
+  if (typeof import !== 'undefined') {
+    try {
+      return import.meta?.env?.MODE === 'development' || import.meta?.env?.DEV;
+    } catch (e) {
+      return false;
+    }
+  }
+  return false;
+})();
 
 /**
  * Níveis de log disponíveis
