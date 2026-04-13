@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { supabase } from '../../../dbClient';
-import { getLocalImageUrl, isLocalImage } from '../../../utils/imageUtils';
+import { getLocalImageUrl, isLocalImage, getSupabaseStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
 import ReusableImageZoom from '../../ReusableImageZoom';
 import OptimizedImage from '../../shared/OptimizedImage';
@@ -69,10 +69,11 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
             let publicUrl = img.imagem_url;
 
             if (publicUrl && !publicUrl.startsWith('http')) {
-              const fullSupabaseUrl = `https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-professores/${img.imagem_url}`;
-              publicUrl = getLocalImageUrl(fullSupabaseUrl);
+              // Construir URL do Supabase via variável de ambiente
+              const storageUrl = getSupabaseStorageUrl('imagens-professores', img.imagem_url);
+              publicUrl = getSecureImageUrl(storageUrl);
             } else if (publicUrl && publicUrl.startsWith('http')) {
-              publicUrl = getLocalImageUrl(publicUrl);
+              publicUrl = getSecureImageUrl(publicUrl);
             }
 
             // Extrair gênero do nome do arquivo (se disponível no nome do arquivo ou usar padrão)

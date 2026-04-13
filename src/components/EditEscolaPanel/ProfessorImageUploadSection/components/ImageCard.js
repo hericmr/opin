@@ -5,7 +5,7 @@ import ImageActions from './ImageActions';
 import LegendForm from './LegendForm';
 import useImagePreloader from '../../../../hooks/useImagePreloader';
 import { supabase } from '../../../../dbClient';
-import { getLocalImageUrl } from '../../../../utils/imageUtils';
+import { getLocalImageUrl, getSecureImageUrl } from '../../../../utils/imageUtils';
 
 /**
  * Individual image card component with all functionality
@@ -64,24 +64,7 @@ const ImageCard = ({
   const isDragOver = dragHandlers?.dragOverIndex === index;
 
   // Get image URL - use helper to ensure Vite compatibility
-  const imageUrl = (() => {
-    // Try local resolution first
-    const url = image.publicURL || image.publicUrl;
-    const localUrl = getLocalImageUrl(url);
-    if (localUrl !== url) return localUrl;
-
-    if (!url) return '';
-
-    // If it's already a full URL (http/https), return as is
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url;
-    }
-
-    // If it's a relative path, prepend BASE_URL for Vite compatibility
-    const baseUrl = import.meta.env.BASE_URL || '/opin/';
-    const normalizedUrl = url.startsWith('/') ? url : `/${url}`;
-    return `${baseUrl.replace(/\/$/, '')}${normalizedUrl}`;
-  })();
+  const imageUrl = getSecureImageUrl(image.publicURL || image.publicUrl);
 
   // Debug log to verify URL is available
   if (!imageUrl && image.id) {

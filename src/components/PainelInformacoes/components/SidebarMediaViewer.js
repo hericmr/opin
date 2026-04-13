@@ -6,7 +6,7 @@ import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 import { formatDateForDisplay } from '../../../utils/dateUtils';
 
-import { getLocalImageUrl } from '../../../utils/imageUtils';
+import { getLocalImageUrl, getSupabaseStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
 
 // Helper function to check if a value has actual content
 const hasContent = (value) => {
@@ -59,11 +59,11 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
         let publicUrl = null;
         if (legenda.imagem_url) {
           if (legenda.imagem_url.trim().startsWith('http')) {
-            publicUrl = getLocalImageUrl(legenda.imagem_url.trim());
+            publicUrl = getSecureImageUrl(legenda.imagem_url.trim());
           } else {
-            // Construir URL do Supabase para tentar resolver via mapa local
-            const fullSupabaseUrl = `https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-das-escolas/${legenda.imagem_url.trim()}`;
-            publicUrl = getLocalImageUrl(fullSupabaseUrl);
+            // Construir URL do Supabase via variável de ambiente para resolver via mapa local
+            const storageUrl = getSupabaseStorageUrl('imagens-das-escolas', legenda.imagem_url.trim());
+            publicUrl = getSecureImageUrl(storageUrl);
           }
         }
 
@@ -98,11 +98,11 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
         let publicUrl = null;
         if (img.imagem_url) {
           if (img.imagem_url.trim().startsWith('http')) {
-            publicUrl = getLocalImageUrl(img.imagem_url.trim());
+            publicUrl = getSecureImageUrl(img.imagem_url.trim());
           } else {
-            // Construir URL do Supabase para tentar resolver via mapa local
-            const fullSupabaseUrl = `https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-professores/${img.imagem_url.trim()}`;
-            publicUrl = getLocalImageUrl(fullSupabaseUrl);
+            // Construir URL do Supabase via variável de ambiente para resolver via mapa local
+            const storageUrl = getSupabaseStorageUrl('imagens-professores', img.imagem_url.trim());
+            publicUrl = getSecureImageUrl(storageUrl);
           }
         }
 
