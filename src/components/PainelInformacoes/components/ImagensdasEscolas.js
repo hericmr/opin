@@ -124,6 +124,8 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
             id: legenda.id || `${escola_id}-${index}`,
             publicURL: publicUrl,
             filePath: legenda.imagem_url,
+            titulo: hasContent(legenda.legenda) ? legenda.legenda.trim() : null,
+            legenda: hasContent(legenda.legenda) ? legenda.legenda.trim() : null,
             descricao: hasContent(legenda.legenda) ? legenda.legenda.trim() : null,
             descricaoDetalhada: hasContent(legenda.descricao_detalhada) ? legenda.descricao_detalhada.trim() : null,
             autor: hasContent(legenda.autor_foto) ? legenda.autor_foto.trim() : null,

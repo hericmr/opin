@@ -92,9 +92,9 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
       if (error) throw error;
       if (!imgsProf) return [];
 
-      mapped = imgsProf
+      const mappedImages = await Promise.all(imgsProf
         .filter(img => hasContent(img.imagem_url))
-        .map((img, index) => {
+        .map(async (img, index) => {
         let publicUrl = null;
         if (img.imagem_url) {
           if (img.imagem_url.trim().startsWith('http')) {
@@ -106,18 +106,30 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
           }
         }
 
+        // Buscar legenda na tabela legendas_fotos
+        let legendaObj = null;
+        try {
+          legendaObj = await getLegendaByImageUrlFlexivel(img.imagem_url, escolaId, {
+            categoria: 'professor',
+            tipo_foto: 'professor'
+          });
+        } catch (err) {
+          console.warn('Erro ao buscar legenda para professor:', err);
+        }
+
         return {
           id: img.id || `prof-${index}`,
           url: publicUrl,
           filePath: img.imagem_url,
-          titulo: null, // Tabela imagens_professores não tem título/legenda explícita além de nome_arquivo ou autor
-          descricao: null,
-          autor: img.autor,
-          dataFoto: img.created_at, // Usando created_at como data da foto
+          titulo: hasContent(legendaObj?.legenda) ? legendaObj.legenda.trim() : null,
+          descricao: hasContent(legendaObj?.descricao_detalhada) ? legendaObj.descricao_detalhada.trim() : null,
+          autor: hasContent(legendaObj?.autor_foto) ? legendaObj.autor_foto.trim() : (img.autor || null),
+          dataFoto: legendaObj?.data_foto || img.created_at, // Usando created_at como data da foto se não tiver no banco
           origem: 'professor',
-          ordem: index + 1000, // Colocar depois das escolas se não tiver ordem
+          ordem: legendaObj?.ordem !== null && legendaObj?.ordem !== undefined ? legendaObj.ordem : index + 1000, // Colocar depois das escolas se não tiver ordem
         };
-      });
+      }));
+      mapped = mappedImages;
     }
 
     return mapped;
@@ -126,15 +138,17 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
   // Update items immediately when headerUrl changes to show image instantly
   useEffect(() => {
     if (hasContent(headerUrl)) {
+      const headerId = `header-${escolaId || 'temp'}`;
       const headerItem = {
-        id: `header-${escolaId || 'temp'}`,
+        id: headerId,
         url: headerUrl,
-        titulo: null,
+        titulo: null, // Start with null for speed
         descricao: null,
         autor: null,
         dataFoto: null,
         origem: 'capa',
       };
+      
       setItems(prev => {
         // Check if header already exists
         const exists = prev.some(i => i.origem === 'capa' && i.url === headerUrl);
@@ -143,6 +157,28 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
         const withoutHeader = prev.filter(i => i.origem !== 'capa');
         return [headerItem, ...withoutHeader];
       });
+
+      // Fetch legend asynchronously to update the header item
+      if (escolaId) {
+        (async () => {
+          try {
+            const headerLegend = await getLegendaByImageUrlFlexivel(headerUrl, escolaId);
+            if (headerLegend) {
+              setItems(prev => prev.map(item => 
+                item.id === headerId ? {
+                  ...item,
+                  titulo: hasContent(headerLegend.legenda) ? headerLegend.legenda.trim() : null,
+                  descricao: hasContent(headerLegend.descricao_detalhada) ? headerLegend.descricao_detalhada.trim() : null,
+                  autor: hasContent(headerLegend.autor_foto) ? headerLegend.autor_foto.trim() : null,
+                  dataFoto: headerLegend.data_foto || null,
+                } : item
+              ));
+            }
+          } catch (e) {
+            console.warn('Erro ao buscar legenda para header (async):', e);
+          }
+        })();
+      }
     }
   }, [headerUrl, escolaId]);
 
@@ -169,16 +205,26 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
         // Prepend header image if provided and not already in list
         if (hasContent(headerUrl)) {
           const exists = combined.some(i => i.url === headerUrl);
-          const headerItem = {
-            id: `header-${escolaId}`,
-            url: headerUrl,
-            titulo: null,
-            descricao: null,
-            autor: null,
-            dataFoto: null,
-            origem: 'capa',
-          };
-          combined = exists ? combined : [headerItem, ...combined];
+          if (!exists) {
+            // Buscar legenda para o header
+            let headerLegend = null;
+            try {
+              headerLegend = await getLegendaByImageUrlFlexivel(headerUrl, escolaId);
+            } catch (err) {
+              console.warn('Erro ao buscar legenda para header:', err);
+            }
+
+            const headerItem = {
+              id: `header-${escolaId}`,
+              url: headerUrl,
+              titulo: hasContent(headerLegend?.legenda) ? headerLegend.legenda.trim() : null,
+              descricao: hasContent(headerLegend?.descricao_detalhada) ? headerLegend.descricao_detalhada.trim() : null,
+              autor: hasContent(headerLegend?.autor_foto) ? headerLegend.autor_foto.trim() : null,
+              dataFoto: headerLegend?.data_foto || null,
+              origem: 'capa',
+            };
+            combined = [headerItem, ...combined];
+          }
         }
         if (!mounted) return;
         // Sort by origem to prioritize school first then teacher, maintain stable order
