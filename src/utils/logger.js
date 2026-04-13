@@ -7,21 +7,15 @@
  * @module utils/logger
  */
 
-// Detectar se estamos em desenvolvimento (compatível com Jest e Vite)
+// Detectar se estamos em desenvolvimento (compatível com Jest, Node.js e Vite)
 const isDevelopment = (() => {
-  // Em Jest (modo de teste)
-  if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
-    return true;
+  try {
+    // Funciona em Jest, Node.js, e Vite (que define process.env.NODE_ENV)
+    return process.env.NODE_ENV !== 'production';
+  } catch (e) {
+    // Fallback se process não estiver disponível
+    return false;
   }
-  // Em Vite (desenvolvimento)
-  if (typeof import !== 'undefined') {
-    try {
-      return import.meta?.env?.MODE === 'development' || import.meta?.env?.DEV;
-    } catch (e) {
-      return false;
-    }
-  }
-  return false;
 })();
 
 /**
