@@ -176,7 +176,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
           if (imagensEncontradas.length > 0) {
             console.log('Imagens existem no banco mas não localmente (provavelmente deletadas).');
           }
-          setError('Nenhuma imagem disponível para esta escola.');
+          // Removemos a mensagem de erro conforme solicitado pelo usuário
         }
       } catch (error) {
         console.error('Erro ao processar imagens:', error);
