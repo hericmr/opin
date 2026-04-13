@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { MODALIDADES_OPTIONS } from '../utils/modalidadesOptions';
+import { parseModalidades, formatModalidades } from '../utils/modalidadeParser';
 
 export const useModalidades = () => {
   const [selectedModalidades, setSelectedModalidades] = useState([]);
@@ -37,8 +38,7 @@ export const useModalidades = () => {
 
   // Função para salvar modalidades no editingLocation
   const saveModalidades = useCallback(() => {
-    const modalidadesText = selectedModalidades.join('; ');
-    return modalidadesText;
+    return formatModalidades(selectedModalidades);
   }, [selectedModalidades]);
 
   // Função para carregar modalidades existentes
@@ -49,17 +49,20 @@ export const useModalidades = () => {
       return;
     }
 
-    const parts = modalidadesText.split(';').map(part => part.trim());
+    // Usar função centralizada de parsing
+    const parts = parseModalidades(modalidadesText);
     const modalidades = [];
     let outro = '';
 
     parts.forEach(part => {
+      if (!part) return;
+      
       if (part.startsWith('Outro:')) {
         outro = part.replace('Outro:', '').trim();
         modalidades.push(part);
       } else if (MODALIDADES_OPTIONS.includes(part)) {
         modalidades.push(part);
-      } else if (part) {
+      } else {
         // Se não está na lista padrão, tratar como "outro"
         outro = part;
         modalidades.push(`Outro: ${part}`);
@@ -78,7 +81,7 @@ export const useModalidades = () => {
 
   // Função para obter preview do texto final
   const getModalidadesPreview = useCallback(() => {
-    return selectedModalidades.join('; ') || 'Nenhuma modalidade selecionada';
+    return formatModalidades(selectedModalidades) || 'Nenhuma modalidade selecionada';
   }, [selectedModalidades]);
 
   // Função para verificar se há modalidades selecionadas

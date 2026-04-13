@@ -3,26 +3,7 @@ import { Sparkles, BookOpen, Users, MessageCircle, Clock } from 'lucide-react';
 import InfoSection from '../InfoSection';
 import BooleanValue from '../../components/BooleanValue';
 import NativeLandCard from '../NativeLandCard';
-
-// Função utilitária para transformar o texto em lista
-function parseModalidadeEnsino(text) {
-  if (!text || typeof text !== 'string') return [];
-  
-  // Primeiro, divide por quebras de linha (\n)
-  // Depois, divide pelo traço longo (–, U+2013) para cada linha
-  // Remove espaços extras e filtra itens vazios
-  return text
-    .split('\n')
-    .flatMap(line => {
-      // Se a linha contém traço longo, divide por ele também
-      if (line.includes('–')) {
-        return line.split('–').map(item => item.trim()).filter(Boolean);
-      }
-      // Caso contrário, retorna a linha inteira (se não estiver vazia)
-      return line.trim() ? [line.trim()] : [];
-    })
-    .filter(Boolean);
-}
+import { parseModalidades } from '../../../AdminPanel/utils/modalidadeParser';
 
 // Componente para renderizar lista com bolinhas
 const ListWithBullets = ({ items }) => {
@@ -81,7 +62,7 @@ const Modalidades = memo(({ escola }) => {
 
   // Cards principais de Modalidades
   const turnosValue = escola.turnos_funcionamento || escola['turnos_funcionamento'] || '';
-  const modalidadeList = parseModalidadeEnsino(escola.modalidade_ensino);
+  const modalidadeList = parseModalidades(escola.modalidade_ensino);
   
 
   // Cards para o grid (sem Modalidade de Ensino)
