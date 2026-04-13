@@ -6,15 +6,22 @@ stages:
 
 variables:
   NODE_ENV: production
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
 
 cache:
   paths:
+    - .npm/
     - node_modules/
+  key:
+    files:
+      - package-lock.json
+
+before_script:
+  - npm ci --cache .npm --prefer-offline
 
 test:
   stage: test
   script:
-    - npm ci
     - npm run test -- --passWithNoTests
     - npm run lint
   allow_failure: true
@@ -22,10 +29,10 @@ test:
 build:
   stage: build
   script:
-    - npm ci
     - npm run build
   artifacts:
     paths:
+      - build/
       - dist/
     expire_in: 7 days
   only:
