@@ -1,0 +1,40 @@
+image: node:20-alpine
+
+stages:
+  - test
+  - build
+
+variables:
+  NPM_CACHE_MOUNT_POINT: cache/npm
+  NODE_ENV: production
+
+cache:
+  paths:
+    - node_modules/
+
+test:
+  stage: test
+  script:
+    - npm ci
+    - npm run test -- --passWithNoTests
+    - npm run lint
+  artifacts:
+    reports:
+      junit: index.xml
+    paths:
+      - coverage/
+    expire_in: 30 days
+  allow_failure: true
+
+build:
+  stage: build
+  script:
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 7 days
+  only:
+    - main
+    - develop
