@@ -1,5 +1,5 @@
 import { supabase } from '../dbClient';
-import { getLocalImageUrl } from '../utils/imageUtils';
+import { getLocalImageUrl, getSupabaseStorageUrl, getSecureImageUrl } from '../utils/imageUtils';
 
 export const addProfessorImageMeta = async (meta) => {
   const { data, error } = await supabase
@@ -47,8 +47,10 @@ export const getProfessorImagesByEscola = async (escolaId) => {
   return (data || []).map(img => {
     let publicUrl = img.imagem_url;
     if (publicUrl && !publicUrl.startsWith('http')) {
-      const fullSupabaseUrl = `https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/imagens-professores/${img.imagem_url}`;
-      publicUrl = getLocalImageUrl(fullSupabaseUrl);
+      const storageUrl = getSupabaseStorageUrl('imagens-professores', img.imagem_url);
+      publicUrl = getSecureImageUrl(storageUrl);
+    } else if (publicUrl) {
+      publicUrl = getSecureImageUrl(publicUrl);
     }
     return { ...img, publicUrl };
   });

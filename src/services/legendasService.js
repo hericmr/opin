@@ -306,7 +306,7 @@ export const transferLegendaToNewUrl = async (oldImageUrl, newImageUrl, escolaId
   }
 };
 
-import { getLocalImageUrl } from '../utils/imageUtils';
+import { getLocalImageUrl, getSupabaseStorageUrl, getSecureImageUrl } from '../utils/imageUtils';
 
 /**
  * Helper para adicionar URL pública ao item
@@ -316,16 +316,21 @@ const enrichWithPublicUrl = (item) => {
 
   let publicUrl = item.imagem_url;
   if (publicUrl && !publicUrl.startsWith('http')) {
-    // Determinar bucket baseado na categoria ou tipo
-    let bucket = 'imagens-das-escolas'; // Padrão
+    // Determinar bucket baseado na categoria ou tipo (garantindo que tipos de professores usem o bucket correto)
+    let bucket = 'imagens-das-escolas'; 
     if (item.categoria === 'professor' || item.tipo_foto === 'professor') {
       bucket = 'imagens-professores';
+    } else if (item.categoria === 'avatar') {
+      bucket = 'avatar';
     }
 
     // Tentar resolver via mapeamento local primeiro
-    // Se não estiver no mapa, constrói a URL do Supabase para manter compatibilidade
-    const fullSupabaseUrl = `https://cbzwrxmcuhsxehdrsrvi.supabase.co/storage/v1/object/public/${bucket}/${item.imagem_url}`;
-    publicUrl = getLocalImageUrl(fullSupabaseUrl);
+    // Se não estiver no mapa, constrói a URL do Supabase via variável de ambiente
+    const storageUrl = getSupabaseStorageUrl(bucket, item.imagem_url);
+    publicUrl = getSecureImageUrl(storageUrl);
+  } else if (publicUrl) {
+    // Se for URL completa, ainda passa pelo secure resolution para checar mapa local
+    publicUrl = getSecureImageUrl(publicUrl);
   }
 
   return { ...item, publicUrl };
