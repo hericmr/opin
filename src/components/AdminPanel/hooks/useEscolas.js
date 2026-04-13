@@ -123,7 +123,8 @@ export const useEscolas = () => {
             'cep': escolaData['cep'],
             'estado': escolaData['estado'],
             'imagem_header': escolaData['imagem_header'],
-            'cards_visibilidade': escolaData['cards_visibilidade'] || null
+            'cards_visibilidade': escolaData['cards_visibilidade'] || null,
+            'outras_informacoes': escolaData.outras_informacoes
           })
           .eq('id', escolaData.id)
           .select();
@@ -194,7 +195,8 @@ export const useEscolas = () => {
             'cep': escolaData['cep'],
             'estado': escolaData['estado'],
             'imagem_header': escolaData['imagem_header'],
-            'cards_visibilidade': escolaData['cards_visibilidade'] || null
+            'cards_visibilidade': escolaData['cards_visibilidade'] || null,
+            'outras_informacoes': escolaData.outras_informacoes
           })
           .select();
 

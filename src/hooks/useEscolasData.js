@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../dbClient';
+import { mapEscolaData } from '../utils/escolaMapper';
 
 // Campos leves para listagem no mapa e busca.
 // Dados detalhados (história, projetos, mídia) são carregados on-demand.
@@ -14,6 +15,7 @@ const CAMPOS_LISTAGEM = [
   'Povos indigenas',
   'Diretoria de Ensino',
   'Modalidade de Ensino/turnos de funcionamento',
+  'Numero de alunos',
   'imagem_header',
   'cards_visibilidade',
 ].map(f => `"${f}"`).join(', ');
@@ -37,85 +39,47 @@ export function useEscolasData() {
 
   const formatData = useCallback((dataPoints) => {
     if (!Array.isArray(dataPoints)) return [];
+    
     const escolasSemCoordenadas = {
       vazias: [],
       invalidas: [],
       foraDosLimites: []
     };
+
     const formattedData = dataPoints
       .filter(e => e && typeof e === 'object' && !Array.isArray(e) && e.Escola)
       .map((e) => {
+        // Validação básica de coordenadas para o mapa
         const infoEscola = {
           id: e.id,
           nome: e.Escola,
-          municipio: e["Município"],
-          endereco: e["Endereço"],
-          diretoria: e["Diretoria de Ensino"],
-          terra_indigena: e["Terra Indigena (TI)"],
-          latitude_original: e.Latitude,
-          longitude_original: e.Longitude
+          municipio: e["Município"]
         };
+
         if (e.Latitude === null || e.Latitude === undefined || 
             e.Longitude === null || e.Longitude === undefined) {
-          escolasSemCoordenadas.vazias.push({ ...infoEscola, problema: "Coordenadas vazias (null/undefined)", detalhes: { latitude: e.Latitude, longitude: e.Longitude } });
+          escolasSemCoordenadas.vazias.push({ ...infoEscola, problema: "Coordenadas vazias" });
           return null;
         }
+
         const latitude = parseFloat(e.Latitude);
         const longitude = parseFloat(e.Longitude);
+
         if (isNaN(latitude) || isNaN(longitude)) {
-          escolasSemCoordenadas.invalidas.push({ ...infoEscola, problema: "Coordenadas não são números válidos", detalhes: { latitude: e.Latitude, longitude: e.Longitude, tipo_latitude: typeof e.Latitude, tipo_longitude: typeof e.Longitude } });
+          escolasSemCoordenadas.invalidas.push({ ...infoEscola, problema: "Coordenadas inválidas" });
           return null;
         }
+
         if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
-          escolasSemCoordenadas.foraDosLimites.push({ ...infoEscola, problema: "Coordenadas fora dos limites válidos", detalhes: { latitude, longitude, limites: { latMin: -90, latMax: 90, lngMin: -180, lngMax: 180 } } });
+          escolasSemCoordenadas.foraDosLimites.push({ ...infoEscola, problema: "Coordenadas fora dos limites" });
           return null;
         }
-        return {
-          ...e,
-          titulo: e.Escola,
-          municipio: e["Município"],
-          endereco: e["Endereço"],
-          logradouro: e.logradouro,
-          numero: e.numero,
-          complemento: e.complemento,
-          bairro: e.bairro,
-          cep: e.cep,
-          estado: e.estado,
-          terra_indigena: e["Terra Indigena (TI)"],
-          parcerias_municipio: e["Parcerias com o município"],
-          diretoria_ensino: e["Diretoria de Ensino"],
-          modalidade_ensino: e["Modalidade de Ensino/turnos de funcionamento"],
-          numero_alunos: e["Numero de alunos"],
-          turnos_funcionamento: e["turnos_funcionamento"],
-          espaco_escolar: e["Espaço escolar e estrutura"],
-          acesso_internet: e["Acesso à internet"],
-          gestao: e["Gestão/Nome"],
-          professores_indigenas: e["Quantidade de professores indígenas"],
-          professores_nao_indigenas: e["Quantidade de professores não indígenas"],
-          formacao_professores: e["Formação dos professores"],
-          ppp_comunidade: e["PPP elaborado com a comunidade?"],
-          material_nao_indigena: e["Material pedagógico não indígena"],
-          material_indigena: e["Material pedagógico indígena"],
-          usa_redes_sociais: e["Escola utiliza redes sociais?"],
-          links_redes_sociais: e["Links das redes sociais"],
-          historia_da_escola: e["historia_da_escola"],
-          latitude,
-          longitude,
-          id: e.id,
-          links: e.links,
-          imagens: e.imagens,
-          audio: e.audio,
-          video: e.video,
-          link_para_documentos: e.link_para_documentos,
-          link_para_videos: e.link_para_videos,
-          imagem_header: e.imagem_header,
-          cards_visibilidade: e.cards_visibilidade,
-          tipo: 'educacao',
-          pontuacao: 100,
-          pontuacaoPercentual: 100
-        };
+
+        // Usa o mapper centralizado para garantir consistência
+        return mapEscolaData(e);
       })
       .filter(ponto => ponto !== null);
+
     return formattedData;
   }, []);
 
@@ -137,4 +101,4 @@ export function useEscolasData() {
   }, [fetchDataPoints, formatData]);
 
   return { dataPoints, loading, error };
-} 
+}
