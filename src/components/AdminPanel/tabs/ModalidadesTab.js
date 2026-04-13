@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useModalidades } from '../hooks/useModalidades';
 import { MODALIDADES_OPTIONS, MODALIDADES_CATEGORIAS } from '../utils/modalidadesOptions';
 import CardVisibilityToggle from '../components/CardVisibilityToggle';
@@ -13,12 +13,52 @@ const ModalidadesTab = ({
     handleModalidadeChange,
     handleOutroModalidadeChange,
     saveModalidades,
+    loadExistingModalidades,
     getModalidadesPreview,
     hasSelectedModalidades,
   } = useModalidades();
 
+  // Estado para rastrear se o usuário editou a textarea manualmente
+  const [textareaWasEdited, setTextareaWasEdited] = useState(false);
+
+  // Carregar modalidades existentes quando editingLocation mudar
+  useEffect(() => {
+    const currentText = editingLocation['Modalidade de Ensino/turnos de funcionamento'];
+    if (currentText && !textareaWasEdited) {
+      loadExistingModalidades(currentText);
+    }
+  }, [editingLocation?.id]); // Só recarregar quando mudar de escola
+
+  // Resetar flag quando mudar de escola
+  useEffect(() => {
+    setTextareaWasEdited(false);
+  }, [editingLocation?.id]);
+
+  // Função para quando o usuário edita a textarea diretamente
+  const handleTextareaChange = (e) => {
+    const newText = e.target.value;
+    setTextareaWasEdited(true);
+    setEditingLocation({ 
+      ...editingLocation, 
+      'Modalidade de Ensino/turnos de funcionamento': newText 
+    });
+    // Tentar carregar os checkboxes com base no novo texto
+    loadExistingModalidades(newText);
+  };
+
   // Função para salvar modalidades no editingLocation
+  // IMPORTANTE: Se o usuário editou a textarea, NUNCA sobrescreva com checkboxes
   const handleSaveModalidades = () => {
+    if (textareaWasEdited) {
+      // Usuário editou manualmente - apenas sincronizar checkboxes, não sobrescrever
+      console.warn('⚠️ Textarea foi editada manualmente. Atualizando apenas os checkboxes.');
+      // O usuario já clicou, mas como editou a textarea, estamos sincronizados
+      // Apenas resetar o flag para a próxima ação
+      setTextareaWasEdited(false);
+      return;
+    }
+    
+    // Se textarea NÃO foi editada, usar os checkboxes para gerar o texto
     const modalidadesText = saveModalidades();
     setEditingLocation(prev => ({
       ...prev,
@@ -45,7 +85,7 @@ const ModalidadesTab = ({
           className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-gray-100 placeholder-gray-400 text-base resize-y"
           rows={6}
           value={editingLocation['Modalidade de Ensino/turnos de funcionamento'] || ''}
-          onChange={e => setEditingLocation({ ...editingLocation, 'Modalidade de Ensino/turnos de funcionamento': e.target.value })}
+          onChange={handleTextareaChange}
           placeholder="Digite ou edite o texto completo das modalidades de ensino..."
         />
         <p className="mt-1 text-xs text-gray-400">
@@ -139,13 +179,23 @@ const ModalidadesTab = ({
       </div>
 
       {/* Botão para salvar modalidades */}
-      <div className="md:col-span-2">
+      <div className="md:col-span-2 space-y-2">
+        {textareaWasEdited && (
+          <div className="bg-amber-900/50 border border-amber-700 rounded px-3 py-2 text-amber-100 text-sm">
+            ⚠️ <strong>Textarea foi editada manualmente.</strong> Os checkboxes foram sincronizados com seu texto, mas clicar no botão abaixo não sobrescreverá suas edições.
+          </div>
+        )}
         <button
           type="button"
           onClick={handleSaveModalidades}
-          className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-400 transition-colors"
+          disabled={!hasSelectedModalidades() && !textareaWasEdited}
+          className={`px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition-colors ${
+            hasSelectedModalidades() || textareaWasEdited
+              ? 'bg-green-700 text-white hover:bg-green-800'
+              : 'bg-gray-600 text-gray-300 cursor-not-allowed'
+          }`}
         >
-          Salvar Modalidades Selecionadas
+          {textareaWasEdited ? 'Syncronizar Checkboxes' : 'Salvar Modalidades Selecionadas'}
         </button>
       </div>
 
