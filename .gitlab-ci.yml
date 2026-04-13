@@ -4,9 +4,6 @@ stages:
   - test
   - build
 
-variables:
-  NODE_ENV: production
-
 cache:
   paths:
     - node_modules/
@@ -26,13 +23,13 @@ build:
   stage: build
   script:
     - npm ci
-    - node --version && npm --version
-    - npm ls vite || echo "vite não está instalado"
     - npm run build
   artifacts:
     paths:
       - dist/
     expire_in: 7 days
+  environment:
+    name: production
   only:
     - main
     - develop
