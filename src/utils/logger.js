@@ -45,7 +45,7 @@ const LOG_LEVEL = isDevelopment ? LogLevel.DEBUG : LogLevel.ERROR;
  * logger.warn('Aviso');
  * logger.error('Erro crítico');
  */
-export const logger = {
+const logger = {
   /**
    * Log de debug - apenas em desenvolvimento
    * @param {...any} args - Argumentos a serem logados
