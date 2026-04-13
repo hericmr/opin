@@ -1,4 +1,4 @@
-# 🌍 OPIN - Observatório dos Professores Indígenas
+# OPIN - Observatório dos Professores Indígenas
 
 Plataforma de mapeamento e documentação de escolas indígenas no estado de São Paulo. Projeto [LINDI/UNIFESP](https://www.unifesp.br/) (2025).
 
@@ -6,20 +6,20 @@ Plataforma de mapeamento e documentação de escolas indígenas no estado de Sã
 
 ---
 
-## 🎯 Sobre
+## Sobre
 
 O OPIN é um observatório que mapeia **escolas indígenas** em São Paulo, documentando suas realidades, histórias e práticas pedagógicas através de uma plataforma interativa com dados colaborativos.
 
-## ✨ Funcionalidades
+## Funcionalidades
 
-- 🗺️ **Mapa Interativo** — Visualização geográfica de escolas e terras indígenas
-- 📊 **Painéis de Dados** — Estatísticas por escola e região administrativa
-- 🔍 **Busca e Filtros** — Consulta avançada por localização e características
-- 📱 **Responsivo** — Funciona em desktop e mobile
+- **Mapa Interativo** — Visualização geográfica de escolas e terras indígenas
+- **Painéis de Dados** — Estatísticas por escola e região administrativa
+- **Busca e Filtros** — Consulta avançada por localização e características
+- **Responsivo** — Funciona em desktop e mobile
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Camada | Tecnologia |
 |--------|-----------|
@@ -32,7 +32,7 @@ O OPIN é um observatório que mapeia **escolas indígenas** em São Paulo, docu
 
 ---
 
-## 🚀 Quick Start (Docker)
+## Quick Start (Docker)
 
 ### Pré-requisitos
 - Docker & Docker Compose
@@ -82,7 +82,7 @@ src/
 
 ---
 
-## 👥 Contato & Repositórios
+## Contato & Repositórios
 
 - **GitHub**: [hericmr/opin](https://github.com/hericmr/opin)
 - **GitLab**: [hericmr/opin](https://gitlab.com/hericmr/opin)
