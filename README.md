@@ -1,68 +1,90 @@
-# OPIN - Observatório dos Professores Indígenas no Estado de São Paulo
+# 🌍 OPIN - Observatório dos Professores Indígenas
 
-O OPIN mapeia escolas indígenas no estado de São Paulo, documentando suas realidades, histórias e práticas pedagógicas. Projeto da LINDI/UNIFESP (2025).
+Plataforma de mapeamento e documentação de escolas indígenas no estado de São Paulo. Projeto [LINDI/UNIFESP](https://www.unifesp.br/) (2025).
 
-![OPIN Logo](public/opin.png)
-
-
----
-
-## Funcionalidades
-- **Mapa Interativo**: Visualização geográfica das escolas e terras indígenas.
-- **Painéis**: Informações detalhadas por escola e área administrativa.
-- **Busca Avançada**: Filtros por localização e características.
-
-![Exemplo da Interface](public/exemplo1.png)
+![OPIN Interface](public/hero.webp)
 
 ---
 
-## Stack Tecnológico (2025)
-- **Frontend**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
-- **Estilização**: [Tailwind CSS 4](https://tailwindcss.com/)
-- **Mapas**: [OpenLayers](https://openlayers.org/) + [Mapbox GL](https://www.mapbox.com/)
-- **Backend/API**: [PostgREST](https://postgrest.org/) (Dockerizado)
-- **Banco de Dados**: PostgreSQL 16
-- **Testes**: Jest + React Testing Library
+## 🎯 Sobre
+
+O OPIN é um observatório que mapeia **escolas indígenas** em São Paulo, documentando suas realidades, histórias e práticas pedagógicas através de uma plataforma interativa com dados colaborativos.
+
+## ✨ Funcionalidades
+
+- 🗺️ **Mapa Interativo** — Visualização geográfica de escolas e terras indígenas
+- 📊 **Painéis de Dados** — Estatísticas por escola e região administrativa
+- 🔍 **Busca e Filtros** — Consulta avançada por localização e características
+- 📱 **Responsivo** — Funciona em desktop e mobile
 
 ---
 
-## Como Rodar (Docker)
+## 🛠️ Tech Stack
 
-O projeto é totalmente dockerizado para facilitar o desenvolvimento e deploy.
-
-### 1. Configuração de Segredos
-**Nunca commite senhas no repositório.**
-1. Copie o exemplo: `cp .env.example .env`
-2. Configure o `.env` com suas senhas (para produção) ou mantenha os defaults (apenas para dev local).
-
-### 2. Comandos Rápidos
-Use o `Makefile` incluído:
-
-- **Iniciar (Dev/Local)**: `make up`
-  - Site: http://localhost:8080/opin/
-  - API: http://localhost:8080/opin/rest/v1/
-- **Iniciar (Produção)**: `make prod-up` (Usa variáveis do `.env`)
-- **Parar**: `make down`
-- **Resetar Banco**: `make reset-db` (Cuidado: Apaga dados locais!)
+| Camada | Tecnologia |
+|--------|-----------|
+| **Frontend** | React 19 + Vite |
+| **Estilos** | Tailwind CSS 4 |
+| **Mapas** | OpenLayers + Mapbox GL |
+| **Backend** | PostgREST (Dockerizado) |
+| **Banco** | PostgreSQL 16 |
+| **Testes** | Jest + React Testing Library |
 
 ---
 
-## Estrutura do Projeto
+## 🚀 Quick Start (Docker)
+
+### Pré-requisitos
+- Docker & Docker Compose
+- Node.js 20+ (para dev local sem Docker)
+
+### Executar
+
 ```bash
-src/
-├── components/   # Componentes React (Mapa, Painéis, Navbar...)
-├── hooks/        # Custom Hooks (useEscolasData, useAuth...)
-├── services/     # Comunicação com API
-├── data/         # Dados estáticos e SQLs
-└── scripts/      # Utilitários de build/manutenção
+# Copiar variáveis de ambiente
+cp .env.example .env
+
+# Iniciar (desenvolvimento)
+make up
+
+# Acessar
+# → Site: http://localhost:8080/opin/
+# → API: http://localhost:8080/opin/rest/v1/
 ```
 
-## Documentação Adicional
-- [Guia para Instalação](Guia%20para%20Instalação.md) (Detalhado)
-- [Guia do Administrador](docs/GUIA_ADMINISTRADOR.md)
+**Comandos úteis:**
+```bash
+make down          # Parar containers
+make reset-db      # Resetar banco (apaga dados locais)
+make prod-up       # Iniciar em produção
+```
 
 ---
 
-## Contato
-**GitHub**: [hericmr/opin](https://github.com/hericmr/opin)
-**Email**: heric.moura@unifesp.br
+## 📁 Estrutura
+
+```
+src/
+├── components/    # React components (Mapa, Painéis, etc)
+├── hooks/         # Custom hooks
+├── services/      # API client
+├── data/          # Static data
+└── utils/         # Helpers
+```
+
+---
+
+## 📚 Documentação
+
+- [Guia de Instalação Detalhado](Guia%20para%20Instalação.md)
+- [Guia do Administrador](docs/GUIA_ADMINISTRADOR.md)
+- [Deploy e CI/CD](docs/GUIA_DEPLOY.md)
+
+---
+
+## 👥 Contato & Repositórios
+
+- **GitHub**: [hericmr/opin](https://github.com/hericmr/opin)
+- **GitLab**: [hericmr/opin](https://gitlab.com/hericmr/opin)
+- **Email**: heric.moura@unifesp.br
+- **LINDI**: [Laboratório de Línguas Indígenas](https://www.unifesp.br/)
