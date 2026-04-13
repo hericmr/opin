@@ -13,8 +13,6 @@ export const fieldCategories = {
     'Ano de criação da escola'
   ],
   'Povos e Línguas': [
-    'Povos indigenas',
-    'Linguas faladas'
   ],
   'Modalidades e Alunos': [
     'Modalidade de Ensino/turnos de funcionamento',
@@ -23,11 +21,8 @@ export const fieldCategories = {
   ],
   'Infraestrutura': [
     'Espaço escolar e estrutura',
-    'Acesso à água',
     'Tem coleta de lixo?',
     'Acesso à internet',
-    'Equipamentos Tecs',
-    'Modo de acesso à escola',
     'diferenciada'
   ],
   'Equipe': [
@@ -35,9 +30,7 @@ export const fieldCategories = {
     'Outros funcionários',
     'Quantidade de professores indígenas',
     'Quantidade de professores não indígenas',
-    'Professores falam a língua indígena?',
-    'Formação dos professores',
-    'Formação continuada oferecida'
+    'Formação dos professores'
   ],
   'Material Pedagógico': [
     'PPP elaborado com a comunidade?',
@@ -47,10 +40,7 @@ export const fieldCategories = {
     'Formas de avaliação'
   ],
   'Projetos e Parcerias': [
-    'Projetos em andamento',
     'Parcerias com universidades?',
-    'Ações com ONGs ou coletivos?',
-    'Desejos da comunidade para a escola'
   ],
   'Redes Sociais e Mídia': [
     'Escola utiliza redes sociais?',

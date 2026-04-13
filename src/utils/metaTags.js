@@ -44,14 +44,6 @@ export const gerarDescricaoEscola = (escola) => {
     descricao += ` - ${escola['Município']}`;
   }
   
-  if (escola['Povos indigenas']) {
-    descricao += ` | Povos: ${escola['Povos indigenas']}`;
-  }
-  
-  if (escola['Linguas faladas']) {
-    descricao += ` | Línguas: ${escola['Linguas faladas']}`;
-  }
-  
   if (escola['Modalidade de Ensino/turnos de funcionamento']) {
     descricao += ` | Modalidade: ${escola['Modalidade de Ensino/turnos de funcionamento']}`;
   }
@@ -88,14 +80,6 @@ export const gerarKeywordsEscola = (escola) => {
   
   if (escola['Município']) {
     keywords.push(escola['Município'].toLowerCase());
-  }
-  
-  if (escola['Povos indigenas']) {
-    keywords.push(escola['Povos indigenas'].toLowerCase());
-  }
-  
-  if (escola['Linguas faladas']) {
-    keywords.push(escola['Linguas faladas'].toLowerCase());
   }
   
   return keywords.join(', ');
