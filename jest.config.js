@@ -7,7 +7,10 @@ module.exports = {
       '<rootDir>/__mocks__/fileMock.js',
   },
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['@babel/preset-env', '@babel/preset-react'] }],
+    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { 
+      presets: ['@babel/preset-env', '@babel/preset-react'],
+      plugins: ['@babel/plugin-syntax-import-meta']
+    }],
   },
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
