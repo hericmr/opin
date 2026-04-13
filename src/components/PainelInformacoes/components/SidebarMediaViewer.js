@@ -307,7 +307,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
 
   // Show "no items" only if not loading and no items
   if (!loading && !hasItems) {
-    return <div className="text-gray-600">Nenhuma imagem disponível.</div>;
+    return null;
   }
 
   // If loading but we have items (e.g., header image), show the viewer with loading indicator
