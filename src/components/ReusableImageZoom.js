@@ -234,15 +234,35 @@ const ReusableImageZoom = ({
         </div>
 
         {/* Legenda - estilo minimalista igual às legendas laterais - só mostra se tiver conteúdo real */}
-        {showCaption && (hasContent(currentImage.descricao) || hasContent(currentImage.descricao_imagem) || hasContent(currentImage.legenda)) && (
+        {showCaption && (
+          hasContent(currentImage.titulo) || 
+          hasContent(currentImage.descricao) || 
+          hasContent(currentImage.descricao_imagem) || 
+          hasContent(currentImage.legenda)
+        ) && (
           <div className="image-zoom-caption">
-            <p className="text-sm text-black mb-1 leading-tight">
-              {currentImage.descricao || currentImage.descricao_imagem || currentImage.legenda}
-            </p>
+            {/* Título/Legenda Principal */}
+            {hasContent(currentImage.titulo) ? (
+              <h4 className="text-sm font-semibold text-black mb-1 leading-tight">
+                {currentImage.titulo}
+              </h4>
+            ) : hasContent(currentImage.legenda) ? (
+              <h4 className="text-sm font-semibold text-black mb-1 leading-tight">
+                {currentImage.legenda}
+              </h4>
+            ) : hasContent(currentImage.descricao) ? (
+              <p className="text-sm text-black mb-1 leading-tight">
+                {currentImage.descricao}
+              </p>
+            ) : hasContent(currentImage.descricao_imagem) ? (
+              <p className="text-sm text-black mb-1 leading-tight">
+                {currentImage.descricao_imagem}
+              </p>
+            ) : null}
 
-            {/* Informações adicionais */}
+            {/* Informações adicionais (Autor e Data) */}
             {(hasContent(currentImage.autor) || currentImage.dataFoto) && (
-              <div className="flex items-center gap-4 text-xs text-gray-500">
+              <div className="flex items-center gap-4 text-xs text-gray-500 mb-1">
                 {hasContent(currentImage.autor) && (
                   <span>Por: {currentImage.autor}</span>
                 )}
@@ -252,10 +272,10 @@ const ReusableImageZoom = ({
               </div>
             )}
 
-            {/* Descrição detalhada */}
-            {hasContent(currentImage.descricaoDetalhada) && (
-              <p className="text-xs text-gray-500 mt-2 leading-relaxed">
-                {currentImage.descricaoDetalhada}
+            {/* Descrição detalhada ou Descrição se Título foi usado */}
+            {(hasContent(currentImage.descricaoDetalhada) || (hasContent(currentImage.titulo) && hasContent(currentImage.descricao) && currentImage.titulo !== currentImage.descricao)) && (
+              <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                {currentImage.descricaoDetalhada || currentImage.descricao}
               </p>
             )}
           </div>
