@@ -24,6 +24,7 @@ const DrawingsSection = ({ escolaId, refreshKey = 0 }) => {
   const [loading, setLoading] = useState(true);
   const [imagemZoom, setImagemZoom] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageOrientations, setImageOrientations] = useState({});
   const { isImagePreloaded } = useImagePreloader(escolaId, true);
 
   const fecharZoom = useCallback(() => {
@@ -31,6 +32,17 @@ const DrawingsSection = ({ escolaId, refreshKey = 0 }) => {
     setCurrentImageIndex(0);
     document.body.style.overflow = 'auto';
   }, []);
+
+  const handleImageLoad = (url, e) => {
+    const img = (e && e.target) || (e && e.currentTarget);
+    if (img && img.naturalWidth && img.naturalHeight) {
+      const isPortrait = img.naturalHeight > img.naturalWidth;
+      setImageOrientations(prev => ({
+        ...prev,
+        [url]: isPortrait ? 'portrait' : 'landscape'
+      }));
+    }
+  };
 
   useEffect(() => {
     if (!escolaId) {
@@ -47,19 +59,15 @@ const DrawingsSection = ({ escolaId, refreshKey = 0 }) => {
         const drawingsWithLegends = await Promise.all(
           urls.map(async (imageUrl) => {
             // Extrair o caminho do arquivo da URL completa
-            // Exemplo: https://xxx.supabase.co/storage/v1/object/public/imagens-das-escolas/123/image.jpg
-            // Precisamos extrair: 123/image.jpg
             let filePath = imageUrl;
             try {
               const urlObj = new URL(imageUrl);
               const pathParts = urlObj.pathname.split('/');
               const bucketIndex = pathParts.findIndex(part => part === 'imagens-das-escolas');
               if (bucketIndex !== -1 && pathParts[bucketIndex + 1]) {
-                // Pegar tudo após o bucket name
                 filePath = pathParts.slice(bucketIndex + 1).join('/');
               }
             } catch (e) {
-              // Se não conseguir fazer parse, usar a URL completa
               console.warn('Não foi possível extrair caminho da URL:', imageUrl);
             }
 
@@ -118,48 +126,59 @@ const DrawingsSection = ({ escolaId, refreshKey = 0 }) => {
 
   return (
     <section className="mt-8">
-      <div className="space-y-8">
-        {drawingsData.map((drawing, index) => (
-          <div key={index}>
-            {/* Large format display similar to YouTube video player (16:9 aspect ratio) */}
+      <div className="grid grid-cols-2 gap-x-4 gap-y-8">
+        {drawingsData.map((drawing, index) => {
+          const orientation = imageOrientations[drawing.url];
+          const isPortrait = orientation === 'portrait';
+          
+          return (
             <div 
-              className="relative pb-[56.25%] h-0 bg-gray-100 cursor-pointer"
-              onClick={() => {
-                if (drawing.url) {
-                  setCurrentImageIndex(index);
-                  setImagemZoom(drawing);
-                  document.body.style.overflow = 'hidden';
-                }
-              }}
+              key={index} 
+              className={`${isPortrait ? 'col-span-1' : 'col-span-2'} flex flex-col`}
             >
-              <OptimizedImage
-                src={drawing.url}
-                alt={drawing.legenda || `Desenho ${index + 1}`}
-                className="absolute top-0 left-0 w-full h-full object-contain"
-                isPreloaded={isImagePreloaded(drawing.url)}
-                style={{ 
-                  maxHeight: '100%',
-                  maxWidth: '100%',
-                  objectPosition: 'center center'
+              {/* Image Container - removes the forced pb-[56.25%] (16:9) and uses flexbox for portrait */}
+              <div 
+                className={`relative bg-gray-50 rounded-lg overflow-hidden cursor-pointer ${
+                  isPortrait ? 'aspect-[3/4]' : 'aspect-video'
+                }`}
+                onClick={() => {
+                  if (drawing.url) {
+                    setCurrentImageIndex(index);
+                    setImagemZoom(drawing);
+                    document.body.style.overflow = 'hidden';
+                  }
                 }}
-              />
-            </div>
-            
-            {/* Legenda do desenho - minimalista e inline - só mostra se tiver conteúdo real */}
-            {hasContent(drawing.legenda) && (
-              <div className="px-4 pt-2 pb-3">
-                <p className="text-sm text-black font-normal leading-relaxed">
-                  {drawing.legenda}
-                </p>
-                {hasContent(drawing.descricaoDetalhada) && (
-                  <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                    {drawing.descricaoDetalhada}
-                  </p>
-                )}
+              >
+                <OptimizedImage
+                  src={drawing.url}
+                  alt={drawing.legenda || `Desenho ${index + 1}`}
+                  className="w-full h-full object-contain"
+                  isPreloaded={isImagePreloaded(drawing.url)}
+                  onLoad={(e) => handleImageLoad(drawing.url, e)}
+                  style={{ 
+                    maxHeight: '100%',
+                    maxWidth: '100%',
+                    objectPosition: 'center center'
+                  }}
+                />
               </div>
-            )}
-          </div>
-        ))}
+              
+              {/* Legenda do desenho - minimalista e inline - só mostra se tiver conteúdo real */}
+              {hasContent(drawing.legenda) && (
+                <div className="px-1 pt-2">
+                  <p className="text-sm text-black font-medium leading-tight">
+                    {drawing.legenda}
+                  </p>
+                  {hasContent(drawing.descricaoDetalhada) && (
+                    <p className="text-xs text-gray-500 mt-1 leading-relaxed line-clamp-2">
+                      {drawing.descricaoDetalhada}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Modal de Zoom Reutilizável */}
