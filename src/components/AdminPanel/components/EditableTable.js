@@ -48,6 +48,8 @@ const EditableTable = ({
     { key: 'Quantidade de professores indígenas', label: 'Prof. Indígenas', width: 'w-28' },
     { key: 'Quantidade de professores não indígenas', label: 'Prof. Não Indígenas', width: 'w-32' },
     { key: 'Formação dos professores', label: 'Formação', width: 'w-32' },
+    { key: 'Material pedagógico não indígena', label: 'Material Não Indígena', width: 'w-32' },
+    { key: 'Material pedagógico indígena', label: 'Material Indígena', width: 'w-32' },
     { key: 'PPP elaborado com a comunidade?', label: 'PPP Comunidade', width: 'w-28' },
     { key: 'Latitude', label: 'Latitude', width: 'w-20' },
     { key: 'Longitude', label: 'Longitude', width: 'w-20' },
