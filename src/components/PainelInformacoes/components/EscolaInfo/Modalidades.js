@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { Sparkles, BookOpen, Users, MessageCircle, Clock } from 'lucide-react';
 import InfoSection from '../InfoSection';
-import BooleanValue from '../../components/BooleanValue';
 import NativeLandCard from '../NativeLandCard';
 import { parseModalidades } from '../../../AdminPanel/utils/modalidadeParser';
 
@@ -84,20 +83,20 @@ const Modalidades = memo(({ escola }) => {
       value: escola.linguas_faladas,
     },
     // Cards de Materiais Pedagógicos integrados
-    {
+    escola.material_nao_indigena && {
       icon: BookOpen,
       label: 'Material Pedagógico Não Indígena',
-      value: <BooleanValue value={escola.material_nao_indigena} />,
+      value: escola.material_nao_indigena,
     },
-    {
+    escola.material_indigena && {
       icon: BookOpen,
       label: 'Material Pedagógico Indígena',
-      value: <BooleanValue value={escola.material_indigena} />,
+      value: escola.material_indigena,
     },
-    {
+    escola.ppp_comunidade && {
       icon: BookOpen,
       label: 'PPP com Comunidade',
-      value: <BooleanValue value={escola.ppp_comunidade} />,
+      value: escola.ppp_comunidade,
     },
   ].filter(Boolean).filter(item => !isEmptyValue(item.value));
 
