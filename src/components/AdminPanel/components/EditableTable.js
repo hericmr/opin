@@ -62,7 +62,6 @@ const EditableTable = ({
     { key: 'nome_professor', label: 'Nome Professor', width: 'w-32' },
     { key: 'professores_indigenas', label: 'Prof. Indígenas (Det.)', width: 'w-32' },
     { key: 'professores_nao_indigenas', label: 'Prof. Não Indígenas (Det.)', width: 'w-32' },
-    { key: 'professores_falam_lingua_indigena', label: 'Falam Língua (Det.)', width: 'w-32' },
     { key: 'formacao_professores', label: 'Formação (Det.)', width: 'w-32' },
     { key: 'outros_funcionarios', label: 'Outros Funcionários (Det.)', width: 'w-32' },
     { key: 'gestao', label: 'Gestão (Det.)', width: 'w-32' },

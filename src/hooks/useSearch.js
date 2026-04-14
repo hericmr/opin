@@ -119,9 +119,6 @@ const useSearch = (dataPoints) => {
           if (school.professores_nao_indigenas && school.professores_nao_indigenas.toString().includes(term)) {
             matches.push('professores não indígenas');
           }
-          if (school.professores_falam_lingua && school.professores_falam_lingua.toLowerCase().includes(term)) {
-            matches.push('professores língua');
-          }
           if (school.formacao_professores && school.formacao_professores.toLowerCase().includes(term)) {
             matches.push('formação professores');
           }

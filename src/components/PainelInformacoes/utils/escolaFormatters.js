@@ -43,7 +43,6 @@ export const formatters = {
     "Outros Funcionários": escola.outros_funcionarios,
     "Professores Indígenas": escola.professores_indigenas,
     "Professores Não Indígenas": escola.professores_nao_indigenas,
-    "Professores Falam a Língua Indígena": escola.professores_falam_lingua,
     "Formação dos Professores": escola.formacao_professores,
     "Formação Continuada": escola.formacao_continuada
   }),
