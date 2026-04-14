@@ -52,19 +52,6 @@ const GestaoProfessoresTab = ({ editingLocation, setEditingLocation }) => {
         />
       </div>
 
-      {/* Professores Falam Língua Indígena? */}
-      <div>
-        <label className="block text-sm font-medium text-gray-200 mb-2 text-base">
-          Professores Falam Língua Indígena?
-        </label>
-        <textarea
-          className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 h-24 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-gray-100 placeholder-gray-400 text-base"
-          value={editingLocation['Professores falam a língua indígena?'] || ''}
-          onChange={e => setEditingLocation({ ...editingLocation, 'Professores falam a língua indígena?': e.target.value })}
-          placeholder="Descreva se os professores falam a língua indígena..."
-        />
-      </div>
-
       {/* Formação dos Professores */}
       <div>
         <label className="block text-sm font-medium text-gray-200 mb-2 text-base">

@@ -51,7 +51,6 @@ export const mapEscolaData = (e) => {
     outros_funcionarios: e["Outros funcionários"],
     professores_indigenas: e["Quantidade de professores indígenas"],
     professores_nao_indigenas: e["Quantidade de professores não indígenas"],
-    professores_falam_lingua: e["Professores falam a língua indígena?"],
     formacao_professores: e["Formação dos professores"],
     formacao_continuada: e["Formação continuada oferecida"],
     ppp_comunidade: e["PPP elaborado com a comunidade?"],

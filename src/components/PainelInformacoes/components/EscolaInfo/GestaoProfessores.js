@@ -5,7 +5,6 @@ import {
   User,
   UserCheck,
   UserMinus,
-  MessageCircle,
   Check,
   X,
 } from 'lucide-react';
@@ -95,11 +94,6 @@ const GestaoProfessores = memo(({ escola }) => {
       label: "Professores Não Indígenas",
       value: escola.professores_nao_indigenas,
       type: "number",
-    },
-    !isEmptyValue(escola.professores_falam_lingua) && {
-      icon: MessageCircle,
-      label: "Professores que falam língua indígena",
-      value: renderBooleanStatus(escola.professores_falam_lingua),
     },
   ].filter(Boolean);
 
