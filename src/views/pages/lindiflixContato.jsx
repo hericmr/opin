@@ -1,0 +1,78 @@
+import React, { useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { Mail, Phone, MapPin } from 'lucide-react';
+import PageHeader from '../../components/PageHeader';
+import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
+
+const LindiflixContato = () => {
+  const breadcrumbs = useMemo(() => [
+    { label: 'Início', path: '/', active: false },
+    { label: 'Lindiflix', path: '/lindiflix', active: false },
+    { label: 'Contato', path: '/lindiflix/contato', active: true },
+  ], []);
+
+  return (
+    <div className="min-h-screen dashboard-scroll relative bg-gray-50/30">
+      <Helmet>
+        <title>Contato – Licenciatura Intercultural Indígena (LINDI)</title>
+        <meta name="description" content="Entre em contato com a Licenciatura Intercultural Indígena (LINDI) da UNIFESP." />
+      </Helmet>
+
+      <PageHeader
+        title="Contato"
+        showNavbar={true}
+        dataPoints={[]}
+        overlayColor="rgba(44, 85, 48, 0.75)"
+        blendMode="normal"
+      >
+        <DashboardBreadcrumbs breadcrumbs={breadcrumbs} />
+      </PageHeader>
+
+      <div className="relative z-10 pb-20">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-xl shadow-md p-8 space-y-6">
+            <h2
+              className="text-2xl font-semibold text-[#215A36] mb-6"
+              style={{ fontFamily: 'Cinzel, serif' }}
+            >
+              Licenciatura Intercultural Indígena – LINDI
+            </h2>
+
+            <div className="flex items-start gap-4 text-gray-700">
+              <MapPin className="w-5 h-5 text-[#215A36] flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium text-sm text-gray-500 uppercase tracking-wide mb-1">Endereço</p>
+                <p>Rua Silva Jardim, 136</p>
+                <p>Santos/SP – CEP: 11070-100</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 text-gray-700">
+              <Phone className="w-5 h-5 text-[#215A36] flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium text-sm text-gray-500 uppercase tracking-wide mb-1">Secretaria de Graduação</p>
+                <p>Ana Claudia Macieski Martins</p>
+                <p>(11) 3385-4255 <span className="text-gray-400 text-sm">(opção 2 – demais cursos)</span></p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 text-gray-700">
+              <Mail className="w-5 h-5 text-[#215A36] flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium text-sm text-gray-500 uppercase tracking-wide mb-1">E-mail</p>
+                <a
+                  href="mailto:lindi@unifesp.br"
+                  className="text-[#215A36] hover:underline"
+                >
+                  lindi@unifesp.br
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default LindiflixContato;

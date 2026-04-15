@@ -63,7 +63,7 @@ const Dashboard = () => {
       </PageHeader>
       
       {/* Conteúdo principal com espaçamento para o hero - será ajustado dinamicamente */}
-      <div className="relative z-10 hero-content-spacer" style={{ marginTop: '300px' }}>
+      <div className="relative z-10">
         {/* Descrição da página - Abaixo do hero, estilo Native Land Digital */}
         <DashboardDescription />
 

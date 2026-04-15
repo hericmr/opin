@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { BookOpen, Map, BarChart3 } from 'lucide-react';
+import { BookOpen, Map, BarChart3, Film } from 'lucide-react';
 import { prefetchPage } from '../../router';
 
 const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, isMobileLandscape }) => {
@@ -10,10 +10,11 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
   const isActive = (path) => {
     if (path === '/mapa') return location.pathname === '/mapa';
     if (path === '/algunsdados') {
-      return location.pathname === '/algunsdados' || 
-             location.pathname === '/painel-dados' || 
+      return location.pathname === '/algunsdados' ||
+             location.pathname === '/painel-dados' ||
              location.pathname === '/dados-escolas-indigenas';
     }
+    if (path === '/lindiflix') return location.pathname.startsWith('/lindiflix');
     return location.pathname === path;
   };
 
@@ -67,6 +68,20 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
       >
         <BarChart3 className="w-4 h-4" />
         <span className="hidden xl:inline">Alguns dados</span>
+      </button>
+
+      {/* Botão Lindiflix */}
+      <button
+        onClick={() => navigate('/lindiflix')}
+        onMouseEnter={() => prefetchPage('lindiflix')}
+        onTouchStart={() => prefetchPage('lindiflix')}
+        className={getButtonStyle(isActive('/lindiflix'))}
+        title="Lindiflix – Vídeos das aldeias indígenas"
+        aria-label="Lindiflix – Vídeos das aldeias indígenas"
+        aria-current={isActive('/lindiflix') ? 'page' : undefined}
+      >
+        <Film className="w-4 h-4" />
+        <span className="hidden xl:inline">Lindiflix</span>
       </button>
     </nav>
   );

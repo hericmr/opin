@@ -152,6 +152,9 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   // Verificar se está na homepage
   const isHomepage = useMemo(() => location.pathname === '/', [location.pathname]);
 
+  // Verificar se está numa página do Lindiflix
+  const isLindiflixPage = useMemo(() => location.pathname.startsWith('/lindiflix'), [location.pathname]);
+
   // URL da imagem hero
   const heroImageUrl = `${import.meta.env.BASE_URL || '/opin'}/hero.webp`;
 
@@ -177,29 +180,44 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
 
           {/* Título do Projeto - Lado esquerdo */}
           <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4 min-w-0 flex-shrink">
-            <button
-              onClick={() => navigate('/')}
-              className="text-left hover:opacity-80 transition-opacity focus:outline-none focus:rounded"
-              aria-label="Ir para página inicial - OPIN"
-            >
-              <div className="flex items-center space-x-1 sm:space-x-2">
+            {isLindiflixPage ? (
+              <button
+                onClick={() => navigate('/lindiflix')}
+                className="text-left hover:opacity-80 transition-opacity focus:outline-none focus:rounded"
+                aria-label="Ir para o Lindiflix"
+              >
                 <img
-                  src={getLocalImageUrl(`${import.meta.env.BASE_URL || '/opin'}/logo_index.webp`)}
-                  alt="OPIN - Observatório dos Professores Indígenas"
-                  className="h-6 sm:h-7 md:h-8 lg:h-10 xl:h-12 w-auto object-contain object-left"
+                  src={getLocalImageUrl(`${import.meta.env.BASE_URL || '/opin'}/lindiflix_logo.png`)}
+                  alt="Lindiflix – Das crianças e jovens das Aldeias de São Paulo para o mundo!"
+                  className="h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 w-auto object-contain object-left"
                   style={{ display: 'block' }}
                 />
-                <div className="hidden sm:block w-px h-4 sm:h-6 md:h-8 bg-white/30 flex-shrink-0"></div>
-                <div className="hidden md:flex flex-col justify-center min-w-0">
-                  <span className="text-white text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl truncate" style={{ fontFamily: 'Cinzel, serif' }}>
-                    Observatório dos Professores Indígenas
-                  </span>
-                  <p className="text-xs sm:text-sm text-white/80 normal-case truncate">
-                    do Estado de São Paulo
-                  </p>
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/')}
+                className="text-left hover:opacity-80 transition-opacity focus:outline-none focus:rounded"
+                aria-label="Ir para página inicial - OPIN"
+              >
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <img
+                    src={getLocalImageUrl(`${import.meta.env.BASE_URL || '/opin'}/logo_index.webp`)}
+                    alt="OPIN - Observatório dos Professores Indígenas"
+                    className="h-6 sm:h-7 md:h-8 lg:h-10 xl:h-12 w-auto object-contain object-left"
+                    style={{ display: 'block' }}
+                  />
+                  <div className="hidden sm:block w-px h-4 sm:h-6 md:h-8 bg-white/30 flex-shrink-0"></div>
+                  <div className="hidden md:flex flex-col justify-center min-w-0">
+                    <span className="text-white text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl truncate" style={{ fontFamily: 'Cinzel, serif' }}>
+                      Observatório dos Professores Indígenas
+                    </span>
+                    <p className="text-xs sm:text-sm text-white/80 normal-case truncate">
+                      do Estado de São Paulo
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </button>
+              </button>
+            )}
           </div>
 
           {/* Menu Superior - Lado direito */}
