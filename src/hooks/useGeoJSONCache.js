@@ -37,7 +37,9 @@ export const useGeoJSONCache = (key) => {
       }
       setLoading(true);
       try {
-         const url = `${import.meta.env.BASE_URL || '/opin'}/${resolvedKey}.geojson`;
+         const rawBase = process.env.PUBLIC_URL || import.meta.env.BASE_URL || '/opin';
+         const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+         const url = `${base}/${resolvedKey}.geojson`;
          logger.info(`useGeoJSONCache: Iniciando carregamento de ${resolvedKey}. Requisitando: ${url}`);
          
          const startTime = Date.now();

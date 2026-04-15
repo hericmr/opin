@@ -12,6 +12,7 @@ import MinimalLoginModal from '../Auth/MinimalLoginModal';
 
 const PageHeader = ({
   title,
+  logoImage = null,
   description,
   titleFontFamily = 'Sora, sans-serif',
   titleSize = 'text-4xl md:text-5xl lg:text-6xl',
@@ -126,6 +127,7 @@ const PageHeader = ({
   }, [updateHeight, title, description, children]);
 
   return (
+    <>
     <div
       className={`text-white shadow-lg relative overflow-hidden ${className}`}
       style={{
@@ -294,13 +296,21 @@ const PageHeader = ({
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Título da Página - Estilo Native Land Digital */}
-          <div className="mt-4">
-            <h1
-              className={`text-white ${titleSize} uppercase leading-none text-center`}
-              style={{ fontFamily: titleFontFamily }}
-            >
-              {title}
-            </h1>
+          <div className="mt-4 flex justify-center">
+            {logoImage ? (
+              <img
+                src={logoImage}
+                alt={title || 'Logo'}
+                className="h-20 sm:h-24 md:h-28 w-auto object-contain"
+              />
+            ) : (
+              <h1
+                className={`text-white ${titleSize} uppercase leading-none text-center`}
+                style={{ fontFamily: titleFontFamily }}
+              >
+                {title}
+              </h1>
+            )}
           </div>
 
           {/* Conteúdo adicional opcional (breadcrumbs, etc) */}
@@ -333,6 +343,10 @@ const PageHeader = ({
         />
       )}
     </div>
+    {/* Spacer em fluxo normal com a mesma altura do header absoluto —
+        garante que o conteúdo abaixo sempre começa após o hero, sem marginTop hardcoded */}
+    <div aria-hidden="true" style={{ height: containerHeight, flexShrink: 0 }} />
+    </>
   );
 };
 

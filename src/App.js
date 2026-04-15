@@ -47,20 +47,22 @@ const AppContent = () => {
       const windowPath = window.location.pathname;
       const normalizedWindowPath = windowPath.replace(/^\/opin/, '').replace(/\/$/, '');
       
-      if (normalizedWindowPath === '/conteudo' || 
-          normalizedWindowPath === '/algunsdados' || 
-          normalizedWindowPath === '/painel-dados' || 
-          normalizedWindowPath === '/dados-escolas-indigenas') {
+      if (normalizedWindowPath === '/conteudo' ||
+          normalizedWindowPath === '/algunsdados' ||
+          normalizedWindowPath === '/painel-dados' ||
+          normalizedWindowPath === '/dados-escolas-indigenas' ||
+          normalizedWindowPath.startsWith('/lindiflix')) {
         return true;
       }
     }
-    
+
     // Verifica o pathname do React Router
     const routerPath = location?.pathname?.replace(/\/$/, '') || '';
-    return routerPath === '/conteudo' || 
-           routerPath === '/algunsdados' || 
-           routerPath === '/painel-dados' || 
-           routerPath === '/dados-escolas-indigenas';
+    return routerPath === '/conteudo' ||
+           routerPath === '/algunsdados' ||
+           routerPath === '/painel-dados' ||
+           routerPath === '/dados-escolas-indigenas' ||
+           routerPath.startsWith('/lindiflix');
   }, [location?.pathname]);
 
   // Handler para redirecionamento do GitHub Pages (404.html)
@@ -88,6 +90,8 @@ const AppContent = () => {
     setOpenPainelFunction(() => openPainelFn);
   }, []);
 
+  const [bannerDismissed, setBannerDismissed] = React.useState(false);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-green-50">
@@ -98,31 +102,25 @@ const AppContent = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="text-center text-red-500 mt-10">
-        <p>Erro ao carregar os dados:</p>
-        <p className="text-sm">{error}</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Tentar novamente...
-        </button>
-      </div>
-    );
-  }
+  const effectiveDataPoints = error ? [] : dataPoints;
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden">
       <ScrollToTop />
-      <MetaTagsDetector dataPoints={dataPoints} />
-      
+      <MetaTagsDetector dataPoints={effectiveDataPoints} />
+
+      {import.meta.env.DEV && error && !bannerDismissed && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-3 bg-amber-50 border border-amber-300 text-amber-800 text-xs px-4 py-2 rounded-lg shadow-md">
+          <span>Banco de dados não disponível. Verifique as variáveis <code className="font-mono bg-amber-100 px-1 rounded">VITE_SUPABASE_URL</code> e <code className="font-mono bg-amber-100 px-1 rounded">VITE_SUPABASE_ANON_KEY</code> no <code className="font-mono bg-amber-100 px-1 rounded">.env.local</code>.</span>
+          <button onClick={() => setBannerDismissed(true)} className="text-amber-600 hover:text-amber-900 font-bold">✕</button>
+        </div>
+      )}
+
       {!isMapRoute && !isHeroNavbarRoute && (
-        <Navbar 
-          onConteudoClick={() => navigate('/conteudo')} 
-          dataPoints={dataPoints} 
-          openPainelFunction={openPainelFunction} 
+        <Navbar
+          onConteudoClick={() => navigate('/conteudo')}
+          dataPoints={effectiveDataPoints}
+          openPainelFunction={openPainelFunction}
         />
       )}
 
@@ -135,7 +133,7 @@ const AppContent = () => {
         </div>
       }>
         <Routes>
-          {createRoutes(dataPoints, loading, handlePainelOpenFunction).map((route, index) => (
+          {createRoutes(effectiveDataPoints, loading, handlePainelOpenFunction).map((route, index) => (
             <Route key={route.path} path={route.path} element={route.element} />
           ))}
         </Routes>

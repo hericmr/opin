@@ -24,7 +24,7 @@ const MateriaisDidáticos = () => {
       </PageHeader>
       
       {/* Conteúdo principal com espaçamento para o hero - será ajustado dinamicamente */}
-      <div className="relative z-10 hero-content-spacer" style={{ marginTop: '300px' }}>
+      <div className="relative z-10">
         {/* Descrição da página - Abaixo do hero, estilo Native Land Digital */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
           <div className="prose prose-lg sm:prose-xl max-w-none" style={{

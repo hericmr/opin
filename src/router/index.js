@@ -15,6 +15,8 @@ const MateriaisDidáticos = React.lazy(() => import("../views/pages/materiaisDid
 const Dashboard = React.lazy(() => import("../views/pages/dashboard"));
 const SearchResults = React.lazy(() => import("../views/pages/search"));
 const AdminPanel = React.lazy(() => import("../components/AdminPanel"));
+const Lindiflix = React.lazy(() => import("../views/pages/lindiflix"));
+const LindiflixContato = React.lazy(() => import("../views/pages/lindiflixContato"));
 
 // Mapa para facilitar o prefetch manual se necessário
 const lazyComponents = {
@@ -23,7 +25,9 @@ const lazyComponents = {
   conteudo: () => import("../views/pages/materiaisDidaticos"),
   dashboard: () => import("../views/pages/dashboard"),
   search: () => import("../views/pages/search"),
-  admin: () => import("../components/AdminPanel")
+  admin: () => import("../components/AdminPanel"),
+  lindiflix: () => import("../views/pages/lindiflix"),
+  lindiflixContato: () => import("../views/pages/lindiflixContato"),
 };
 
 /**
@@ -93,6 +97,14 @@ export const createRoutes = (dataPoints, loading, onPainelOpen) => {
     {
       path: "/dados-escolas-indigenas",
       element: createRouteElement(Dashboard)
+    },
+    {
+      path: "/lindiflix",
+      element: createRouteElement(Lindiflix)
+    },
+    {
+      path: "/lindiflix/contato",
+      element: createRouteElement(LindiflixContato)
     }
   ];
 };

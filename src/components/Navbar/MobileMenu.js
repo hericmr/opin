@@ -1,21 +1,22 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { BookOpen, Leaf, Shield, LayoutGrid, Map, BarChart3 } from 'lucide-react';
+import { BookOpen, Leaf, Shield, LayoutGrid, Map, BarChart3, Film } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { prefetchPage } from '../../router';
 
-const MobileMenu = ({ 
-  mobileMenuOpen, 
-  isConteudoPage, 
+const MobileMenu = ({
+  mobileMenuOpen,
+  isConteudoPage,
   isSearchPage,
   isAdminPage,
   isDashboardPage,
-  isAdmin, 
-  onAdminClick, 
+  isAdmin,
+  onAdminClick,
   isMobileLandscape,
   onNavigation
 }) => {
   const location = useLocation();
+  const isLindiflixPage = location.pathname.startsWith('/lindiflix');
 
   const getActiveStyle = (isActive) => 
     isActive 
@@ -79,6 +80,20 @@ const MobileMenu = ({
                 <div className="flex items-center gap-3">
                   <BarChart3 className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
                   <span>Alguns dados</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => onNavigation('/lindiflix')}
+                onMouseEnter={() => prefetchPage('lindiflix')}
+                onTouchStart={() => prefetchPage('lindiflix')}
+                className={`w-full text-left px-4 py-2.5 font-medium rounded transition-colors ${getActiveStyle(isLindiflixPage)}`}
+                aria-label="Lindiflix – Vídeos das aldeias indígenas"
+                aria-current={isLindiflixPage ? 'page' : undefined}
+              >
+                <div className="flex items-center gap-3">
+                  <Film className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
+                  <span>Lindiflix</span>
                 </div>
               </button>
             </div>
