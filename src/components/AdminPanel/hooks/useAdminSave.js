@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { identificarCamposAlterados } from '../../../utils/campoComparator';
 import logger from '../../../utils/logger';
+import { useRefresh } from '../../../contexts/RefreshContext';
 
 /**
  * Hook customizado para gerenciar a lógica de salvamento de escolas no AdminPanel
@@ -31,6 +32,7 @@ export const useAdminSave = ({
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const { triggerRefresh } = useRefresh();
 
   /**
    * Função para salvar escola
@@ -69,6 +71,7 @@ export const useAdminSave = ({
       
       if (result.success) {
         setSaveSuccess(true);
+        triggerRefresh();
         // Atualizar o editingLocation com os dados salvos
         setEditingLocation(result.data);
         
@@ -103,7 +106,8 @@ export const useAdminSave = ({
     setEscolaSalvaId,
     setEscolaSalvaNome,
     setCamposAlterados,
-    setShowMetadadosModal
+    setShowMetadadosModal,
+    triggerRefresh
   ]);
 
   return {
