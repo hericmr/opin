@@ -1,3 +1,4 @@
+import logger from "../utils/logger";
 import { useState, useCallback, useRef } from 'react';
 
 const useSearch = (dataPoints) => {
@@ -220,7 +221,7 @@ const useSearch = (dataPoints) => {
     setSearchResults(sortedResults);
     return sortedResults;
   } catch (error) {
-    console.error('Erro na busca:', error);
+    logger.error('Erro na busca:', error);
     setSearchResults([]);
     return [];
   } finally {

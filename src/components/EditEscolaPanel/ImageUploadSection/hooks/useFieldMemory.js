@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 import { useState, useEffect, useCallback } from 'react';
 
 const STORAGE_KEY = 'opin_legend_field_memory';
@@ -25,7 +26,7 @@ export const useFieldMemory = () => {
         setMemory(parsed);
       }
     } catch (err) {
-      console.warn('[useFieldMemory] Error loading memory:', err);
+      logger.warn('[useFieldMemory] Error loading memory:', err);
     }
   }, []);
 
@@ -55,7 +56,7 @@ export const useFieldMemory = () => {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newMemory));
       } catch (err) {
-        console.warn('[useFieldMemory] Error saving memory:', err);
+        logger.warn('[useFieldMemory] Error saving memory:', err);
       }
 
       return newMemory;
@@ -87,7 +88,7 @@ export const useFieldMemory = () => {
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(newMemory));
         } catch (err) {
-          console.warn('[useFieldMemory] Error clearing memory:', err);
+          logger.warn('[useFieldMemory] Error clearing memory:', err);
         }
         return newMemory;
       });
@@ -104,7 +105,7 @@ export const useFieldMemory = () => {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(emptyMemory));
       } catch (err) {
-        console.warn('[useFieldMemory] Error clearing all memory:', err);
+        logger.warn('[useFieldMemory] Error clearing all memory:', err);
       }
     }
   }, []);

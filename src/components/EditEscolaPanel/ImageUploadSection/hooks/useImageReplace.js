@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 import { useState, useCallback } from 'react';
 import { replaceImage as replaceImageService } from '../services/imageUploadService';
 
@@ -53,7 +54,7 @@ export const useImageReplace = (escolaId, bucketName = 'imagens-das-escolas') =>
 
       return newImage;
     } catch (err) {
-      console.error('Erro ao substituir imagem:', err);
+      logger.error('Erro ao substituir imagem:', err);
       setUploading(false);
       throw err;
     }

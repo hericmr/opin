@@ -21,7 +21,7 @@ export class OpenLayersClustering {
 
   addMarker(markerData, id) {
     if (!markerData.latitude || !markerData.longitude) {
-      console.warn('[OpenLayersClustering] Dados de marcador inválidos:', markerData);
+      logger.warn('[OpenLayersClustering] Dados de marcador inválidos:', markerData);
       return null;
     }
 
@@ -246,9 +246,9 @@ export class OpenLayersClustering {
       // Limpar opções
       this.options = null;
       
-      console.log('[OpenLayersClustering] Instância destruída com sucesso');
+      logger.debug('[OpenLayersClustering] Instância destruída com sucesso');
     } catch (error) {
-      console.error('[OpenLayersClustering] Erro ao destruir instância:', error);
+      logger.error('[OpenLayersClustering] Erro ao destruir instância:', error);
     }
   }
 }

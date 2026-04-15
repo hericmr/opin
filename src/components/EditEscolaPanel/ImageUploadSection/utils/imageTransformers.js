@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 import { supabase } from '../../../../dbClient';
 
 /**
@@ -20,7 +21,7 @@ export const transformFilesToImages = (files, escolaId, bucketName) => {
       .from(bucketName)
       .getPublicUrl(filePath);
 
-    console.log(`[transformFilesToImages] File: ${file.name}`, {
+    logger.debug(`[transformFilesToImages] File: ${file.name}`, {
       filePath,
       publicUrl,
       fileProperties: Object.keys(file),

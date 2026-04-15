@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 import { useState, useCallback } from 'react';
 import { uploadProfessorImages } from '../services/professorImageUploadService';
 import { validateImageFiles } from '../../ImageUploadSection/services/imageValidationService';
@@ -48,7 +49,7 @@ export const useProfessorImageUpload = (escolaId) => {
       
       return uploadedImages;
     } catch (err) {
-      console.error('Erro no upload:', err);
+      logger.error('Erro no upload:', err);
       setError(err.message || 'Erro ao fazer upload');
       setUploading(false);
       setProgress(0);

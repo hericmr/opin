@@ -1,3 +1,4 @@
+import logger from "../utils/logger";
 import { useState, useEffect } from 'react';
 import { GlobalConfigService } from '../services/globalConfigService';
 
@@ -16,7 +17,7 @@ export const useGlobalCardVisibility = () => {
         const config = await GlobalConfigService.getGlobalCardsVisibility();
         setGlobalVisibility(config);
       } catch (error) {
-        console.error('Erro ao carregar configuração global:', error);
+        logger.error('Erro ao carregar configuração global:', error);
         setGlobalVisibility(null);
       } finally {
         setLoading(false);

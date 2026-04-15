@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 import { supabase } from '../../../../dbClient';
 import { updateMultipleImageOrders } from '../../../../services/legendasService';
 
@@ -27,7 +28,7 @@ export const loadImageOrder = async (images, escolaId, tipoFoto = 'escola') => {
       .eq('ativo', true);
     
     if (error) {
-      console.warn('Erro ao buscar ordem das imagens:', error);
+      logger.warn('Erro ao buscar ordem das imagens:', error);
       return images;
     }
     
@@ -60,7 +61,7 @@ export const loadImageOrder = async (images, escolaId, tipoFoto = 'escola') => {
     // Verify if publicURL was preserved (React 19 compatibility)
     const missingUrls = sortedImages.filter(img => !img.publicURL && !img.publicUrl);
     if (missingUrls.length > 0) {
-      console.warn('[imageOrderService] ⚠️ publicURL perdido após ordenação:', missingUrls.length, 'imagens');
+      logger.warn('[imageOrderService] ⚠️ publicURL perdido após ordenação:', missingUrls.length, 'imagens');
       // Recreate publicURL if it was lost
       missingUrls.forEach(img => {
         if (img.url) {
@@ -76,7 +77,7 @@ export const loadImageOrder = async (images, escolaId, tipoFoto = 'escola') => {
     
     return sortedImages;
   } catch (err) {
-    console.warn('Erro ao carregar ordem das imagens:', err);
+    logger.warn('Erro ao carregar ordem das imagens:', err);
     return images;
   }
 };
@@ -102,7 +103,7 @@ export const saveImageOrder = async (images, escolaId) => {
     // Update orders in database
     await updateMultipleImageOrders(imageOrders, escolaId);
   } catch (err) {
-    console.error('Erro ao salvar ordem das imagens no banco:', err);
+    logger.error('Erro ao salvar ordem das imagens no banco:', err);
     throw new Error('Erro ao salvar ordem das imagens. Tente novamente.');
   }
 };

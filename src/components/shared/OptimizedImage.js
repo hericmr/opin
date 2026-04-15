@@ -1,3 +1,4 @@
+import logger from "../../utils/logger";
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getLocalImageUrl } from '../../utils/imageUtils';
@@ -47,7 +48,7 @@ const OptimizedImage = ({
       onError={(e) => {
         // Hide broken image and show error
         e.target.style.display = 'none';
-        console.error('[OptimizedImage] Failed to load image:', src);
+        logger.error('[OptimizedImage] Failed to load image:', src);
         if (onError) onError(e);
       }}
       loading={isPreloaded ? "eager" : "lazy"}

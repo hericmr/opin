@@ -1,3 +1,4 @@
+import logger from "../../../utils/logger";
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Image as ImageIcon, AlertCircle, Check } from 'lucide-react';
@@ -101,7 +102,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         setError(imageUpload.error);
       }
     } catch (err) {
-      console.error('Erro no upload:', err);
+      logger.error('Erro no upload:', err);
       setError(err.message || 'Erro ao fazer upload');
     }
   }, [selectedFiles, imageUpload, imageManagement, onImagesUpdate]);
@@ -138,7 +139,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         onImagesUpdate();
       }
     } catch (err) {
-      console.error('Erro ao deletar imagem:', err);
+      logger.error('Erro ao deletar imagem:', err);
       setError(err.message || 'Erro ao excluir imagem');
     }
   }, [imageManagement, headerImage, drawingsImage, onImagesUpdate]);
@@ -173,7 +174,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
 
       // Refresh images in background (without showing loading) to sync with database
       imageManagement.refresh(false).catch(err => {
-        console.warn('Erro ao atualizar lista de imagens (não crítico):', err);
+        logger.warn('Erro ao atualizar lista de imagens (não crítico):', err);
       });
       
       setSuccess('Imagem substituída com sucesso! A legenda foi preservada.');
@@ -182,7 +183,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         onImagesUpdate();
       }
     } catch (err) {
-      console.error('Erro ao substituir imagem:', err);
+      logger.error('Erro ao substituir imagem:', err);
       setError(err.message || 'Erro ao substituir imagem');
     }
   }, [imageManagement, imageReplace, onImagesUpdate]);
@@ -197,7 +198,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         onImagesUpdate();
       }
     } catch (err) {
-      console.error('Erro ao definir imagem do header:', err);
+      logger.error('Erro ao definir imagem do header:', err);
       setError(err.message || 'Erro ao definir imagem do header');
     }
   }, [headerImage, onImagesUpdate]);
@@ -212,7 +213,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         onImagesUpdate();
       }
     } catch (err) {
-      console.error('Erro ao remover imagem do header:', err);
+      logger.error('Erro ao remover imagem do header:', err);
       setError(err.message || 'Erro ao remover imagem do header');
     }
   }, [headerImage, onImagesUpdate]);
@@ -227,7 +228,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         onImagesUpdate();
       }
     } catch (err) {
-      console.error('Erro ao adicionar imagem aos desenhos:', err);
+      logger.error('Erro ao adicionar imagem aos desenhos:', err);
       setError(err.message || 'Erro ao adicionar imagem aos desenhos');
     }
   }, [drawingsImage, onImagesUpdate]);
@@ -242,7 +243,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         onImagesUpdate();
       }
     } catch (err) {
-      console.error('Erro ao remover imagem dos desenhos:', err);
+      logger.error('Erro ao remover imagem dos desenhos:', err);
       setError(err.message || 'Erro ao remover imagem dos desenhos');
     }
   }, [drawingsImage, onImagesUpdate]);
@@ -254,7 +255,7 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       setSuccess('Ordem das imagens atualizada!');
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
-      console.error('Erro ao reordenar imagens:', err);
+      logger.error('Erro ao reordenar imagens:', err);
       setError('Erro ao salvar ordem das imagens');
     }
   }, [imageManagement]);
@@ -299,14 +300,14 @@ const ImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       
       // Refresh in background (without showing loading) to ensure sync with database
       imageManagement.refresh(false).catch(err => {
-        console.warn('Erro ao atualizar lista de imagens (não crítico):', err);
+        logger.warn('Erro ao atualizar lista de imagens (não crítico):', err);
       });
       
       if (onImagesUpdate) {
         onImagesUpdate();
       }
     } catch (err) {
-      console.error('Erro ao salvar legenda:', err);
+      logger.error('Erro ao salvar legenda:', err);
       setError(err.message || 'Erro ao salvar legenda');
     }
   }, [saveLegend, imageManagement, onImagesUpdate]);

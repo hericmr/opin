@@ -1,3 +1,4 @@
+import logger from "../../utils/logger";
 import React, { useEffect, useRef, useCallback, forwardRef } from 'react';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
@@ -27,7 +28,7 @@ const OpenLayersEstadoSP = forwardRef(({
 
     // Verificar se os dados têm a estrutura correta
     if (!data.features || !Array.isArray(data.features) || data.features.length === 0) {
-      console.warn('[OpenLayersEstadoSP] Dados inválidos ou vazios:', data);
+      logger.warn('[OpenLayersEstadoSP] Dados inválidos ou vazios:', data);
       return;
     }
 
@@ -57,10 +58,10 @@ const OpenLayersEstadoSP = forwardRef(({
       // Adicionar camada ao mapa
       map.addLayer(vectorLayerRef.current);
 
-      console.log(`[OpenLayersEstadoSP] Camada criada com ${geoJSONFeatures.length} features`);
+      logger.debug(`[OpenLayersEstadoSP] Camada criada com ${geoJSONFeatures.length} features`);
 
     } catch (error) {
-      console.error('[OpenLayersEstadoSP] Erro ao criar camada:', error);
+      logger.error('[OpenLayersEstadoSP] Erro ao criar camada:', error);
     }
 
   }, [map, data]);

@@ -1,3 +1,4 @@
+import logger from "../../../utils/logger";
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { User, AlertCircle, Check } from 'lucide-react';
@@ -101,7 +102,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         setError(imageUpload.error);
       }
     } catch (err) {
-      console.error('Erro no upload:', err);
+      logger.error('Erro no upload:', err);
       setError(err.message || 'Erro ao fazer upload');
     }
   }, [selectedFiles, imageUpload, imageManagement, onImagesUpdate]);
@@ -118,7 +119,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         onImagesUpdate();
       }
     } catch (err) {
-      console.error('Erro ao deletar imagem:', err);
+      logger.error('Erro ao deletar imagem:', err);
       setError(err.message || 'Erro ao excluir imagem');
     }
   }, [imageManagement, onImagesUpdate]);
@@ -152,7 +153,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
 
       // Refresh images in background (without showing loading) to sync with database
       imageManagement.refresh(false).catch(err => {
-        console.warn('Erro ao atualizar lista de imagens (não crítico):', err);
+        logger.warn('Erro ao atualizar lista de imagens (não crítico):', err);
       });
       setSuccess('Imagem do professor substituída com sucesso! A legenda foi preservada.');
 
@@ -160,7 +161,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         onImagesUpdate();
       }
     } catch (err) {
-      console.error('Erro ao substituir imagem:', err);
+      logger.error('Erro ao substituir imagem:', err);
       setError(err.message || 'Erro ao substituir imagem');
     }
   }, [imageManagement, imageReplace, onImagesUpdate]);
@@ -172,7 +173,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
       setSuccess('Ordem das imagens atualizada!');
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
-      console.error('Erro ao reordenar imagens:', err);
+      logger.error('Erro ao reordenar imagens:', err);
       setError('Erro ao salvar ordem das imagens');
     }
   }, [imageManagement]);
@@ -225,7 +226,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
             });
           }
         } catch (err) {
-          console.warn('Erro ao atualizar meta do professor:', err);
+          logger.warn('Erro ao atualizar meta do professor:', err);
           // Don't fail the whole operation if meta update fails
         }
       }
@@ -239,7 +240,7 @@ const ProfessorImageUploadSection = ({ escolaId, onImagesUpdate }) => {
         onImagesUpdate();
       }
     } catch (err) {
-      console.error('Erro ao salvar legenda:', err);
+      logger.error('Erro ao salvar legenda:', err);
       setError(err.message || 'Erro ao salvar legenda');
     }
   }, [saveLegend, imageManagement, escolaId, onImagesUpdate]);

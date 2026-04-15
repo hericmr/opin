@@ -1,3 +1,4 @@
+import logger from "../../utils/logger";
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Eye, EyeOff, Shield, AlertCircle, CheckCircle, Lock, User } from 'lucide-react';
 import { AuthService } from '../../services/authService';
@@ -156,7 +157,7 @@ const AdminLoginModal = ({
         }
       }
     } catch (err) {
-      console.error('Erro no login:', err);
+      logger.error('Erro no login:', err);
       setError('Erro interno. Tente novamente.');
     } finally {
       setLoading(false);

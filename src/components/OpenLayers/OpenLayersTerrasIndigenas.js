@@ -1,3 +1,4 @@
+import logger from "../../utils/logger";
 import React, { useEffect, useRef, useCallback, useMemo, forwardRef } from 'react';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
@@ -42,7 +43,7 @@ const OpenLayersTerrasIndigenas = forwardRef(({
 
     // Verificar se os dados têm a estrutura correta
     if (!data.features || !Array.isArray(data.features) || data.features.length === 0) {
-      console.warn('[OpenLayersTerrasIndigenas] Dados inválidos ou vazios:', data);
+      logger.warn('[OpenLayersTerrasIndigenas] Dados inválidos ou vazios:', data);
       return;
     }
 
@@ -99,10 +100,10 @@ const OpenLayersTerrasIndigenas = forwardRef(({
       // Configurar interações
       setupInteractions();
 
-      console.log(`[OpenLayersTerrasIndigenas] Camada criada com ${geoJSONFeatures.length} features`);
+      logger.debug(`[OpenLayersTerrasIndigenas] Camada criada com ${geoJSONFeatures.length} features`);
 
     } catch (error) {
-      console.error('[OpenLayersTerrasIndigenas] Erro ao criar camada:', error);
+      logger.error('[OpenLayersTerrasIndigenas] Erro ao criar camada:', error);
     }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
