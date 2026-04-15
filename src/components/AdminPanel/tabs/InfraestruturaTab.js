@@ -30,12 +30,26 @@ const InfraestruturaTab = ({ editingLocation, setEditingLocation }) => {
         <label className="block text-sm font-medium text-gray-200 mb-2 text-base">
           Acesso à Internet
         </label>
-        <textarea
-          className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 h-24 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-gray-100 placeholder-gray-400 text-base"
-          value={editingLocation['Acesso à internet'] || ''}
-          onChange={e => setEditingLocation({ ...editingLocation, 'Acesso à internet': e.target.value })}
-          placeholder="Descreva o acesso à internet na escola..."
-        />
+        <div className="flex gap-3">
+          {['Sim', 'Não'].map(opcao => {
+            const atual = editingLocation['Acesso à internet'];
+            const ativo = atual === opcao || (opcao === 'Sim' && atual === true) || (opcao === 'Não' && atual === false);
+            return (
+              <button
+                key={opcao}
+                type="button"
+                onClick={() => setEditingLocation({ ...editingLocation, 'Acesso à internet': opcao })}
+                className={`px-6 py-2 rounded font-medium text-sm transition-colors ${
+                  ativo
+                    ? 'bg-amber-400 text-gray-900'
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                }`}
+              >
+                {opcao}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Equipamentos Tecnológicos */}
