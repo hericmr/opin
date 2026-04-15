@@ -148,10 +148,9 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
 
       {/* Painel de informações */}
       {painelInfo && (
-        <PainelInformacoes 
-          painelInfo={painelInfo} 
-          closePainel={fecharPainel} 
-          refreshKey={refreshKey}
+        <PainelInformacoes
+          painelInfo={painelInfo}
+          closePainel={fecharPainel}
         />
       )}
     </div>

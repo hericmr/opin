@@ -59,12 +59,11 @@ const GridLayoutWrapper = memo(({ children, shouldUseGrid }) => {
   );
 });
 
-const EscolaInfo = memo(({ 
-  escola, 
-  shouldUseGrid = false, 
-  refreshKey = 0, 
-  sectionRefs, 
-  isMaximized = false, 
+const EscolaInfo = memo(({
+  escola,
+  shouldUseGrid = false,
+  sectionRefs,
+  isMaximized = false,
   shouldHideInlineMedia = false,
   isLoadingDetails = false
 }) => {
@@ -111,7 +110,7 @@ const EscolaInfo = memo(({
       {/* História da Escola em destaque */}
       {isCardVisible(cardsVisibilidade, 'historiaEscola', globalVisibility) && (
         <div ref={(el) => sectionRefs && (sectionRefs.historia = el)}>
-          <HistoriaEscola escola={escola} refreshKey={refreshKey} isMaximized={isMaximized} />
+          <HistoriaEscola escola={escola} isMaximized={isMaximized} />
         </div>
       )}
 
@@ -119,7 +118,6 @@ const EscolaInfo = memo(({
       {isCardVisible(cardsVisibilidade, 'imagensEscola', globalVisibility) && (
         <ImagensdasEscolas
           escola_id={escola.id}
-          refreshKey={refreshKey}
           isMaximized={isMaximized}
           hideInlineMedia={shouldHideInlineMedia}
         />
@@ -130,7 +128,6 @@ const EscolaInfo = memo(({
         <div ref={(el) => sectionRefs && (sectionRefs.depoimentos = el)}>
           <HistoriadoProfessor
             escola={escola}
-            refreshKey={refreshKey}
             isMaximized={isMaximized}
             shouldHideInlineMedia={shouldHideInlineMedia}
           />
