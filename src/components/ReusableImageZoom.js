@@ -3,13 +3,7 @@ import PropTypes from 'prop-types';
 import { X, ZoomIn, ZoomOut, RotateCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatDateForDisplay } from '../utils/dateUtils';
 import { getLocalImageUrl } from '../utils/imageUtils';
-
-// Helper function to check if a value has actual content
-const hasContent = (value) => {
-  if (value === null || value === undefined) return false;
-  if (typeof value === 'string' && value.trim() === '') return false;
-  return true;
-};
+import { hasContent } from '../utils/contentValidation';
 
 const ReusableImageZoom = ({
   images = [],
