@@ -52,8 +52,6 @@ const createRouteElement = (Component, props = {}) => {
  * Returns an array of Route components ready to be used in Routes
  */
 export const createRoutes = (dataPoints, loading, onPainelOpen) => {
-  const dashboardStyle = { height: 'calc(100vh - 64px)', overflow: 'hidden' };
-
   return [
     {
       path: "/",
@@ -87,15 +85,15 @@ export const createRoutes = (dataPoints, loading, onPainelOpen) => {
     },
     {
       path: "/algunsdados",
-      element: createRouteElement(Dashboard, { style: dashboardStyle })
+      element: createRouteElement(Dashboard)
     },
     {
       path: "/painel-dados",
-      element: createRouteElement(Dashboard, { style: dashboardStyle })
+      element: createRouteElement(Dashboard)
     },
     {
       path: "/dados-escolas-indigenas",
-      element: createRouteElement(Dashboard, { style: dashboardStyle })
+      element: createRouteElement(Dashboard)
     }
   ];
 };
