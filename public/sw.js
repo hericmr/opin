@@ -1,7 +1,7 @@
 // Service Worker básico para PWA
 // Versão atualizada para evitar problemas de cache com arquivos JavaScript
-const CACHE_NAME = 'opin-pwa-v3';
-const STATIC_CACHE_NAME = 'opin-static-v3';
+const CACHE_NAME = 'opin-pwa-v4';
+const STATIC_CACHE_NAME = 'opin-static-v4';
 
 // URLs estáticas que podem ser cacheadas
 const urlsToCache = [
