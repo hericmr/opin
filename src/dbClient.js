@@ -23,8 +23,6 @@ if (!supabaseUrl && typeof window !== 'undefined') {
     supabaseUrl = `${window.location.origin}/opin`;
 }
 
-console.log('=== Banco de Dados: Inicialização ===');
-console.log('URL Base detectada:', supabaseUrl);
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

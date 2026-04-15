@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import { useState, useEffect, useRef } from 'react';
 
 // Hook para carregamento inteligente de imagens
@@ -123,7 +124,7 @@ export const useImagePreloader = (imageUrls) => {
     // Pré-carregar imagens em paralelo
     Promise.allSettled(imageUrls.map(preloadImage))
       .then((results) => {
-        console.log('Pré-carregamento concluído:', results.length, 'imagens');
+        logger.debug('Pré-carregamento concluído:', results.length, 'imagens');
       });
   }, [imageUrls]);
 

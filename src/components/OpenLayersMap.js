@@ -1,3 +1,4 @@
+import logger from "../utils/logger";
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -122,7 +123,7 @@ const OpenLayersMap = ({
       setMapInfo(newView);
     });
 
-    console.log('[OpenLayersMap] Mapa inicializado com sucesso');
+    logger.debug('[OpenLayersMap] Mapa inicializado com sucesso');
 
     if (typeof onMapReady === 'function') {
       onMapReady(map.current);

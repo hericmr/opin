@@ -1,3 +1,4 @@
+import logger from "../utils/logger";
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../dbClient';
 import { mapEscolaData } from '../utils/escolaMapper';
@@ -31,7 +32,7 @@ export const useEscolaDetalhes = (id) => {
       const mappedData = mapEscolaData(rawData);
       setData(mappedData);
     } catch (err) {
-      console.error(`Erro ao carregar detalhes da escola ${id}:`, err);
+      logger.error(`Erro ao carregar detalhes da escola ${id}:`, err);
       setError(err.message || 'Erro ao carregar detalhes');
     } finally {
       setLoading(false);

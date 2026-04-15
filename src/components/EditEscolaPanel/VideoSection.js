@@ -1,3 +1,4 @@
+import logger from "../../utils/logger";
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { 
@@ -44,7 +45,7 @@ const VideoSection = ({ escolaId, videoUrl, onVideoUrlChange, onTitulosUpdate })
       
       setVideos(videosOrganizados);
     } catch (err) {
-      console.error('Erro ao buscar vídeos:', err);
+      logger.error('Erro ao buscar vídeos:', err);
       setError('Erro ao carregar vídeos');
     } finally {
       setLoading(false);
@@ -115,7 +116,7 @@ const VideoSection = ({ escolaId, videoUrl, onVideoUrlChange, onTitulosUpdate })
         onTitulosUpdate();
       }
     } catch (err) {
-      console.error('Erro ao adicionar vídeo:', err);
+      logger.error('Erro ao adicionar vídeo:', err);
       setError('Erro ao adicionar vídeo');
     }
   };
@@ -135,7 +136,7 @@ const VideoSection = ({ escolaId, videoUrl, onVideoUrlChange, onTitulosUpdate })
         onTitulosUpdate();
       }
     } catch (err) {
-      console.error('Erro ao atualizar título:', err);
+      logger.error('Erro ao atualizar título:', err);
       setError('Erro ao atualizar título');
     }
   };
@@ -153,7 +154,7 @@ const VideoSection = ({ escolaId, videoUrl, onVideoUrlChange, onTitulosUpdate })
         onTitulosUpdate();
       }
     } catch (err) {
-      console.error('Erro ao remover vídeo:', err);
+      logger.error('Erro ao remover vídeo:', err);
       setError('Erro ao remover vídeo');
     }
   };

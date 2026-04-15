@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 import { useState, useEffect, useCallback } from 'react';
 import { DrawingsImageService } from '../../../../services/drawingsImageService';
 
@@ -17,7 +18,7 @@ export const useDrawingsImage = (escolaId) => {
       const urls = await DrawingsImageService.getDrawingsImages(escolaId);
       setDrawingsImageUrls(urls);
     } catch (err) {
-      console.error('Erro ao buscar imagens de desenhos:', err);
+      logger.error('Erro ao buscar imagens de desenhos:', err);
     }
   }, [escolaId]);
 
@@ -38,7 +39,7 @@ export const useDrawingsImage = (escolaId) => {
         return prev;
       });
     } catch (err) {
-      console.error('Erro ao adicionar imagem aos desenhos:', err);
+      logger.error('Erro ao adicionar imagem aos desenhos:', err);
       throw err;
     } finally {
       setLoading(false);
@@ -53,7 +54,7 @@ export const useDrawingsImage = (escolaId) => {
       await DrawingsImageService.removeDrawingImage(escolaId, imageUrl);
       setDrawingsImageUrls(prev => prev.filter(url => url !== imageUrl));
     } catch (err) {
-      console.error('Erro ao remover imagem dos desenhos:', err);
+      logger.error('Erro ao remover imagem dos desenhos:', err);
       throw err;
     } finally {
       setLoading(false);

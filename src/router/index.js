@@ -32,7 +32,6 @@ const lazyComponents = {
 export const prefetchPage = (pageName) => {
   if (lazyComponents[pageName]) {
     lazyComponents[pageName]();
-    console.log(`[Router] Prefetching ${pageName}...`);
   }
 };
 

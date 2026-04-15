@@ -68,13 +68,10 @@ const EscolaInfo = memo(({
   shouldHideInlineMedia = false,
   isLoadingDetails = false
 }) => {
-  console.log("EscolaInfo recebeu:", escola);
-
   // Buscar configuração global
   const { globalVisibility } = useGlobalCardVisibility();
 
   if (!escola) {
-    console.log("EscolaInfo: escola é null ou undefined");
     return null;
   }
 

@@ -1,3 +1,4 @@
+import logger from "../../utils/logger";
 import React, { useRef, useEffect, useCallback } from 'react';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
@@ -19,7 +20,7 @@ const QuillEditorDirect = ({ value, onChange, placeholder, label, style = {} }) 
   // Handler customizado para upload de imagens
   const imageHandler = useCallback(async () => {
     if (!quillInstanceRef.current) {
-      console.warn('Editor não está pronto ainda');
+      logger.warn('Editor não está pronto ainda');
       return;
     }
 
@@ -50,7 +51,7 @@ const QuillEditorDirect = ({ value, onChange, placeholder, label, style = {} }) 
             quillInstanceRef.current.setSelection(range.index + 1);
           }
         } catch (error) {
-          console.error('Erro ao fazer upload da imagem:', error);
+          logger.error('Erro ao fazer upload da imagem:', error);
           alert('Erro ao fazer upload da imagem. Tente novamente.');
         }
       }
@@ -162,7 +163,7 @@ const QuillEditorDirect = ({ value, onChange, placeholder, label, style = {} }) 
             const delta = quill.clipboard.convert({ html: value });
             quill.setContents(delta, 'silent');
           } catch (e2) {
-            console.warn('Erro ao definir valor inicial:', e2);
+            logger.warn('Erro ao definir valor inicial:', e2);
           }
         }
         setTimeout(() => {
@@ -171,7 +172,7 @@ const QuillEditorDirect = ({ value, onChange, placeholder, label, style = {} }) 
       }
 
     } catch (error) {
-      console.error('Erro ao inicializar Quill:', error);
+      logger.error('Erro ao inicializar Quill:', error);
       setHasError(true);
       isInitializingRef.current = false; // Resetar flag em caso de erro
     }
@@ -216,7 +217,7 @@ const QuillEditorDirect = ({ value, onChange, placeholder, label, style = {} }) 
           isInternalChange.current = false;
         }, 0);
       } catch (error) {
-        console.warn('Erro ao atualizar conteúdo do editor:', error);
+        logger.warn('Erro ao atualizar conteúdo do editor:', error);
         isInternalChange.current = false;
       }
     }

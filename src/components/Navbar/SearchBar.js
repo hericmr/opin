@@ -1,3 +1,4 @@
+import logger from "../../utils/logger";
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, X, MapPin, BookOpen, Users, FileText, Map } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -47,7 +48,7 @@ const SearchBar = ({ onSearch, onResultClick, isMobile, isMobileLandscape, dataP
         // const newSuggestions = getSearchSuggestions(localSearchTerm); // Removido - não utilizado
         // setSuggestions(newSuggestions); // Removido - não utilizado
       } catch (error) {
-        console.error('Erro na busca:', error);
+        logger.error('Erro na busca:', error);
       }
     };
 

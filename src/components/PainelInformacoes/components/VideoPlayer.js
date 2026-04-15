@@ -1,3 +1,4 @@
+import logger from "../../../utils/logger";
 import React, { useState, useEffect } from 'react';
 import { getTituloByVideoUrl } from '../../../services/legendasService';
 
@@ -60,7 +61,7 @@ const VideoPlayer = ({ videoUrl, title = "Vídeo", escolaId }) => {
           setTituloPersonalizado(titulo);
         }
       } catch (error) {
-        console.warn('Erro ao buscar título personalizado de legenda:', error);
+        logger.warn('Erro ao buscar título personalizado de legenda:', error);
       } finally {
         setLoading(false);
       }

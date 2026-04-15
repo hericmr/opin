@@ -1,3 +1,4 @@
+import logger from "../../utils/logger";
 import React, { useState, useRef, useEffect } from 'react';
 import { Eye, EyeOff, Lock, User, AlertCircle, CheckCircle } from 'lucide-react';
 import { AuthService } from '../../services/authService';
@@ -136,7 +137,7 @@ const LoginForm = ({
         }
       }
     } catch (err) {
-      console.error('Erro no login:', err);
+      logger.error('Erro no login:', err);
       setError('Erro interno. Tente novamente.');
       
       if (onError) {

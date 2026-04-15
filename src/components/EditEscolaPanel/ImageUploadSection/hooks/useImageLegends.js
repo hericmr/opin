@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 import { useState, useCallback } from 'react';
 import { 
   getLegendaByImageUrl, 
@@ -30,7 +31,7 @@ export const useImageLegends = (escolaId, tipoFoto = 'escola') => {
         }
       }
     } catch (error) {
-      console.error('Erro ao buscar legendas:', error);
+      logger.error('Erro ao buscar legendas:', error);
     } finally {
       setLoading(false);
     }
@@ -89,7 +90,7 @@ export const useImageLegends = (escolaId, tipoFoto = 'escola') => {
         });
       }
     } catch (err) {
-      console.error('Erro ao salvar legenda:', err);
+      logger.error('Erro ao salvar legenda:', err);
       throw err;
     }
   }, [escolaId, tipoFoto]);

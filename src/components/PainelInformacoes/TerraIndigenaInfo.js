@@ -9,7 +9,6 @@ const LargeHandFistIcon = (props) => <HandFistIcon className="w-8 h-8" {...props
 
 const TerraIndigenaInfo = memo(({ terraIndigena }) => {
   if (!terraIndigena) {
-    console.log("TerraIndigenaInfo: terraIndigena é null ou undefined");
     return null;
   }
 
