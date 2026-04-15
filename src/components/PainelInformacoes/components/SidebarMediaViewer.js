@@ -8,13 +8,7 @@ import { formatDateForDisplay } from '../../../utils/dateUtils';
 
 import { getLocalImageUrl, getSupabaseStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
 import logger from '../../../utils/logger';
-
-// Helper function to check if a value has actual content
-const hasContent = (value) => {
-  if (value === null || value === undefined) return false;
-  if (typeof value === 'string' && value.trim() === '') return false;
-  return true;
-};
+import { hasContent } from '../../../utils/contentValidation';
 
 const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, showSchool = true, scrollProgress, headerUrl, onCurrentItemChange }) => {
   // Initialize with header image if available to show it immediately

@@ -4,18 +4,12 @@ import { supabase } from '../../../dbClient';
 import { getLocalImageUrl, isLocalImage, getSupabaseStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
 import logger from '../../../utils/logger';
+import { hasContent } from '../../../utils/contentValidation';
 import ReusableImageZoom from '../../ReusableImageZoom';
 import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 import { formatDateForDisplay } from '../../../utils/dateUtils';
 import '../../ReusableImageZoom.css';
-
-// Helper function to check if a value has actual content
-const hasContent = (value) => {
-  if (value === null || value === undefined) return false;
-  if (typeof value === 'string' && value.trim() === '') return false;
-  return true;
-};
 
 const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = false, hideInlineMedia = false }) => {
   const [imagens, setImagens] = useState([]);

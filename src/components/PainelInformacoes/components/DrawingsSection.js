@@ -7,13 +7,7 @@ import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 import ReusableImageZoom from '../../ReusableImageZoom';
 import '../../ReusableImageZoom.css';
-
-// Helper function to check if a value has actual content
-const hasContent = (value) => {
-  if (value === null || value === undefined) return false;
-  if (typeof value === 'string' && value.trim() === '') return false;
-  return true;
-};
+import { hasContent } from '../../../utils/contentValidation';
 
 /**
  * Component to display drawings section
