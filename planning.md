@@ -42,7 +42,7 @@ Fluxo de cada passo: implementar → testar manualmente → commit + deploy.
 
 **Teste manual:** Abrir painel de uma escola com fotos de professores → fotos e legendas aparecem; verificar no DevTools → Network que o número de requests caiu
 
-**Status:** [ ] implementado [ ] testado [ ] publicado
+**Status:** [x] implementado [x] testado [x] publicado
 
 ---
 
@@ -68,7 +68,7 @@ Fluxo de cada passo: implementar → testar manualmente → commit + deploy.
 
 **Teste manual:** Abrir painel maximizado → imagens carregam, navegação entre fotos funciona, header não duplica
 
-**Status:** [ ] implementado [ ] testado [ ] publicado
+**Status:** [x] implementado [x] testado [x] publicado
 
 ---
 
@@ -82,7 +82,7 @@ Fluxo de cada passo: implementar → testar manualmente → commit + deploy.
 
 **Teste manual:** Criar e editar uma escola pelo admin → todos os campos salvam corretamente, upload de imagem funciona
 
-**Status:** [ ] implementado [ ] testado [ ] publicado
+**Status:** [x] implementado [x] testado [x] publicado
 
 ---
 
@@ -95,7 +95,7 @@ Fluxo de cada passo: implementar → testar manualmente → commit + deploy.
 
 **Teste manual:** Aba "Tabelas" no admin funciona → tabela exibe escolas, exportação funciona, logs aparecem
 
-**Status:** [ ] implementado [ ] testado [ ] publicado
+**Status:** [x] implementado [ ] testado [ ] publicado
 
 ---
 
