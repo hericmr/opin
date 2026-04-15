@@ -35,7 +35,7 @@ function VideoCard({ professor }) {
           src={imgSrc}
           alt={`Foto de ${nome}`}
           loading="lazy"
-          className="w-14 h-14 rounded-full object-cover border-2 border-[#215A36]/30 flex-shrink-0"
+          className="w-28 h-28 rounded-full object-cover border-2 border-[#215A36]/30 flex-shrink-0"
           onError={(e) => { e.target.src = `${baseUrl}/lindiflix_fotos/default.jpeg`; }}
         />
         <div className="min-w-0">
