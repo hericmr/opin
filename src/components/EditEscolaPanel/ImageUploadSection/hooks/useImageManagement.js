@@ -61,6 +61,30 @@ export const useImageManagement = (escolaId, bucketName = 'imagens-das-escolas',
       if (tipoFoto === 'professor' || bucketName === 'imagens-professores') {
         // Buscar imagens de professores
         dbImages = await getProfessorImagesByEscola(escolaId);
+
+        // Buscar legendas em batch (1 query) e mesclar nos dados
+        const { data: legendasProfessor } = await supabase
+          .from('legendas_fotos')
+          .select('*')
+          .eq('escola_id', escolaId)
+          .eq('tipo_foto', 'professor')
+          .eq('ativo', true)
+          .order('created_at', { ascending: false });
+
+        const legendasMap = new Map();
+        (legendasProfessor || []).forEach(l => {
+          if (l.imagem_url && !legendasMap.has(l.imagem_url)) legendasMap.set(l.imagem_url, l);
+          const filename = l.imagem_url?.split('/').pop();
+          if (filename && !legendasMap.has(filename)) legendasMap.set(filename, l);
+        });
+
+        dbImages = dbImages.map(img => {
+          const filename = img.imagem_url?.split('/').pop();
+          const legenda = legendasMap.get(img.imagem_url) || legendasMap.get(filename) || null;
+          return legenda
+            ? { ...img, legenda: legenda.legenda, descricao_detalhada: legenda.descricao_detalhada, autor_foto: legenda.autor_foto, data_foto: legenda.data_foto, _legendaId: legenda.id }
+            : img;
+        });
       } else {
         // Buscar imagens da escola (legendas_fotos)
         dbImages = await getLegendasByEscolaOrdered(escolaId, tipoFoto);
@@ -84,7 +108,7 @@ export const useImageManagement = (escolaId, bucketName = 'imagens-das-escolas',
           legendaData: {
             legenda: img.legenda || '',
             descricao_detalhada: img.descricao_detalhada || '',
-            autor_foto: isProfessorTable ? img.autor : (img.autor_foto || ''),
+            autor_foto: isProfessorTable ? (img.autor_foto || img.autor || '') : (img.autor_foto || ''),
             data_foto: img.data_foto || '',
             categoria: img.categoria || 'geral',
           }
