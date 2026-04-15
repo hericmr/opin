@@ -48,7 +48,7 @@ const AppContent = () => {
       const normalizedWindowPath = windowPath.replace(/^\/opin/, '').replace(/\/$/, '');
       
       if (normalizedWindowPath === '/conteudo' || 
-          normalizedWindowPath === '/dashboard' || 
+          normalizedWindowPath === '/algunsdados' || 
           normalizedWindowPath === '/painel-dados' || 
           normalizedWindowPath === '/dados-escolas-indigenas') {
         return true;
@@ -58,7 +58,7 @@ const AppContent = () => {
     // Verifica o pathname do React Router
     const routerPath = location?.pathname?.replace(/\/$/, '') || '';
     return routerPath === '/conteudo' || 
-           routerPath === '/dashboard' || 
+           routerPath === '/algunsdados' || 
            routerPath === '/painel-dados' || 
            routerPath === '/dados-escolas-indigenas';
   }, [location?.pathname]);
