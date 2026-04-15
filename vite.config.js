@@ -5,8 +5,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { config } from 'dotenv';
 
-// Carregar variáveis de ambiente do .env.local
+// Carregar variáveis de ambiente — .env.supabase tem prioridade sobre .env.local
 config({ path: '.env.local' });
+config({ path: '.env.supabase', override: true });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

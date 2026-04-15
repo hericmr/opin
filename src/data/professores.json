@@ -1,0 +1,272 @@
+[
+    {
+        "imagem": "fotos/edina.jpeg",
+        "nome": "Edina Jaxuka",
+        "professor": "Edina Jaxuka",
+        "aldeia": "Nhamandu Oua",
+        "povo": "Guarani Mbya",
+        "youtube": "https://www.youtube.com/embed/JBl34djaSHw?si=7vQxuu7FRNTO1G1D"
+    },
+    {
+        "imagem": "fotos/paula.jpeg",
+        "nome": "Paula Aparecida Baptista",
+        "professor": "Paula Aparecida Baptista",
+        "aldeia": "Aldeia Tangará",
+        "youtube": "https://www.youtube.com/embed/aVnLAbow-kY?si=6xU4QtVG5mru6ZHO",
+        "povo":"Guarani Nhandewa/ Tupi Guarani"
+    },
+    {
+        "imagem": "fotos/renato.jpeg",
+        "nome": "Renato da Silva Mariano",
+        "professor": "Renato da Silva Mariano",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/rBXZkhe6Qmo",
+        "terra_indigena": "Aldeia Pindo-ty",
+        "aldeia": "Aldeia Pindo-ty",
+        "povo": "Guarani Mbya"
+    },
+    {
+        "imagem": "fotos/andreia.jpeg",
+        "nome": "Andreia Ribeiro dos Santos",
+        "professor": "Andreia Ribeiro dos Santos",
+        "aldeia": "Terra Indígena Djaiko Aty",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/dq6lps46jQw",
+        "terra_indigena": "Terra Indígena Djaiko Aty",
+        "povo": "Guarani Nhandewa/ Tupi Guarani"
+    },
+    {
+        "imagem": "fotos/jonathan.jpeg",
+        "nome": "Jonathan Marcolino",
+        "professor": "Jonathan Marcolino",
+        "aldeia": "Aldeia Tereguá",
+        "youtube": "https://www.youtube.com/embed/rqp1SwCDnfc",
+        "povo": "Guarani Nhandewa/ Tupi Guarani"
+    },
+    {
+        "imagem": "fotos/kerexu.jpeg",
+        "nome": "Kerexu Mirim da Silva",
+        "professora": "Kerexu Mirim da Silva",
+        "aldeia": "Aldeia Krukutu",
+        "youtube": "https://www.youtube.com/embed/yYBeDUKZjk4",
+        "povo": "Guarani Mbya"
+    },
+    {
+        "imagem": "fotos/rodrigo.jpeg",
+        "nome": "Rodrigo Vera Mirim da Silva",
+        "professor": "Rodrigo Vera Mirim da Silva",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/5j3YEdeMraw",
+        "terra_indigena": "TI Pakurity aldeia Taluari-ty",
+        "povo": "Guarani Mbya",
+        "aldeia": "Aldeia Takuari-ty"
+    },
+    { 
+        "imagem": "fotos/mariza.jpeg",
+        "nome": "Mariza da Silva",
+        "professor": "Mariza da Silva",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/IsIJVA4ppOg",
+        "aldeia": "Aldeia Pegua-oty",
+        "povo": "Guarani Mbya"
+    },
+    {
+        "imagem": "fotos/abilio.jpeg",
+        "nome": "Abílio",
+        "professor": "Abílio Fernandes",
+        "aldeia": "Aldeia Uru'ity.",
+        "youtube": "https://www.youtube.com/embed/_6PuOnVIhEU",
+        "povo": "Guarani Mbya"
+    },
+    {
+        "imagem": "fotos/adao.jpeg",
+        "nome": "Adão Alves",
+        "professor": "Adão Alves",
+        "aldeia": "Aldeia Kopenoti (Avaí/SP)",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/3e8N8uGyIvE",
+        "terra_indigena": "Terra Indígena Araribá",
+        "povo": "Terena"
+    },
+    {
+        "imagem": "fotos/iara.jpeg",
+        "nome": "Iara Mendonça Bolgarim",
+        "professor": "Iara Mendonça Bolgarim",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/yum4n1kHsGE",
+        "terra_indigena": "Terra Indígena Jaraguá",
+        "povo": "Guarani Mbya",
+        "aldeia": "Terra Indígena Jaraguá"
+    },
+    {
+        "imagem": "fotos/edson.jpeg",
+        "nome": "Edson Rodrigues",
+        "professor": "Edson Rodrigues",
+        "aldeia": "Terra indígena Amba Porã",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/AXcJ2C_ofHo",
+        "terra_indigena": "Terra indígena Amba Porã",
+        "povo": "Guarani Mbya"
+    },
+
+    {
+        "imagem": "fotos/webp/claudinei.webp",
+        "nome": "Claudinei Fermino da Silva",
+        "professor": "Claudinei Fermino da Silva",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/1Ld2I2t01U8",
+        "terra_indigena": "Terra Indígena Guarani do Aguapeú",
+        "povo": "Guarani Mbya",
+        "aldeia": "Aldeia Nimuendaju"
+    },
+    {
+        "imagem": "fotos/cledinilson.jpeg",
+        "nome": "Cledinilson Alves Marcolino",
+        "professor": "Cledinilson Alves Marcolino",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/VVTfkbrvxZs",
+        "terra_indigena": "Terra Indígena Araribá, Aldeia Nimuendaju",
+        "povo": "Guarani Nhandewa/ Tupi Guarani",
+        "aldeia": "Aldeia Nimuendaju"
+    },
+    {
+        "imagem": "fotos/ingrid.jpeg",
+        "nome": "Ingrid Ara I Santos da Silva",
+        "professor": "Ingrid Ara I Santos da Silva",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/7Xt-wM3po2w ",
+        "terra_indigena": "Terra Indígena Boa Vista",
+        "povo": "Guarani Mbya",
+        "aldeia": "Aldeia Boa Vista"
+    },
+    {
+        "imagem": "fotos/kamila.jpeg",
+        "nome": "Kamila Ariellen Dina dos Santos",
+        "professor": "Kamila Ariellen Dina dos Santos",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/wzXQT6O-N8c",
+        "terra_indigena": "Terra Indígena Piaçaguera",
+        "povo": "Guarani Nhandewa/ Tupi Guarani",
+        "aldeia": "Aldeia Nhamandu Mirim"
+    },
+    {
+        "imagem": "fotos/leonardo.jpeg",
+        "nome": "Leonardo Edileno Wera Tupã Macena",
+        "professor": "Leonardo Edileno Wera Tupã Macena",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/-BREiQHALvE",
+        "terra_indigena": "Terra Indígena Ribeirão Silveira",
+        "povo": "Guarani Mbya",
+        "aldeia": "Aldeia Rio Silveira"
+    },
+    {
+        "imagem": "fotos/lidiane.jpeg",
+        "nome": "Lidiane Damaceno Cotui Afonso",
+        "professor": "Lidiane Damaceno Cotui Afonso",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/fSLgQd3QuRg",
+        "terra_indigena": "Aldeia Vanuire",
+        "aldeia": "Aldeia Vanuire",
+        "povo": "Krenak"
+    },
+    {
+        "imagem": "fotos/marcelo.jpeg",
+        "nome": "Marcelo Papa Benite",
+        "professor": "Marcelo Papa Benite",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/yOn8nVP6qpI",
+        "terra_indigena": "Tekoa Mirim",
+        "povo": "Guarani Mbya",
+        "aldeia": "Tekoa Mirim"
+    },
+    {
+        "imagem": "fotos/marcio.jpeg",
+        "nome": "Marcio da Silva",
+        "professor": "Marcio da Silva",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/ufv3fKPHk60",
+        "terra_indigena": "Aldeia Itapuã",
+        "povo": "Guarani Mbya",
+        "aldeia": "Aldeia Itapuã"
+    },
+    {
+        "imagem": "fotos/mariana.jpeg",
+        "nome": "Mariana Benite",
+        "professor": "Mariana Benite",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/mRfa7KPkoMU",
+        "terra_indigena": "TI Aldeia Renascer",
+        "povo": "Guarani Mbya",
+        "aldeia": "Aldeia Renascer"
+    },
+    {
+    "imagem": "fotos/roberto.jpeg",
+    "nome": "Roberto Martin da Silva",
+    "professor": "Roberto Martin da Silva",
+    "uf": "SP",
+    "youtube": "https://www.youtube.com/embed/-tLEHM4TRhw", 
+    "terra_indigena": "Terra Indígena Guarani do Aguapeú",
+    "povo": "Guarani Mbya",
+    "aldeia": "Adeia Aguapeu"
+},
+    {
+        "imagem": "fotos/marilene.jpeg",
+        "nome": "Marilene Mendonça Bolgarim",
+        "professor": "Marilene Mendonça Bolgarim",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/yum4n1kHsGE",
+        "terra_indigena": "Terra Indígena Jaraguá, aldeia Yvyporã",
+        "povo": "Guarani Mbya",
+        "aldeia": "Terra Indígena Jaraguá"
+    },
+    {
+        "imagem": "fotos/reinaldo.jpeg",
+        "nome": "Reinaldo karai tukumbbo Peralta",
+        "professor": "Reinaldo karai tukumbbo Peralta",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/jjl3-7MpHZg",
+        "terra_indigena": "Tekoha Tupã reko",
+        "povo": "Guarani Mbya",
+        "aldeia": "Tekoa Tupã reko"
+    },
+    {
+        "imagem": "fotos/rosangela.jpeg",
+        "nome": "Rosângela Barbosa",
+        "professor": "Rosângela Barbosa",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/jm-RxazV9w4",
+        "terra_indigena": "Tekoa Arandu (Capoeirão)",
+        "povo": "Guarani Mbya",
+        "aldeia": "Tekoa Arandu"
+    },
+    {
+        "imagem": "fotos/rosimeire.jpeg",
+        "nome": "Rosimeire Iaiaiti Indubrasil",
+        "professor": "Rosimeire Iaiaiti Indubrasil",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/ClCXAq2uy6c",
+        "terra_indigena": "Aldeia Indigena Icatu",
+        "povo": "Kaingang",
+        "aldeia": "Aldeia Indigena Icatu"
+    },
+    {
+        "imagem": "fotos/severino.jpeg",
+        "nome": "Severino Cabral Ramires",
+        "professor": "Severino Cabral Ramires",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/5IrPkutF9z4", 
+        "terra_indigena": "Terra Indígena Guavira-ty",
+        "povo": "Guarani Mbya",
+        "aldeia": "Madenuá Porã"
+    },
+    {
+        "imagem": "fotos/joao.jpeg",
+        "nome": "João Batista Ortega",
+        "professor": "João Batista Ortega",
+        "uf": "SP",
+        "youtube": "https://www.youtube.com/embed/A79kDuycPs4",
+        "terra_indigena": "Terra Indígena Ka'aguy hovy",
+        "povo": "Guarani Mbya",
+        "aldeia": "Aldeia Ka'aguy hovy"
+    }
+]
