@@ -127,9 +127,6 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false,
                 aria-hidden="true"
               />
             </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-black m-0">
-              Depoimento dos Professores
-            </h2>
           </div>
           {hasMultipleHistorias && (
             <div className="flex items-center gap-2 text-sm text-gray-600">

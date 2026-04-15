@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import {
-  Home,
   Wifi,
   Monitor,
   Layout,
@@ -49,7 +48,6 @@ const Infraestrutura = memo(({ escola }) => {
 
   if (escola.espaco_escolar && !isEmptyValue(escola.espaco_escolar)) {
     allItems.push({
-      icon: Home,
       label: 'Espaço Escolar e Estrutura',
       value: escola.espaco_escolar,
     });
