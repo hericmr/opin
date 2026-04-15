@@ -54,7 +54,7 @@ const PageHeader = ({
   const isSearchPage = React.useMemo(() => location.pathname === '/search', [location.pathname]);
   const isAdminPage = React.useMemo(() => location.pathname === '/admin', [location.pathname]);
   const isPainelPage = React.useMemo(() =>
-    location.pathname === '/dashboard' ||
+    location.pathname === '/algunsdados' ||
     location.pathname === '/painel-dados' ||
     location.pathname === '/dados-escolas-indigenas',
     [location.pathname]

@@ -273,7 +273,7 @@ export default function Homepage({ dataPoints = [] }) {
                 <Link to="/mapa" className="block rounded-full bg-green-500 text-green-950 font-semibold px-4 py-2.5 text-center hover:bg-green-400 transition">
                   Explorar Mapa
                 </Link>
-                <Link to="/dashboard" className="block rounded-full bg-green-600 text-white font-semibold px-4 py-2.5 text-center hover:bg-green-500 transition">
+                <Link to="/algunsdados" className="block rounded-full bg-green-600 text-white font-semibold px-4 py-2.5 text-center hover:bg-green-500 transition">
                   Alguns dados
                 </Link>
                 <Link to="/conteudo" className="block rounded-full bg-green-700 text-white font-semibold px-4 py-2.5 text-center hover:bg-green-600 transition">

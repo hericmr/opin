@@ -279,7 +279,7 @@ export default function Homepage({ dataPoints = [] }) {
                   Explorar Mapa
                 </Link>
                 <Link 
-                  to="/dashboard" 
+                  to="/algunsdados" 
                   className="inline-flex items-center gap-2 rounded-full bg-[#9ce66b] text-green-950 font-semibold px-5 py-3 text-center hover:bg-[#85d15a] transition-all hover:scale-105 shadow-xl shadow-green-500/10 whitespace-nowrap"
                 >
                   <Users className="w-5 h-5" />
