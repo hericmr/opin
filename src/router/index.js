@@ -86,7 +86,7 @@ export const createRoutes = (dataPoints, loading, onPainelOpen) => {
       element: createRouteElement(AdminPanel)
     },
     {
-      path: "/dashboard",
+      path: "/algunsdados",
       element: createRouteElement(Dashboard, { style: dashboardStyle })
     },
     {
