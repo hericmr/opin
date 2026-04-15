@@ -59,7 +59,7 @@ const Infraestrutura = memo(({ escola }) => {
       label: 'Salas Vinculadas',
       value: escola.salas_vinculadas,
     },
-    {
+    !isEmptyValue(escola.acesso_internet) && {
       icon: Wifi,
       label: 'Acesso à Internet',
       value: <BooleanValue value={escola.acesso_internet} />,
@@ -69,7 +69,7 @@ const Infraestrutura = memo(({ escola }) => {
       label: 'Equipamentos Tecnológicos',
       value: escola.equipamentos,
     },
-  ].filter(item => !isEmptyValue(item.value));
+  ].filter(Boolean).filter(item => !isEmptyValue(item.value));
 
   // Combinar todos os itens
   const allItemsCombined = [...allItems, ...items];
