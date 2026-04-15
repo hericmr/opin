@@ -1,3 +1,4 @@
+import logger from "../utils/logger";
 import { useEffect, useRef } from 'react';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
@@ -78,7 +79,7 @@ const GeoJSONLayer = ({
         }
       };
     } catch (error) {
-      console.error('Erro ao processar camada GeoJSON:', error);
+      logger.error('Erro ao processar camada GeoJSON:', error);
     }
 
     // Cleanup da camada

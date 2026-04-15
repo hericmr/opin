@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 import { supabase } from '../../../../dbClient';
 
 /**
@@ -26,7 +27,7 @@ export const getImageUrl = (image, bucketName = 'imagens-das-escolas') => {
     return publicUrl;
   }
   
-  console.warn('Image missing URL:', image);
+  logger.warn('Image missing URL:', image);
   return '';
 };
 

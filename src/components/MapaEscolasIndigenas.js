@@ -81,7 +81,7 @@ const MapaEscolasIndigenas = ({ dataPoints, onPainelOpen, isLoading = false }) =
       try {
         localStorage.setItem('opin:painelIsMaximized', 'true');
       } catch (e) {
-        console.warn('Erro ao salvar estado de maximização:', e);
+        logger.warn('Erro ao salvar estado de maximização:', e);
       }
     }
     // Se não há panel na URL, resetar o estado

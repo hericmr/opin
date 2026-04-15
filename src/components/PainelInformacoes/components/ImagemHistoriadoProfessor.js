@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { supabase } from '../../../dbClient';
 import { getLocalImageUrl, isLocalImage, getSupabaseStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
+import logger from '../../../utils/logger';
 import ReusableImageZoom from '../../ReusableImageZoom';
 import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
@@ -36,7 +37,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
   // Forçar recarga quando refreshKey mudar
   useEffect(() => {
     if (refreshKey > 0) {
-      console.log('ImagemHistoriadoProfessor: refreshKey mudou, forçando recarga');
+      logger.debug('ImagemHistoriadoProfessor: refreshKey mudou, forçando recarga');
       setImagens([]);
       setLoading(true);
       setError(null);
@@ -64,7 +65,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
         }
 
         if (data && data.length > 0) {
-          console.log('Arquivos de professores encontrados:', data.length);
+          logger.debug('Arquivos de professores encontrados:', data.length);
           const imagensComUrl = await Promise.all(data.map(async (img, idx) => {
             let publicUrl = img.imagem_url;
 
@@ -95,7 +96,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
                 // ou ser construída.
               }
             } catch (error) {
-              console.warn('Erro ao buscar legenda:', error);
+              logger.warn('Erro ao buscar legenda:', error);
             }
 
             // Construir legenda/descrição
@@ -141,7 +142,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
             return false;
           });
 
-          console.log('Arquivos de professores VALIDADOS:', imagensValidas.length);
+          logger.debug('Arquivos de professores VALIDADOS:', imagensValidas.length);
           setImagens(imagensValidas);
         } else {
           setImagens([]);

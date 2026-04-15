@@ -14,7 +14,6 @@ export const RefreshProvider = ({ children }) => {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const triggerRefresh = () => {
-    console.log('RefreshContext: Disparando refresh');
     setRefreshKey(prev => prev + 1);
   };
 

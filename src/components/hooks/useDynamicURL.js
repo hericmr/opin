@@ -1,3 +1,4 @@
+import logger from "../../utils/logger";
 import { useEffect, useRef } from "react";
 
 export const useDynamicURL = (painelInfo, gerarLinkCustomizado) => {
@@ -22,7 +23,7 @@ export const useDynamicURL = (painelInfo, gerarLinkCustomizado) => {
           window.history.replaceState({}, "", newUrl);
           lastUrlRef.current = newUrl;
         } catch (error) {
-          console.warn('Erro ao atualizar URL:', error);
+          logger.warn('Erro ao atualizar URL:', error);
         }
       }
     }, 300); // 300ms de debounce

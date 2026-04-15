@@ -186,7 +186,7 @@ const MapSelector = ({
       try {
         await performSearch(localSearchTerm);
       } catch (error) {
-        console.error('Erro na busca:', error);
+        logger.error('Erro na busca:', error);
       }
     };
 

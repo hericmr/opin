@@ -40,7 +40,7 @@ const HomepageSearch = ({ dataPoints }) => {
         await performSearch(localSearchTerm);
         setShowResults(true);
       } catch (error) {
-        console.error('Erro na busca:', error);
+        logger.error('Erro na busca:', error);
       }
     };
 

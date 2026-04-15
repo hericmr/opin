@@ -1,4 +1,5 @@
 import { isMobile, hasTouchCapabilities } from '../mobileUtils';
+import logger from '../logger';
 
 /**
  * Classe para gerenciar interações e eventos do OpenLayers
@@ -22,7 +23,7 @@ export class OpenLayersInteractions {
     this.clickTimeout = null;
     this.hoverTimeout = null;
     this.tooltipElement = null;
-    console.log('[OpenLayersInteractions] Interações inicializadas');
+    logger.debug('[OpenLayersInteractions] Interações inicializadas');
 
     this.initializeInteractions();
   }
@@ -34,7 +35,7 @@ export class OpenLayersInteractions {
     const mobile = isMobile();
     const hasTouch = hasTouchCapabilities();
     
-    console.log('[OpenLayersInteractions] Detecção de mobile:', {
+    logger.debug('[OpenLayersInteractions] Detecção de mobile:', {
       mobile,
       hasTouch,
       windowWidth: window.innerWidth,
@@ -102,7 +103,7 @@ export class OpenLayersInteractions {
   setupTouchInteraction() {
     // Em mobile, usar o sistema de clique com tooltip
     // O handleClick já trata mobile vs desktop
-    console.log('[OpenLayersInteractions] Touch interaction configurada para mobile');
+    logger.debug('[OpenLayersInteractions] Touch interaction configurada para mobile');
   }
 
   /**
@@ -116,7 +117,7 @@ export class OpenLayersInteractions {
     
     // Debug: verificar se está detectando features
     if (feature && !this.hoveredFeature) {
-      console.log('[OpenLayersInteractions] Feature detectado:', {
+      logger.debug('[OpenLayersInteractions] Feature detectado:', {
         type: feature.get('type'),
         schoolData: feature.get('schoolData'),
         terraIndigenaInfo: feature.get('terraIndigenaInfo')
@@ -225,14 +226,14 @@ export class OpenLayersInteractions {
     // Verificar se é o mesmo feature clicado anteriormente
     if (this.clickedFeature === feature) {
       // Segundo clique: abrir painel
-      console.log('[OpenLayersInteractions] Segundo clique em mobile - abrindo painel');
+      logger.debug('[OpenLayersInteractions] Segundo clique em mobile - abrindo painel');
       this.forceHideTooltip(); // Esconder tooltip e resetar estado
       this.executeClickHandler(feature, event); // Abrir painel
       return;
     }
 
     // Primeiro clique: mostrar tooltip
-    console.log('[OpenLayersInteractions] Primeiro clique em mobile - mostrando tooltip');
+    logger.debug('[OpenLayersInteractions] Primeiro clique em mobile - mostrando tooltip');
     this.clickedFeature = feature;
     
     // Mostrar tooltip
@@ -246,7 +247,7 @@ export class OpenLayersInteractions {
     }
     
     this.clickTimeout = setTimeout(() => {
-      console.log('[OpenLayersInteractions] Timeout mobile - escondendo tooltip e resetando');
+      logger.debug('[OpenLayersInteractions] Timeout mobile - escondendo tooltip e resetando');
       this.forceHideTooltip();
     }, 3000); // 3 segundos de timeout
 
@@ -329,16 +330,16 @@ export class OpenLayersInteractions {
     }
 
     const tooltipContent = this.getTooltipContent(feature);
-    console.log('[OpenLayersInteractions] Conteúdo do tooltip:', tooltipContent);
+    logger.debug('[OpenLayersInteractions] Conteúdo do tooltip:', tooltipContent);
     
     if (!tooltipContent) {
-      console.log('[OpenLayersInteractions] Sem conteúdo para tooltip');
+      logger.debug('[OpenLayersInteractions] Sem conteúdo para tooltip');
       return;
     }
 
     this.tooltipElement = this.createTooltipElement(tooltipContent, event);
     this.map.getTargetElement().appendChild(this.tooltipElement);
-    console.log('[OpenLayersInteractions] Tooltip criado e adicionado ao DOM');
+    logger.debug('[OpenLayersInteractions] Tooltip criado e adicionado ao DOM');
   }
 
   /**
@@ -348,7 +349,7 @@ export class OpenLayersInteractions {
     if (this.tooltipElement) {
       this.tooltipElement.remove();
       this.tooltipElement = null;
-      console.log('[OpenLayersInteractions] Tooltip escondido');
+      logger.debug('[OpenLayersInteractions] Tooltip escondido');
     }
   }
 
@@ -362,7 +363,7 @@ export class OpenLayersInteractions {
       this.clickTimeout = null;
     }
     this.clickedFeature = null;
-    console.log('[OpenLayersInteractions] Tooltip forçadamente escondido e estado resetado');
+    logger.debug('[OpenLayersInteractions] Tooltip forçadamente escondido e estado resetado');
   }
 
   /**
@@ -432,7 +433,7 @@ export class OpenLayersInteractions {
         
         // Adicionar evento de clique para abrir o painel
         clickableSpan.addEventListener('click', () => {
-          console.log('[OpenLayersInteractions] Nome clicado no tooltip mobile');
+          logger.debug('[OpenLayersInteractions] Nome clicado no tooltip mobile');
           // Emitir evento para abrir o painel
           const feature = this.map.forEachFeatureAtPixel(event.pixel, (feature) => feature);
           if (feature) {
@@ -504,7 +505,7 @@ export class OpenLayersInteractions {
    * @returns {string} Conteúdo do tooltip
    */
   getTooltipContent(feature) {
-    console.log('[OpenLayersInteractions] Obtendo conteúdo do tooltip para feature:', {
+    logger.debug('[OpenLayersInteractions] Obtendo conteúdo do tooltip para feature:', {
       type: feature.get('type'),
       schoolData: feature.get('schoolData'),
       terraIndigenaInfo: feature.get('terraIndigenaInfo')
@@ -514,7 +515,7 @@ export class OpenLayersInteractions {
     // Esta função deve ser sobrescrita ou configurada
     if (this.options.tooltipContentFunction) {
       const content = this.options.tooltipContentFunction(feature);
-      console.log('[OpenLayersInteractions] Conteúdo do tooltip (função customizada):', content);
+      logger.debug('[OpenLayersInteractions] Conteúdo do tooltip (função customizada):', content);
       return content;
     }
 
@@ -523,19 +524,19 @@ export class OpenLayersInteractions {
     if (schoolData) {
       // FORÇAR apenas o título da escola, SEM município ou outras informações
       const titulo = schoolData.titulo || 'Escola Indígena';
-      console.log('[OpenLayersInteractions] Título extraído (padrão):', titulo);
-      console.log('[OpenLayersInteractions] Conteúdo do tooltip (padrão escola - FORÇADO apenas título):', titulo);
+      logger.debug('[OpenLayersInteractions] Título extraído (padrão):', titulo);
+      logger.debug('[OpenLayersInteractions] Conteúdo do tooltip (padrão escola - FORÇADO apenas título):', titulo);
       return titulo; // Retorna APENAS o título
     }
 
     const terraIndigenaInfo = feature.get('terraIndigenaInfo');
     if (terraIndigenaInfo) {
       const content = `Terra Indígena ${terraIndigenaInfo.titulo || 'Indígena'}`;
-      console.log('[OpenLayersInteractions] Conteúdo do tooltip (padrão terra indígena):', content);
+      logger.debug('[OpenLayersInteractions] Conteúdo do tooltip (padrão terra indígena):', content);
       return content;
     }
 
-    console.log('[OpenLayersInteractions] Nenhum conteúdo encontrado para tooltip');
+    logger.debug('[OpenLayersInteractions] Nenhum conteúdo encontrado para tooltip');
     return null;
   }
 
@@ -682,28 +683,28 @@ export function createDefaultInteractions(map, options = {}) {
  * @returns {OpenLayersInteractions} Instância de interações configurada
  */
 export function createMarkerInteractions(map, onMarkerClick, onMarkerHover) {
-  console.log('[createMarkerInteractions] Criando interações para marcadores...');
+  logger.debug('[createMarkerInteractions] Criando interações para marcadores...');
   
   const interactions = createDefaultInteractions(map, {
     showTooltip: true,
     tooltipContentFunction: (feature) => {
-      console.log('[createMarkerInteractions] Função de conteúdo do tooltip chamada para:', feature);
+      logger.debug('[createMarkerInteractions] Função de conteúdo do tooltip chamada para:', feature);
       const schoolData = feature.get('schoolData');
       if (schoolData) {
         // FORÇAR apenas o título da escola, SEM município
         const titulo = schoolData.titulo || 'Escola Indígena';
-        console.log('[createMarkerInteractions] Título extraído:', titulo);
-        console.log('[createMarkerInteractions] Conteúdo do tooltip gerado (FORÇADO apenas título):', titulo);
+        logger.debug('[createMarkerInteractions] Título extraído:', titulo);
+        logger.debug('[createMarkerInteractions] Conteúdo do tooltip gerado (FORÇADO apenas título):', titulo);
         return titulo; // Retorna APENAS o título
       }
-      console.log('[createMarkerInteractions] Sem dados de escola para tooltip');
+      logger.debug('[createMarkerInteractions] Sem dados de escola para tooltip');
       return null;
     }
   });
 
   // Configurar handler de clique se fornecido
   if (onMarkerClick) {
-    console.log('[createMarkerInteractions] Configurando handler de clique personalizado');
+    logger.debug('[createMarkerInteractions] Configurando handler de clique personalizado');
     interactions.on('click', onMarkerClick);
   }
 
@@ -711,7 +712,7 @@ export function createMarkerInteractions(map, onMarkerClick, onMarkerHover) {
     interactions.on('hover', onMarkerHover);
   }
 
-  console.log('[createMarkerInteractions] Interações criadas com sucesso');
+  logger.debug('[createMarkerInteractions] Interações criadas com sucesso');
   return interactions;
 }
 

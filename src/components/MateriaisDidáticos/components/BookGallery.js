@@ -1,3 +1,4 @@
+import logger from "../../../utils/logger";
 import React, { useState, useEffect } from 'react';
 import BookCard from './BookCard';
 import { motion } from 'framer-motion';
@@ -19,7 +20,7 @@ const BookGallery = () => {
         const data = await response.json();
         setBooks(data.books || []);
       } catch (err) {
-        console.error('Erro ao carregar catálogo:', err);
+        logger.error('Erro ao carregar catálogo:', err);
         setError(err.message);
       } finally {
         setLoading(false);

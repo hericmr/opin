@@ -115,10 +115,6 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
     closePainel();
   });
 
-  // Forçar re-renderização quando refreshKey mudar
-  useEffect(() => {
-    console.log('PainelInformacoes: refreshKey mudou para', refreshKey);
-  }, [refreshKey]);
 
   // Load videos presence independently of other sections
   useEffect(() => {

@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 import { uploadProfessorImage, replaceImage as replaceImageService } from '../../../../services/escolaImageService';
 import { addProfessorImageMeta, getProfessorImageMetaByUrl, updateProfessorImageMeta } from '../../../../services/professorImageMetaService';
 
@@ -78,7 +79,7 @@ export const replaceProfessorImage = async (newFile, oldFilePath, escolaId, desc
       });
     }
   } catch (error) {
-    console.warn('Erro ao atualizar metadados do professor na substituição:', error);
+    logger.warn('Erro ao atualizar metadados do professor na substituição:', error);
     // Don't fail the whole operation, as the file was replaced
   }
 

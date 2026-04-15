@@ -7,6 +7,7 @@ import useImagePreloader from '../../../hooks/useImagePreloader';
 import { formatDateForDisplay } from '../../../utils/dateUtils';
 
 import { getLocalImageUrl, getSupabaseStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
+import logger from '../../../utils/logger';
 
 // Helper function to check if a value has actual content
 const hasContent = (value) => {
@@ -114,7 +115,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
             tipo_foto: 'professor'
           });
         } catch (err) {
-          console.warn('Erro ao buscar legenda para professor:', err);
+          logger.warn('Erro ao buscar legenda para professor:', err);
         }
 
         return {
@@ -175,7 +176,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
               ));
             }
           } catch (e) {
-            console.warn('Erro ao buscar legenda para header (async):', e);
+            logger.warn('Erro ao buscar legenda para header (async):', e);
           }
         })();
       }
@@ -217,7 +218,7 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
           try {
             headerLegend = await getLegendaByImageUrlFlexivel(headerUrl, escolaId);
           } catch (err) {
-            console.warn('Erro ao buscar legenda para header:', err);
+            logger.warn('Erro ao buscar legenda para header:', err);
           }
 
           const headerItem = {

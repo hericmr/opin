@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 import { useState, useCallback } from 'react';
 import { replaceProfessorImage } from '../services/professorImageUploadService';
 
@@ -47,7 +48,7 @@ export const useProfessorImageReplace = (escolaId) => {
 
       return newImage;
     } catch (err) {
-      console.error('Erro ao substituir imagem:', err);
+      logger.error('Erro ao substituir imagem:', err);
       setUploading(false);
       throw err;
     }

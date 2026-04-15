@@ -1,3 +1,4 @@
+import logger from "../utils/logger";
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { MapPin, BookOpen, Users, FileText, ArrowLeft, Search } from 'lucide-react';
@@ -21,7 +22,7 @@ const SearchResults = ({ dataPoints }) => {
           const searchResults = await performSearch(searchTerm);
           setResults(searchResults);
         } catch (error) {
-          console.error('Erro na busca:', error);
+          logger.error('Erro na busca:', error);
           setResults([]);
         } finally {
           setIsLoading(false);

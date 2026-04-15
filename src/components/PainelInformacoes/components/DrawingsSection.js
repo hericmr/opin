@@ -1,3 +1,4 @@
+import logger from "../../../utils/logger";
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { DrawingsImageService } from '../../../services/drawingsImageService';
@@ -68,7 +69,7 @@ const DrawingsSection = ({ escolaId, refreshKey = 0 }) => {
                 filePath = pathParts.slice(bucketIndex + 1).join('/');
               }
             } catch (e) {
-              console.warn('Não foi possível extrair caminho da URL:', imageUrl);
+              logger.warn('Não foi possível extrair caminho da URL:', imageUrl);
             }
 
             // Buscar legenda
@@ -79,7 +80,7 @@ const DrawingsSection = ({ escolaId, refreshKey = 0 }) => {
                 tipo_foto: 'escola'
               });
             } catch (error) {
-              console.warn('Erro ao buscar legenda para:', filePath, error);
+              logger.warn('Erro ao buscar legenda para:', filePath, error);
             }
 
             return {
@@ -93,7 +94,7 @@ const DrawingsSection = ({ escolaId, refreshKey = 0 }) => {
 
         setDrawingsData(drawingsWithLegends);
       } catch (error) {
-        console.error('Erro ao buscar imagens de desenhos:', error);
+        logger.error('Erro ao buscar imagens de desenhos:', error);
         setDrawingsData([]);
       } finally {
         setLoading(false);

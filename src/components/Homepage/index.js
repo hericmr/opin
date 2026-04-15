@@ -1,3 +1,4 @@
+import logger from "../../utils/logger";
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
@@ -40,7 +41,7 @@ const HomepageSearch = ({ dataPoints }) => {
         await performSearch(localSearchTerm);
         setShowResults(true);
       } catch (error) {
-        console.error('Erro na busca:', error);
+        logger.error('Erro na busca:', error);
       }
     };
 

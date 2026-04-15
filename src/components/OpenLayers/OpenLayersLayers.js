@@ -1,3 +1,4 @@
+import logger from "../../utils/logger";
 import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import OpenLayersTerrasIndigenas from './OpenLayersTerrasIndigenas';
 import OpenLayersEstadoSP from './OpenLayersEstadoSP';
@@ -65,7 +66,7 @@ const OpenLayersLayers = ({
    * Handler para erros nas camadas
    */
   const handleLayerError = useCallback((layerName, error) => {
-    console.error(`[OpenLayersLayers] Erro na camada ${layerName}:`, error);
+    logger.error(`[OpenLayersLayers] Erro na camada ${layerName}:`, error);
     updateLayerStatus(layerName, { error: error.message });
   }, [updateLayerStatus]);
 
@@ -120,7 +121,7 @@ const OpenLayersLayers = ({
     const stats = getLayersStats();
     const info = getLayersInfo();
     
-    console.log('[OpenLayersLayers] Status das camadas:', {
+    logger.debug('[OpenLayersLayers] Status das camadas:', {
       stats,
       info,
       hasValidData

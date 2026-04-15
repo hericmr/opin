@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { RefreshCw } from 'lucide-react';
 import { getLocalImageUrl, isLocalImage, getSupabaseStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
+import logger from '../../../utils/logger';
 import { supabase } from '../../../dbClient';
 import ReusableImageZoom from '../../ReusableImageZoom';
 import OptimizedImage from '../../shared/OptimizedImage';
@@ -31,7 +32,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
 
   // Função para limpar cache e recarregar
   const limparCacheERecarregar = useCallback(() => {
-    console.log('Limpando cache e recarregando imagens...');
+    logger.debug('Limpando cache e recarregando imagens...');
     cacheRef.current = {};
     setCacheVersion(prev => prev + 1);
   }, []);
@@ -39,7 +40,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
   // Forçar recarga quando refreshKey mudar
   useEffect(() => {
     if (refreshKey > 0) {
-      console.log('ImagensdasEscolas: refreshKey mudou, forçando recarga');
+      logger.debug('ImagensdasEscolas: refreshKey mudou, forçando recarga');
       limparCacheERecarregar();
     }
   }, [refreshKey, limparCacheERecarregar]);
@@ -80,7 +81,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
     const cacheKey = `${escola_id}_v${cacheVersion}_rk${refreshKey}`;
 
     const buscarImagens = async () => {
-      console.log('Buscando imagens para escola', escola_id, 'refreshKey:', refreshKey);
+      logger.debug('Buscando imagens para escola', escola_id, 'refreshKey:', refreshKey);
 
       try {
         // Buscar imagens da tabela legendas_fotos (que contém os caminhos das imagens)
@@ -98,13 +99,13 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
         }
 
         if (!legendas || legendas.length === 0) {
-          console.log('Nenhuma imagem encontrada em legendas_fotos para escola', escola_id);
+          logger.debug('Nenhuma imagem encontrada em legendas_fotos para escola', escola_id);
           setImagens([]);
           setLoading(false);
           return;
         }
 
-        console.log('Imagens encontradas em legendas_fotos:', legendas.length);
+        logger.debug('Imagens encontradas em legendas_fotos:', legendas.length);
 
         // Processar cada imagem encontrada
         const imagensEncontradas = legendas.map((legenda, index) => {
@@ -165,7 +166,7 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
           return false;
         });
 
-        console.log('Imagens processadas, ordenadas e VALIDADAS:', imagensValidas.length);
+        logger.debug('Imagens processadas, ordenadas e VALIDADAS:', imagensValidas.length);
 
         // Salvar no cache com versão
         cacheRef.current[cacheKey] = imagensValidas;
@@ -174,12 +175,12 @@ const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hid
         if (imagensValidas.length === 0) {
           // Se encontrou no banco mas nenhuma válida localmente
           if (imagensEncontradas.length > 0) {
-            console.log('Imagens existem no banco mas não localmente (provavelmente deletadas).');
+            logger.debug('Imagens existem no banco mas não localmente (provavelmente deletadas).');
           }
           // Removemos a mensagem de erro conforme solicitado pelo usuário
         }
       } catch (error) {
-        console.error('Erro ao processar imagens:', error);
+        logger.error('Erro ao processar imagens:', error);
         setError(`Erro ao carregar imagens da escola: ${error.message || JSON.stringify(error)}`);
       } finally {
         setLoading(false);

@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../../../../dbClient';
 import { deleteImage } from '../../../../services/escolaImageService';
@@ -32,7 +33,7 @@ export const useImageManagement = (escolaId, bucketName = 'imagens-das-escolas',
 
     // Proteção contra múltiplas execuções simultâneas
     if (isFetchingRef.current) {
-      console.log('[useImageManagement] Fetch já em progresso, ignorando...');
+      logger.debug('[useImageManagement] Fetch já em progresso, ignorando...');
       return;
     }
 
@@ -65,7 +66,7 @@ export const useImageManagement = (escolaId, bucketName = 'imagens-das-escolas',
         dbImages = await getLegendasByEscolaOrdered(escolaId, tipoFoto);
       }
 
-      console.log('[useImageManagement] DB Images:', dbImages.length);
+      logger.debug('[useImageManagement] DB Images:', dbImages.length);
 
       // Mapear para estrutura esperada pelo componente
       const mappedImages = dbImages.map(img => {
@@ -100,7 +101,7 @@ export const useImageManagement = (escolaId, bucketName = 'imagens-das-escolas',
           // Se os IDs são os mesmos, preservar o estado anterior (evita re-render desnecessário)
           if (prevIds.size === newIds.size &&
             [...prevIds].every(id => newIds.has(id))) {
-            console.log('[useImageManagement] Imagens já carregadas, preservando estado anterior');
+            logger.debug('[useImageManagement] Imagens já carregadas, preservando estado anterior');
             return prevImages;
           }
         }
@@ -109,7 +110,7 @@ export const useImageManagement = (escolaId, bucketName = 'imagens-das-escolas',
         return mappedImages;
       });
     } catch (err) {
-      console.error('Erro ao buscar imagens:', err);
+      logger.error('Erro ao buscar imagens:', err);
       setError('Erro ao carregar imagens existentes');
     } finally {
       isFetchingRef.current = false;
@@ -148,7 +149,7 @@ export const useImageManagement = (escolaId, bucketName = 'imagens-das-escolas',
       // Refresh images list
       await fetchImages(false);
     } catch (err) {
-      console.error('Erro ao deletar imagem:', err);
+      logger.error('Erro ao deletar imagem:', err);
       throw err;
     }
   }, [bucketName, tipoFoto, fetchImages]);
@@ -166,7 +167,7 @@ export const useImageManagement = (escolaId, bucketName = 'imagens-das-escolas',
       // Then update state
       setImages(updatedImages);
     } catch (err) {
-      console.error('Erro ao atualizar imagens:', err);
+      logger.error('Erro ao atualizar imagens:', err);
       throw err;
     }
   }, [saveOrder]);

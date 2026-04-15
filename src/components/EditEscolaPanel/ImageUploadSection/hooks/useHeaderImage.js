@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 import { useState, useEffect, useCallback } from 'react';
 import { HeaderImageService } from '../../../../services/headerImageService';
 
@@ -17,7 +18,7 @@ export const useHeaderImage = (escolaId) => {
       const imagemUrl = await HeaderImageService.getImagemHeader(escolaId);
       setHeaderImageUrl(imagemUrl);
     } catch (err) {
-      console.error('Erro ao buscar imagem do header:', err);
+      logger.error('Erro ao buscar imagem do header:', err);
     }
   }, [escolaId]);
 
@@ -33,7 +34,7 @@ export const useHeaderImage = (escolaId) => {
       await HeaderImageService.setImagemHeader(escolaId, imageUrl);
       setHeaderImageUrl(imageUrl);
     } catch (err) {
-      console.error('Erro ao definir imagem do header:', err);
+      logger.error('Erro ao definir imagem do header:', err);
       throw err;
     } finally {
       setLoading(false);
@@ -48,7 +49,7 @@ export const useHeaderImage = (escolaId) => {
       await HeaderImageService.removeImagemHeader(escolaId);
       setHeaderImageUrl(null);
     } catch (err) {
-      console.error('Erro ao remover imagem do header:', err);
+      logger.error('Erro ao remover imagem do header:', err);
       throw err;
     } finally {
       setLoading(false);

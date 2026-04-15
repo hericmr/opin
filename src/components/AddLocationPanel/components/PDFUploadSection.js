@@ -1,3 +1,4 @@
+import logger from "../../../utils/logger";
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Upload, File, X, AlertCircle, Link as LinkIcon } from 'lucide-react';
@@ -50,7 +51,7 @@ const PDFUploadSection = ({ onUploadComplete, onRemove, existingUrls = [] }) => 
       setSelectedFiles([]);
     } catch (err) {
       setError('Erro ao fazer upload dos arquivos. Tente novamente.');
-      console.error('Erro no upload:', err);
+      logger.error('Erro no upload:', err);
     } finally {
       setIsUploading(false);
     }

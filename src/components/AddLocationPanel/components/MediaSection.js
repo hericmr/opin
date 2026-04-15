@@ -1,3 +1,4 @@
+import logger from "../../../utils/logger";
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { uploadImage, uploadAudio } from '../../../services/uploadService';
@@ -25,7 +26,7 @@ const MediaSection = ({ type, preview, onUpload, onRemove, onUploadComplete }) =
       onUpload(event);
     } catch (err) {
       setError('Erro ao fazer upload do arquivo. Tente novamente.');
-      console.error('Erro no upload:', err);
+      logger.error('Erro no upload:', err);
     } finally {
       setIsUploading(false);
     }

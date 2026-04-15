@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { GripVertical, Check } from 'lucide-react';
@@ -74,7 +75,7 @@ const ImageCard = ({
 
   // Debug log to verify URL is available
   if (!imageUrl && image.id) {
-    console.warn('[ImageCard] Missing URL for image:', {
+    logger.warn('[ImageCard] Missing URL for image:', {
       id: image.id,
       url: image.url,
       publicURL: image.publicURL,
@@ -135,7 +136,7 @@ const ImageCard = ({
               pointerEvents: 'auto'
             }}
             onError={(e) => {
-              console.error('[ImageCard] Error loading image:', {
+              logger.error('[ImageCard] Error loading image:', {
                 src: imageUrl,
                 imageId: image.id,
                 publicURL: image.publicURL,
@@ -145,7 +146,7 @@ const ImageCard = ({
               e.target.style.opacity = '0.5';
             }}
             onLoad={(e) => {
-              console.log('[ImageCard] Image loaded successfully:', {
+              logger.debug('[ImageCard] Image loaded successfully:', {
                 imageUrl,
                 naturalWidth: e.target.naturalWidth,
                 naturalHeight: e.target.naturalHeight

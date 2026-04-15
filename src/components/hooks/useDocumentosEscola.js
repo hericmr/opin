@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../dbClient';
+import logger from '../../utils/logger';
 
 const useDocumentosEscola = (escolaId) => {
   const [documentos, setDocumentos] = useState([]);
@@ -8,10 +9,10 @@ const useDocumentosEscola = (escolaId) => {
 
   useEffect(() => {
     const fetchDocumentos = async () => {
-      console.log('🔄 Iniciando busca de documentos para escola:', escolaId, 'tipo:', typeof escolaId);
+      logger.debug('🔄 Iniciando busca de documentos para escola:', escolaId, 'tipo:', typeof escolaId);
       
       if (!escolaId) {
-        console.log('⚠️ Nenhum ID de escola fornecido, retornando array vazio');
+        logger.debug('⚠️ Nenhum ID de escola fornecido, retornando array vazio');
         setDocumentos([]);
         setIsLoading(false);
         return;
@@ -19,11 +20,11 @@ const useDocumentosEscola = (escolaId) => {
 
       try {
         setIsLoading(true);
-        console.log('📡 Consultando tabela documentos_escola...');
+        logger.debug('📡 Consultando tabela documentos_escola...');
         
         // Verificar conexão com Supabase
         const { data: authData, error: authError } = await supabase.auth.getSession();
-        console.log('🔐 Estado da autenticação:', {
+        logger.debug('🔐 Estado da autenticação:', {
           temSessao: !!authData?.session,
           error: authError
         });
@@ -34,7 +35,7 @@ const useDocumentosEscola = (escolaId) => {
           .select('count')
           .limit(1);
 
-        console.log('🔑 Verificação de permissões:', {
+        logger.debug('🔑 Verificação de permissões:', {
           podeAcessar: !rlsError,
           error: rlsError ? {
             code: rlsError.code,
@@ -50,29 +51,29 @@ const useDocumentosEscola = (escolaId) => {
           .select('*');
 
         if (allDocsError) {
-          console.error('❌ Erro ao buscar todos os documentos:', {
+          logger.error('❌ Erro ao buscar todos os documentos:', {
             code: allDocsError.code,
             message: allDocsError.message,
             details: allDocsError.details,
             hint: allDocsError.hint
           });
         } else {
-          console.log('📊 Todos os documentos na tabela:', allDocs);
+          logger.debug('📊 Todos os documentos na tabela:', allDocs);
           if (allDocs && allDocs.length > 0) {
-            console.log('📊 Exemplo de documento:', allDocs[0]);
-            console.log('📊 Tipos de escola_id encontrados:', allDocs.map(doc => ({
+            logger.debug('📊 Exemplo de documento:', allDocs[0]);
+            logger.debug('📊 Tipos de escola_id encontrados:', allDocs.map(doc => ({
               id: doc.id,
               escola_id: doc.escola_id,
               tipo_escola_id: typeof doc.escola_id,
               valor_escola_id: doc.escola_id
             })));
           } else {
-            console.log('⚠️ Tabela está vazia ou não temos permissão para ver os dados');
+            logger.debug('⚠️ Tabela está vazia ou não temos permissão para ver os dados');
           }
         }
         
         // Agora vamos buscar os documentos específicos
-        console.log('🔍 Buscando documentos para escola_id:', escolaId);
+        logger.debug('🔍 Buscando documentos para escola_id:', escolaId);
         const { data, error } = await supabase
           .from('documentos_escola')
           .select('*')
@@ -80,7 +81,7 @@ const useDocumentosEscola = (escolaId) => {
           .order('created_at', { ascending: false });
 
         if (error) {
-          console.error('❌ Erro na consulta Supabase:', {
+          logger.error('❌ Erro na consulta Supabase:', {
             code: error.code,
             message: error.message,
             details: error.details,
@@ -89,10 +90,10 @@ const useDocumentosEscola = (escolaId) => {
           throw error;
         }
 
-        console.log('✅ Documentos encontrados:', data?.length || 0);
+        logger.debug('✅ Documentos encontrados:', data?.length || 0);
         if (data?.length === 0) {
-          console.log('ℹ️ Nenhum documento encontrado para a escola ID:', escolaId);
-          console.log('ℹ️ Tentando buscar com diferentes formatos de escola_id...');
+          logger.debug('ℹ️ Nenhum documento encontrado para a escola ID:', escolaId);
+          logger.debug('ℹ️ Tentando buscar com diferentes formatos de escola_id...');
           
           // Tentando diferentes formatos do ID
           const { data: dataAsNumber, error: errorAsNumber } = await supabase
@@ -105,21 +106,21 @@ const useDocumentosEscola = (escolaId) => {
             .select('*')
             .eq('escola_id', String(escolaId));
             
-          console.log('Resultados com escola_id como número:', {
+          logger.debug('Resultados com escola_id como número:', {
             count: dataAsNumber?.length || 0,
             error: errorAsNumber
           });
-          console.log('Resultados com escola_id como string:', {
+          logger.debug('Resultados com escola_id como string:', {
             count: dataAsString?.length || 0,
             error: errorAsString
           });
         } else {
-          console.log('📄 Dados dos documentos:', data);
+          logger.debug('📄 Dados dos documentos:', data);
         }
         
         setDocumentos(data || []);
       } catch (err) {
-        console.error('❌ Erro ao buscar documentos:', err);
+        logger.error('❌ Erro ao buscar documentos:', err);
         setError(err.message);
       } finally {
         setIsLoading(false);
