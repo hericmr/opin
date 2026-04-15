@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../dbClient';
 import { mapEscolaData } from '../utils/escolaMapper';
 import { useRefresh } from '../contexts/RefreshContext';
@@ -26,6 +26,7 @@ export function useEscolasData() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { refreshKey } = useRefresh();
+  const isInitialLoad = useRef(true);
 
   const fetchDataPoints = useCallback(async () => {
     try {
@@ -87,7 +88,9 @@ export function useEscolasData() {
 
   useEffect(() => {
     async function initialize() {
-      setLoading(true);
+      if (isInitialLoad.current) {
+        setLoading(true);
+      }
       setError(null);
       try {
         let data = await fetchDataPoints();
@@ -97,6 +100,7 @@ export function useEscolasData() {
         setError(err.message || 'Erro ao carregar dados');
       } finally {
         setLoading(false);
+        isInitialLoad.current = false;
       }
     }
     initialize();
