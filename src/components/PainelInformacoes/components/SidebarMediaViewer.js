@@ -1,331 +1,31 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { supabase } from '../../../dbClient';
-import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
 import OptimizedImage from '../../shared/OptimizedImage';
-import useImagePreloader from '../../../hooks/useImagePreloader';
 import { formatDateForDisplay } from '../../../utils/dateUtils';
-
-import { getLocalImageUrl, getSupabaseStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
-import logger from '../../../utils/logger';
 import { hasContent } from '../../../utils/contentValidation';
-import { useRefresh } from '../../../contexts/RefreshContext';
+import useSidebarImages from '../../../hooks/useSidebarImages';
 
 const SidebarMediaViewer = ({ escolaId, showTeacher = true, showSchool = true, scrollProgress, headerUrl, onCurrentItemChange }) => {
-  const { refreshKey } = useRefresh();
-  // Initialize with header image if available to show it immediately
-  const initialHeaderItem = headerUrl ? [{
-    id: `header-${escolaId || 'temp'}`,
-    url: getLocalImageUrl(headerUrl),
-    titulo: null,
-    descricao: null,
-    autor: null,
-    dataFoto: null,
-    origem: 'capa',
-  }] : [];
+  const {
+    loading,
+    error,
+    hasItems,
+    currentItem,
+    isTallImage,
+    handleImageLoad,
+    isImagePreloaded,
+    prev,
+    next,
+    items,
+  } = useSidebarImages({ escolaId, showTeacher, showSchool, scrollProgress, headerUrl, onCurrentItemChange });
 
-  const [items, setItems] = useState(initialHeaderItem);
-  const [current, setCurrent] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const { isImagePreloaded } = useImagePreloader(escolaId, true);
-  const [manualOverrideUntil, setManualOverrideUntil] = useState(0);
-  // Track image aspect ratios to determine if image is tall/narrow
-  const [imageAspectRatios, setImageAspectRatios] = useState(new Map());
-
-  const fetchBucketList = useCallback(async (bucket, categoria) => {
-    let mapped = [];
-
-    if (categoria === 'escola') {
-      // Buscar da tabela legendas_fotos
-      const { data: legendas, error } = await supabase
-        .from('legendas_fotos')
-        .select('*')
-        .eq('escola_id', escolaId)
-        .eq('tipo_foto', 'escola')
-        .eq('ativo', true)
-        .order('ordem', { ascending: true, nullsFirst: false })
-        .order('created_at', { ascending: true });
-
-      if (error) throw error;
-      if (!legendas) return [];
-
-      mapped = legendas
-        .filter(legenda => hasContent(legenda.imagem_url))
-        .map((legenda, index) => {
-        let publicUrl = null;
-        if (legenda.imagem_url) {
-          if (legenda.imagem_url.trim().startsWith('http')) {
-            publicUrl = getSecureImageUrl(legenda.imagem_url.trim());
-          } else {
-            // Construir URL do Supabase via variável de ambiente para resolver via mapa local
-            const storageUrl = getSupabaseStorageUrl('imagens-das-escolas', legenda.imagem_url.trim());
-            publicUrl = getSecureImageUrl(storageUrl);
-          }
-        }
-
-        return {
-          id: legenda.id || `escola-${index}`,
-          url: publicUrl,
-          filePath: legenda.imagem_url,
-          titulo: hasContent(legenda.legenda) ? legenda.legenda.trim() : null,
-          descricao: hasContent(legenda.descricao_detalhada) ? legenda.descricao_detalhada.trim() : null,
-          autor: hasContent(legenda.autor_foto) ? legenda.autor_foto.trim() : null,
-          dataFoto: legenda.data_foto,
-          origem: 'escola',
-          ordem: legenda.ordem !== null && legenda.ordem !== undefined ? legenda.ordem : index,
-        };
-      });
-
-    } else if (categoria === 'professor') {
-      // Buscar da tabela imagens_professores
-      const { data: imgsProf, error } = await supabase
-        .from('imagens_professores')
-        .select('*')
-        .eq('escola_id', escolaId)
-        .eq('ativo', true)
-        .order('created_at', { ascending: true });
-
-      if (error) throw error;
-      if (!imgsProf) return [];
-
-      // 1 query para todas as legendas de professor (evita N queries individuais)
-      const { data: legendasProfessor } = await supabase
-        .from('legendas_fotos')
-        .select('*')
-        .eq('escola_id', escolaId)
-        .eq('tipo_foto', 'professor')
-        .eq('ativo', true)
-        .order('created_at', { ascending: false });
-
-      // Mapa em memória: imagem_url e nome do arquivo → legenda
-      const legendaMap = new Map();
-      (legendasProfessor || []).forEach(l => {
-        if (l.imagem_url && !legendaMap.has(l.imagem_url)) {
-          legendaMap.set(l.imagem_url, l);
-        }
-        const filename = l.imagem_url?.split('/').pop();
-        if (filename && !legendaMap.has(filename)) {
-          legendaMap.set(filename, l);
-        }
-      });
-
-      const mappedImages = imgsProf
-        .filter(img => hasContent(img.imagem_url))
-        .map((img, index) => {
-          let publicUrl = null;
-          if (img.imagem_url) {
-            if (img.imagem_url.trim().startsWith('http')) {
-              publicUrl = getSecureImageUrl(img.imagem_url.trim());
-            } else {
-              const storageUrl = getSupabaseStorageUrl('imagens-professores', img.imagem_url.trim());
-              publicUrl = getSecureImageUrl(storageUrl);
-            }
-          }
-
-          // Lookup em memória (sem query por imagem)
-          const filename = img.imagem_url?.split('/').pop();
-          const legendaObj = legendaMap.get(img.imagem_url) || legendaMap.get(filename) || null;
-
-          return {
-            id: img.id || `prof-${index}`,
-            url: publicUrl,
-            filePath: img.imagem_url,
-            titulo: hasContent(legendaObj?.legenda) ? legendaObj.legenda.trim() : null,
-            descricao: hasContent(legendaObj?.descricao_detalhada) ? legendaObj.descricao_detalhada.trim() : null,
-            autor: hasContent(legendaObj?.autor_foto) ? legendaObj.autor_foto.trim() : (img.autor || null),
-            dataFoto: legendaObj?.data_foto || img.created_at,
-            origem: 'professor',
-            ordem: legendaObj?.ordem !== null && legendaObj?.ordem !== undefined ? legendaObj.ordem : index + 1000,
-          };
-        });
-      mapped = mappedImages;
-    }
-
-    return mapped;
-  }, [escolaId]);
-
-  // Update items immediately when headerUrl changes to show image instantly
-  useEffect(() => {
-    if (hasContent(headerUrl)) {
-      const headerId = `header-${escolaId || 'temp'}`;
-      const headerItem = {
-        id: headerId,
-        url: headerUrl,
-        titulo: null, // Start with null for speed
-        descricao: null,
-        autor: null,
-        dataFoto: null,
-        origem: 'capa',
-      };
-      
-      setItems(prev => {
-        // Check if header already exists
-        const exists = prev.some(i => i.origem === 'capa' && i.url === headerUrl);
-        if (exists) return prev;
-        // Replace existing header or add new one at the beginning
-        const withoutHeader = prev.filter(i => i.origem !== 'capa');
-        return [headerItem, ...withoutHeader];
-      });
-
-      // Fetch legend asynchronously to update the header item
-      if (escolaId) {
-        (async () => {
-          try {
-            const headerLegend = await getLegendaByImageUrlFlexivel(headerUrl, escolaId);
-            if (headerLegend) {
-              setItems(prev => prev.map(item => 
-                item.id === headerId ? {
-                  ...item,
-                  titulo: hasContent(headerLegend.legenda) ? headerLegend.legenda.trim() : null,
-                  descricao: hasContent(headerLegend.descricao_detalhada) ? headerLegend.descricao_detalhada.trim() : null,
-                  autor: hasContent(headerLegend.autor_foto) ? headerLegend.autor_foto.trim() : null,
-                  dataFoto: headerLegend.data_foto || null,
-                } : item
-              ));
-            }
-          } catch (e) {
-            logger.warn('Erro ao buscar legenda para header (async):', e);
-          }
-        })();
-      }
-    }
-  }, [headerUrl, escolaId]);
-
-  useEffect(() => {
-    let mounted = true;
-    if (!escolaId) {
-      // If no escolaId but we have headerUrl, keep it (already handled by above effect)
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    setError('');
-
-    // Show header image immediately if available (already in items state)
-    // This prevents the delay when maximizing the panel
-
-    (async () => {
-      try {
-        const promises = [];
-        if (showSchool) promises.push(fetchBucketList('imagens-das-escolas', 'escola'));
-        if (showTeacher) promises.push(fetchBucketList('imagens-professores', 'professor'));
-        const results = await Promise.all(promises);
-        let combined = results.flat();
-        // Prepend header image if provided and not already in list
-        if (hasContent(headerUrl)) {
-          const normalizedHeaderUrl = getLocalImageUrl(headerUrl);
-          // Filter out any escola/professor images that are physically the same as the header
-          // (URL formats may differ: raw https vs local /opin/images/... path)
-          combined = combined.filter(i => {
-            const normalizedItemUrl = getLocalImageUrl(i.url);
-            return normalizedItemUrl !== normalizedHeaderUrl && i.url !== headerUrl;
-          });
-
-          // Buscar legenda para o header
-          let headerLegend = null;
-          try {
-            headerLegend = await getLegendaByImageUrlFlexivel(headerUrl, escolaId);
-          } catch (err) {
-            logger.warn('Erro ao buscar legenda para header:', err);
-          }
-
-          const headerItem = {
-            id: `header-${escolaId}`,
-            url: headerUrl,
-            titulo: hasContent(headerLegend?.legenda) ? headerLegend.legenda.trim() : null,
-            descricao: hasContent(headerLegend?.descricao_detalhada) ? headerLegend.descricao_detalhada.trim() : null,
-            autor: hasContent(headerLegend?.autor_foto) ? headerLegend.autor_foto.trim() : null,
-            dataFoto: headerLegend?.data_foto || null,
-            origem: 'capa',
-          };
-          combined = [headerItem, ...combined];
-        }
-        if (!mounted) return;
-        // Sort by origem to prioritize school first then teacher, maintain stable order
-        // Ensure header stays first if present
-        const ordered = combined.sort((a, b) => {
-          if (a.origem === 'capa') return -1;
-          if (b.origem === 'capa') return 1;
-          return a.origem.localeCompare(b.origem);
-        });
-        setItems(ordered);
-        setCurrent(0);
-      } catch (e) {
-        if (!mounted) return;
-        setError('Erro ao carregar imagens.');
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    })();
-    return () => { mounted = false; };
-  }, [escolaId, refreshKey, fetchBucketList, showSchool, showTeacher, headerUrl]);
-
-  const hasItems = items.length > 0;
-  const currentItem = useMemo(() => {
-    if (!hasItems || current < 0 || current >= items.length) return null;
-    return items[current] || null;
-  }, [items, current, hasItems]);
-
-  // Detect if current image is tall/narrow (portrait orientation)
-  const isTallImage = useMemo(() => {
-    if (!currentItem || !currentItem.url) return false;
-    const aspectRatio = imageAspectRatios.get(currentItem.url);
-    // If height > width, it's a tall image (aspect ratio < 1 means portrait)
-    return aspectRatio !== undefined && aspectRatio < 1;
-  }, [currentItem, imageAspectRatios]);
-
-  // Handler to detect image dimensions when image loads
-  const handleImageLoad = useCallback((e) => {
-    if (!currentItem || !currentItem.url) return;
-    const img = e.target || e.currentTarget;
-    if (img && img.naturalWidth && img.naturalHeight) {
-      const aspectRatio = img.naturalWidth / img.naturalHeight;
-      setImageAspectRatios(prev => new Map(prev).set(currentItem.url, aspectRatio));
-    }
-  }, [currentItem]);
-
-  // Notify parent when current item changes
-  useEffect(() => {
-    if (onCurrentItemChange && currentItem) {
-      onCurrentItemChange(currentItem);
-    }
-  }, [currentItem, onCurrentItemChange]);
-
-  // Sync current image to scroll progress
-  useEffect(() => {
-    if (!hasItems || typeof scrollProgress !== 'number') return;
-    // If user recently navigated manually, skip syncing from scroll
-    if (Date.now() < manualOverrideUntil) return;
-    const idx = Math.floor(scrollProgress * Math.max(0, items.length - 1));
-    if (Number.isFinite(idx) && idx !== current) {
-      setCurrent(idx);
-    }
-  }, [scrollProgress, hasItems, items.length, current, manualOverrideUntil]);
-
-  const prev = useCallback(() => {
-    if (!hasItems) return;
-    setCurrent((idx) => (idx > 0 ? idx - 1 : items.length - 1));
-    setManualOverrideUntil(Date.now() + 1200);
-  }, [hasItems, items.length]);
-
-  const next = useCallback(() => {
-    if (!hasItems) return;
-    setCurrent((idx) => (idx < items.length - 1 ? idx + 1 : 0));
-    setManualOverrideUntil(Date.now() + 1200);
-  }, [hasItems, items.length]);
-
-  // Show error only if there's an error and no items to display
   if (error && !hasItems) {
     return <div className="text-red-600">{error}</div>;
   }
 
-  // Show "no items" only if not loading and no items
   if (!loading && !hasItems) {
     return null;
   }
-
-  // If loading but we have items (e.g., header image), show the viewer with loading indicator
 
   return (
     <div className="h-full w-full relative">
@@ -354,7 +54,6 @@ const SidebarMediaViewer = ({ escolaId, showTeacher = true, showSchool = true, s
         <div className="w-full h-full bg-black/5 overflow-y-auto overflow-x-hidden flex items-start justify-center">
           {currentItem && (
             <>
-              {/* Use regular img with smart object-fit: contain for tall images, cover for wide images */}
               {currentItem.origem === 'capa' ? (
                 <img
                   src={currentItem.url}
@@ -387,12 +86,10 @@ const SidebarMediaViewer = ({ escolaId, showTeacher = true, showSchool = true, s
                     objectPosition: isTallImage ? 'top center' : 'center center'
                   }}
                   onLoad={(e) => {
-                    // OptimizedImage passes the event, but we need the actual img element
                     if (!currentItem || !currentItem.url) return;
                     const img = e?.target || document.querySelector(`img[src="${currentItem.url}"]`);
                     if (img && img.naturalWidth && img.naturalHeight) {
-                      const aspectRatio = img.naturalWidth / img.naturalHeight;
-                      setImageAspectRatios(prev => new Map(prev).set(currentItem.url, aspectRatio));
+                      handleImageLoad({ target: img });
                     }
                   }}
                 />
@@ -406,7 +103,6 @@ const SidebarMediaViewer = ({ escolaId, showTeacher = true, showSchool = true, s
           )}
         </div>
 
-        {/* Caption at bottom with black background */}
         {currentItem && (
           <div className="absolute bottom-3 left-3 right-3 z-10 flex">
             <div
@@ -442,5 +138,3 @@ const SidebarMediaViewer = ({ escolaId, showTeacher = true, showSchool = true, s
 };
 
 export default React.memo(SidebarMediaViewer);
-
-
