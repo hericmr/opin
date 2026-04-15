@@ -29,7 +29,7 @@ Fluxo de cada passo: implementar → testar manualmente → commit + deploy.
 
 **Teste manual:** Abrir painel de uma escola com fotos e legendas → imagens e legendas aparecem normalmente
 
-**Status:** [ ] implementado [ ] testado [ ] publicado
+**Status:** [x] implementado [ ] testado [ ] publicado
 
 ---
 
