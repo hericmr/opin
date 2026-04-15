@@ -52,33 +52,22 @@ export function useEscolasData() {
     const formattedData = dataPoints
       .filter(e => e && typeof e === 'object' && !Array.isArray(e) && e.Escola)
       .map((e) => {
-        // Validação básica de coordenadas para o mapa
-        const infoEscola = {
-          id: e.id,
-          nome: e.Escola,
-          municipio: e["Município"]
-        };
+        // Registra escolas sem coordenadas para diagnóstico, mas não as descarta
+        // (a busca funciona sem coordenadas; o mapa simplesmente não as plota)
+        const lat = parseFloat(e.Latitude);
+        const lng = parseFloat(e.Longitude);
+        const hasCoords =
+          e.Latitude != null && e.Longitude != null &&
+          !isNaN(lat) && !isNaN(lng) &&
+          lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
 
-        if (e.Latitude === null || e.Latitude === undefined || 
-            e.Longitude === null || e.Longitude === undefined) {
-          escolasSemCoordenadas.vazias.push({ ...infoEscola, problema: "Coordenadas vazias" });
-          return null;
+        if (!hasCoords) {
+          escolasSemCoordenadas.vazias.push({
+            id: e.id, nome: e.Escola, municipio: e["Município"],
+            problema: "Coordenadas ausentes ou inválidas"
+          });
         }
 
-        const latitude = parseFloat(e.Latitude);
-        const longitude = parseFloat(e.Longitude);
-
-        if (isNaN(latitude) || isNaN(longitude)) {
-          escolasSemCoordenadas.invalidas.push({ ...infoEscola, problema: "Coordenadas inválidas" });
-          return null;
-        }
-
-        if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
-          escolasSemCoordenadas.foraDosLimites.push({ ...infoEscola, problema: "Coordenadas fora dos limites" });
-          return null;
-        }
-
-        // Usa o mapper centralizado para garantir consistência
         return mapEscolaData(e);
       })
       .filter(ponto => ponto !== null);
