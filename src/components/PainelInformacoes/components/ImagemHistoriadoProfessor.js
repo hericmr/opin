@@ -4,13 +4,15 @@ import { supabase } from '../../../dbClient';
 import { getLocalImageUrl, isLocalImage, getSupabaseStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
 import logger from '../../../utils/logger';
 import { hasContent } from '../../../utils/contentValidation';
+import { useRefresh } from '../../../contexts/RefreshContext';
 import ReusableImageZoom from '../../ReusableImageZoom';
 import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 import { formatDateForDisplay } from '../../../utils/dateUtils';
 import '../../ReusableImageZoom.css';
 
-const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = false, hideInlineMedia = false }) => {
+const ImagemHistoriadoProfessor = ({ escola_id, isMaximized = false, hideInlineMedia = false }) => {
+  const { refreshKey } = useRefresh();
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

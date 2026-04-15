@@ -6,13 +6,15 @@ import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService'
 import logger from '../../../utils/logger';
 import { hasContent } from '../../../utils/contentValidation';
 import { supabase } from '../../../dbClient';
+import { useRefresh } from '../../../contexts/RefreshContext';
 import ReusableImageZoom from '../../ReusableImageZoom';
 import OptimizedImage from '../../shared/OptimizedImage';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 import { formatDateForDisplay } from '../../../utils/dateUtils';
 import '../../ReusableImageZoom.css';
 
-const ImagensdasEscolas = ({ escola_id, refreshKey = 0, isMaximized = false, hideInlineMedia = false }) => {
+const ImagensdasEscolas = ({ escola_id, isMaximized = false, hideInlineMedia = false }) => {
+  const { refreshKey } = useRefresh();
   const [imagens, setImagens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [imagemZoom, setImagemZoom] = useState(null);

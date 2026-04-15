@@ -7,15 +7,14 @@ import usePainelVisibility from '../../hooks/usePainelVisibility';
 import { usePainelDimensions } from '../../hooks/usePainelDimensions';
 import useImagePreloader from '../../../hooks/useImagePreloader';
 
-const PainelContainer = ({ 
-  painelInfo, 
-  closePainel, 
+const PainelContainer = ({
+  painelInfo,
+  closePainel,
   children,
   isMaximized,
   onToggleMaximize,
   contentRef,
   rightNav,
-  refreshKey,
   shareUrl,
   shareTitle
 }) => {
@@ -129,10 +128,8 @@ const PainelContainer = ({
           <aside className="mj-split-left">
             <SidebarMediaViewer
               escolaId={painelInfo.id}
-              refreshKey={refreshKey || 0}
               scrollProgress={scrollProgress}
               headerUrl={painelInfo.imagem_header}
-              
             />
           </aside>
           <div className="mj-split-right flex flex-col h-full overflow-hidden">
