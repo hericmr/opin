@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../dbClient';
 import { mapEscolaData } from '../utils/escolaMapper';
+import { useRefresh } from '../contexts/RefreshContext';
 
 // Campos leves para listagem no mapa e busca.
 // Dados detalhados (história, projetos, mídia) são carregados on-demand.
@@ -24,6 +25,7 @@ export function useEscolasData() {
   const [dataPoints, setDataPoints] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { refreshKey } = useRefresh();
 
   const fetchDataPoints = useCallback(async () => {
     try {
@@ -98,7 +100,7 @@ export function useEscolasData() {
       }
     }
     initialize();
-  }, [fetchDataPoints, formatData]);
+  }, [fetchDataPoints, formatData, refreshKey]);
 
   return { dataPoints, loading, error };
 }
