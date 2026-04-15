@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useModalidades } from '../hooks/useModalidades';
 import { MODALIDADES_OPTIONS, MODALIDADES_CATEGORIAS } from '../utils/modalidadesOptions';
+import { formatModalidades } from '../utils/modalidadeParser';
 import CardVisibilityToggle from '../components/CardVisibilityToggle';
 
 const ModalidadesTab = ({ 
@@ -12,7 +13,6 @@ const ModalidadesTab = ({
     outroModalidade,
     handleModalidadeChange,
     handleOutroModalidadeChange,
-    saveModalidades,
     loadExistingModalidades,
     getModalidadesPreview,
     hasSelectedModalidades,
@@ -46,24 +46,29 @@ const ModalidadesTab = ({
     loadExistingModalidades(newText);
   };
 
-  // Função para salvar modalidades no editingLocation
-  // IMPORTANTE: Se o usuário editou a textarea, NUNCA sobrescreva com checkboxes
-  const handleSaveModalidades = () => {
-    if (textareaWasEdited) {
-      // Usuário editou manualmente - apenas sincronizar checkboxes, não sobrescrever
-      console.warn('⚠️ Textarea foi editada manualmente. Atualizando apenas os checkboxes.');
-      // O usuario já clicou, mas como editou a textarea, estamos sincronizados
-      // Apenas resetar o flag para a próxima ação
-      setTextareaWasEdited(false);
-      return;
-    }
-    
-    // Se textarea NÃO foi editada, usar os checkboxes para gerar o texto
-    const modalidadesText = saveModalidades();
+  // Wrapper para checkbox: atualiza estado local E editingLocation imediatamente
+  const handleCheckboxChange = (modalidade) => {
+    const newSelected = selectedModalidades.includes(modalidade)
+      ? selectedModalidades.filter(m => m !== modalidade)
+      : [...selectedModalidades, modalidade];
+    handleModalidadeChange(modalidade);
     setEditingLocation(prev => ({
       ...prev,
-      'Modalidade de Ensino/turnos de funcionamento': modalidadesText
+      'Modalidade de Ensino/turnos de funcionamento': formatModalidades(newSelected)
     }));
+    setTextareaWasEdited(false);
+  };
+
+  // Wrapper para campo "Outro": atualiza estado local E editingLocation imediatamente
+  const handleOutroChange = (value) => {
+    handleOutroModalidadeChange(value);
+    const newSelected = selectedModalidades.filter(m => !m.startsWith('Outro:'));
+    if (value.trim()) newSelected.push(`Outro: ${value}`);
+    setEditingLocation(prev => ({
+      ...prev,
+      'Modalidade de Ensino/turnos de funcionamento': formatModalidades(newSelected)
+    }));
+    setTextareaWasEdited(false);
   };
 
   return (
@@ -113,7 +118,7 @@ const ModalidadesTab = ({
                           type="checkbox"
                           className="mt-1 h-4 w-4 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500 focus:ring-2"
                           checked={selectedModalidades.includes(modalidade)}
-                          onChange={() => handleModalidadeChange(modalidade)}
+                          onChange={() => handleCheckboxChange(modalidade)}
                         />
                         <span className="text-sm text-gray-200 leading-relaxed">{modalidade}</span>
                       </label>
@@ -132,11 +137,9 @@ const ModalidadesTab = ({
                   checked={selectedModalidades.some(m => m.startsWith('Outro:')) || outroModalidade.trim() !== ''}
                   onChange={(e) => {
                     if (e.target.checked && !outroModalidade.trim()) {
-                      // Se está marcando o checkbox mas não há valor, adicionar um valor padrão
-                      handleOutroModalidadeChange('Modalidade específica');
+                      handleOutroChange('Modalidade específica');
                     } else if (!e.target.checked) {
-                      // Se está desmarcando o checkbox, limpar o valor
-                      handleOutroModalidadeChange('');
+                      handleOutroChange('');
                     }
                   }}
                 />
@@ -147,7 +150,7 @@ const ModalidadesTab = ({
                     className="mt-1 w-full px-3 py-2 border border-gray-600 rounded text-sm bg-gray-700 text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="Digite a modalidade específica..."
                     value={outroModalidade}
-                    onChange={(e) => handleOutroModalidadeChange(e.target.value)}
+                    onChange={(e) => handleOutroChange(e.target.value)}
                   />
                 </div>
               </label>
@@ -178,26 +181,6 @@ const ModalidadesTab = ({
         />
       </div>
 
-      {/* Botão para salvar modalidades */}
-      <div className="md:col-span-2 space-y-2">
-        {textareaWasEdited && (
-          <div className="bg-amber-900/50 border border-amber-700 rounded px-3 py-2 text-amber-100 text-sm">
-            ⚠️ <strong>Textarea foi editada manualmente.</strong> Os checkboxes foram sincronizados com seu texto, mas clicar no botão abaixo não sobrescreverá suas edições.
-          </div>
-        )}
-        <button
-          type="button"
-          onClick={handleSaveModalidades}
-          disabled={!hasSelectedModalidades() && !textareaWasEdited}
-          className={`px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition-colors ${
-            hasSelectedModalidades() || textareaWasEdited
-              ? 'bg-green-700 text-white hover:bg-green-800'
-              : 'bg-gray-600 text-gray-300 cursor-not-allowed'
-          }`}
-        >
-          {textareaWasEdited ? 'Syncronizar Checkboxes' : 'Salvar Modalidades Selecionadas'}
-        </button>
-      </div>
 
       {/* Preview do texto final */}
       {hasSelectedModalidades() && (
