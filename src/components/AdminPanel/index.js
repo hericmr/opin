@@ -123,6 +123,7 @@ const AdminPanelContent = () => {
       'formacao_professores': escola['formacao_professores'],
       'outros_funcionarios': escola['outros_funcionarios'],
       'gestao': escola['gestao'],
+      'Povos indigenas': escola['Povos indigenas'],
       activeTab: FORM_CONFIG.DEFAULT_ACTIVE_TAB
     };
 

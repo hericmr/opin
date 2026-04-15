@@ -9,8 +9,10 @@ import { formatDateForDisplay } from '../../../utils/dateUtils';
 import { getLocalImageUrl, getSupabaseStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
 import logger from '../../../utils/logger';
 import { hasContent } from '../../../utils/contentValidation';
+import { useRefresh } from '../../../contexts/RefreshContext';
 
-const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, showSchool = true, scrollProgress, headerUrl, onCurrentItemChange }) => {
+const SidebarMediaViewer = ({ escolaId, showTeacher = true, showSchool = true, scrollProgress, headerUrl, onCurrentItemChange }) => {
+  const { refreshKey } = useRefresh();
   // Initialize with header image if available to show it immediately
   const initialHeaderItem = headerUrl ? [{
     id: `header-${escolaId || 'temp'}`,
@@ -87,43 +89,56 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
       if (error) throw error;
       if (!imgsProf) return [];
 
-      const mappedImages = await Promise.all(imgsProf
+      // 1 query para todas as legendas de professor (evita N queries individuais)
+      const { data: legendasProfessor } = await supabase
+        .from('legendas_fotos')
+        .select('*')
+        .eq('escola_id', escolaId)
+        .eq('tipo_foto', 'professor')
+        .eq('ativo', true)
+        .order('created_at', { ascending: false });
+
+      // Mapa em memória: imagem_url e nome do arquivo → legenda
+      const legendaMap = new Map();
+      (legendasProfessor || []).forEach(l => {
+        if (l.imagem_url && !legendaMap.has(l.imagem_url)) {
+          legendaMap.set(l.imagem_url, l);
+        }
+        const filename = l.imagem_url?.split('/').pop();
+        if (filename && !legendaMap.has(filename)) {
+          legendaMap.set(filename, l);
+        }
+      });
+
+      const mappedImages = imgsProf
         .filter(img => hasContent(img.imagem_url))
-        .map(async (img, index) => {
-        let publicUrl = null;
-        if (img.imagem_url) {
-          if (img.imagem_url.trim().startsWith('http')) {
-            publicUrl = getSecureImageUrl(img.imagem_url.trim());
-          } else {
-            // Construir URL do Supabase via variável de ambiente para resolver via mapa local
-            const storageUrl = getSupabaseStorageUrl('imagens-professores', img.imagem_url.trim());
-            publicUrl = getSecureImageUrl(storageUrl);
+        .map((img, index) => {
+          let publicUrl = null;
+          if (img.imagem_url) {
+            if (img.imagem_url.trim().startsWith('http')) {
+              publicUrl = getSecureImageUrl(img.imagem_url.trim());
+            } else {
+              const storageUrl = getSupabaseStorageUrl('imagens-professores', img.imagem_url.trim());
+              publicUrl = getSecureImageUrl(storageUrl);
+            }
           }
-        }
 
-        // Buscar legenda na tabela legendas_fotos
-        let legendaObj = null;
-        try {
-          legendaObj = await getLegendaByImageUrlFlexivel(img.imagem_url, escolaId, {
-            categoria: 'professor',
-            tipo_foto: 'professor'
-          });
-        } catch (err) {
-          logger.warn('Erro ao buscar legenda para professor:', err);
-        }
+          // Lookup em memória (sem query por imagem)
+          const filename = img.imagem_url?.split('/').pop();
+          const legendaObj = legendaMap.get(img.imagem_url) || legendaMap.get(filename) || null;
 
-        return {
-          id: img.id || `prof-${index}`,
-          url: publicUrl,
-          filePath: img.imagem_url,
-          titulo: hasContent(legendaObj?.legenda) ? legendaObj.legenda.trim() : null,
-          descricao: hasContent(legendaObj?.descricao_detalhada) ? legendaObj.descricao_detalhada.trim() : null,
-          autor: hasContent(legendaObj?.autor_foto) ? legendaObj.autor_foto.trim() : (img.autor || null),
-          dataFoto: legendaObj?.data_foto || img.created_at, // Usando created_at como data da foto se não tiver no banco
-          origem: 'professor',
-          ordem: legendaObj?.ordem !== null && legendaObj?.ordem !== undefined ? legendaObj.ordem : index + 1000, // Colocar depois das escolas se não tiver ordem
-        };
-      }));
+          return {
+            id: img.id || `prof-${index}`,
+            url: publicUrl,
+            filePath: img.imagem_url,
+            titulo: hasContent(legendaObj?.legenda) ? legendaObj.legenda.trim() : null,
+            descricao: hasContent(legendaObj?.descricao_detalhada) ? legendaObj.descricao_detalhada.trim() : null,
+            autor: hasContent(legendaObj?.autor_foto) ? legendaObj.autor_foto.trim() : (img.autor || null),
+            dataFoto: legendaObj?.data_foto || img.created_at,
+            origem: 'professor',
+            ordem: legendaObj?.ordem !== null && legendaObj?.ordem !== undefined ? legendaObj.ordem : index + 1000,
+          };
+        });
       mapped = mappedImages;
     }
 

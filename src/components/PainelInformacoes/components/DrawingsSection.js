@@ -1,5 +1,6 @@
 import logger from "../../../utils/logger";
 import React, { useEffect, useState, useCallback } from 'react';
+import { useRefresh } from '../../../contexts/RefreshContext';
 import PropTypes from 'prop-types';
 import { DrawingsImageService } from '../../../services/drawingsImageService';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
@@ -14,7 +15,8 @@ import { hasContent } from '../../../utils/contentValidation';
  * Shows images in large format similar to YouTube video player (16:9 aspect ratio)
  * Displays the legend/caption of each drawing instead of a fixed title
  */
-const DrawingsSection = ({ escolaId, refreshKey = 0 }) => {
+const DrawingsSection = ({ escolaId }) => {
+  const { refreshKey } = useRefresh();
   const [drawingsData, setDrawingsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [imagemZoom, setImagemZoom] = useState(null);

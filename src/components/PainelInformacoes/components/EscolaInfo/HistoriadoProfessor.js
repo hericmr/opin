@@ -1,12 +1,14 @@
 import React, { memo, useEffect, useState, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { getHistoriasProfessor } from '../../../../services/historiaProfessorService';
+import { useRefresh } from '../../../../contexts/RefreshContext';
 import { getLocalImageUrl } from '../../../../utils/imageUtils';
 import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
 import FotoProfessor from '../FotoProfessor';
 import './HistoriadoProfessor.css';
 
-const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false, shouldHideInlineMedia = false }) => {
+const HistoriadoProfessor = memo(({ escola, isMaximized = false, shouldHideInlineMedia = false }) => {
+  const { refreshKey } = useRefresh();
   const [historias, setHistorias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -273,7 +275,6 @@ const HistoriadoProfessor = memo(({ escola, refreshKey = 0, isMaximized = false,
 
         <ImagemHistoriadoProfessor
           escola_id={escola.id}
-          refreshKey={refreshKey}
           isMaximized={isMaximized}
           hideInlineMedia={shouldHideInlineMedia}
         />

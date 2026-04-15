@@ -6,6 +6,7 @@ import useDocumentosEscola from "../hooks/useDocumentosEscola";
 import { isCardVisible } from "../../components/AdminPanel/constants/cardVisibilityConfig";
 import { useGlobalCardVisibility } from "../../hooks/useGlobalCardVisibility";
 import { useEscolaDetalhes } from "../../hooks/useEscolaDetalhes";
+import { useRefresh } from "../../contexts/RefreshContext";
 
 // Import modular components
 import EscolaInfo from "./components/EscolaInfo";
@@ -17,7 +18,8 @@ import VideoPlayer from "./components/VideoPlayer";
 import DrawingsSection from "./components/DrawingsSection";
 import { getVideosEscola } from "../../services/videoService";
 
-const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 }) => {
+const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
+  const { refreshKey } = useRefresh();
   const painelRef = useRef(null);
   const contentRef = useRef(null);
   const sectionRefs = useRef({});
@@ -167,10 +169,9 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
 
     return (
       <div className="relative">
-        <EscolaInfo 
-          escola={escolaData} 
+        <EscolaInfo
+          escola={escolaData}
           shouldUseGrid={true}
-          refreshKey={refreshKey}
           sectionRefs={sectionRefs.current}
           isMaximized={isMaximized}
           shouldHideInlineMedia={useSplitLayout}
@@ -210,9 +211,8 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
         )}
         
         {/* Desenhos */}
-        <DrawingsSection 
+        <DrawingsSection
           escolaId={escolaData?.id}
-          refreshKey={refreshKey}
         />
         
         {/* Documentos - Displayed last, after drawings */}
@@ -238,7 +238,6 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id, refreshKey = 0 
         isMaximized={isMaximized}
         onToggleMaximize={toggleMaximize}
         contentRef={contentRef}
-        refreshKey={refreshKey}
         rightNav={null}
         shareUrl={shareUrl}
         shareTitle={painelInfo?.titulo}

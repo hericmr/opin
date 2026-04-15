@@ -3,7 +3,7 @@ import HistoriaEscolaContent from './HistoriaEscolaContent';
 import HistoriaEscolaHeader from './HistoriaEscolaHeader';
 import './HistoriaEscola.css';
 
-const HistoriaEscola = memo(({ escola, refreshKey = 0, isMaximized = false }) => {
+const HistoriaEscola = memo(({ escola, isMaximized = false }) => {
   if (!escola?.historia_da_escola) return null;
 
   // Usar o HTML diretamente, igual à história dos professores
