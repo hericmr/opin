@@ -204,27 +204,32 @@ const SidebarMediaViewer = ({ escolaId, refreshKey = 0, showTeacher = true, show
         let combined = results.flat();
         // Prepend header image if provided and not already in list
         if (hasContent(headerUrl)) {
-          const exists = combined.some(i => i.url === headerUrl);
-          if (!exists) {
-            // Buscar legenda para o header
-            let headerLegend = null;
-            try {
-              headerLegend = await getLegendaByImageUrlFlexivel(headerUrl, escolaId);
-            } catch (err) {
-              console.warn('Erro ao buscar legenda para header:', err);
-            }
+          const normalizedHeaderUrl = getLocalImageUrl(headerUrl);
+          // Filter out any escola/professor images that are physically the same as the header
+          // (URL formats may differ: raw https vs local /opin/images/... path)
+          combined = combined.filter(i => {
+            const normalizedItemUrl = getLocalImageUrl(i.url);
+            return normalizedItemUrl !== normalizedHeaderUrl && i.url !== headerUrl;
+          });
 
-            const headerItem = {
-              id: `header-${escolaId}`,
-              url: headerUrl,
-              titulo: hasContent(headerLegend?.legenda) ? headerLegend.legenda.trim() : null,
-              descricao: hasContent(headerLegend?.descricao_detalhada) ? headerLegend.descricao_detalhada.trim() : null,
-              autor: hasContent(headerLegend?.autor_foto) ? headerLegend.autor_foto.trim() : null,
-              dataFoto: headerLegend?.data_foto || null,
-              origem: 'capa',
-            };
-            combined = [headerItem, ...combined];
+          // Buscar legenda para o header
+          let headerLegend = null;
+          try {
+            headerLegend = await getLegendaByImageUrlFlexivel(headerUrl, escolaId);
+          } catch (err) {
+            console.warn('Erro ao buscar legenda para header:', err);
           }
+
+          const headerItem = {
+            id: `header-${escolaId}`,
+            url: headerUrl,
+            titulo: hasContent(headerLegend?.legenda) ? headerLegend.legenda.trim() : null,
+            descricao: hasContent(headerLegend?.descricao_detalhada) ? headerLegend.descricao_detalhada.trim() : null,
+            autor: hasContent(headerLegend?.autor_foto) ? headerLegend.autor_foto.trim() : null,
+            dataFoto: headerLegend?.data_foto || null,
+            origem: 'capa',
+          };
+          combined = [headerItem, ...combined];
         }
         if (!mounted) return;
         // Sort by origem to prioritize school first then teacher, maintain stable order
