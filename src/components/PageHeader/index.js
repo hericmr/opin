@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useSearch } from '../../contexts/SearchContext';
 import { useAuth } from '../../hooks/useAuth';
 import { useBreakpoint } from '../../hooks/responsive/useBreakpoint';
-import { Leaf, Shield } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import NavButtons from '../Navbar/NavButtons';
 import SearchBar from '../Navbar/SearchBar';
 import MobileToggle from '../Navbar/MobileToggle';
@@ -237,40 +237,29 @@ const PageHeader = ({
                   </a>
                 </div>
 
-                {/* Admin */}
-                <div className="flex items-center space-x-2">
-                  {!isAuthenticated ? (
+                {/* Admin - só mostra quando autenticado */}
+                {isAuthenticated && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-white/80 hidden xl:inline" aria-live="polite">
+                      Olá, {user?.username}
+                    </span>
                     <button
-                      onClick={handleAdminClick}
+                      onClick={() => navigate('/admin')}
                       className="p-1.5 rounded hover:bg-white/10 transition-colors focus:outline-none"
-                      title="Acesso administrativo"
-                      aria-label="Acesso administrativo"
+                      title="Painel administrativo"
+                      aria-label="Painel administrativo"
                     >
-                      <Leaf className="w-4 h-4" />
+                      <Shield className="w-4 h-4" />
                     </button>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-white/80 hidden xl:inline" aria-live="polite">
-                        Olá, {user?.username}
-                      </span>
-                      <button
-                        onClick={() => navigate('/admin')}
-                        className="p-1.5 rounded hover:bg-white/10 transition-colors focus:outline-none"
-                        title="Painel administrativo"
-                        aria-label="Painel administrativo"
-                      >
-                        <Shield className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={logout}
-                        className="px-3 py-1.5 text-xs rounded hover:bg-white/10 transition-colors focus:outline-none"
-                        aria-label="Sair"
-                      >
-                        Sair
-                      </button>
-                    </div>
-                  )}
-                </div>
+                    <button
+                      onClick={logout}
+                      className="px-3 py-1.5 text-xs rounded hover:bg-white/10 transition-colors focus:outline-none"
+                      aria-label="Sair"
+                    >
+                      Sair
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Mobile - Busca e Botão hambúrguer */}
