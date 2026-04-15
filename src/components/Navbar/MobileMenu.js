@@ -69,7 +69,7 @@ const MobileMenu = ({
               </button>
               
               <button
-                onClick={() => onNavigation('/dashboard')}
+                onClick={() => onNavigation('/algunsdados')}
                 onMouseEnter={() => prefetchPage('dashboard')}
                 onTouchStart={() => prefetchPage('dashboard')}
                 className={`w-full text-left px-4 py-2.5 font-medium rounded transition-colors ${getActiveStyle(isDashboardPage)}`}

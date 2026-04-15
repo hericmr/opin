@@ -23,7 +23,7 @@ const Dashboard = () => {
   // Breadcrumbs de Navegação - memoizado para evitar recriação
   const breadcrumbs = useMemo(() => [
     { label: 'Início', path: '/', active: false },
-    { label: 'Alguns dados', path: '/dashboard', active: true }
+    { label: 'Alguns dados', path: '/algunsdados', active: true }
   ], []);
 
   if (loading) {

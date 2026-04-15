@@ -9,8 +9,8 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
 
   const isActive = (path) => {
     if (path === '/mapa') return location.pathname === '/mapa';
-    if (path === '/dashboard') {
-      return location.pathname === '/dashboard' || 
+    if (path === '/algunsdados') {
+      return location.pathname === '/algunsdados' || 
              location.pathname === '/painel-dados' || 
              location.pathname === '/dados-escolas-indigenas';
     }
@@ -57,13 +57,13 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
 
       {/* Botão Alguns dados */}
       <button
-        onClick={() => navigate('/dashboard')}
+        onClick={() => navigate('/algunsdados')}
         onMouseEnter={() => prefetchPage('dashboard')}
         onTouchStart={() => prefetchPage('dashboard')}
-        className={getButtonStyle(isActive('/dashboard'))}
+        className={getButtonStyle(isActive('/algunsdados'))}
         title="Ver dados das escolas indígenas"
         aria-label="Ver dados das escolas indígenas"
-        aria-current={isActive('/dashboard') ? 'page' : undefined}
+        aria-current={isActive('/algunsdados') ? 'page' : undefined}
       >
         <BarChart3 className="w-4 h-4" />
         <span className="hidden xl:inline">Alguns dados</span>
