@@ -1,7 +1,7 @@
 // Service Worker básico para PWA
 // Versão atualizada para evitar problemas de cache com arquivos JavaScript
-const CACHE_NAME = 'opin-pwa-v4';
-const STATIC_CACHE_NAME = 'opin-static-v4';
+const CACHE_NAME = 'opin-pwa-v5';
+const STATIC_CACHE_NAME = 'opin-static-v5';
 
 // URLs estáticas que podem ser cacheadas
 const urlsToCache = [
@@ -127,24 +127,9 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Para index.html e outros, usar network-first
+  // Para index.html: NUNCA cachear — sempre buscar da rede para garantir hashes de JS/CSS atualizados
   if (event.request.destination === 'document' || url.pathname === '/opin/' || url.pathname === '/opin/index.html') {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200) {
-            const responseToCache = response.clone();
-            caches.open(STATIC_CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-          }
-          return response;
-        })
-        .catch(() => {
-          // Fallback para cache se offline
-          return caches.match('/opin/index.html') || caches.match('/index.html');
-        })
-    );
+    event.respondWith(fetch(event.request));
     return;
   }
 
