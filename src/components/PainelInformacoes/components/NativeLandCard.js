@@ -65,9 +65,10 @@ const NativeLandCard = memo(({
         // Textos completos com quebra de linha - permite expansão e preserva quebras de linha
         // Trim trailing whitespace/newlines to avoid excessive spacing
         // Remove trailing newlines and whitespace from each line, then trim the whole string
-        let textValue = String(value || '').trim();
+        let textValue = String(value ?? '').trim();
         // Remove trailing newlines and spaces from the end
         textValue = textValue.replace(/\n\s*$/, '').replace(/\s+$/, '').trim();
+        if (!textValue) return null;
         const isLongText = textValue.length > 30;
         const isShortText = textValue.length <= 30; // Consider text up to 30 chars as short for spacing purposes
         // For short text, use normal whitespace instead of pre-line to avoid extra spacing
