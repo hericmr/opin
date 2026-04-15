@@ -32,9 +32,9 @@ const NativeLandCard = memo(({
         const numberValue = value || 0;
         return (
           <div className="text-center w-full flex items-center justify-center h-full min-w-0">
-            <div 
-              className="text-3xl font-semibold text-gray-900 truncate" 
-              style={{fontSize: '1.875rem', fontWeight: '600', color: '#111827', lineHeight: '1.2'}}
+            <div
+              className="text-3xl font-semibold text-gray-900"
+              style={{fontSize: '1.875rem', fontWeight: '600', color: '#111827', lineHeight: '1.2', wordBreak: 'normal', overflowWrap: 'anywhere'}}
               title={String(numberValue)}
             >
               {numberValue.toLocaleString('pt-BR')}
@@ -72,7 +72,10 @@ const NativeLandCard = memo(({
         const isShortText = textValue.length <= 30; // Consider text up to 30 chars as short for spacing purposes
         // For short text, use normal whitespace instead of pre-line to avoid extra spacing
         return (
-          <div className={`text-sm text-gray-800 ${isLongText ? 'text-left' : 'text-center'} w-full font-medium ${isShortText ? 'leading-normal' : 'leading-relaxed'} ${isLongText ? 'whitespace-pre-line' : 'whitespace-normal'} break-words ${isShortText ? 'px-1 py-0' : 'px-2'}`} style={{ lineHeight: isShortText ? '1.4' : '1.6' }}>
+          <div
+            className={`text-sm text-gray-800 ${isLongText ? 'text-left' : 'text-center'} w-full font-medium ${isShortText ? 'leading-normal' : 'leading-relaxed'} ${isLongText ? 'whitespace-pre-line' : 'whitespace-normal'} ${isShortText ? 'px-1 py-0' : 'px-2'}`}
+            style={{ lineHeight: isShortText ? '1.4' : '1.6', wordBreak: 'normal', overflowWrap: 'anywhere' }}
+          >
             {textValue}
           </div>
         );
@@ -142,7 +145,7 @@ const NativeLandCard = memo(({
               </div>
             )}
             {/* Valor principal em cinza */}
-            <h5 className={`font-medium leading-relaxed break-words relative z-20 ${category ? 'text-base text-gray-700' : 'text-sm text-gray-700'}`} style={{ lineHeight: '1.6' }}>
+            <h5 className={`font-medium leading-relaxed relative z-20 ${category ? 'text-base text-gray-700' : 'text-sm text-gray-700'}`} style={{ lineHeight: '1.6', wordBreak: 'normal', overflowWrap: 'anywhere' }}>
               {category ? (
                 // Se tem category, mostra o value como valor principal (ex: "Panará")
                 type === 'number' ? (
@@ -150,14 +153,14 @@ const NativeLandCard = memo(({
                 ) : type === 'boolean' ? (
                   renderValue()
                 ) : React.isValidElement(value) ? value : (
-                  <span className="break-words">{String(value || label)}</span>
+                  <span style={{ wordBreak: 'normal', overflowWrap: 'anywhere' }}>{String(value || label)}</span>
                 )
               ) : type === 'number' ? (
                 <span className="text-lg font-semibold text-gray-700">{value || '0'}</span>
               ) : type === 'boolean' ? (
                 renderValue()
               ) : React.isValidElement(value) ? value : (
-                <span className="break-words">{String(value || label)}</span>
+                <span style={{ wordBreak: 'normal', overflowWrap: 'anywhere' }}>{String(value || label)}</span>
               )}
             </h5>
           </div>
@@ -270,7 +273,7 @@ const NativeLandCard = memo(({
       <div className={`flex flex-col relative z-20 ${isShortContent && !hasDescription ? 'h-auto' : isShortContent ? 'justify-start' : 'h-full'}`}>
         {/* Título centralizado - aproveitando melhor o espaço */}
         <div className={`flex items-center justify-center flex-shrink-0 relative z-20 ${hasDescription && !isShortContent || needsFlexibleLayout ? 'mb-1' : isShortContent ? 'mb-0' : 'mb-0.5'}`}>
-          <div className="text-xs text-gray-700 font-semibold leading-tight text-center uppercase tracking-wide break-words relative z-20" style={{ lineHeight: '1.3' }}>
+          <div className="text-xs text-gray-700 font-semibold leading-tight text-center uppercase tracking-wide relative z-20" style={{ lineHeight: '1.3', wordBreak: 'normal', overflowWrap: 'anywhere' }}>
             {label}
           </div>
         </div>
