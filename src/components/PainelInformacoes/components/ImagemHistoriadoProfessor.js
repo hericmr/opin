@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { supabase } from '../../../dbClient';
 import { getLocalImageUrl, isLocalImage, getSupabaseStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
-import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
 import logger from '../../../utils/logger';
 import { hasContent } from '../../../utils/contentValidation';
 import ReusableImageZoom from '../../ReusableImageZoom';
@@ -60,58 +59,55 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
 
         if (data && data.length > 0) {
           logger.debug('Arquivos de professores encontrados:', data.length);
-          const imagensComUrl = await Promise.all(data.map(async (img, idx) => {
+
+          // 1 query para todas as legendas de professor (evita N queries individuais)
+          const { data: legendasProfessor } = await supabase
+            .from('legendas_fotos')
+            .select('*')
+            .eq('escola_id', escola_id)
+            .eq('tipo_foto', 'professor')
+            .eq('ativo', true)
+            .order('created_at', { ascending: false });
+
+          // Mapa em memória: imagem_url, caminho relativo e nome do arquivo → legenda
+          const legendaMap = new Map();
+          (legendasProfessor || []).forEach(l => {
+            if (l.imagem_url && !legendaMap.has(l.imagem_url)) {
+              legendaMap.set(l.imagem_url, l);
+            }
+            const filename = l.imagem_url?.split('/').pop();
+            if (filename && !legendaMap.has(filename)) {
+              legendaMap.set(filename, l);
+            }
+            const relativo = `${escola_id}/${filename}`;
+            if (relativo && !legendaMap.has(relativo)) {
+              legendaMap.set(relativo, l);
+            }
+          });
+
+          const imagensComUrl = data.map((img, idx) => {
             let publicUrl = img.imagem_url;
 
             if (publicUrl && !publicUrl.startsWith('http')) {
-              // Construir URL do Supabase via variável de ambiente
               const storageUrl = getSupabaseStorageUrl('imagens-professores', img.imagem_url);
               publicUrl = getSecureImageUrl(storageUrl);
             } else if (publicUrl && publicUrl.startsWith('http')) {
               publicUrl = getSecureImageUrl(publicUrl);
             }
 
-            // Extrair gênero do nome do arquivo (se disponível no nome do arquivo ou usar padrão)
             const fileName = img.nome_arquivo || img.imagem_url || '';
             let genero = 'professor';
             if (fileName.includes('professora')) {
               genero = 'professora';
             }
 
-            // Buscar legenda da nova tabela (se necessário, mas imagens_professores já tem autor)
-            // Mantendo lógica para compatibilidade se houver dados em legendas_fotos para professores
-            let legenda = null;
-            try {
-              const caminhoRelativo = img.imagem_url;
-              // Se não tiver imagem_url, não tem como buscar legenda por caminho
-              if (caminhoRelativo) {
-                // Tentar buscar legenda se existir
-                // Nota: A tabela imagens_professores já tem 'autor', mas 'legenda' pode vir de legendas_fotos
-                // ou ser construída.
-              }
-            } catch (error) {
-              logger.warn('Erro ao buscar legenda:', error);
-            }
-
-            // Construir legenda/descrição
-            // Se imagens_professores não tem campo 'legenda' explícito, usamos o que temos
-            // O código original buscava legenda em 'legendas_fotos' usando o caminho.
-            // Podemos manter isso se 'imagens_professores' não for suficiente.
-
-            // Para simplificar e seguir o padrão, vamos usar os dados que já temos na tabela imagens_professores
-            // ou buscar em legendas_fotos se precisarmos de mais detalhes.
-            // O código original fazia getLegendaByImageUrlFlexivel.
-
-            // Vamos tentar manter a busca de legenda para garantir que descrições detalhadas apareçam
-            if (img.imagem_url) {
-              try {
-                const caminhoRelativo = `${escola_id}/${img.imagem_url.split('/').pop()}`;
-                legenda = await getLegendaByImageUrlFlexivel(caminhoRelativo, escola_id, {
-                  categoria: 'professor',
-                  tipo_foto: 'professor'
-                });
-              } catch (e) { }
-            }
+            // Lookup em memória (sem query por imagem)
+            const filename = img.imagem_url?.split('/').pop();
+            const caminhoRelativo = `${escola_id}/${filename}`;
+            const legenda = legendaMap.get(img.imagem_url)
+              || legendaMap.get(caminhoRelativo)
+              || legendaMap.get(filename)
+              || null;
 
             const legendaFinal = hasContent(legenda?.legenda) ? legenda.legenda.trim() : (img.autor ? `Foto de ${img.autor}` : null);
 
@@ -128,7 +124,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, refreshKey = 0, isMaximized = fa
               dataFoto: img.data_upload || legenda?.data_foto,
               categoria: 'professor',
             };
-          }));
+          });
 
           // Filtrar apenas imagens que existem localmente (consistência com ImagensdasEscolas)
           const imagensValidas = imagensComUrl.filter(img => {
