@@ -1,13 +1,11 @@
 import React, { useState, Suspense } from 'react';
 import { useEscolas } from './hooks/useEscolas';
-import { useModalidades } from './hooks/useModalidades';
+import { useAdminForm } from './hooks/useAdminForm';
 import { ADMIN_TABS, UI_CONFIG, FORM_CONFIG } from './constants/adminConstants';
 import AdminSidebar from './AdminSidebar';
 import AdminToolbar from './AdminToolbar';
 import ProtectedRoute from '../Auth/ProtectedRoute';
-import { supabase } from '../../dbClient';
 import './AdminPanel.css';
-// Imports de tabs movidos para tabRenderer.js
 import TabelaEditavelTab from './tabs/TabelaEditavelTab';
 import GlobalCardVisibilitySettings from './components/GlobalCardVisibilitySettings';
 import MetadadosModal from './components/MetadadosModal';
@@ -17,13 +15,13 @@ import logger from '../../utils/logger';
 import { renderActiveTab } from './utils/tabRenderer';
 import { useAdminSave } from './hooks/useAdminSave';
 import { useAdminFilters } from './hooks/useAdminFilters';
+import { downloadAllImages } from './utils/downloadImagesService';
 
 // Lazy loading do CompletenessDashboard - só é carregado quando necessário
 const CompletenessDashboard = React.lazy(() => import('./components/CompletenessDashboard'));
 
 const AdminPanelContent = () => {
-  // Estados principais
-  const [editingLocation, setEditingLocation] = useState(null);
+  // UI state
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showBackupModal, setShowBackupModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -35,12 +33,9 @@ const AdminPanelContent = () => {
   const [escolaSalvaId, setEscolaSalvaId] = useState(null);
   const [escolaSalvaNome, setEscolaSalvaNome] = useState(null);
   const [camposAlterados, setCamposAlterados] = useState([]);
-  const [dadosOriginais, setDadosOriginais] = useState(null);
 
-  // Detectar se é mobile
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= UI_CONFIG.MOBILE_BREAKPOINT;
 
-  // Hooks customizados
   const {
     escolas,
     loading: escolasLoading,
@@ -53,15 +48,19 @@ const AdminPanelContent = () => {
     deleteEscola
   } = useEscolas();
 
-  // Hook para filtros
   const { filteredEscolas } = useAdminFilters(escolas, searchTerm, selectedType);
 
   const {
-    loadExistingModalidades,
-    clearModalidades
-  } = useModalidades();
+    editingLocation,
+    setEditingLocation,
+    dadosOriginais,
+    setDadosOriginais,
+    openEditModal,
+    handleNovaEscola,
+    abrirTabelaEditavel,
+    hasMissingInfo,
+  } = useAdminForm();
 
-  // Hook para gerenciar salvamento de escolas
   const {
     isSaving,
     saveError,
@@ -78,249 +77,6 @@ const AdminPanelContent = () => {
     dadosOriginais,
     setDadosOriginais
   });
-
-  // Função para abrir edição de escola
-  const openEditModal = (escola) => {
-    // Carregar modalidades existentes
-    loadExistingModalidades(escola['Modalidade de Ensino/turnos de funcionamento']);
-
-    // Garantir que apenas os campos originais do banco sejam usados
-    const escolaOriginal = {
-      id: escola.id,
-      Escola: escola.Escola,
-      'Município': escola['Município'],
-      'Endereço': escola['Endereço'],
-      'Terra Indigena (TI)': escola['Terra Indigena (TI)'],
-      'Parcerias com o município': escola['Parcerias com o município'],
-      'Diretoria de Ensino': escola['Diretoria de Ensino'],
-      'Ano de criação da escola': escola['Ano de criação da escola'],
-      'Modalidade de Ensino/turnos de funcionamento': escola['Modalidade de Ensino/turnos de funcionamento'],
-      'Numero de alunos': escola['Numero de alunos'],
-      'turnos_funcionamento': escola['turnos_funcionamento'] || '',
-      'salas_vinculadas': escola['salas_vinculadas'] || '',
-      'Espaço escolar e estrutura': escola['Espaço escolar e estrutura'],
-      'Acesso à internet': escola['Acesso à internet'],
-      'Gestão/Nome': escola['Gestão/Nome'],
-      'Outros funcionários': escola['Outros funcionários'],
-      'Quantidade de professores indígenas': escola['Quantidade de professores indígenas'],
-      'Quantidade de professores não indígenas': escola['Quantidade de professores não indígenas'],
-      'Formação dos professores': escola['Formação dos professores'],
-      'PPP elaborado com a comunidade?': escola['PPP elaborado com a comunidade?'],
-      'outras_informacoes': escola['outras_informacoes'] || '',
-      'Latitude': escola['Latitude'],
-      'Longitude': escola['Longitude'],
-      'links': escola['links'],
-      'link_para_videos': escola['link_para_videos'],
-      'logradouro': escola['logradouro'],
-      'numero': escola['numero'],
-      'complemento': escola['complemento'],
-      'bairro': escola['bairro'],
-      'cep': escola['cep'],
-      'estado': escola['estado'],
-      'nome_professor': escola['nome_professor'],
-      'professores_indigenas': escola['professores_indigenas'],
-      'professores_nao_indigenas': escola['professores_nao_indigenas'],
-      'formacao_professores': escola['formacao_professores'],
-      'outros_funcionarios': escola['outros_funcionarios'],
-      'gestao': escola['gestao'],
-      'Povos indigenas': escola['Povos indigenas'],
-      activeTab: FORM_CONFIG.DEFAULT_ACTIVE_TAB
-    };
-
-    // Salvar dados originais para comparação posterior
-    setDadosOriginais({ ...escolaOriginal });
-    setEditingLocation(escolaOriginal);
-  };
-
-  // Função para abrir tabela editável
-  const abrirTabelaEditavel = () => {
-    setEditingLocation({
-      id: 'tabela-editavel',
-      Escola: 'Tabela Editável',
-      activeTab: 'tabela-editavel'
-    });
-  };
-
-  // Função para criar nova escola vazia
-  const criarNovaEscolaVazia = () => {
-    // Limpar modalidades
-    clearModalidades();
-
-    return {
-      Escola: '',
-      'Município': '',
-      'Endereço': '',
-      'Terra Indigena (TI)': '',
-      'Parcerias com o município': '',
-      'Diretoria de Ensino': '',
-      'Ano de criação da escola': null,
-      'Modalidade de Ensino/turnos de funcionamento': '',
-      'Numero de alunos': null,
-      'turnos_funcionamento': '',
-      'salas_vinculadas': '',
-      'Espaço escolar e estrutura': '',
-      'Acesso à internet': '',
-      'Gestão/Nome': '',
-      'Outros funcionários': '',
-      'Quantidade de professores indígenas': null,
-      'Quantidade de professores não indígenas': null,
-      'Formação dos professores': '',
-      'PPP elaborado com a comunidade?': '',
-      'outras_informacoes': '',
-      'Latitude': null,
-      'Longitude': null,
-      'links': '',
-      'link_para_videos': '',
-      'logradouro': '',
-      'numero': '',
-      'complemento': '',
-      'bairro': '',
-      'cep': '',
-      'estado': 'SP',
-      'nome_professor': '',
-      'professores_indigenas': '',
-      'professores_nao_indigenas': '',
-      'formacao_professores': '',
-      'outros_funcionarios': '',
-      'gestao': '',
-      activeTab: FORM_CONFIG.DEFAULT_ACTIVE_TAB
-    };
-  };
-
-  // Função para criar nova escola
-  const handleNovaEscola = () => {
-    setEditingLocation(criarNovaEscolaVazia());
-  };
-
-  // Função para abrir modal de remoção - REMOVIDO: não utilizado
-  // const handleRemoverEscola = (escola) => {
-  //   setEscolaToDelete(escola);
-  //   setShowDeleteModal(true);
-  // };
-
-  // Função para verificar se uma aba tem informações faltando
-  const hasMissingInfo = (tabId, escola) => {
-    if (!escola) return false;
-
-    const fieldMappings = {
-      'dados-basicos': ['Escola', 'Município', 'Endereço', 'Terra Indigena (TI)', 'Diretoria de Ensino'],
-      'povos-linguas': ['Povos indigenas'],
-      'modalidades': ['Modalidade de Ensino/turnos de funcionamento', 'Numero de alunos'],
-      'infraestrutura': ['Espaço escolar e estrutura', 'Acesso à internet'],
-      'gestao-professores': ['Gestão/Nome', 'Quantidade de professores indígenas', 'Quantidade de professores não indígenas'],
-      'funcionarios': ['Outros funcionários'],
-      'material-pedagogico': ['Material pedagógico indígena'],
-      'projetos-parcerias': ['outras_informacoes'],
-      'video': ['link_para_videos'],
-      'historia-professores': ['nome_professor'],
-      'coordenadas': ['Latitude', 'Longitude'],
-      'imagens-escola': ['imagem_header'],
-      'imagens-professores': [],
-      'documentos': []
-    };
-
-    const fields = fieldMappings[tabId] || [];
-
-    return fields.some(field => {
-      const value = escola[field];
-      return value === null || value === undefined || value === '' || value === 'null';
-    });
-  };
-
-  // Função para fazer download de todas as imagens
-  const handleDownloadImages = async () => {
-    try {
-      // Criar um arquivo ZIP com todas as imagens
-      const JSZip = (await import('jszip')).default;
-      const zip = new JSZip();
-
-      // Buscar todas as imagens do bucket 'imagens'
-      const { data: imagens, error } = await supabase
-        .storage
-        .from('imagens')
-        .list('', {
-          limit: 1000,
-          offset: 0
-        });
-
-      if (error) {
-        logger.error('Erro ao buscar imagens:', error);
-        alert('Erro ao buscar imagens: ' + error.message);
-        return;
-      }
-
-      if (!imagens || imagens.length === 0) {
-        alert('Nenhuma imagem encontrada no bucket.');
-        return;
-      }
-
-      // Mostrar loading
-      const loadingMessage = document.createElement('div');
-      loadingMessage.innerHTML = `
-        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-                    background: rgba(0,0,0,0.8); color: white; padding: 20px; border-radius: 10px; 
-                    z-index: 9999; text-align: center;">
-          <div style="margin-bottom: 10px;">Preparando download...</div>
-          <div style="font-size: 12px;">Encontradas ${imagens.length} imagens</div>
-        </div>
-      `;
-      document.body.appendChild(loadingMessage);
-
-      // Baixar cada imagem e adicionar ao ZIP
-      for (let i = 0; i < imagens.length; i++) {
-        const imagem = imagens[i];
-
-        try {
-          const { data: imageData, error: downloadError } = await supabase
-            .storage
-            .from('imagens')
-            .download(imagem.name);
-
-          if (downloadError) {
-            logger.error(`Erro ao baixar ${imagem.name}:`, downloadError);
-            continue;
-          }
-
-          // Adicionar ao ZIP
-          zip.file(imagem.name, imageData);
-
-          // Atualizar progresso
-          loadingMessage.innerHTML = `
-            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-                        background: rgba(0,0,0,0.8); color: white; padding: 20px; border-radius: 10px; 
-                        z-index: 9999; text-align: center;">
-              <div style="margin-bottom: 10px;">Preparando download...</div>
-              <div style="font-size: 12px;">${i + 1} de ${imagens.length} imagens processadas</div>
-            </div>
-          `;
-        } catch (err) {
-          logger.error(`Erro ao processar ${imagem.name}:`, err);
-        }
-      }
-
-      // Gerar e baixar o ZIP
-      const zipBlob = await zip.generateAsync({ type: 'blob' });
-
-      // Criar link de download
-      const url = URL.createObjectURL(zipBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `backup-imagens-escolas-${new Date().toISOString().split('T')[0]}.zip`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      // Remover loading
-      document.body.removeChild(loadingMessage);
-
-      alert(`Download concluído! ${imagens.length} imagens foram baixadas em um arquivo ZIP.`);
-
-    } catch (error) {
-      logger.error('Erro ao fazer download das imagens:', error);
-      alert('Erro ao fazer download das imagens: ' + error.message);
-    }
-  };
 
   // Função para confirmar remoção
   const handleConfirmarRemocao = async () => {
@@ -662,7 +418,7 @@ const AdminPanelContent = () => {
                   </h4>
 
                   <button
-                    onClick={handleDownloadImages}
+                    onClick={downloadAllImages}
                     className="w-full px-4 py-3 bg-gray-800 text-gray-100 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 border border-gray-600 text-sm"
                   >
                     <div className="flex items-center gap-2 justify-center">
