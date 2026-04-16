@@ -32,7 +32,7 @@ const AddressDetails = ({ escola }) => {
   if (!hasDetailedAddress) {
     return (
       <div className="p-2.5 bg-gray-50 border border-gray-200 rounded-md">
-        <p className="text-sm text-gray-900 leading-relaxed break-words" style={{ lineHeight: '1.6' }}>
+        <p className="text-sm text-gray-900 leading-relaxed" style={{ lineHeight: '1.6' }}>
           {capitalize(escola.endereco)}
         </p>
       </div>
@@ -52,7 +52,7 @@ const AddressDetails = ({ escola }) => {
             <MapPin className="w-5 h-5 text-gray-700 mt-0.5 flex-shrink-0" aria-hidden="true" />
             <div className="flex-1 min-w-0">
               <div className="text-xs font-semibold text-gray-800 mb-1">{label}</div>
-              <div className="text-sm text-gray-900 leading-relaxed break-words" style={{ lineHeight: '1.6' }}>{escola[field]}</div>
+              <div className="text-sm text-gray-900 leading-relaxed" style={{ lineHeight: '1.6' }}>{escola[field]}</div>
             </div>
           </div>
         )
@@ -63,7 +63,7 @@ const AddressDetails = ({ escola }) => {
           <MapPin className="w-5 h-5 text-gray-700 mt-0.5 flex-shrink-0" aria-hidden="true" />
           <div className="flex-1 min-w-0">
             <div className="text-xs font-semibold text-gray-800 mb-1">Localização</div>
-            <div className="text-sm text-gray-900 leading-relaxed break-words" style={{ lineHeight: '1.6' }}>
+            <div className="text-sm text-gray-900 leading-relaxed" style={{ lineHeight: '1.6' }}>
               {[escola.municipio, escola.estado, escola.cep].filter(Boolean).join(', ')}
             </div>
           </div>

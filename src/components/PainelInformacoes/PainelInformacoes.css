@@ -5,6 +5,7 @@
   border-top: 4px solid #215A36; /* accent changed from blue to green */
   hyphens: none;
   word-break: normal;
+  overflow-wrap: break-word;
   
   /* Transição sinuosa (Quintic Out) para um deslize orgânico */
   transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), 
@@ -81,6 +82,21 @@
   margin: 1em 0 1.25em; /* Increased spacing */
   line-height: 1.75; /* Better line height for paragraphs */
   color: #374151; /* gray-700 for better contrast */
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+/* InfoGrid: flex-wrap para que item órfão (sozinho na linha) preencha todo o espaço */
+.mj-panel .info-grid > * {
+  flex: 1 1 var(--grid-basis, 130px);
+  min-width: 0;
+}
+
+/* Texto corrido em info-items e parágrafos fora do mj-prose */
+.mj-panel p,
+.mj-panel .info-paragraph {
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .mj-panel .mj-prose a {

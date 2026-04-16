@@ -9,7 +9,7 @@ const ListWithBullets = ({ items }) => {
   if (!items || items.length === 0) return null;
   
   return (
-    <div className="text-sm text-gray-800 text-left w-full font-medium leading-relaxed break-words px-2">
+    <div className="text-sm text-gray-800 text-left w-full font-medium leading-relaxed px-2">
       <ul className="list-none pl-0 ml-0 space-y-1.5">
         {items.map((item, idx) => (
           <li key={idx} className="leading-relaxed m-0 p-0 pl-0 ml-0 flex items-start" style={{ lineHeight: '1.7' }}>
