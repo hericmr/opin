@@ -141,7 +141,7 @@ const NativeLandCard = memo(({
           <div className="flex-1 min-w-0 relative z-20">
             {/* Categoria em uppercase e teal (se fornecido) */}
             {category && (
-              <div className="text-xs font-semibold text-teal-600 uppercase tracking-wide mb-1.5 break-words relative z-20" style={{ lineHeight: '1.5' }}>
+              <div className="text-xs font-semibold text-teal-600 uppercase tracking-wide mb-1.5 relative z-20" style={{ lineHeight: '1.5' }}>
                 {category}
               </div>
             )}
@@ -169,7 +169,7 @@ const NativeLandCard = memo(({
         
         {/* Descrição opcional */}
         {description && (
-          <div className="text-sm text-gray-700 leading-relaxed mt-2 pt-2 border-t border-gray-200 whitespace-pre-line break-words relative z-20" style={{ lineHeight: '1.6' }}>
+          <div className="text-sm text-gray-700 leading-relaxed mt-2 pt-2 border-t border-gray-200 whitespace-pre-line relative z-20" style={{ lineHeight: '1.6' }}>
             {description}
           </div>
         )}
@@ -287,7 +287,7 @@ const NativeLandCard = memo(({
         
         {/* Descrição opcional */}
         {description && (
-          <div className={`text-sm text-gray-700 leading-relaxed whitespace-pre-line break-words relative z-20 flex-shrink-0 ${isShortContent ? 'mt-0.5 pt-0.5' : 'mt-1 pt-1'}`} style={{ lineHeight: '1.5' }}>
+          <div className={`text-sm text-gray-700 leading-relaxed whitespace-pre-line relative z-20 flex-shrink-0 ${isShortContent ? 'mt-0.5 pt-0.5' : 'mt-1 pt-1'}`} style={{ lineHeight: '1.5' }}>
             {description}
           </div>
         )}

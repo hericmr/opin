@@ -69,17 +69,21 @@ const InfoCard = memo(({ label, value, icon: Icon, type = 'text', className = ''
   );
 });
 
-// Componente InfoGrid para layout em grid
+// Componente InfoGrid para layout em flex-wrap
+// flex: 1 1 <basis> garante que item órfão (sozinho na última linha) cresce para preencher a linha inteira
 const InfoGrid = memo(({ children, columns = 'auto-fit', gap = 4, className = '' }) => {
-  const gridClasses = {
-    'auto-fit': 'grid-cols-2 lg:grid-cols-3',
-    '2': 'grid-cols-2',
-    '3': 'grid-cols-2 lg:grid-cols-3',
-    '4': 'grid-cols-2 lg:grid-cols-4'
+  const basisMap = {
+    'auto-fit': '140px',
+    '2': '140px',
+    '3': '130px',
+    '4': '120px',
   };
 
   return (
-    <div className={`grid ${gridClasses[columns]} gap-${gap} ${className} [&>*]:bg-gray-50`}>
+    <div
+      className={`info-grid flex flex-wrap gap-${gap} ${className} [&>*]:bg-gray-50`}
+      style={{ '--grid-basis': basisMap[columns] ?? '130px' }}
+    >
       {children}
     </div>
   );

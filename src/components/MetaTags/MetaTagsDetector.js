@@ -14,7 +14,7 @@ const MetaTagsDetector = ({ dataPoints }) => {
   React.useEffect(() => {
     const isDevelopment = import.meta.env.MODE === 'development' || import.meta.env.DEV;
     if (isDevelopment && escolaAtual) {
-      logger.debug('🎯 MetaTagsDetector: Escola detectada:', debugInfo);
+      console.debug('🎯 MetaTagsDetector: Escola detectada:', debugInfo);
     }
   }, [escolaAtual, debugInfo]);
 

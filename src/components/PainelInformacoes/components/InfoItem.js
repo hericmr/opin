@@ -13,12 +13,12 @@ const InfoItem = memo(({ label, value, className = '', isTextArea = false }) => 
       <span className="font-semibold text-gray-800 leading-tight">{label}:</span>
       {isTextArea ? (
         <div className="text-gray-700">
-          <div className="whitespace-pre-wrap break-words text-sm leading-relaxed" style={{ lineHeight: '1.7' }}>
+          <div className="whitespace-pre-wrap text-sm leading-relaxed" style={{ lineHeight: '1.7' }}>
             {value}
           </div>
         </div>
       ) : (
-        <span className="text-gray-700 break-words leading-relaxed" style={{ lineHeight: '1.6' }}>{value}</span>
+        <span className="text-gray-700 leading-relaxed" style={{ lineHeight: '1.6' }}>{value}</span>
       )}
     </div>
   );
