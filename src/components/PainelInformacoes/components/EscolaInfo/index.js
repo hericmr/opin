@@ -11,7 +11,7 @@ import Infraestrutura from './Infraestrutura';
 import GestaoProfessores from './GestaoProfessores';
 import ProjetosParcerias from './ProjetosParcerias';
 import HistoriadoProfessor from './HistoriadoProfessor';
-import ImagensdasEscolas from '../ImagensdasEscolas';
+import GaleriaHorizontal from '../GaleriaHorizontal';
 
 // CSS para layout Masonry real usando CSS columns
 const masonryStyles = `
@@ -65,7 +65,8 @@ const EscolaInfo = memo(({
   sectionRefs,
   isMaximized = false,
   shouldHideInlineMedia = false,
-  isLoadingDetails = false
+  isLoadingDetails = false,
+  onOpenGaleria,
 }) => {
   // Buscar configuração global
   const { globalVisibility } = useGlobalCardVisibility();
@@ -114,12 +115,12 @@ const EscolaInfo = memo(({
         </div>
       )}
 
-      {/* Imagens da escola, agora renderizadas independentemente da história */}
+      {/* Galeria filmstrip entre a história da escola e a do professor */}
       {isCardVisible(cardsVisibilidade, 'imagensEscola', globalVisibility) && (
-        <ImagensdasEscolas
+        <GaleriaHorizontal
           escola_id={escola.id}
-          isMaximized={isMaximized}
           hideInlineMedia={shouldHideInlineMedia}
+          onOpenGaleria={onOpenGaleria}
         />
       )}
 

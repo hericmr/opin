@@ -15,7 +15,6 @@ import IntroPanel from "./IntroPanel";
 import PainelContainer from "./components/PainelContainer";
 import DocumentViewer from "./components/DocumentViewer";
 import VideoPlayer from "./components/VideoPlayer";
-import DrawingsSection from "./components/DrawingsSection";
 import { getVideosEscola } from "../../services/videoService";
 
 const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
@@ -156,7 +155,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
   const isIntro = escolaData?.titulo === 'Sobre o site';
 
   const renderContent = (layoutInfo = {}) => {
-    const { useSplitLayout = false } = layoutInfo;
+    const { useSplitLayout = false, onOpenGaleria } = layoutInfo;
     const cardsVisibilidade = escolaData?.cards_visibilidade;
 
     if (isIntro) {
@@ -176,6 +175,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
           isMaximized={isMaximized}
           shouldHideInlineMedia={useSplitLayout}
           isLoadingDetails={detalhesLoading}
+          onOpenGaleria={onOpenGaleria}
         />
         {/* Vídeos */}
         {isCardVisible(cardsVisibilidade, 'videos', globalVisibility) && 
@@ -210,12 +210,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
           </div>
         )}
         
-        {/* Desenhos */}
-        <DrawingsSection
-          escolaId={escolaData?.id}
-        />
-        
-        {/* Documentos - Displayed last, after drawings */}
+        {/* Documentos */}
         {isCardVisible(cardsVisibilidade, 'documentos', globalVisibility) && 
          documentos && documentos.length > 0 && (
           <DocumentViewer 
