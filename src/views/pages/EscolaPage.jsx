@@ -14,8 +14,7 @@ import { useEscolasData } from '../../hooks/useEscolasData';
 import HistoriaEscola from '../../components/PainelInformacoes/components/EscolaInfo/HistoriaEscola';
 import HistoriaTerraIndigena from '../../components/PainelInformacoes/components/EscolaInfo/HistoriaTerraIndigena';
 import HistoriadoProfessor from '../../components/PainelInformacoes/components/EscolaInfo/HistoriadoProfessor';
-import GaleriaHorizontal from '../../components/PainelInformacoes/components/GaleriaHorizontal';
-import GaleriaPanel from '../../components/PainelInformacoes/components/GaleriaPanel';
+import GaleriaEditorial from '../../components/GaleriaEditorial';
 import { idFromEscolaSlug, escolaUrlSlug } from '../../utils/slug';
 
 const siteUrl = 'https://hericmr.github.io/opin';
@@ -182,7 +181,6 @@ const EscolaPage = () => {
   const navigate = useNavigate();
   const { dataPoints } = useEscolasData();
   const { data: escola, loading, error } = useEscolaDetalhes(id);
-  const [galeriaOpen, setGaleriaOpen] = useState(false);
 
   const nome = escola?.nome || '';
   const municipio = escola?.municipio || '';
@@ -352,11 +350,13 @@ const EscolaPage = () => {
           </div>
         </div>
 
-        {/* Galeria */}
-        <div className="border-b border-gray-100">
-          <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 py-8">
-            <GaleriaHorizontal escola_id={Number(id)} onOpenGaleria={() => setGaleriaOpen(true)} />
-          </div>
+        {/* Galeria editorial */}
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
+          <GaleriaEditorial
+            escola_id={Number(id)}
+            headerUrl={escola?.imagem_header}
+            titulo={nome}
+          />
         </div>
 
         {/* Nav âncoras */}
@@ -413,16 +413,6 @@ const EscolaPage = () => {
 
         </div>
       </div>
-
-      {galeriaOpen && (
-        <GaleriaPanel
-          escolaId={Number(id)}
-          headerUrl={escola?.imagem_header}
-          titulo={nome}
-          isOpen={galeriaOpen}
-          onClose={() => setGaleriaOpen(false)}
-        />
-      )}
 
       <Footer />
     </div>
