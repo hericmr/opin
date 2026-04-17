@@ -155,7 +155,7 @@ const AnchorNav = ({ sections }) => {
   }, [sections]);
 
   return (
-    <nav className="sticky top-0 z-20 bg-white border-b border-gray-100 shadow-sm">
+    <nav className="bg-white border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
         <div className="flex items-center gap-1 overflow-x-auto py-0" style={{ scrollbarWidth: 'none' }}>
           {sections.map(({ id, label }) => (
