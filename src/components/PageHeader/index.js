@@ -27,6 +27,7 @@ const PageHeader = ({
   blendMode = 'normal',
   backgroundImage = null,
   minHeight = null,
+  titlePosition = 'center',
 }) => {
   const defaultHeroUrl = `${import.meta.env.BASE_URL || '/opin'}/hero_grayscale.webp`;
   const heroImageUrl = backgroundImage || defaultHeroUrl;
@@ -146,17 +147,18 @@ const PageHeader = ({
         zIndex: 10
       }}
     >
-      {/* Overlay de cor com modo de mesclagem para colorir a escala de cinza */}
-      <div 
-        className="absolute inset-0 transition-all duration-500" 
-        style={{ 
-          backgroundColor: overlayColor,
-          mixBlendMode: blendMode
-        }}
-      ></div>
+      {/* Overlay de cor */}
+      <div
+        className="absolute inset-0 transition-all duration-500"
+        style={{ backgroundColor: overlayColor, mixBlendMode: blendMode }}
+      />
+      {/* Gradiente inferior para legibilidade do título bottom-left */}
+      {titlePosition === 'bottom-left' && (
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 50%)' }} />
+      )}
 
 
-      <div ref={contentRef} className="relative z-10" style={{ paddingTop: showNavbar ? '0' : '80px', paddingBottom: '2rem' }}>
+      <div ref={contentRef} className="relative z-10 flex flex-col" style={{ paddingTop: showNavbar ? '0' : '80px', paddingBottom: titlePosition === 'bottom-left' ? '0' : '2rem', minHeight: minHeight || undefined }}>
         {/* Navbar integrada no topo do hero - usando os mesmos espaçamentos da navbar original */}
         {showNavbar && (
           <div className="w-full max-w-none px-2 sm:px-4 md:px-6 lg:px-16 xl:px-24">
@@ -285,32 +287,43 @@ const PageHeader = ({
           </div>
         )}
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Título da Página - Estilo Native Land Digital */}
-          <div className="mt-4 flex items-center justify-center min-h-20 sm:min-h-24 md:min-h-28">
+        {titlePosition === 'bottom-left' ? (
+          /* Título no canto inferior esquerdo — estilo editorial */
+          <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 flex flex-col justify-end pb-8 pb-10" style={{ flex: 1 }}>
+            {children && <div className="mb-4">{children}</div>}
             {logoImage ? (
-              <img
-                src={logoImage}
-                alt={title || 'Logo'}
-                className="h-20 sm:h-24 md:h-28 w-auto object-contain"
-              />
+              <img src={logoImage} alt={title || 'Logo'} className="h-20 w-auto object-contain" />
             ) : (
               <h1
-                className={`text-white ${titleSize} uppercase leading-none text-center`}
+                className="text-white text-2xl sm:text-3xl md:text-4xl font-bold leading-tight"
                 style={{ fontFamily: titleFontFamily }}
               >
                 {title}
               </h1>
             )}
           </div>
-
-          {/* Conteúdo adicional opcional (breadcrumbs, etc) */}
-          {children && (
-            <div className="mt-4">
-              {children}
+        ) : (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {/* Título centrado — padrão */}
+            <div className="mt-4 flex items-center justify-center min-h-20 sm:min-h-24 md:min-h-28">
+              {logoImage ? (
+                <img
+                  src={logoImage}
+                  alt={title || 'Logo'}
+                  className="h-20 sm:h-24 md:h-28 w-auto object-contain"
+                />
+              ) : (
+                <h1
+                  className={`text-white ${titleSize} uppercase leading-none text-center`}
+                  style={{ fontFamily: titleFontFamily }}
+                >
+                  {title}
+                </h1>
+              )}
             </div>
-          )}
-        </div>
+            {children && <div className="mt-4">{children}</div>}
+          </div>
+        )}
       </div>
 
       {/* Menu Mobile */}
