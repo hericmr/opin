@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { BookOpen, Map, BarChart3, Film } from 'lucide-react';
 import { prefetchPage } from '../../router';
 
 const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, isMobileLandscape }) => {
@@ -19,7 +18,7 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
   };
 
   const getButtonStyle = (active) => {
-    const baseStyle = 'px-3 xl:px-4 py-1.5 text-sm font-medium rounded-lg focus:outline-none flex items-center gap-2 relative';
+    const baseStyle = 'px-3 xl:px-4 py-1.5 text-base font-medium rounded-lg focus:outline-none relative';
     const activeStyle = 'bg-white/20 text-white shadow-sm';
     const inactiveStyle = 'text-white hover:text-white opacity-80 hover:opacity-100';
     
@@ -38,8 +37,7 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
         aria-label="Ir para o mapa das escolas indígenas"
         aria-current={isActive('/mapa') ? 'page' : undefined}
       >
-        <Map className="w-4 h-4" />
-        <span className="hidden xl:inline">Mapa</span>
+        Mapa
       </button>
 
       {/* Botão Materiais Didáticos */}
@@ -52,8 +50,7 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
         aria-label="Ver materiais didáticos indígenas"
         aria-current={isActive('/conteudo') ? 'page' : undefined}
       >
-        <BookOpen className="w-4 h-4" />
-        <span className="hidden xl:inline">Materiais</span>
+        Materiais
       </button>
 
       {/* Botão Alguns dados */}
@@ -66,8 +63,7 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
         aria-label="Ver dados das escolas indígenas"
         aria-current={isActive('/algunsdados') ? 'page' : undefined}
       >
-        <BarChart3 className="w-4 h-4" />
-        <span className="hidden xl:inline">Alguns dados</span>
+        Alguns dados
       </button>
 
       {/* Botão Lindiflix */}
@@ -80,8 +76,7 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
         aria-label="Lindiflix – Vídeos das aldeias indígenas"
         aria-current={isActive('/lindiflix') ? 'page' : undefined}
       >
-        <Film className="w-4 h-4" />
-        <span className="hidden xl:inline">Lindiflix</span>
+        Lindiflix
       </button>
     </nav>
   );
