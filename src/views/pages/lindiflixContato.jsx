@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import Footer from '../../components/Footer';
 import PageHeader from '../../components/PageHeader';
 import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
 
@@ -71,6 +72,7 @@ const LindiflixContato = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

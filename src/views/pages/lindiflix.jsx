@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'; // useState/useEffect usados no VideoCard
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import Footer from '../../components/Footer'; // useState/useEffect usados no VideoCard
 import { Helmet } from 'react-helmet-async';
 import PageHeader from '../../components/PageHeader';
 import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
@@ -123,6 +124,7 @@ const Lindiflix = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
