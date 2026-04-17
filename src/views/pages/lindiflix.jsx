@@ -89,9 +89,15 @@ const Lindiflix = () => {
       <Helmet>
         <title>Lindiflix – Das crianças e jovens das Aldeias de São Paulo para o mundo!</title>
         <meta name="description" content="Plataforma que reúne os vídeos produzidos por estudantes da LINDI, onde crianças e jovens compartilham suas aldeias, culturas e modos de viver." />
-        <meta property="og:title" content="Lindiflix – Das crianças e jovens das Aldeias de São Paulo para o mundo!" />
-        <meta property="og:url" content={`${siteUrl}/lindiflix`} />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content={`${siteUrl}/lindiflix`} />
+        <meta property="og:title" content="Lindiflix – Das crianças e jovens das Aldeias de São Paulo para o mundo!" />
+        <meta property="og:description" content="Plataforma que reúne os vídeos produzidos por estudantes da LINDI, onde crianças e jovens compartilham suas aldeias, culturas e modos de viver." />
+        <meta property="og:image" content={`${siteUrl}/hero_grayscale.webp`} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Lindiflix – Das crianças e jovens das Aldeias de São Paulo para o mundo!" />
+        <meta name="twitter:description" content="Plataforma que reúne os vídeos produzidos por estudantes da LINDI, onde crianças e jovens compartilham suas aldeias, culturas e modos de viver." />
+        <meta name="twitter:image" content={`${siteUrl}/hero_grayscale.webp`} />
       </Helmet>
 
       <PageHeader
