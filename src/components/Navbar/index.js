@@ -86,9 +86,10 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   );
 
   // Páginas que usam hero image (navbar transparente)
+  const isGaleriaPage = useMemo(() => location.pathname.startsWith('/galeria'), [location.pathname]);
   const isHeroPage = useMemo(() =>
-    isPainelPage || isConteudoPage,
-    [isPainelPage, isConteudoPage]
+    isPainelPage || isConteudoPage || isGaleriaPage,
+    [isPainelPage, isConteudoPage, isGaleriaPage]
   );
 
   const toggleMobileMenu = React.useCallback(() => {
