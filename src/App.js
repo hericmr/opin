@@ -53,7 +53,8 @@ const AppContent = () => {
           normalizedWindowPath === '/dados-escolas-indigenas' ||
           normalizedWindowPath === '/search' ||
           normalizedWindowPath.startsWith('/lindiflix') ||
-          normalizedWindowPath.startsWith('/escola')) {
+          normalizedWindowPath.startsWith('/escola') ||
+          normalizedWindowPath.startsWith('/galeria')) {
         return true;
       }
     }
@@ -66,7 +67,8 @@ const AppContent = () => {
            routerPath === '/dados-escolas-indigenas' ||
            routerPath === '/search' ||
            routerPath.startsWith('/lindiflix') ||
-           routerPath.startsWith('/escola');
+           routerPath.startsWith('/escola') ||
+           routerPath.startsWith('/galeria');
   }, [location?.pathname]);
 
   // Handler para redirecionamento do GitHub Pages (404.html)
