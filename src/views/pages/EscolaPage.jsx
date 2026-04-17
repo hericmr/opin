@@ -50,8 +50,8 @@ const DataCard = ({ icon: Icon, label, value, wide = false, searchTag = false })
   const displayValue = value === true ? 'Sim' : value;
   return (
     <div className={`bg-white rounded-xl border border-gray-100 px-5 py-4 flex items-start gap-4 ${wide ? 'col-span-2' : ''}`}>
-      <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-        <Icon className="w-5 h-5 text-green-700" />
+      <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+        <Icon className="w-5 h-5 text-gray-400" />
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">{label}</p>
