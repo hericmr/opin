@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Footer from '../../components/Footer';
 import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
-import { Search, X, MapPin, BookOpen, Users, FileText, Map } from 'lucide-react';
+import { Search, X, MapPin, BookOpen, Users, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useSearch from '../../hooks/useSearch';
 import { useSearch as useSearchContext } from '../../contexts/SearchContext';
@@ -272,26 +272,29 @@ export default function Homepage({ dataPoints = [] }) {
               </div>
               
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link 
-                  to="/mapa" 
-                  className="inline-flex items-center gap-2 rounded-full bg-[#9ce66b] text-green-950 font-bold px-5 py-3 text-center hover:bg-[#85d15a] transition-all hover:scale-105 shadow-xl shadow-green-500/10 whitespace-nowrap"
+                <Link
+                  to="/mapa"
+                  className="rounded-full bg-[#9ce66b] text-green-950 font-bold px-5 py-3 text-center hover:bg-[#85d15a] shadow-xl shadow-green-500/10 whitespace-nowrap"
                 >
-                  <Map className="w-5 h-5" />
                   Explorar Mapa
                 </Link>
-                <Link 
-                  to="/algunsdados" 
-                  className="inline-flex items-center gap-2 rounded-full bg-[#9ce66b] text-green-950 font-semibold px-5 py-3 text-center hover:bg-[#85d15a] transition-all hover:scale-105 shadow-xl shadow-green-500/10 whitespace-nowrap"
+                <Link
+                  to="/algunsdados"
+                  className="rounded-full bg-[#9ce66b] text-green-950 font-semibold px-5 py-3 text-center hover:bg-[#85d15a] shadow-xl shadow-green-500/10 whitespace-nowrap"
                 >
-                  <Users className="w-5 h-5" />
                   Alguns dados
                 </Link>
-                <Link 
-                  to="/conteudo" 
-                  className="inline-flex items-center gap-2 rounded-full bg-[#9ce66b] text-green-950 font-semibold px-5 py-3 text-center hover:bg-[#85d15a] transition-all hover:scale-105 shadow-xl shadow-green-500/10 whitespace-nowrap"
+                <Link
+                  to="/conteudo"
+                  className="rounded-full bg-[#9ce66b] text-green-950 font-semibold px-5 py-3 text-center hover:bg-[#85d15a] shadow-xl shadow-green-500/10 whitespace-nowrap"
                 >
-                  <BookOpen className="w-5 h-5" />
                   Materiais Didáticos
+                </Link>
+                <Link
+                  to="/lindiflix"
+                  className="rounded-full bg-[#9ce66b] text-green-950 font-semibold px-5 py-3 text-center hover:bg-[#85d15a] shadow-xl shadow-green-500/10 whitespace-nowrap"
+                >
+                  Lindiflix
                 </Link>
               </div>
             </div>
