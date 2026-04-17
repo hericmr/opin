@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useEscolasData } from '../../hooks/useEscolasData';
 import Footer from '../../components/Footer';
 import { useDashboardData } from '../../hooks/useDashboardData';
@@ -54,7 +55,19 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen dashboard-scroll relative">
-      {/* Cabeçalho com design indígena - Hero image começa do topo */}
+      <Helmet>
+        <title>Alguns Dados – OPIN</title>
+        <meta name="description" content="Indicadores sobre escolas indígenas de São Paulo: alunos, docentes, infraestrutura, distribuição geográfica e modalidades de ensino." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://hericmr.github.io/opin/algunsdados" />
+        <meta property="og:title" content="Alguns Dados – OPIN" />
+        <meta property="og:description" content="Indicadores sobre escolas indígenas de São Paulo: alunos, docentes, infraestrutura, distribuição geográfica e modalidades de ensino." />
+        <meta property="og:image" content="https://hericmr.github.io/opin/hero_grayscale.webp" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Alguns Dados – OPIN" />
+        <meta name="twitter:description" content="Indicadores sobre escolas indígenas de São Paulo: alunos, docentes, infraestrutura, distribuição geográfica e modalidades de ensino." />
+        <meta name="twitter:image" content="https://hericmr.github.io/opin/hero_grayscale.webp" />
+      </Helmet>
       <PageHeader
         title="Alguns dados"
         showNavbar={true}

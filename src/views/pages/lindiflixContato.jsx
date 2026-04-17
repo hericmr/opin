@@ -15,8 +15,17 @@ const LindiflixContato = () => {
   return (
     <div className="min-h-screen dashboard-scroll relative bg-gray-50/30">
       <Helmet>
-        <title>Contato – Licenciatura Intercultural Indígena (LINDI)</title>
+        <title>Contato – LINDI / OPIN</title>
         <meta name="description" content="Entre em contato com a Licenciatura Intercultural Indígena (LINDI) da UNIFESP." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://hericmr.github.io/opin/lindiflix/contato" />
+        <meta property="og:title" content="Contato – LINDI / OPIN" />
+        <meta property="og:description" content="Entre em contato com a Licenciatura Intercultural Indígena (LINDI) da UNIFESP." />
+        <meta property="og:image" content="https://hericmr.github.io/opin/hero_grayscale.webp" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contato – LINDI / OPIN" />
+        <meta name="twitter:description" content="Entre em contato com a Licenciatura Intercultural Indígena (LINDI) da UNIFESP." />
+        <meta name="twitter:image" content="https://hericmr.github.io/opin/hero_grayscale.webp" />
       </Helmet>
 
       <PageHeader

@@ -235,7 +235,17 @@ export default function Homepage({ dataPoints = [] }) {
   return (
     <div className="flex-1 overflow-auto bg-white text-green-900">
       <Helmet>
-        <title>OPIN - Observatório dos Professores Indígenas no Estado de São Paulo</title>
+        <title>OPIN – Observatório dos Professores Indígenas no Estado de São Paulo</title>
+        <meta name="description" content="Plataforma de dados, memória e educação sobre as escolas e professores indígenas do Estado de São Paulo." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://hericmr.github.io/opin/" />
+        <meta property="og:title" content="OPIN – Observatório dos Professores Indígenas no Estado de São Paulo" />
+        <meta property="og:description" content="Plataforma de dados, memória e educação sobre as escolas e professores indígenas do Estado de São Paulo." />
+        <meta property="og:image" content="https://hericmr.github.io/opin/hero_grayscale.webp" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="OPIN – Observatório dos Professores Indígenas no Estado de São Paulo" />
+        <meta name="twitter:description" content="Plataforma de dados, memória e educação sobre as escolas e professores indígenas do Estado de São Paulo." />
+        <meta name="twitter:image" content="https://hericmr.github.io/opin/hero_grayscale.webp" />
       </Helmet>
       {/* Hero inspirado no native-land: fundo, título, busca/CTA */}
       <section className="relative min-h-screen h-screen w-full bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url('${bgUrl}')` }}>

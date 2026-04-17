@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { MapPin, Users, Search, X, ArrowRight } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import Footer from '../../components/Footer';
 import PageHeader from '../../components/PageHeader';
 import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
@@ -64,6 +65,19 @@ const SearchResults = ({ dataPoints }) => {
 
   return (
     <div className="min-h-screen dashboard-scroll relative bg-gray-50/30">
+      <Helmet>
+        <title>Buscar Escola – OPIN</title>
+        <meta name="description" content="Pesquise escolas indígenas do Estado de São Paulo por nome, município, povo ou terra indígena." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://hericmr.github.io/opin/search" />
+        <meta property="og:title" content="Buscar Escola – OPIN" />
+        <meta property="og:description" content="Pesquise escolas indígenas do Estado de São Paulo por nome, município, povo ou terra indígena." />
+        <meta property="og:image" content="https://hericmr.github.io/opin/hero_grayscale.webp" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Buscar Escola – OPIN" />
+        <meta name="twitter:description" content="Pesquise escolas indígenas do Estado de São Paulo por nome, município, povo ou terra indígena." />
+        <meta name="twitter:image" content="https://hericmr.github.io/opin/hero_grayscale.webp" />
+      </Helmet>
       {/* Hero */}
       <PageHeader
         title="Buscar Escola"
