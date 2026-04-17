@@ -356,6 +356,7 @@ const EscolaPage = () => {
             escola_id={Number(id)}
             headerUrl={escola?.imagem_header}
             titulo={nome}
+            escolaNome={nome}
           />
         </div>
 

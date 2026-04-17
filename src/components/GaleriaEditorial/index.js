@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Images } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import useSidebarImages from '../../hooks/useSidebarImages';
 import GaleriaPanel from '../PainelInformacoes/components/GaleriaPanel';
+import { escolaUrlSlug } from '../../utils/slug';
 
 /**
  * Galeria editorial para páginas estáticas de escola.
@@ -22,8 +24,9 @@ const EXTRA_INDICES = [5, 6, 7, 8, 9]; // fila inferior
 
 const imgClass = 'w-full h-full object-cover block transition-opacity duration-200 hover:opacity-90 cursor-pointer';
 
-const GaleriaEditorial = ({ escola_id, headerUrl, titulo }) => {
+const GaleriaEditorial = ({ escola_id, headerUrl, titulo, escolaNome }) => {
   const [galeriaOpen, setGaleriaOpen] = useState(false);
+  const galeriaSlug = escolaUrlSlug(escola_id, escolaNome || titulo || String(escola_id));
 
   const { items, loading, hasItems } = useSidebarImages({
     escolaId: escola_id,
@@ -51,13 +54,12 @@ const GaleriaEditorial = ({ escola_id, headerUrl, titulo }) => {
           )}
         </div>
         {hasItems && (
-          <button
-            type="button"
-            onClick={() => setGaleriaOpen(true)}
+          <Link
+            to={`/galeria/${galeriaSlug}`}
             className="text-sm font-semibold text-green-700 hover:text-green-900 flex items-center gap-1 transition-colors"
           >
             Ver todas as fotos →
-          </button>
+          </Link>
         )}
       </div>
 
