@@ -51,6 +51,7 @@ const AppContent = () => {
           normalizedWindowPath === '/algunsdados' ||
           normalizedWindowPath === '/painel-dados' ||
           normalizedWindowPath === '/dados-escolas-indigenas' ||
+          normalizedWindowPath === '/search' ||
           normalizedWindowPath.startsWith('/lindiflix')) {
         return true;
       }
@@ -62,6 +63,7 @@ const AppContent = () => {
            routerPath === '/algunsdados' ||
            routerPath === '/painel-dados' ||
            routerPath === '/dados-escolas-indigenas' ||
+           routerPath === '/search' ||
            routerPath.startsWith('/lindiflix');
   }, [location?.pathname]);
 

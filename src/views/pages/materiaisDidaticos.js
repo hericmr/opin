@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useEscolasData } from '../../hooks/useEscolasData';
+import Footer from '../../components/Footer';
 import PageHeader from '../../components/PageHeader';
 import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
 import BookGallery from '../../components/MateriaisDidáticos/components/BookGallery';
@@ -55,6 +56,7 @@ const MateriaisDidáticos = () => {
           <BookGallery />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

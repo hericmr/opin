@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useEscolasData } from '../../hooks/useEscolasData';
+import Footer from '../../components/Footer';
 import { useDashboardData } from '../../hooks/useDashboardData';
 import { useDashboardImages } from '../../hooks/useDashboardImages';
 import PageHeader from '../../components/PageHeader';
@@ -138,6 +139,7 @@ const Dashboard = () => {
         </section>
       </div>
       </div>
+      <Footer />
     </div>
   );
 };
