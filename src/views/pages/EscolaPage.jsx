@@ -219,10 +219,11 @@ const EscolaPage = () => {
         title={nome}
         showNavbar={true}
         dataPoints={dataPoints || []}
-        overlayColor="rgba(20, 81, 45, 0.55)"
+        overlayColor="rgba(20, 81, 45, 0.4)"
         blendMode="normal"
         backgroundImage={escola?.imagem_header || null}
         minHeight="65vh"
+        titlePosition="bottom-left"
       >
         <DashboardBreadcrumbs breadcrumbs={breadcrumbs} />
       </PageHeader>
