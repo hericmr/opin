@@ -108,7 +108,7 @@ export const createRoutes = (dataPoints, loading, onPainelOpen) => {
       element: createRouteElement(LindiflixContato)
     },
     {
-      path: "/escola/:id",
+      path: "/escola/:slug",
       element: createRouteElement(EscolaPage, { componentProps: { dataPoints } })
     }
   ];

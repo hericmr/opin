@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { MapPin, Users, Search, X, ArrowRight, FileText } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
+import { escolaUrlSlug } from '../../utils/slug';
 import Footer from '../../components/Footer';
 import PageHeader from '../../components/PageHeader';
 import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
@@ -209,7 +210,7 @@ const SearchResults = ({ dataPoints }) => {
                         </button>
                         {result.id && (
                           <Link
-                            to={`/escola/${result.id}`}
+                            to={`/escola/${escolaUrlSlug(result.id, result.title)}`}
                             className="flex items-center gap-1 text-xs text-green-700 hover:text-green-900 font-medium"
                             title="Ver página da escola"
                           >

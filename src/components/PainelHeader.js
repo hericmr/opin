@@ -1,6 +1,7 @@
 import React from "react";
 import { X, Maximize2, Minimize2, MapPin, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
+import { escolaUrlSlug } from "../utils/slug";
 import { capitalizeWords } from "../utils/textFormatting";
 import MinimalShareButtons from "./MinimalShareButtons";
 import { BREAKPOINTS } from '../constants/breakpoints';
@@ -110,7 +111,7 @@ const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagem
         )}
         {escolaId && (
           <Link
-            to={`/escola/${escolaId}`}
+            to={`/escola/${escolaUrlSlug(escolaId, titulo)}`}
             className="p-2 text-green-700 hover:text-green-900 hover:bg-green-100 transition-colors duration-200 rounded-lg focus:outline-none"
             title="Ver página da escola"
             aria-label="Ver página da escola"
