@@ -46,7 +46,7 @@ const DistribuicaoAlunosChart = ({ data }) => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
       
-      <h3 className="text-xl font-bold mb-4 text-gray-800">
+      <h3 className="text-2xl sm:text-3xl font-bold mb-8 pb-4 border-b border-gray-100 text-gray-900">
         Distribuição de Escolas por Número de Alunos
       </h3>
       <div className="h-96" style={{ minWidth: '300px', minHeight: '384px', width: '100%', height: '100%' }}>

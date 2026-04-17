@@ -68,10 +68,8 @@ const Dashboard = () => {
         {/* Descrição da página - Abaixo do hero, estilo Native Land Digital */}
         <DashboardDescription />
 
-      {/* Seções com cores que mudam conforme o scroll */}
       <div className="w-full">
-        {/* PRIMEIRO GRÁFICO - Distribuição de Alunos por Modalidade - Seção Branca */}
-        <section className="bg-white py-12 sm:py-16 transition-colors duration-500">
+        <section className="bg-white py-16 sm:py-24 border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <ChartSuspenseWrapper>
               <DistribuicaoAlunosModalidadeChart data={data.distribuicaoAlunosModalidade} />
@@ -79,13 +77,11 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* Imagem de Header - Full Width */}
         {imagesReady && headerImages[1] && (
           <DashboardImageSection image={headerImages[1]} priority="high" />
         )}
 
-        {/* Gráfico de Barras - Tipos de Ensino - Seção Indigo */}
-        <section className="bg-indigo-50 py-12 sm:py-16 transition-colors duration-500">
+        <section className="bg-white py-16 sm:py-24 border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <ChartSuspenseWrapper>
               <TiposEnsinoChart data={data.tiposEnsino} />
@@ -93,16 +89,14 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* Imagem de Header - Full Width */}
         {imagesReady && headerImages[2] && (
           <DashboardImageSection image={headerImages[2]} priority="normal" />
         )}
 
-        {/* Gráfico Combinado - Distribuição de Escolas - Seção Amarela */}
-        <section className="bg-yellow-100 py-12 sm:py-16 transition-colors duration-500">
+        <section className="bg-white py-16 sm:py-24 border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <ChartSuspenseWrapper>
-              <DistribuicaoEscolasCombinadoChart 
+              <DistribuicaoEscolasCombinadoChart
                 distribuicaoData={data.distribuicaoAlunos}
                 alunosPorEscolaData={data.alunosPorEscola}
               />
@@ -110,13 +104,11 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* Imagem de Header - Full Width */}
         {imagesReady && headerImages[3] && (
           <DashboardImageSection image={headerImages[3]} priority="normal" />
         )}
 
-        {/* Gráfico de Equipamentos - Seção Verde */}
-        <section className="bg-green-100 py-12 sm:py-16 transition-colors duration-500">
+        <section className="bg-white py-16 sm:py-24 border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <ChartSuspenseWrapper>
               <EquipamentosChart data={data.equipamentos} />
@@ -124,13 +116,11 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* Imagem de Header - Full Width */}
         {imagesReady && headerImages[4] && (
           <DashboardImageSection image={headerImages[4]} priority="normal" />
         )}
 
-        {/* Gráfico de Escolas por Diretoria - Seção Cinza */}
-        <section className="bg-gray-100 py-12 sm:py-16 transition-colors duration-500">
+        <section className="bg-white py-16 sm:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <ChartSuspenseWrapper>
               <EscolasPorDiretoriaChart data={data.escolasPorDiretoria} />

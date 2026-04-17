@@ -43,7 +43,7 @@ const AlunosPorEscolaChart = ({ data }) => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
-      <h3 className="text-xl font-bold mb-4 text-gray-800">
+      <h3 className="text-2xl sm:text-3xl font-bold mb-8 pb-4 border-b border-gray-100 text-gray-900">
         Número de Alunos por Escola Indígena
       </h3>
       
