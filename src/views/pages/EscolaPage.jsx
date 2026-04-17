@@ -45,8 +45,8 @@ const Section = ({ id, title, children, show = true }) => {
   );
 };
 
-// Card individual de dado
-const DataCard = ({ icon: Icon, label, value, wide = false }) => {
+// Card individual de dado — searchTag torna o valor um link para busca
+const DataCard = ({ icon: Icon, label, value, wide = false, searchTag = false }) => {
   if (value === null || value === undefined || value === '' || value === false) return null;
   const displayValue = value === true ? 'Sim' : value;
   return (
@@ -56,7 +56,16 @@ const DataCard = ({ icon: Icon, label, value, wide = false }) => {
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">{label}</p>
-        <p className="text-base font-semibold text-gray-900 leading-snug whitespace-pre-line">{displayValue}</p>
+        {searchTag ? (
+          <Link
+            to={`/search?q=${encodeURIComponent(displayValue)}`}
+            className="text-base font-semibold text-green-700 hover:text-green-900 hover:underline leading-snug whitespace-pre-line"
+          >
+            {displayValue}
+          </Link>
+        ) : (
+          <p className="text-base font-semibold text-gray-900 leading-snug whitespace-pre-line">{displayValue}</p>
+        )}
       </div>
     </div>
   );
@@ -68,6 +77,27 @@ const CardGroup = ({ children }) => (
     {children}
   </div>
 );
+
+// Mini-mapa via iframe OpenStreetMap
+const MiniMapa = ({ lat, lon, nome }) => {
+  if (!lat || !lon) return null;
+  const delta = 0.04;
+  const bbox = `${lon - delta},${lat - delta},${lon + delta},${lat + delta}`;
+  const src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`;
+  return (
+    <div className="rounded-xl overflow-hidden border border-gray-100 h-64 w-full">
+      <iframe
+        title={`Localização de ${nome}`}
+        src={src}
+        width="100%"
+        height="100%"
+        style={{ border: 0 }}
+        loading="lazy"
+        referrerPolicy="no-referrer"
+      />
+    </div>
+  );
+};
 
 // Nav de âncoras sticky
 const AnchorNav = ({ sections }) => {
@@ -130,8 +160,16 @@ const EscolaPage = () => {
     if (escola.historia_da_escola) s.push({ id: 'historia', label: 'História' });
     if (escola.historia_terra_indigena) s.push({ id: 'terra', label: 'Terra Indígena' });
     s.push({ id: 'historias-professores', label: 'Histórias' });
+    s.push({ id: 'relacionadas', label: 'Outras escolas' });
     return s;
   }, [escola]);
+
+  const escolasRelacionadas = useMemo(() => {
+    if (!terraIndigena || !dataPoints) return [];
+    return dataPoints
+      .filter(p => p.terra_indigena === terraIndigena && p.id !== escola?.id)
+      .slice(0, 6);
+  }, [terraIndigena, dataPoints, escola]);
 
   const ogDescription = `Escola indígena ${nome}${municipio ? ` em ${municipio}` : ''}${terraIndigena ? `, Terra Indígena ${terraIndigena}` : ''}.`;
 
@@ -202,10 +240,10 @@ const EscolaPage = () => {
           <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 py-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {/* Campos curtos — identificação */}
-              <DataCard icon={MapPin} label="Município" value={escola.municipio} />
-              <DataCard icon={TreePine} label="Terra Indígena" value={escola.terra_indigena} />
-              <DataCard icon={Users} label="Povos Indígenas" value={escola.povos_indigenas} />
-              <DataCard icon={Languages} label="Línguas Faladas" value={escola.linguas_faladas} />
+              <DataCard icon={MapPin} label="Município" value={escola.municipio} searchTag />
+              <DataCard icon={TreePine} label="Terra Indígena" value={escola.terra_indigena} searchTag />
+              <DataCard icon={Users} label="Povos Indígenas" value={escola.povos_indigenas} searchTag />
+              <DataCard icon={Languages} label="Línguas Faladas" value={escola.linguas_faladas} searchTag />
               <DataCard icon={Building2} label="Diretoria de Ensino" value={escola.diretoria_ensino} />
               <DataCard icon={Calendar} label="Ano de Criação" value={escola.ano_criacao} />
               {/* Endereço longo — ocupa 2 colunas, terceira coluna livre para modo de acesso */}
@@ -242,6 +280,12 @@ const EscolaPage = () => {
               <DataCard icon={BookOpen} label="Outras Informações" value={escola.outras_informacoes} wide />
               <DataCard icon={BookOpen} label="Desejos da Comunidade" value={escola.desejos_comunidade} wide />
             </div>
+            {/* Mini-mapa */}
+            {escola.latitude && escola.longitude && (
+              <div className="mt-3">
+                <MiniMapa lat={escola.latitude} lon={escola.longitude} nome={nome} />
+              </div>
+            )}
             <div className="flex gap-3 mt-4">
               <button
                 onClick={() => navigate('/mapa', {
@@ -295,6 +339,37 @@ const EscolaPage = () => {
             <HistoriadoProfessor escola={escola} />
           </Section>
 
+          {/* Escolas relacionadas */}
+          {escolasRelacionadas.length > 0 && (
+            <section id="relacionadas" className="py-12 scroll-mt-16">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 pb-4 border-b border-gray-100">
+                Outras escolas na Terra Indígena {terraIndigena}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {escolasRelacionadas.map(p => (
+                  <Link
+                    key={p.id}
+                    to={`/escola/${escolaUrlSlug(p.id, p.titulo || p.nome)}`}
+                    className="bg-white rounded-xl border border-gray-100 hover:border-green-300 px-5 py-4 flex items-start gap-3 transition-colors group"
+                  >
+                    <div className="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <School className="w-4 h-4 text-green-700" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 group-hover:text-green-700 leading-snug">{p.titulo || p.nome}</p>
+                      {p.municipio && <p className="text-xs text-gray-400 mt-0.5">{p.municipio}</p>}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Nota de fonte */}
+          <div className="py-8 border-t border-gray-100 text-xs text-gray-400 flex items-center gap-2">
+            <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" />
+            Dados coletados em pesquisa de campo pela equipe OPIN / UNIFESP. Informações podem estar desatualizadas.
+          </div>
 
         </div>
       </div>
