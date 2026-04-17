@@ -1,9 +1,5 @@
 # OPIN - Observatório dos Professores Indígenas
-
 Plataforma de mapeamento e documentação de escolas indígenas no estado de São Paulo. Projeto [LINDI/UNIFESP](https://www.unifesp.br/) (2025).
-
-![OPIN Interface](public/hero.webp)
-
 ---
 
 ## Sobre
@@ -48,8 +44,8 @@ cp .env.example .env
 make up
 
 # Acessar
-# → Site: http://localhost:8080/opin/
-# → API: http://localhost:8080/opin/rest/v1/
+# - Site: http://localhost:8080/opin/
+# - API: http://localhost:8080/opin/rest/v1/
 ```
 
 **Comandos úteis:**
@@ -61,7 +57,7 @@ make prod-up       # Iniciar em produção
 
 ---
 
-## 📁 Estrutura
+## Estrutura
 
 ```
 src/
@@ -74,17 +70,9 @@ src/
 
 ---
 
-## 📚 Documentação
+## Documentação
 
 - [Guia de Instalação Detalhado](Guia%20para%20Instalação.md)
 - [Guia do Administrador](docs/GUIA_ADMINISTRADOR.md)
 - [Deploy e CI/CD](docs/GUIA_DEPLOY.md)
 
----
-
-## Contato & Repositórios
-
-- **GitHub**: [hericmr/opin](https://github.com/hericmr/opin)
-- **GitLab**: [hericmr/opin](https://gitlab.com/hericmr/opin)
-- **Email**: heric.moura@unifesp.br
-- **LINDI**: [Laboratório de Línguas Indígenas](https://www.unifesp.br/)
