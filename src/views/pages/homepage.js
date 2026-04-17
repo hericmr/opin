@@ -194,7 +194,7 @@ const HomepageSearch = ({ dataPoints }) => {
                         </p>
                       </div>
                       {result.coordinates && (
-                        <Map className="w-4 h-4 text-green-400 group-hover:text-green-600 transition-colors flex-shrink-0" />
+                        <MapPin className="w-4 h-4 text-green-400 group-hover:text-green-600 transition-colors flex-shrink-0" />
                       )}
                     </button>
                   ))}
