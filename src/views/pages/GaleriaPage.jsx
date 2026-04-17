@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, X, ChevronLeft, ChevronRight, Download } from 'lucide-react';
-import PageHeader from '../../components/PageHeader';
-import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
 import Footer from '../../components/Footer';
 import useSidebarImages from '../../hooks/useSidebarImages';
 import { useEscolaDetalhes } from '../../hooks/useEscolaDetalhes';
@@ -127,12 +125,6 @@ const GaleriaPage = () => {
   const prevPhoto = useCallback(() => setLightboxIndex(i => Math.max(0, i - 1)), []);
   const nextPhoto = useCallback(() => setLightboxIndex(i => Math.min(items.length - 1, i + 1)), [items.length]);
 
-  const breadcrumbs = [
-    { label: 'Início', path: '/', active: false },
-    { label: nome || 'Escola', path: escolaSlug, active: false },
-    { label: 'Galeria', path: `/galeria/${slug}`, active: true },
-  ];
-
   const loading = loadingEscola || loadingImages;
 
   return (
@@ -143,35 +135,32 @@ const GaleriaPage = () => {
         <meta property="og:image" content={escola?.imagem_header || `${siteUrl}/hero_grayscale.webp`} />
       </Helmet>
 
-      <PageHeader
-        title={nome ? `Galeria — ${nome}` : 'Galeria de fotos'}
-        showNavbar={true}
-        dataPoints={[]}
-        overlayColor="rgba(20, 81, 45, 0.55)"
-        blendMode="normal"
-        backgroundImage={escola?.imagem_header || null}
-        minHeight="40vh"
+      {/* Hero simples — rola com a página */}
+      <div
+        className="relative text-white"
+        style={{
+          backgroundImage: `url('${escola?.imagem_header || `${siteUrl}/hero_grayscale.webp`}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '40vh',
+        }}
       >
-        <DashboardBreadcrumbs breadcrumbs={breadcrumbs} />
-      </PageHeader>
+        <div className="absolute inset-0 bg-green-900/55" />
+        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 flex flex-col justify-end pb-8 h-full" style={{ minHeight: '40vh' }}>
+          <Link to={escolaSlug} className="inline-flex items-center gap-1 text-white/70 hover:text-white text-sm mb-4 transition-colors w-fit">
+            <ArrowLeft className="w-4 h-4" /> {nome || 'Escola'}
+          </Link>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold uppercase" style={{ fontFamily: 'Sora, sans-serif' }}>
+            Galeria de fotos
+          </h1>
+          {nome && <p className="text-white/70 mt-2 text-lg">{nome}</p>}
+        </div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 py-10">
-
-        {/* Voltar + contagem */}
-        <div className="flex items-center justify-between mb-8">
-          <Link
-            to={escolaSlug}
-            className="inline-flex items-center gap-2 text-sm font-medium text-green-700 hover:text-green-900 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Voltar para a escola
-          </Link>
-          {hasItems && (
-            <span className="text-sm text-gray-400">
-              {items.length} {items.length === 1 ? 'foto' : 'fotos'}
-            </span>
-          )}
-        </div>
+        {hasItems && (
+          <p className="text-sm text-gray-400 mb-8">{items.length} {items.length === 1 ? 'foto' : 'fotos'}</p>
+        )}
 
         {/* Grid de fotos */}
         {loading && (
