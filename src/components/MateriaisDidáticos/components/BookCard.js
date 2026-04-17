@@ -9,16 +9,16 @@ const BookCard = ({ book }) => {
   const pdfUrl = `${baseUrl}/materiais/${book.pdf_source}`;
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full border border-gray-100 group transition-shadow duration-300 hover:shadow-lg">
+    <div className="bg-white rounded-lg overflow-hidden flex flex-col h-full border border-gray-100 group">
       {/* Container da Capa */}
       <div className="relative bg-gray-100 rounded-md">
         <img
           src={coverUrl}
           alt={`Capa do livro: ${book.title}`}
-          className="w-full h-auto block rounded-md group-hover:scale-[1.03] transition-transform duration-500"
+          className="w-full h-auto block rounded-md"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center">
           <a
             href={pdfUrl}
             target="_blank"
@@ -39,7 +39,7 @@ const BookCard = ({ book }) => {
           </span>
         </div>
 
-        <h3 className="text-lg font-bold text-gray-900 leading-tight mb-1 group-hover:text-green-800 transition-colors">
+        <h3 className="text-lg font-bold text-gray-900 leading-tight mb-1">
           {book.title}
         </h3>
 
