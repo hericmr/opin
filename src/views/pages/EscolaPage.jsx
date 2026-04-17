@@ -139,41 +139,6 @@ const MiniMapa = ({ lat, lon }) => {
 };
 
 // Nav de âncoras sticky
-const AnchorNav = ({ sections }) => {
-  const [active, setActive] = useState(sections[0]?.id);
-
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }),
-      { rootMargin: '-20% 0px -70% 0px' }
-    );
-    sections.forEach(({ id }) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, [sections]);
-
-  return (
-    <nav className="bg-white border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
-        <div className="flex items-center gap-1 overflow-x-auto py-0" style={{ scrollbarWidth: 'none' }}>
-          {sections.map(({ id, label }) => (
-            <button
-              key={id}
-              onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })}
-              className={`whitespace-nowrap px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                active === id ? 'border-green-600 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-800'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
-    </nav>
-  );
-};
 
 const EscolaPage = () => {
   const { slug } = useParams();
@@ -192,15 +157,6 @@ const EscolaPage = () => {
     { label: nome || 'Escola', path: `/escola/${slug}`, active: true },
   ], [nome, slug]);
 
-  const navSections = useMemo(() => {
-    if (!escola) return [];
-    const s = [];
-    if (escola.historia_da_escola) s.push({ id: 'historia', label: 'História' });
-    if (escola.historia_terra_indigena) s.push({ id: 'terra', label: 'Terra Indígena' });
-    s.push({ id: 'historias-professores', label: 'Histórias' });
-    s.push({ id: 'relacionadas', label: 'Outras escolas' });
-    return s;
-  }, [escola]);
 
   const escolasRelacionadas = useMemo(() => {
     if (!terraIndigena || !dataPoints) return [];
@@ -361,7 +317,6 @@ const EscolaPage = () => {
         </div>
 
         {/* Nav âncoras */}
-        {navSections.length > 0 && <AnchorNav sections={navSections} />}
 
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
 
