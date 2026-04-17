@@ -1,5 +1,6 @@
 import React from "react";
-import { X, Maximize2, Minimize2, MapPin } from "lucide-react";
+import { X, Maximize2, Minimize2, MapPin, FileText } from "lucide-react";
+import { Link } from "react-router-dom";
 import { capitalizeWords } from "../utils/textFormatting";
 import MinimalShareButtons from "./MinimalShareButtons";
 import { BREAKPOINTS } from '../constants/breakpoints';
@@ -43,7 +44,7 @@ const formatarTituloEscola = (titulo) => {
   return capitalizeWords(titulo);
 };
 
-const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagemHeader, shareUrl, shareTitle }) => {
+const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagemHeader, shareUrl, shareTitle, escolaId }) => {
   const isMobile = window.innerWidth <= BREAKPOINTS.mobile;
   const isMobileLandscape = isMobile && window.innerWidth > window.innerHeight;
 
@@ -106,6 +107,17 @@ const PainelHeader = ({ titulo, closePainel, toggleMaximize, isMaximized, imagem
           <div className="linkSocialContainer" style={{ zIndex: 1005 }}>
             <MinimalShareButtons url={shareUrl} title={shareTitle || titulo} />
           </div>
+        )}
+        {escolaId && (
+          <Link
+            to={`/escola/${escolaId}`}
+            className="p-2 text-green-700 hover:text-green-900 hover:bg-green-100 transition-colors duration-200 rounded-lg focus:outline-none"
+            title="Ver página da escola"
+            aria-label="Ver página da escola"
+            style={{ zIndex: 1005 }}
+          >
+            <FileText size={18} className="stroke-2" aria-hidden="true" />
+          </Link>
         )}
         {!isMobile && (
           <button

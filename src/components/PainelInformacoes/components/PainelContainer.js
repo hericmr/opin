@@ -114,6 +114,7 @@ const PainelContainer = ({
           imagemHeader={painelInfo.imagem_header}
           shareUrl={shareUrl}
           shareTitle={shareTitle}
+          escolaId={painelInfo.id}
         />
 
         {rightNav && (

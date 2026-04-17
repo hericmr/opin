@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
-import { MapPin, Users, Search, X, ArrowRight } from 'lucide-react';
+import { MapPin, Users, Search, X, ArrowRight, FileText } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import Footer from '../../components/Footer';
 import PageHeader from '../../components/PageHeader';
@@ -154,33 +154,35 @@ const SearchResults = ({ dataPoints }) => {
             {results.length > 0 ? (
               <div className="flex flex-col gap-3">
                 {results.map((result) => (
-                  <button
+                  <div
                     key={result.id}
-                    type="button"
-                    onClick={() => handleResultClick(result)}
-                    className="w-full text-left bg-white rounded-xl border border-gray-200 hover:border-yellow-400 hover:shadow-md transition-all group p-5"
+                    className="bg-white rounded-xl border border-gray-200 hover:border-green-300 transition-all p-5"
                   >
                     <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
+                      <button
+                        type="button"
+                        onClick={() => handleResultClick(result)}
+                        className="flex-1 min-w-0 text-left"
+                      >
                         <h2 className="font-semibold text-gray-900 text-base leading-snug mb-1.5">
                           {highlight(result.title, searchTerm)}
                         </h2>
                         <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500">
                           {result.subtitle && (
                             <span className="flex items-center gap-1">
-                              <MapPin className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
+                              <MapPin className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
                               {highlight(result.subtitle, searchTerm)}
                             </span>
                           )}
                           {result.data?.terra_indigena && (
                             <span className="flex items-center gap-1">
-                              <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 flex-shrink-0" />
+                              <span className="w-1.5 h-1.5 rounded-full bg-green-400 flex-shrink-0" />
                               TI {highlight(result.data.terra_indigena, searchTerm)}
                             </span>
                           )}
                           {result.data?.povos_indigenas && (
                             <span className="flex items-center gap-1">
-                              <Users className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
+                              <Users className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
                               {highlight(result.data.povos_indigenas, searchTerm)}
                             </span>
                           )}
@@ -194,16 +196,30 @@ const SearchResults = ({ dataPoints }) => {
                               .filter(m => !['nome','município','terra indígena','povos'].includes(m))
                               .slice(0, 4)
                               .map((match, i) => (
-                                <span key={i} className="px-2 py-0.5 bg-yellow-50 text-yellow-700 text-xs rounded-full border border-yellow-100">
+                                <span key={i} className="px-2 py-0.5 bg-green-50 text-green-700 text-xs rounded-full border border-green-100">
                                   {match}
                                 </span>
                               ))}
                           </div>
                         )}
+                      </button>
+                      <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                        <button type="button" onClick={() => handleResultClick(result)}>
+                          <ArrowRight className="w-4 h-4 text-gray-300 hover:text-green-600 transition-colors mt-1" />
+                        </button>
+                        {result.id && (
+                          <Link
+                            to={`/escola/${result.id}`}
+                            className="flex items-center gap-1 text-xs text-green-700 hover:text-green-900 font-medium"
+                            title="Ver página da escola"
+                          >
+                            <FileText className="w-3.5 h-3.5" />
+                            Ver página
+                          </Link>
+                        )}
                       </div>
-                      <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-yellow-500 transition-colors flex-shrink-0 mt-1" />
                     </div>
-                  </button>
+                  </div>
                 ))}
               </div>
             ) : (
