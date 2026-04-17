@@ -7,6 +7,7 @@ import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumb
 import Footer from '../../components/Footer';
 import { useEscolaDetalhes } from '../../hooks/useEscolaDetalhes';
 import { useEscolasData } from '../../hooks/useEscolasData';
+import { idFromEscolaSlug, escolaUrlSlug } from '../../utils/slug';
 import BasicInfo from '../../components/PainelInformacoes/components/EscolaInfo/BasicInfo';
 import Modalidades from '../../components/PainelInformacoes/components/EscolaInfo/Modalidades';
 import Infraestrutura from '../../components/PainelInformacoes/components/EscolaInfo/Infraestrutura';
@@ -109,7 +110,8 @@ const AnchorNav = ({ sections }) => {
 };
 
 const EscolaPage = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
+  const id = idFromEscolaSlug(slug);
   const navigate = useNavigate();
   const { dataPoints } = useEscolasData();
   const { data: escola, loading, error } = useEscolaDetalhes(id);
@@ -122,8 +124,8 @@ const EscolaPage = () => {
   const breadcrumbs = useMemo(() => [
     { label: 'Início', path: '/', active: false },
     { label: 'Mapa', path: '/mapa', active: false },
-    { label: nome || 'Escola', path: `/escola/${id}`, active: true },
-  ], [nome, id]);
+    { label: nome || 'Escola', path: `/escola/${slug}`, active: true },
+  ], [nome, slug]);
 
   // Seções visíveis para o nav de âncoras
   const navSections = useMemo(() => {
@@ -149,7 +151,7 @@ const EscolaPage = () => {
   const ogDescription = `Escola indígena ${nome}${municipio ? ` em ${municipio}` : ''}${terraIndigena ? `, Terra Indígena ${terraIndigena}` : ''}.`;
 
   const handleShare = () => {
-    const url = `${siteUrl}/escola/${id}`;
+    const url = `${siteUrl}/escola/${slug}`;
     if (navigator.share) {
       navigator.share({ title: nome, url });
     } else {
@@ -189,7 +191,7 @@ const EscolaPage = () => {
         <title>{nome} – OPIN</title>
         <meta name="description" content={ogDescription} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={`${siteUrl}/escola/${id}`} />
+        <meta property="og:url" content={`${siteUrl}/escola/${slug}`} />
         <meta property="og:title" content={`${nome} – OPIN`} />
         <meta property="og:description" content={ogDescription} />
         <meta property="og:image" content={escola?.imagem_header || `${siteUrl}/hero_grayscale.webp`} />
@@ -206,6 +208,7 @@ const EscolaPage = () => {
         overlayColor="rgba(20, 81, 45, 0.55)"
         blendMode="normal"
         backgroundImage={escola?.imagem_header || null}
+        minHeight="65vh"
       >
         <DashboardBreadcrumbs breadcrumbs={breadcrumbs} />
       </PageHeader>
