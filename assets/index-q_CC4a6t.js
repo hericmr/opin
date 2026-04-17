@@ -1,1 +1,0 @@
-import{j as e}from"./index-DlKLYeRi.js";const r=({children:t,className:s="",centered:x=!1})=>e.jsx("div",{className:`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 border-b border-gray-100 mb-4 ${s}`,children:e.jsx("div",{className:`text-lg leading-relaxed text-neutral-800 ${x?"text-center":"text-justify"}`,children:t})});export{r as P};
