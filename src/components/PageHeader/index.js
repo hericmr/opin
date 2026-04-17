@@ -26,6 +26,7 @@ const PageHeader = ({
   overlayColor = 'rgba(20, 81, 45, 0.6)',
   blendMode = 'normal',
   backgroundImage = null,
+  minHeight = null,
 }) => {
   const defaultHeroUrl = `${import.meta.env.BASE_URL || '/opin'}/hero_grayscale.webp`;
   const heroImageUrl = backgroundImage || defaultHeroUrl;
@@ -133,7 +134,7 @@ const PageHeader = ({
       style={{
         backgroundImage: `url('${heroImageUrl}')`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center top',
+        backgroundPosition: 'center center',
         backgroundRepeat: 'no-repeat',
         position: 'absolute',
         top: 0,
@@ -141,6 +142,7 @@ const PageHeader = ({
         right: 0,
         width: '100%',
         height: containerHeight,
+        minHeight: minHeight || undefined,
         zIndex: 10
       }}
     >
@@ -334,7 +336,7 @@ const PageHeader = ({
     </div>
     {/* Spacer em fluxo normal com a mesma altura do header absoluto —
         garante que o conteúdo abaixo sempre começa após o hero, sem marginTop hardcoded */}
-    <div aria-hidden="true" style={{ height: containerHeight, flexShrink: 0 }} />
+    <div aria-hidden="true" style={{ height: containerHeight, minHeight: minHeight || undefined, flexShrink: 0 }} />
     </>
   );
 };
