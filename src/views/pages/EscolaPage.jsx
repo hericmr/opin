@@ -126,7 +126,7 @@ const EscolaPage = () => {
 
   const navSections = useMemo(() => {
     if (!escola) return [];
-    const s = [{ id: 'dados', label: 'Dados' }];
+    const s = [];
     if (escola.historia_da_escola) s.push({ id: 'historia', label: 'História' });
     if (escola.historia_terra_indigena) s.push({ id: 'terra', label: 'Terra Indígena' });
     s.push({ id: 'historias-professores', label: 'Histórias' });
@@ -200,11 +200,38 @@ const EscolaPage = () => {
         {/* Sumário + ações */}
         <div className="bg-gray-50 border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 py-6">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <DataCard icon={Users} label="Alunos" value={escola.numero_alunos} />
-              <DataCard icon={TreePine} label="Terra Indígena" value={terraIndigena} />
-              <DataCard icon={Users} label="Povo" value={escola.povos_indigenas} />
-              <DataCard icon={MapPin} label="Município" value={municipio} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <DataCard icon={MapPin} label="Município" value={escola.municipio} />
+              <DataCard icon={TreePine} label="Terra Indígena" value={escola.terra_indigena} />
+              <DataCard icon={Users} label="Povos Indígenas" value={escola.povos_indigenas} />
+              <DataCard icon={Languages} label="Línguas Faladas" value={escola.linguas_faladas} />
+              <DataCard icon={Building2} label="Diretoria de Ensino" value={escola.diretoria_ensino} />
+              <DataCard icon={Calendar} label="Ano de Criação" value={escola.ano_criacao} />
+              <DataCard icon={MapPin} label="Endereço" value={escola.endereco} />
+              <DataCard icon={MapPin} label="Modo de Acesso" value={escola.modo_acesso} />
+              <DataCard icon={Users} label="Número de Alunos" value={escola.numero_alunos} />
+              <DataCard icon={BookOpen} label="Modalidades de Ensino" value={escola.modalidade_ensino} />
+              <DataCard icon={School} label="Turnos de Funcionamento" value={escola.turnos_funcionamento} />
+              <DataCard icon={BookOpen} label="Material Pedagógico Indígena" value={escola.material_indigena} />
+              <DataCard icon={BookOpen} label="Material Pedagógico Não Indígena" value={escola.material_nao_indigena} />
+              <DataCard icon={CheckCircle} label="PPP com a Comunidade" value={escola.ppp_comunidade} />
+              <DataCard icon={Building2} label="Espaço Escolar" value={escola.espaco_escolar} />
+              <DataCard icon={Wifi} label="Acesso à Internet" value={escola.acesso_internet} />
+              <DataCard icon={Laptop} label="Equipamentos Tecnológicos" value={escola.equipamentos} />
+              <DataCard icon={School} label="Salas Vinculadas" value={escola.salas_vinculadas} />
+              <DataCard icon={CheckCircle} label="Acesso à Água" value={escola.acesso_agua} />
+              <DataCard icon={CheckCircle} label="Coleta de Lixo" value={escola.coleta_lixo} />
+              <DataCard icon={UserCheck} label="Professores Indígenas" value={escola.professores_indigenas} />
+              <DataCard icon={UserCheck} label="Professores Não Indígenas" value={escola.professores_nao_indigenas} />
+              <DataCard icon={GraduationCap} label="Formação dos Professores" value={escola.formacao_professores} />
+              <DataCard icon={GraduationCap} label="Formação Continuada" value={escola.formacao_continuada} />
+              <DataCard icon={Building2} label="Gestão" value={escola.gestao} />
+              <DataCard icon={Users} label="Outros Funcionários" value={escola.outros_funcionarios} />
+              <DataCard icon={BookOpen} label="Outras Informações" value={escola.outras_informacoes} wide />
+              <DataCard icon={GraduationCap} label="Projetos em Andamento" value={escola.projetos_andamento} wide />
+              <DataCard icon={CheckCircle} label="Parcerias com Universidades" value={escola.parcerias_universidades} />
+              <DataCard icon={Users} label="Ações com ONGs" value={escola.acoes_ongs} />
+              <DataCard icon={BookOpen} label="Desejos da Comunidade" value={escola.desejos_comunidade} wide />
             </div>
             <div className="flex gap-3 mt-4">
               <button
@@ -243,43 +270,6 @@ const EscolaPage = () => {
         {navSections.length > 0 && <AnchorNav sections={navSections} />}
 
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
-
-          {/* Todos os dados agrupados */}
-          <Section id="dados" title="Dados da Escola">
-            <CardGroup>
-              <DataCard icon={MapPin} label="Município" value={escola.municipio} />
-              <DataCard icon={TreePine} label="Terra Indígena" value={escola.terra_indigena} />
-              <DataCard icon={Users} label="Povos Indígenas" value={escola.povos_indigenas} />
-              <DataCard icon={Languages} label="Línguas Faladas" value={escola.linguas_faladas} />
-              <DataCard icon={Building2} label="Diretoria de Ensino" value={escola.diretoria_ensino} />
-              <DataCard icon={Calendar} label="Ano de Criação" value={escola.ano_criacao} />
-              <DataCard icon={MapPin} label="Endereço" value={escola.endereco} />
-              <DataCard icon={MapPin} label="Modo de Acesso" value={escola.modo_acesso} />
-              <DataCard icon={Users} label="Número de Alunos" value={escola.numero_alunos} />
-              <DataCard icon={BookOpen} label="Modalidades de Ensino" value={escola.modalidade_ensino} />
-              <DataCard icon={School} label="Turnos de Funcionamento" value={escola.turnos_funcionamento} />
-              <DataCard icon={BookOpen} label="Material Pedagógico Indígena" value={escola.material_indigena} />
-              <DataCard icon={BookOpen} label="Material Pedagógico Não Indígena" value={escola.material_nao_indigena} />
-              <DataCard icon={CheckCircle} label="PPP com a Comunidade" value={escola.ppp_comunidade} />
-              <DataCard icon={Building2} label="Espaço Escolar" value={escola.espaco_escolar} />
-              <DataCard icon={Wifi} label="Acesso à Internet" value={escola.acesso_internet} />
-              <DataCard icon={Laptop} label="Equipamentos Tecnológicos" value={escola.equipamentos} />
-              <DataCard icon={School} label="Salas Vinculadas" value={escola.salas_vinculadas} />
-              <DataCard icon={CheckCircle} label="Acesso à Água" value={escola.acesso_agua} />
-              <DataCard icon={CheckCircle} label="Coleta de Lixo" value={escola.coleta_lixo} />
-              <DataCard icon={UserCheck} label="Professores Indígenas" value={escola.professores_indigenas} />
-              <DataCard icon={UserCheck} label="Professores Não Indígenas" value={escola.professores_nao_indigenas} />
-              <DataCard icon={GraduationCap} label="Formação dos Professores" value={escola.formacao_professores} />
-              <DataCard icon={GraduationCap} label="Formação Continuada" value={escola.formacao_continuada} />
-              <DataCard icon={Building2} label="Gestão" value={escola.gestao} />
-              <DataCard icon={Users} label="Outros Funcionários" value={escola.outros_funcionarios} />
-              <DataCard icon={BookOpen} label="Outras Informações" value={escola.outras_informacoes} wide />
-              <DataCard icon={GraduationCap} label="Projetos em Andamento" value={escola.projetos_andamento} wide />
-              <DataCard icon={CheckCircle} label="Parcerias com Universidades" value={escola.parcerias_universidades} />
-              <DataCard icon={Users} label="Ações com ONGs" value={escola.acoes_ongs} />
-              <DataCard icon={BookOpen} label="Desejos da Comunidade" value={escola.desejos_comunidade} wide />
-            </CardGroup>
-          </Section>
 
           {/* História da Escola */}
           <Section id="historia" title="História da Escola" show={!!escola.historia_da_escola}>
