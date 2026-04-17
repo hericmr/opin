@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useLayoutEffect, useRef } from 'react';
+import React, { useMemo, useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
@@ -78,25 +78,65 @@ const CardGroup = ({ children }) => (
   </div>
 );
 
-// Mini-mapa via iframe OpenStreetMap
-const MiniMapa = ({ lat, lon, nome }) => {
+// Mini-mapa com OpenLayers (já bundled no projeto)
+const MiniMapa = ({ lat, lon }) => {
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    if (!lat || !lon || !mapRef.current) return;
+
+    let map;
+    (async () => {
+      const [
+        { default: OLMap },
+        { default: View },
+        { default: TileLayer },
+        { default: OSM },
+        { fromLonLat },
+        { default: Feature },
+        { default: Point },
+        { default: VectorLayer },
+        { default: VectorSource },
+        { Style, Circle: CircleStyle, Fill, Stroke },
+      ] = await Promise.all([
+        import('ol/Map'),
+        import('ol/View'),
+        import('ol/layer/Tile'),
+        import('ol/source/OSM'),
+        import('ol/proj'),
+        import('ol/Feature'),
+        import('ol/geom/Point'),
+        import('ol/layer/Vector'),
+        import('ol/source/Vector'),
+        import('ol/style'),
+      ]);
+
+      const coords = fromLonLat([lon, lat]);
+      const marker = new Feature({ geometry: new Point(coords) });
+      marker.setStyle(new Style({
+        image: new CircleStyle({
+          radius: 9,
+          fill: new Fill({ color: '#16a34a' }),
+          stroke: new Stroke({ color: '#fff', width: 2.5 }),
+        }),
+      }));
+
+      map = new OLMap({
+        target: mapRef.current,
+        layers: [
+          new TileLayer({ source: new OSM() }),
+          new VectorLayer({ source: new VectorSource({ features: [marker] }) }),
+        ],
+        view: new View({ center: coords, zoom: 13 }),
+        controls: [],
+      });
+    })();
+
+    return () => { if (map) map.setTarget(undefined); };
+  }, [lat, lon]);
+
   if (!lat || !lon) return null;
-  const delta = 0.04;
-  const bbox = `${lon - delta},${lat - delta},${lon + delta},${lat + delta}`;
-  const src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`;
-  return (
-    <div className="rounded-xl overflow-hidden border border-gray-100 h-64 w-full">
-      <iframe
-        title={`Localização de ${nome}`}
-        src={src}
-        width="100%"
-        height="100%"
-        style={{ border: 0 }}
-        loading="lazy"
-        referrerPolicy="no-referrer"
-      />
-    </div>
-  );
+  return <div ref={mapRef} className="rounded-xl overflow-hidden border border-gray-100 h-64 w-full" />;
 };
 
 // Nav de âncoras sticky
