@@ -1,27 +1,26 @@
-import React, { useMemo, useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useMemo, useState, useLayoutEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Map as MapIcon, Users, BookOpen, Wifi, Share2, ChevronDown } from 'lucide-react';
+import {
+  Map as MapIcon, Users, BookOpen, Wifi, Share2, MapPin,
+  Calendar, Building2, Languages, GraduationCap, Laptop,
+  TreePine, UserCheck, School, CheckCircle, XCircle,
+} from 'lucide-react';
 import PageHeader from '../../components/PageHeader';
 import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
 import Footer from '../../components/Footer';
 import { useEscolaDetalhes } from '../../hooks/useEscolaDetalhes';
 import { useEscolasData } from '../../hooks/useEscolasData';
-import { idFromEscolaSlug, escolaUrlSlug } from '../../utils/slug';
-import BasicInfo from '../../components/PainelInformacoes/components/EscolaInfo/BasicInfo';
-import Modalidades from '../../components/PainelInformacoes/components/EscolaInfo/Modalidades';
-import Infraestrutura from '../../components/PainelInformacoes/components/EscolaInfo/Infraestrutura';
-import GestaoProfessores from '../../components/PainelInformacoes/components/EscolaInfo/GestaoProfessores';
 import HistoriaEscola from '../../components/PainelInformacoes/components/EscolaInfo/HistoriaEscola';
 import HistoriaTerraIndigena from '../../components/PainelInformacoes/components/EscolaInfo/HistoriaTerraIndigena';
 import HistoriadoProfessor from '../../components/PainelInformacoes/components/EscolaInfo/HistoriadoProfessor';
-import ProjetosParcerias from '../../components/PainelInformacoes/components/EscolaInfo/ProjetosParcerias';
 import GaleriaHorizontal from '../../components/PainelInformacoes/components/GaleriaHorizontal';
 import GaleriaPanel from '../../components/PainelInformacoes/components/GaleriaPanel';
+import { idFromEscolaSlug, escolaUrlSlug } from '../../utils/slug';
 
 const siteUrl = 'https://hericmr.github.io/opin';
 
-// Seção com âncora — oculta se show=false ou se o conteúdo renderizado for vazio
+// Seção com âncora — oculta se show=false ou conteúdo vazio
 const Section = ({ id, title, children, show = true }) => {
   const contentRef = useRef(null);
   const [hasContent, setHasContent] = useState(true);
@@ -46,33 +45,37 @@ const Section = ({ id, title, children, show = true }) => {
   );
 };
 
-// Card de stat do sumário
-const StatCard = ({ icon: Icon, label, value }) => {
-  if (!value && value !== 0) return null;
+// Card individual de dado
+const DataCard = ({ icon: Icon, label, value, wide = false }) => {
+  if (value === null || value === undefined || value === '' || value === false) return null;
+  const displayValue = value === true ? 'Sim' : value;
   return (
-    <div className="bg-white rounded-xl border border-gray-100 px-5 py-4 flex items-center gap-4">
-      <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
+    <div className={`bg-white rounded-xl border border-gray-100 px-5 py-4 flex items-start gap-4 ${wide ? 'col-span-2' : ''}`}>
+      <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0 mt-0.5">
         <Icon className="w-5 h-5 text-green-700" />
       </div>
-      <div className="min-w-0">
-        <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">{label}</p>
-        <p className="text-lg font-bold text-gray-900 leading-tight truncate">{value}</p>
+      <div className="min-w-0 flex-1">
+        <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">{label}</p>
+        <p className="text-base font-semibold text-gray-900 leading-snug whitespace-pre-line">{displayValue}</p>
       </div>
     </div>
   );
 };
 
-// Nav de âncoras com highlight ativo
+// Grupo de cards
+const CardGroup = ({ children }) => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    {children}
+  </div>
+);
+
+// Nav de âncoras sticky
 const AnchorNav = ({ sections }) => {
   const [active, setActive] = useState(sections[0]?.id);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        });
-      },
+      (entries) => entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }),
       { rootMargin: '-20% 0px -70% 0px' }
     );
     sections.forEach(({ id }) => {
@@ -82,22 +85,16 @@ const AnchorNav = ({ sections }) => {
     return () => observer.disconnect();
   }, [sections]);
 
-  const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <nav className="sticky top-0 z-20 bg-white border-b border-gray-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
-        <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-0">
+        <div className="flex items-center gap-1 overflow-x-auto py-0" style={{ scrollbarWidth: 'none' }}>
           {sections.map(({ id, label }) => (
             <button
               key={id}
-              onClick={() => scrollTo(id)}
+              onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })}
               className={`whitespace-nowrap px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                active === id
-                  ? 'border-green-600 text-green-700'
-                  : 'border-transparent text-gray-500 hover:text-gray-800'
+                active === id ? 'border-green-600 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-800'
               }`}
             >
               {label}
@@ -127,24 +124,16 @@ const EscolaPage = () => {
     { label: nome || 'Escola', path: `/escola/${slug}`, active: true },
   ], [nome, slug]);
 
-  // Seções visíveis para o nav de âncoras
   const navSections = useMemo(() => {
     if (!escola) return [];
-    const s = [];
-    s.push({ id: 'informacoes', label: 'Informações' });
-    if (escola.modalidade_ensino || escola.numero_alunos || escola.linguas_faladas)
-      s.push({ id: 'ensino', label: 'Ensino' });
-    if (escola.espaco_escolar || escola.acesso_internet != null || escola.equipamentos)
-      s.push({ id: 'infraestrutura', label: 'Infraestrutura' });
-    if (escola.professores_indigenas || escola.professores_nao_indigenas)
-      s.push({ id: 'professores', label: 'Professores' });
-    if (escola.historia_da_escola)
-      s.push({ id: 'historia', label: 'História' });
-    if (escola.historia_terra_indigena)
-      s.push({ id: 'terra', label: 'Terra Indígena' });
+    const s = [{ id: 'localizacao', label: 'Localização' }];
+    if (escola.modalidade_ensino || escola.numero_alunos) s.push({ id: 'ensino', label: 'Ensino' });
+    if (escola.espaco_escolar || escola.equipamentos || escola.acesso_internet != null) s.push({ id: 'infraestrutura', label: 'Infraestrutura' });
+    if (escola.professores_indigenas || escola.professores_nao_indigenas) s.push({ id: 'professores', label: 'Professores' });
+    if (escola.historia_da_escola) s.push({ id: 'historia', label: 'História' });
+    if (escola.historia_terra_indigena) s.push({ id: 'terra', label: 'Terra Indígena' });
     s.push({ id: 'historias-professores', label: 'Histórias' });
-    if (escola.outras_informacoes)
-      s.push({ id: 'projetos', label: 'Projetos' });
+    if (escola.outras_informacoes) s.push({ id: 'projetos', label: 'Projetos' });
     return s;
   }, [escola]);
 
@@ -152,11 +141,8 @@ const EscolaPage = () => {
 
   const handleShare = () => {
     const url = `${siteUrl}/escola/${slug}`;
-    if (navigator.share) {
-      navigator.share({ title: nome, url });
-    } else {
-      navigator.clipboard?.writeText(url);
-    }
+    if (navigator.share) navigator.share({ title: nome, url });
+    else navigator.clipboard?.writeText(url);
   };
 
   if (loading) {
@@ -215,17 +201,15 @@ const EscolaPage = () => {
 
       <div className="relative z-10">
 
-        {/* Sumário visual */}
+        {/* Sumário + ações */}
         <div className="bg-gray-50 border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 py-6">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <StatCard icon={Users} label="Alunos" value={escola.numero_alunos} />
-              <StatCard icon={BookOpen} label="Terra Indígena" value={terraIndigena} />
-              <StatCard icon={Users} label="Povo" value={escola.povos_indigenas} />
-              <StatCard icon={Wifi} label="Município" value={municipio} />
+              <DataCard icon={Users} label="Alunos" value={escola.numero_alunos} />
+              <DataCard icon={TreePine} label="Terra Indígena" value={terraIndigena} />
+              <DataCard icon={Users} label="Povo" value={escola.povos_indigenas} />
+              <DataCard icon={MapPin} label="Município" value={municipio} />
             </div>
-
-            {/* Ações */}
             <div className="flex gap-3 mt-4">
               <button
                 onClick={() => navigate('/mapa', {
@@ -259,70 +243,97 @@ const EscolaPage = () => {
           </div>
         </div>
 
-        {/* Nav de âncoras */}
+        {/* Nav âncoras */}
         {navSections.length > 0 && <AnchorNav sections={navSections} />}
 
-        {/* Conteúdo editorial */}
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
 
-          <Section id="informacoes" title="Informações Básicas">
-            <BasicInfo escola={escola} />
+          {/* Localização */}
+          <Section id="localizacao" title="Localização e Identificação">
+            <CardGroup>
+              <DataCard icon={MapPin} label="Município" value={escola.municipio} />
+              <DataCard icon={TreePine} label="Terra Indígena" value={escola.terra_indigena} />
+              <DataCard icon={Users} label="Povos Indígenas" value={escola.povos_indigenas} />
+              <DataCard icon={Languages} label="Línguas Faladas" value={escola.linguas_faladas} />
+              <DataCard icon={Building2} label="Diretoria de Ensino" value={escola.diretoria_ensino} />
+              <DataCard icon={Calendar} label="Ano de Criação" value={escola.ano_criacao} />
+              <DataCard icon={MapPin} label="Endereço" value={escola.endereco} />
+              <DataCard icon={MapPin} label="Modo de Acesso" value={escola.modo_acesso} />
+            </CardGroup>
           </Section>
 
+          {/* Ensino */}
           <Section
             id="ensino"
-            title="Modalidades e Ensino"
-            show={!!(escola.modalidade_ensino || escola.numero_alunos || escola.linguas_faladas || escola.turnos_funcionamento)}
+            title="Ensino e Alunos"
+            show={!!(escola.modalidade_ensino || escola.numero_alunos || escola.turnos_funcionamento || escola.linguas_faladas || escola.material_indigena || escola.material_nao_indigena || escola.ppp_comunidade)}
           >
-            <Modalidades escola={escola} />
+            <CardGroup>
+              <DataCard icon={Users} label="Número de Alunos" value={escola.numero_alunos} />
+              <DataCard icon={BookOpen} label="Modalidades de Ensino" value={escola.modalidade_ensino} />
+              <DataCard icon={School} label="Turnos de Funcionamento" value={escola.turnos_funcionamento} />
+              <DataCard icon={BookOpen} label="Material Pedagógico Indígena" value={escola.material_indigena} />
+              <DataCard icon={BookOpen} label="Material Pedagógico Não Indígena" value={escola.material_nao_indigena} />
+              <DataCard icon={CheckCircle} label="PPP com a Comunidade" value={escola.ppp_comunidade} />
+            </CardGroup>
           </Section>
 
+          {/* Infraestrutura */}
           <Section
             id="infraestrutura"
             title="Infraestrutura"
-            show={!!(escola.espaco_escolar || escola.acesso_internet != null || escola.equipamentos)}
+            show={!!(escola.espaco_escolar || escola.equipamentos || escola.acesso_internet != null || escola.salas_vinculadas || escola.acesso_agua)}
           >
-            <Infraestrutura escola={escola} />
+            <CardGroup>
+              <DataCard icon={Building2} label="Espaço Escolar" value={escola.espaco_escolar} />
+              <DataCard icon={Wifi} label="Acesso à Internet" value={escola.acesso_internet} />
+              <DataCard icon={Laptop} label="Equipamentos Tecnológicos" value={escola.equipamentos} />
+              <DataCard icon={School} label="Salas Vinculadas" value={escola.salas_vinculadas} />
+              <DataCard icon={CheckCircle} label="Acesso à Água" value={escola.acesso_agua} />
+              <DataCard icon={CheckCircle} label="Coleta de Lixo" value={escola.coleta_lixo} />
+            </CardGroup>
           </Section>
 
+          {/* Professores */}
           <Section
             id="professores"
             title="Gestão e Professores"
-            show={!!(escola.professores_indigenas || escola.professores_nao_indigenas || escola.gestao || escola.formacao_professores)}
+            show={!!(escola.professores_indigenas || escola.professores_nao_indigenas || escola.gestao || escola.formacao_professores || escola.outros_funcionarios)}
           >
-            <GestaoProfessores escola={escola} />
+            <CardGroup>
+              <DataCard icon={UserCheck} label="Professores Indígenas" value={escola.professores_indigenas} />
+              <DataCard icon={UserCheck} label="Professores Não Indígenas" value={escola.professores_nao_indigenas} />
+              <DataCard icon={GraduationCap} label="Formação dos Professores" value={escola.formacao_professores} />
+              <DataCard icon={GraduationCap} label="Formação Continuada" value={escola.formacao_continuada} />
+              <DataCard icon={Building2} label="Gestão" value={escola.gestao} />
+              <DataCard icon={Users} label="Outros Funcionários" value={escola.outros_funcionarios} />
+            </CardGroup>
           </Section>
 
-          <Section
-            id="historia"
-            title="História da Escola"
-            show={!!escola.historia_da_escola}
-          >
-            <div className="prose prose-lg prose-headings:text-green-900 prose-p:text-gray-800 prose-p:leading-loose max-w-3xl">
-              <HistoriaEscola escola={escola} />
-            </div>
+          {/* História da Escola */}
+          <Section id="historia" title="História da Escola" show={!!escola.historia_da_escola}>
+            <HistoriaEscola escola={escola} />
           </Section>
 
-          <Section
-            id="terra"
-            title="História da Terra Indígena"
-            show={!!escola.historia_terra_indigena}
-          >
-            <div className="prose prose-lg prose-headings:text-green-900 prose-p:text-gray-800 prose-p:leading-loose max-w-3xl">
-              <HistoriaTerraIndigena escola={escola} />
-            </div>
+          {/* História da Terra Indígena */}
+          <Section id="terra" title="História da Terra Indígena" show={!!escola.historia_terra_indigena}>
+            <HistoriaTerraIndigena escola={escola} />
           </Section>
 
+          {/* Histórias dos Professores */}
           <Section id="historias-professores" title="Histórias dos Professores">
             <HistoriadoProfessor escola={escola} />
           </Section>
 
-          <Section
-            id="projetos"
-            title="Projetos e Parcerias"
-            show={!!escola.outras_informacoes}
-          >
-            <ProjetosParcerias escola={escola} />
+          {/* Projetos */}
+          <Section id="projetos" title="Projetos e Parcerias" show={!!(escola.outras_informacoes || escola.projetos_andamento || escola.parcerias_universidades || escola.acoes_ongs)}>
+            <CardGroup>
+              <DataCard icon={BookOpen} label="Outras Informações" value={escola.outras_informacoes} wide />
+              <DataCard icon={GraduationCap} label="Projetos em Andamento" value={escola.projetos_andamento} wide />
+              <DataCard icon={CheckCircle} label="Parcerias com Universidades" value={escola.parcerias_universidades} />
+              <DataCard icon={Users} label="Ações com ONGs" value={escola.acoes_ongs} />
+              <DataCard icon={BookOpen} label="Desejos da Comunidade" value={escola.desejos_comunidade} wide />
+            </CardGroup>
           </Section>
 
         </div>
