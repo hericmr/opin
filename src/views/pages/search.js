@@ -1,202 +1,217 @@
-import logger from "../../utils/logger";
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { MapPin, BookOpen, Users, FileText, ArrowLeft, Search } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { MapPin, Users, Search, X, ArrowRight } from 'lucide-react';
+import Footer from '../../components/Footer';
+import PageHeader from '../../components/PageHeader';
+import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
 import useSearch from '../../hooks/useSearch';
 
 const SearchResults = ({ dataPoints }) => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const searchTerm = searchParams.get('q') || '';
+  const [inputValue, setInputValue] = useState(searchTerm);
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const { performSearch } = useSearch(dataPoints);
 
-  useEffect(() => {
-    if (searchTerm) {
-      const searchData = async () => {
-        setIsLoading(true);
-        try {
-          const searchResults = await performSearch(searchTerm);
-          setResults(searchResults);
-        } catch (error) {
-          logger.error('Erro na busca:', error);
-          setResults([]);
-        } finally {
-          setIsLoading(false);
-        }
-      };
+  const breadcrumbs = useMemo(() => [
+    { label: 'Início', path: '/', active: false },
+    { label: 'Buscar Escola', path: '/search', active: true },
+  ], []);
 
-      searchData();
-    }
+  useEffect(() => {
+    setInputValue(searchTerm);
+    if (!searchTerm) { setResults([]); return; }
+    setIsLoading(true);
+    performSearch(searchTerm)
+      .then(r => setResults(r))
+      .finally(() => setIsLoading(false));
   }, [searchTerm, performSearch]);
 
-  const handleResultClick = (result) => {
-    if (result.coordinates) {
-      navigate('/', { 
-        state: { 
-          searchTerm: result.title, 
-          coordinates: result.coordinates,
-          highlightSchool: result.title 
-        } 
-      });
-    }
-  };
+  const handleSubmit = useCallback((e) => {
+    e.preventDefault();
+    if (inputValue.trim()) setSearchParams({ q: inputValue.trim() });
+  }, [inputValue, setSearchParams]);
 
-  const getIconForType = (type) => {
-    switch (type) {
-      case 'school': return <MapPin className="w-5 h-5" />;
-      case 'land': return <BookOpen className="w-5 h-5" />;
-      case 'teacher': return <Users className="w-5 h-5" />;
-      case 'history': return <FileText className="w-5 h-5" />;
-      default: return <MapPin className="w-5 h-5" />;
-    }
-  };
+  const handleClear = useCallback(() => {
+    setInputValue('');
+    setSearchParams({});
+  }, [setSearchParams]);
 
-  const getCategoryColor = (category) => {
-    switch (category) {
-      case 'educação': return 'text-blue-600 bg-blue-50';
-      case 'comunidades': return 'text-red-600 bg-red-50';
-      case 'histórico': return 'text-yellow-600 bg-yellow-50';
-      default: return 'text-gray-600 bg-gray-50';
-    }
-  };
+  const handleResultClick = useCallback((result) => {
+    navigate('/mapa', {
+      state: {
+        searchTerm: result.title,
+        coordinates: result.coordinates,
+        highlightSchool: result.title,
+        openPainel: result.id,
+      }
+    });
+  }, [navigate]);
 
-  const highlightText = (text, searchTerm) => {
-    if (!searchTerm) return text;
-    const regex = new RegExp(`(${searchTerm})`, 'gi');
+  const highlight = (text, term) => {
+    if (!term || !text) return text;
+    const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
     const parts = text.split(regex);
-    return parts.map((part, index) => 
-      regex.test(part) ? (
-        <span key={index} className="bg-yellow-200 font-semibold">{part}</span>
-      ) : part
+    return parts.map((part, i) =>
+      regex.test(part)
+        ? <mark key={i} className="bg-yellow-200 text-yellow-900 rounded px-0.5">{part}</mark>
+        : part
     );
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 pt-20">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center">
-            <p className="mt-4 text-lg text-gray-600">Buscando resultados...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2 text-green-600 hover:text-green-700 transition-colors mb-4"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Voltar ao mapa
-          </button>
-          
-          <div className="flex items-center gap-3 mb-4">
-            <Search className="w-6 h-6 text-gray-400" />
-            <h1 className="text-2xl font-bold text-gray-900">
-              Resultados da busca
-            </h1>
-          </div>
-          
-          <p className="text-gray-600">
-            {results.length > 0 
-              ? `${results.length} resultado${results.length > 1 ? 's' : ''} encontrado${results.length > 1 ? 's' : ''} para "${searchTerm}"`
-              : `Nenhum resultado encontrado para "${searchTerm}"`
-            }
-          </p>
-        </div>
+    <div className="min-h-screen dashboard-scroll relative bg-gray-50/30">
+      {/* Hero */}
+      <PageHeader
+        title="Buscar Escola"
+        showNavbar={true}
+        dataPoints={dataPoints || []}
+        overlayColor="rgba(255, 128, 90, 1)"
+        blendMode="color"
+      >
+        <DashboardBreadcrumbs breadcrumbs={breadcrumbs} />
+      </PageHeader>
 
-        {/* Resultados */}
-        {results.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {results.map((result, index) => (
-              <motion.div
-                key={result.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                onClick={() => handleResultClick(result)}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 
-                         cursor-pointer border border-gray-200 overflow-hidden group"
+      {/* Campo de busca centralizado abaixo do hero */}
+      <div className="max-w-2xl mx-auto px-4 mt-10 relative z-10 mb-8">
+        <form onSubmit={handleSubmit} className="flex gap-2 bg-white rounded-2xl border border-gray-200 p-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-green-700 pointer-events-none" />
+            <input
+              type="search"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Escola, município, povo, terra indígena..."
+              autoFocus
+              className="w-full pl-11 pr-10 py-3 rounded-xl outline-none text-base focus:ring-2 focus:ring-green-300 transition"
+            />
+            {inputValue && (
+              <button
+                type="button"
+                onClick={handleClear}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                aria-label="Limpar busca"
               >
-                <div className="p-6">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="text-green-600 group-hover:text-green-700 transition-colors">
-                      {getIconForType(result.type)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2">
-                        {highlightText(result.title, searchTerm)}
-                      </h3>
-                      {result.subtitle && (
-                        <p className="text-sm text-gray-500 mb-2">
-                          {result.subtitle}
-                        </p>
-                      )}
-                      <span className={`inline-block px-2 py-1 text-xs rounded-full ${getCategoryColor(result.category)}`}>
-                        {result.category}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  {result.matches && result.matches.length > 0 && (
-                    <div className="mt-3">
-                      <p className="text-xs text-gray-500 mb-1">Encontrado em:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {result.matches.map((match, matchIndex) => (
-                          <span
-                            key={matchIndex}
-                            className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded"
-                          >
-                            {match}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {result.coordinates && (
-                    <div className="mt-3 flex items-center gap-2 text-xs text-green-600">
-                      <MapPin className="w-3 h-3" />
-                      <span>Ver no mapa</span>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
-        ) : (
-          <div className="text-center py-12">
-            <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Nenhum resultado encontrado
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Tente usar termos diferentes ou verificar a ortografia.
-            </p>
-            <button
-              onClick={() => navigate('/')}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-            >
-              Voltar ao mapa
-            </button>
+          <button
+            type="submit"
+            className="px-5 py-3 bg-green-700 text-white rounded-xl font-semibold hover:bg-green-600 transition-colors flex-shrink-0"
+          >
+            Buscar
+          </button>
+        </form>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-4">
+
+        {/* Sem query */}
+        {!searchTerm && (
+          <div className="text-center py-16 text-gray-400">
+            <Search className="w-12 h-12 mx-auto mb-4 opacity-20" />
+            <p className="text-base font-medium text-gray-500">Digite algo para buscar escolas</p>
+            <p className="text-sm mt-1">Nome, município, povo, terra indígena...</p>
           </div>
         )}
+
+        {/* Carregando */}
+        {isLoading && (
+          <div className="text-center py-16">
+            <div className="w-8 h-8 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-sm text-gray-400">Buscando...</p>
+          </div>
+        )}
+
+        {/* Resultados */}
+        {!isLoading && searchTerm && (
+          <>
+            <p className="text-sm text-gray-500 mb-5">
+              {results.length > 0
+                ? <><span className="font-semibold text-gray-800">{results.length}</span> resultado{results.length !== 1 ? 's' : ''} para <span className="font-semibold text-gray-800">"{searchTerm}"</span></>
+                : <>Nenhum resultado para <span className="font-semibold text-gray-800">"{searchTerm}"</span></>
+              }
+            </p>
+
+            {results.length > 0 ? (
+              <div className="flex flex-col gap-3">
+                {results.map((result) => (
+                  <button
+                    key={result.id}
+                    type="button"
+                    onClick={() => handleResultClick(result)}
+                    className="w-full text-left bg-white rounded-xl border border-gray-200 hover:border-yellow-400 hover:shadow-md transition-all group p-5"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <h2 className="font-semibold text-gray-900 text-base leading-snug mb-1.5">
+                          {highlight(result.title, searchTerm)}
+                        </h2>
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500">
+                          {result.subtitle && (
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
+                              {highlight(result.subtitle, searchTerm)}
+                            </span>
+                          )}
+                          {result.data?.terra_indigena && (
+                            <span className="flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 flex-shrink-0" />
+                              TI {highlight(result.data.terra_indigena, searchTerm)}
+                            </span>
+                          )}
+                          {result.data?.povos_indigenas && (
+                            <span className="flex items-center gap-1">
+                              <Users className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
+                              {highlight(result.data.povos_indigenas, searchTerm)}
+                            </span>
+                          )}
+                          {result.data?.numero_alunos && (
+                            <span className="text-gray-400">{result.data.numero_alunos} alunos</span>
+                          )}
+                        </div>
+                        {result.matches?.filter(m => !['nome','município','terra indígena','povos'].includes(m)).length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mt-2.5">
+                            {result.matches
+                              .filter(m => !['nome','município','terra indígena','povos'].includes(m))
+                              .slice(0, 4)
+                              .map((match, i) => (
+                                <span key={i} className="px-2 py-0.5 bg-yellow-50 text-yellow-700 text-xs rounded-full border border-yellow-100">
+                                  {match}
+                                </span>
+                              ))}
+                          </div>
+                        )}
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-yellow-500 transition-colors flex-shrink-0 mt-1" />
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <Search className="w-12 h-12 text-gray-200 mx-auto mb-4" />
+                <p className="text-gray-500 mb-2">Nenhuma escola encontrada.</p>
+                <p className="text-sm text-gray-400 mb-6">Tente outros termos ou verifique a ortografia.</p>
+                <Link
+                  to="/mapa"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-400 transition-colors text-sm"
+                >
+                  <MapPin className="w-4 h-4" />
+                  Explorar o mapa
+                </Link>
+              </div>
+            )}
+          </>
+        )}
       </div>
+      <Footer />
     </div>
   );
 };
 
 export default SearchResults;
-
-
-

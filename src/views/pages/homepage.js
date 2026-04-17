@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import Footer from '../../components/Footer';
 import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 import { Search, X, MapPin, BookOpen, Users, FileText, Map } from 'lucide-react';
@@ -297,6 +298,7 @@ export default function Homepage({ dataPoints = [] }) {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }
