@@ -18,6 +18,7 @@ const AdminPanel = React.lazy(() => import("../components/AdminPanel"));
 const Lindiflix = React.lazy(() => import("../views/pages/lindiflix"));
 const LindiflixContato = React.lazy(() => import("../views/pages/lindiflixContato"));
 const EscolaPage = React.lazy(() => import("../views/pages/EscolaPage"));
+const GaleriaPage = React.lazy(() => import("../views/pages/GaleriaPage"));
 
 // Mapa para facilitar o prefetch manual se necessário
 const lazyComponents = {
@@ -110,6 +111,10 @@ export const createRoutes = (dataPoints, loading, onPainelOpen) => {
     {
       path: "/escola/:slug",
       element: createRouteElement(EscolaPage, { componentProps: { dataPoints } })
+    },
+    {
+      path: "/galeria/:slug",
+      element: createRouteElement(GaleriaPage)
     }
   ];
 };
