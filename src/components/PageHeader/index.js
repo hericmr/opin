@@ -118,10 +118,8 @@ const PageHeader = ({
     }
   }, []);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     updateHeight();
-
-    // Recalcular quando a janela for redimensionada
     window.addEventListener('resize', updateHeight);
     return () => window.removeEventListener('resize', updateHeight);
   }, [updateHeight, title, description, children]);
@@ -285,7 +283,7 @@ const PageHeader = ({
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Título da Página - Estilo Native Land Digital */}
-          <div className="mt-4 flex justify-center">
+          <div className="mt-4 flex items-center justify-center min-h-20 sm:min-h-24 md:min-h-28">
             {logoImage ? (
               <img
                 src={logoImage}
