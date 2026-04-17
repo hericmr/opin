@@ -1,1 +1,0 @@
-import{j as e}from"./index-DXJwoMjk.js";const r=({children:t,className:s="",centered:x=!1})=>e.jsx("div",{className:`max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 py-10 sm:py-14 border-b border-gray-100 mb-4 ${s}`,children:e.jsx("div",{className:`text-xl leading-loose text-neutral-700 ${x?"text-center":"text-left"}`,children:t})});export{r as P};
