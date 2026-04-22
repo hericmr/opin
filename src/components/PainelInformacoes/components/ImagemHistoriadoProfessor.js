@@ -128,11 +128,25 @@ const ImagemHistoriadoProfessor = ({ escola_id, isMaximized = false, hideInlineM
             };
           });
 
-          // Filtrar apenas imagens que existem localmente (consistência com ImagensdasEscolas)
+          // Filtrar apenas imagens que são válidas
           const imagensValidas = imagensComUrl.filter(img => {
-            if (img.publicURL) return isLocalImage(img.publicURL);
+            if (!img.publicURL) return false;
+            
+            // Se for imagem local no mapa, é válida
+            if (isLocalImage(img.publicURL)) return true;
+            
+            // Se for uma imagem do nosso novo storage local (/opin/data/storage/opin/ ou /opin/storage/v1/)
+            // também é considerada válida
+            if (img.publicURL.startsWith('/opin/data/storage/') || img.publicURL.startsWith('/opin/storage/v1/')) {
+              return true;
+            }
+
+            // Se for URL completa (cloud), também permitimos
+            if (img.publicURL.startsWith('http')) return true;
+
             return false;
           });
+
 
           logger.debug('Arquivos de professores VALIDADOS:', imagensValidas.length);
           setImagens(imagensValidas);

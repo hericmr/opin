@@ -37,3 +37,13 @@ yarn-error.log*
 /backups/
 postgres_data/
 storage_backup/
+
+# Secrets and Local Data
+.env.supabase
+/data/
+/supabase/
+*.log
+pipeline_git.md
+diagnose.sh
+docker_sync_and_run.sh
+sync_storage_docker.sh

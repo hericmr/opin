@@ -1,9 +1,13 @@
-.env
-.env.development.local
-.env.test.local
-.env.production.local
+# Ignorar todos os arquivos .env para evitar contaminação durante o build
+.env*
+!.env.example
+
+# Dependências e diretórios de build
 node_modules
 build
 dist
+
+# Controle de versão
 .git
 .gitignore
+.github

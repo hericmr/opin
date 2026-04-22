@@ -147,20 +147,26 @@ const ImagensdasEscolas = ({ escola_id, isMaximized = false, hideInlineMedia = f
 
 
 
-        // Filtrar apenas imagens que existem localmente (para evitar flash de imagens deletadas)
-        // Isso assume que o download_images.js rodou e baixou tudo que era válido.
-        // Se uma imagem não está no mapa, assumimos que ela foi deletada ou não existe.
+        // Filtrar apenas imagens que são válidas
+        // Mantemos um fallback para isLocalImage mas permitimos URLs do nosso próprio domínio/storage
         const imagensValidas = imagensEncontradas.filter(img => {
-          // Se tiver URL pública, verifique se temos mapeamento local
-          if (img.publicURL) {
-            return isLocalImage(img.publicURL);
+          if (!img.publicURL) return false;
+          
+          // Se for imagem local no mapa, é válida
+          if (isLocalImage(img.publicURL)) return true;
+          
+          // Se for uma imagem do nosso novo storage local (/opin/data/storage/opin/ ou /opin/storage/v1/)
+          // também é considerada válida
+          if (img.publicURL.startsWith('/opin/data/storage/') || img.publicURL.startsWith('/opin/storage/v1/')) {
+            return true;
           }
-          // Fallback para check no filePath se necessário
-          if (img.filePath) {
-            return isLocalImage(img.filePath);
-          }
+
+          // Se for URL completa (cloud), também permitimos
+          if (img.publicURL.startsWith('http')) return true;
+
           return false;
         });
+
 
         logger.debug('Imagens processadas, ordenadas e VALIDADAS:', imagensValidas.length);
 

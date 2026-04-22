@@ -4,6 +4,32 @@ GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgres;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO postgres;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO postgres;
 
+-- Schema necessario para o supabase/storage-api
+CREATE SCHEMA IF NOT EXISTS storage;
+GRANT ALL ON SCHEMA storage TO postgres;
+ALTER DEFAULT PRIVILEGES IN SCHEMA storage GRANT ALL ON TABLES TO postgres;
+ALTER DEFAULT PRIVILEGES IN SCHEMA storage GRANT ALL ON SEQUENCES TO postgres;
+
+-- Creating core storage tables that storage-api expects to exist before its own migrations
+CREATE TABLE IF NOT EXISTS storage.buckets (
+    id text NOT NULL primary key,
+    name text NOT NULL,
+    owner uuid,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS storage.objects (
+    id uuid NOT NULL DEFAULT gen_random_uuid() primary key,
+    bucket_id text,
+    name text,
+    owner uuid,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    last_accessed_at timestamp with time zone DEFAULT now(),
+    metadata jsonb
+);
+
 -- Drop all tables to ensure clean state
 DROP TABLE IF EXISTS fontes_dados CASCADE;
 DROP TABLE IF EXISTS imagens_professores CASCADE;
