@@ -52,6 +52,9 @@ storage_backup/
 # Secrets and Local Data
 .env.supabase
 /data/
+!/data/storage/
+!/data/storage/opin/
+!/data/storage/opin/**
 /supabase/
 *.log
 pipeline_git.md
