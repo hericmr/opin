@@ -43,10 +43,10 @@ services:
         condition: service_healthy
 
   front:
+    image: ${FRONT_IMAGE:-opin_front_prod_local}
     build:
       context: .
       args:
-        # Build-time args injetados via env vars do compose
         - VITE_API_URL=${VITE_API_URL}
         - VITE_API_ANON_KEY=${VITE_API_ANON_KEY}
         - VITE_ADMIN_PASSWORD=${VITE_ADMIN_PASSWORD}

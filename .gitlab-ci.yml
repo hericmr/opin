@@ -2,6 +2,7 @@ stages:
   - test
   - build
   - docker
+  - deploy
 
 cache:
   paths:
@@ -35,17 +36,38 @@ docker:
   needs:
     - build
   variables:
-    VITE_API_URL: ""
+    VITE_API_URL: $VITE_API_URL
     VITE_API_ANON_KEY: $VITE_API_ANON_KEY
+    VITE_ADMIN_PASSWORD: $VITE_ADMIN_PASSWORD
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build
         --build-arg VITE_API_URL="$VITE_API_URL"
         --build-arg VITE_API_ANON_KEY="$VITE_API_ANON_KEY"
+        --build-arg VITE_ADMIN_PASSWORD="$VITE_ADMIN_PASSWORD"
         -t $CI_REGISTRY_IMAGE:latest
         -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
         .
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  only:
+    - main
+
+deploy:
+  stage: deploy
+  needs:
+    - docker
+  script:
+    - apk add --no-cache openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+    - ssh $SSH_USER@$SSH_HOST "
+        cd /opt/opin &&
+        docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
+        docker pull $CI_REGISTRY_IMAGE:latest &&
+        FRONT_IMAGE=$CI_REGISTRY_IMAGE:latest docker compose -f docker-compose.prod.yml --env-file .env up -d --no-build
+      "
   only:
     - main
