@@ -49,9 +49,7 @@ jobs:
         NODE_ENV: production
         VITE_API_URL: ${{ secrets.VITE_API_URL }}
         VITE_API_ANON_KEY: ${{ secrets.VITE_API_ANON_KEY }}
-        REACT_APP_API_URL: ${{ secrets.VITE_API_URL }}
-        REACT_APP_API_ANON_KEY: ${{ secrets.VITE_API_ANON_KEY }}
-        REACT_APP_ADMIN_PASSWORD: ${{ secrets.REACT_APP_ADMIN_PASSWORD }}
+        VITE_ADMIN_PASSWORD: ${{ secrets.VITE_ADMIN_PASSWORD }}
         
     - name: Setup Pages
       uses: actions/configure-pages@v4
