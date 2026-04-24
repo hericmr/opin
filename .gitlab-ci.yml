@@ -1,8 +1,7 @@
-image: node:20
-
 stages:
   - test
   - build
+  - docker
 
 cache:
   paths:
@@ -13,6 +12,7 @@ cache:
 
 test:
   stage: test
+  image: node:20
   script:
     - npm ci
     - npm run test -- --passWithNoTests
@@ -21,15 +21,37 @@ test:
 
 build:
   stage: build
+  image: node:20
   script:
     - npm ci
     - npm run build
   artifacts:
     paths:
-      - dist/
+      - build/
     expire_in: 7 days
-  environment:
-    name: production
   only:
     - main
-    - develop
+
+docker:
+  stage: docker
+  image: docker:24
+  services:
+    - docker:24-dind
+  needs:
+    - build
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+    VITE_SUPABASE_URL: ""
+    VITE_SUPABASE_ANON_KEY: $VITE_SUPABASE_ANON_KEY
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build
+        --build-arg VITE_SUPABASE_URL="$VITE_SUPABASE_URL"
+        --build-arg VITE_SUPABASE_ANON_KEY="$VITE_SUPABASE_ANON_KEY"
+        -t $CI_REGISTRY_IMAGE:latest
+        -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+        .
+    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  only:
+    - main
