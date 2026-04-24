@@ -39,8 +39,11 @@ postgres_data/
 storage_backup/
 /data/backups/
 
-# Imagens locais (servidas via storage, não devem estar no repositório)
+# Imagens locais e pastas de backup (não devem estar no repositório)
 /public/images/local/
+/public/fotos/
+/public/backups/
+/public/exemplo*.webp
 
 # Arquivos de compressão gerados
 *.zip
