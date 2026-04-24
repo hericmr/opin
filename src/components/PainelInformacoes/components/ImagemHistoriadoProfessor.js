@@ -137,7 +137,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, isMaximized = false, hideInlineM
             
             // Se for uma imagem do nosso novo storage local (/opin/data/storage/opin/ ou /opin/storage/v1/)
             // também é considerada válida
-            if (img.publicURL.startsWith('/opin/data/storage/') || img.publicURL.startsWith('/opin/storage/v1/')) {
+            if (img.publicURL.startsWith('/data/storage/') || img.publicURL.startsWith('/storage/v1/')) {
               return true;
             }
 

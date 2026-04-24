@@ -45,11 +45,12 @@ export const getSupabaseStorageUrl = (bucket, path) => {
     if (path.startsWith('http')) return path;
 
     const baseUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim().replace(/\/$/, '');
-    
-    // Modo Docker local: VITE_SUPABASE_URL vazio ou relativo — usa proxy Nginx em /storage/v1/
+
+    // Modo Docker local: VITE_SUPABASE_URL vazio ou relativo
+    // Serve os arquivos como estáticos diretamente via Nginx (os arquivos ficam em data/storage/opin/)
     if (!baseUrl || baseUrl.startsWith('/')) {
         const cleanPath = path.startsWith('/') ? path.substring(1) : path;
-        return `/storage/v1/object/public/${bucket}/${cleanPath}`;
+        return `/data/storage/opin/${bucket}/${cleanPath}`;
     }
 
     // Modo Supabase Cloud
@@ -100,11 +101,13 @@ export const getSecureImageUrl = (url) => {
 
     // 3. If it's already a full URL (http/https), return as is
     if (url.startsWith('http')) {
-        // Em modo Docker local, roteia URLs do Supabase cloud para o proxy Nginx local
+        // Em modo Docker local, roteia URLs do Supabase cloud para os arquivos estáticos
         const supabaseEnvUrl = import.meta.env.VITE_SUPABASE_URL || '';
         const isLocalMode = !supabaseEnvUrl || supabaseEnvUrl.startsWith('/');
         if (isLocalMode && url.includes('cbzwrxmcuhsxehdrsrvi.supabase.co')) {
-            return url.replace('https://cbzwrxmcuhsxehdrsrvi.supabase.co', '');
+            // https://PROJECT.supabase.co/storage/v1/object/public/BUCKET/PATH
+            // → /data/storage/opin/BUCKET/PATH
+            return url.replace(/https:\/\/[^/]+\/storage\/v1\/object\/public/, '/data/storage/opin');
         }
         return url;
     }
