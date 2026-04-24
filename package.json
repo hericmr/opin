@@ -43,6 +43,7 @@
     "test:coverage": "jest --coverage",
     "lint": "eslint . --max-warnings=5000 || true",
     "optimize-images": "node scripts/convert_to_webp.js",
+    "convert-storage": "node scripts/convert_storage_to_webp.js",
     "db:migrate": "knex migrate:latest --knexfile config/knexfile.cjs",
     "db:rollback": "knex migrate:rollback --knexfile config/knexfile.cjs"
   },
