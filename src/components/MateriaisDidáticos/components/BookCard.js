@@ -3,7 +3,7 @@ import { FileText, Download, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const BookCard = ({ book }) => {
-  const rawBaseUrl = process.env.PUBLIC_URL || '/opin';
+  const rawBaseUrl = import.meta.env.BASE_URL || '/';
   const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl.slice(0, -1) : rawBaseUrl;
   const coverUrl = `${baseUrl}/materiais/${book.cover_image}`;
   const pdfUrl = `${baseUrl}/materiais/${book.pdf_source}`;

@@ -157,7 +157,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
   const isLindiflixPage = useMemo(() => location.pathname.startsWith('/lindiflix'), [location.pathname]);
 
   // URL da imagem hero
-  const heroImageUrl = `${import.meta.env.BASE_URL || '/opin'}/hero.webp`;
+  const heroImageUrl = `${import.meta.env.BASE_URL}hero.webp`;
 
   return (
     <header
@@ -188,7 +188,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                 aria-label="Ir para o Lindiflix"
               >
                 <img
-                  src={getLocalImageUrl(`${import.meta.env.BASE_URL || '/opin'}/lindiflix_logo.png`)}
+                  src={getLocalImageUrl(`${import.meta.env.BASE_URL}lindiflix_logo.png`)}
                   alt="Lindiflix – Das crianças e jovens das Aldeias de São Paulo para o mundo!"
                   className="h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 w-auto object-contain object-left"
                   style={{ display: 'block' }}
@@ -202,7 +202,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
               >
                 <div className="flex items-center space-x-1 sm:space-x-2">
                   <img
-                    src={getLocalImageUrl(`${import.meta.env.BASE_URL || '/opin'}/logo_index.webp`)}
+                    src={getLocalImageUrl(`${import.meta.env.BASE_URL}logo_index.webp`)}
                     alt="OPIN - Observatório dos Professores Indígenas"
                     className="h-6 sm:h-7 md:h-8 lg:h-10 xl:h-12 w-auto object-contain object-left"
                     style={{ display: 'block' }}
@@ -252,7 +252,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                 className="flex items-center hover:opacity-80 transition-opacity"
               >
                 <img
-                  src={getLocalImageUrl(`${import.meta.env.BASE_URL || '/opin'}/lindi.svg`)}
+                  src={getLocalImageUrl(`${import.meta.env.BASE_URL}lindi.svg`)}
                   alt="LINDI - Licenciatura Intercultural Indígena"
                   className="h-12 xl:h-16 w-auto"
                 />
@@ -265,7 +265,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                 className="flex items-center hover:opacity-80 transition-opacity"
               >
                 <img
-                  src={getLocalImageUrl(`${import.meta.env.BASE_URL || '/opin'}/logo.webp`)}
+                  src={getLocalImageUrl(`${import.meta.env.BASE_URL}logo.webp`)}
                   alt="UNIFESP"
                   className="h-8 xl:h-12 w-auto"
                 />

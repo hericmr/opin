@@ -11,7 +11,7 @@ const BookGallery = () => {
   useEffect(() => {
     const fetchCatalog = async () => {
       try {
-        const rawBaseUrl = process.env.PUBLIC_URL || '/opin';
+        const rawBaseUrl = import.meta.env.BASE_URL || '/';
         const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl.slice(0, -1) : rawBaseUrl;
         const response = await fetch(`${baseUrl}/materiais/catalog.json`);
         if (!response.ok) {
@@ -60,7 +60,7 @@ const BookGallery = () => {
         <div className="mb-6">
           <p></p>
           <img
-            src={`${import.meta.env.BASE_URL || '/opin'}/logo_saberes.webp`}
+            src={`${import.meta.env.BASE_URL}logo_saberes.webp`}
             alt="Logo Saberes Indígenas na Escola - UNIFESP"
             className="h-24 sm:h-32 w-auto mx-auto object-contain"
           />

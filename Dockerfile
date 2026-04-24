@@ -12,6 +12,10 @@ RUN npm install
 # Copiar o resto do código
 COPY . .
 
+# Remover arquivos de ambiente locais para que o build use apenas as build-args/ENV
+# (impede que .env.supabase embuta a URL cloud no bundle Docker)
+RUN rm -f .env.supabase .env.local .env.development.local .env.production.local
+
 # Build da aplicação
 # Definir argumento de build para a URL do Backend (pode ser relativo ou absoluto)
 ARG VITE_SUPABASE_URL

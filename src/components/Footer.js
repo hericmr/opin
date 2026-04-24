@@ -10,17 +10,17 @@ const Footer = () => (
         <div className="lg:col-span-1">
           <div className="flex items-center gap-4 flex-wrap">
             <img
-              src={`${import.meta.env.BASE_URL || '/opin'}/logo.webp`}
+              src={`${import.meta.env.BASE_URL}logo.webp`}
               alt="OPIN"
               className="h-14 w-auto"
             />
             <img
-              src={`${import.meta.env.BASE_URL || '/opin'}/lindi.svg`}
+              src={`${import.meta.env.BASE_URL}lindi.svg`}
               alt="LINDI"
               className="h-24 w-auto"
             />
             <img
-              src={`${import.meta.env.BASE_URL || '/opin'}/logo_saberes.webp`}
+              src={`${import.meta.env.BASE_URL}logo_saberes.webp`}
               alt="Saberes"
               className="h-28 w-auto"
               style={{ filter: 'invert(1)' }}

@@ -83,7 +83,7 @@ services:
     build:
       context: .
       args:
-        - VITE_SUPABASE_URL=${VITE_SUPABASE_URL:-}
+        - VITE_SUPABASE_URL=
         - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY:-local-dev-key-ignore-auth}
     container_name: opin_front
     restart: unless-stopped

@@ -15,7 +15,7 @@ const NavLogos = ({ isMobileLandscape }) => {
           title="UNIFESP - Universidade Federal de São Paulo"
         >
           <LazyImage
-            src={getLocalImageUrl(`${import.meta.env.BASE_URL || '/opin'}/logo.webp`)}
+            src={getLocalImageUrl(`${import.meta.env.BASE_URL}logo.webp`)}
             alt="Logo UNIFESP"
             className="h-8 w-auto"
           />
@@ -29,7 +29,7 @@ const NavLogos = ({ isMobileLandscape }) => {
           title="LINDI - Licenciatura Intercultural Indígena"
         >
           <LazyImage
-            src={getLocalImageUrl(`${import.meta.env.BASE_URL || '/opin'}/lindi.svg`)}
+            src={getLocalImageUrl(`${import.meta.env.BASE_URL}lindi.svg`)}
             alt="LINDI - Licenciatura Intercultural Indígena"
             className="h-20 w-auto"
           />

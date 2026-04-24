@@ -10,15 +10,30 @@ const failedImageCache = new Set();
  * @returns {string} The local path or the original URL
  */
 export const getLocalImageUrl = (url) => {
-    // Direct match
-    if (imageMap[url]) {
-        const localPath = imageMap[url];
-        // Prepend BASE_URL if configured (handles /opin/ prefix)
-        const baseUrl = import.meta.env.BASE_URL || '/';
-        // Remove trailing slash from base if present and leading slash from path
-        const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+    if (!url) return url;
 
+    const buildLocalPath = (localPath) => {
+        const baseUrl = import.meta.env.BASE_URL || '/';
+        const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
         return `${cleanBase}${localPath}`;
+    };
+
+    // Direct match
+    if (imageMap[url]) return buildLocalPath(imageMap[url]);
+
+    // Handle storage URL pattern: /data/storage/opin/[bucket/]school_id/file
+    // The image_map keys use relative paths like "1/image.jpeg"
+    const storagePrefix = '/data/storage/opin/';
+    if (url.startsWith(storagePrefix)) {
+        const afterPrefix = url.slice(storagePrefix.length);
+        // Try direct match (no bucket subdir in path)
+        if (imageMap[afterPrefix]) return buildLocalPath(imageMap[afterPrefix]);
+        // Try stripping the first path component (bucket name)
+        const slashIdx = afterPrefix.indexOf('/');
+        if (slashIdx !== -1) {
+            const withoutBucket = afterPrefix.slice(slashIdx + 1);
+            if (imageMap[withoutBucket]) return buildLocalPath(imageMap[withoutBucket]);
+        }
     }
 
     return url;
@@ -47,10 +62,10 @@ export const getSupabaseStorageUrl = (bucket, path) => {
     const baseUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim().replace(/\/$/, '');
 
     // Modo Docker local: VITE_SUPABASE_URL vazio ou relativo
-    // Serve os arquivos como estáticos diretamente via Nginx (os arquivos ficam em data/storage/opin/)
+    // Arquivos ficam em data/storage/opin/{escola_id}/arquivo (sem subdiretório de bucket)
     if (!baseUrl || baseUrl.startsWith('/')) {
         const cleanPath = path.startsWith('/') ? path.substring(1) : path;
-        return `/data/storage/opin/${bucket}/${cleanPath}`;
+        return `/data/storage/opin/${cleanPath}`;
     }
 
     // Modo Supabase Cloud
@@ -106,8 +121,10 @@ export const getSecureImageUrl = (url) => {
         const isLocalMode = !supabaseEnvUrl || supabaseEnvUrl.startsWith('/');
         if (isLocalMode && url.includes('cbzwrxmcuhsxehdrsrvi.supabase.co')) {
             // https://PROJECT.supabase.co/storage/v1/object/public/BUCKET/PATH
-            // → /data/storage/opin/BUCKET/PATH
-            return url.replace(/https:\/\/[^/]+\/storage\/v1\/object\/public/, '/data/storage/opin');
+            // → /data/storage/opin/PATH (sem o nome do bucket — arquivos ficam por escola_id diretamente)
+            const bucketPathMatch = url.match(/\/storage\/v1\/object\/public\/[^/]+\/(.+)$/);
+            if (bucketPathMatch) return `/data/storage/opin/${bucketPathMatch[1]}`;
+            return url.replace(/https:\/\/[^/]+\/storage\/v1\/object\/public\/[^/]+/, '/data/storage/opin');
         }
         return url;
     }
