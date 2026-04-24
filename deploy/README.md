@@ -31,11 +31,10 @@ A equipe de desenvolvimento fornecerá os valores de `VITE_API_ANON_KEY` e `FRON
 ### 3. Autenticar no registry do GitLab
 
 ```bash
-docker login git.unifesp.br:5050
+docker login git.unifesp.br:5050 -u <REGISTRY_USER> -p <REGISTRY_PASSWORD>
 ```
 
-Use um **Deploy Token** gerado em: GitLab → Settings → Repository → Deploy tokens
-(solicitar à equipe de desenvolvimento caso não tenha).
+As credenciais (`REGISTRY_USER` e `REGISTRY_PASSWORD`) serão fornecidas pela equipe de desenvolvimento por canal seguro (não estão neste repositório).
 
 ### 4. Criar a estrutura de diretórios de mídia
 
