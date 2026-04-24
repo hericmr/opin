@@ -50,7 +50,7 @@ export const isLocalImage = (url) => {
 
 /**
  * Build a fallback Supabase storage URL for a relative path.
- * Uses the environment variable VITE_SUPABASE_URL.
+ * Uses the environment variable VITE_API_URL.
  * @param {string} bucket - The storage bucket name
  * @param {string} path - The internal path (e.g. "4/image.jpg")
  * @returns {string} The full Supabase URL
@@ -59,9 +59,9 @@ export const getSupabaseStorageUrl = (bucket, path) => {
     if (!path) return '';
     if (path.startsWith('http')) return path;
 
-    const baseUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim().replace(/\/$/, '');
+    const baseUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '');
 
-    // Modo Docker local: VITE_SUPABASE_URL vazio ou relativo
+    // Modo Docker local: VITE_API_URL vazio ou relativo
     // Arquivos ficam em data/storage/opin/{escola_id}/arquivo (sem subdiretório de bucket)
     if (!baseUrl || baseUrl.startsWith('/')) {
         const cleanPath = path.startsWith('/') ? path.substring(1) : path;
@@ -117,7 +117,7 @@ export const getSecureImageUrl = (url) => {
     // 3. If it's already a full URL (http/https), return as is
     if (url.startsWith('http')) {
         // Em modo Docker local, roteia URLs do Supabase cloud para os arquivos estáticos
-        const supabaseEnvUrl = import.meta.env.VITE_SUPABASE_URL || '';
+        const supabaseEnvUrl = import.meta.env.VITE_API_URL || '';
         const isLocalMode = !supabaseEnvUrl || supabaseEnvUrl.startsWith('/');
         if (isLocalMode && url.includes('cbzwrxmcuhsxehdrsrvi.supabase.co')) {
             // https://PROJECT.supabase.co/storage/v1/object/public/BUCKET/PATH

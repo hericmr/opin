@@ -35,13 +35,13 @@ docker:
   needs:
     - build
   variables:
-    VITE_SUPABASE_URL: ""
-    VITE_SUPABASE_ANON_KEY: $VITE_SUPABASE_ANON_KEY
+    VITE_API_URL: ""
+    VITE_API_ANON_KEY: $VITE_API_ANON_KEY
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build
-        --build-arg VITE_SUPABASE_URL="$VITE_SUPABASE_URL"
-        --build-arg VITE_SUPABASE_ANON_KEY="$VITE_SUPABASE_ANON_KEY"
+        --build-arg VITE_API_URL="$VITE_API_URL"
+        --build-arg VITE_API_ANON_KEY="$VITE_API_ANON_KEY"
         -t $CI_REGISTRY_IMAGE:latest
         -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
         .

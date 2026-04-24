@@ -115,7 +115,7 @@ const AppContent = () => {
 
       {import.meta.env.DEV && error && !bannerDismissed && (
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-3 bg-amber-50 border border-amber-300 text-amber-800 text-xs px-4 py-2 rounded-lg shadow-md">
-          <span>Banco de dados não disponível. Verifique as variáveis <code className="font-mono bg-amber-100 px-1 rounded">VITE_SUPABASE_URL</code> e <code className="font-mono bg-amber-100 px-1 rounded">VITE_SUPABASE_ANON_KEY</code> no <code className="font-mono bg-amber-100 px-1 rounded">.env.local</code>.</span>
+          <span>Banco de dados não disponível. Verifique as variáveis <code className="font-mono bg-amber-100 px-1 rounded">VITE_API_URL</code> e <code className="font-mono bg-amber-100 px-1 rounded">VITE_API_ANON_KEY</code> no <code className="font-mono bg-amber-100 px-1 rounded">.env.local</code>.</span>
           <button onClick={() => setBannerDismissed(true)} className="text-amber-600 hover:text-amber-900 font-bold">✕</button>
         </div>
       )}

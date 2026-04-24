@@ -2,12 +2,12 @@
 import { createClient } from "@supabase/supabase-js";
 
 // Usando variáveis de ambiente (compatível com Vite e CRA)
-const rawUrl = (import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_URL.trim())
-  || import.meta.env.REACT_APP_SUPABASE_URL
+const rawUrl = (import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim())
+  || import.meta.env.REACT_APP_API_URL
   || '';
 
-const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY && import.meta.env.VITE_SUPABASE_ANON_KEY.trim())
-  || import.meta.env.REACT_APP_SUPABASE_ANON_KEY
+const supabaseAnonKey = (import.meta.env.VITE_API_ANON_KEY && import.meta.env.VITE_API_ANON_KEY.trim())
+  || import.meta.env.REACT_APP_API_ANON_KEY
   || '';
 
 // Tratamento para URLs relativas (comum em Docker/Nginx Proxy)

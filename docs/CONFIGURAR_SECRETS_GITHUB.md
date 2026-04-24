@@ -1,15 +1,11 @@
-# Como Configurar Secrets do Supabase no GitHub Actions
+# Como Configurar Secrets da API no GitHub Actions
 
-Este guia explica como configurar as variáveis de ambiente do Supabase como secrets no GitHub para que o build de produção funcione corretamente.
+Este guia explica como configurar as variáveis de ambiente da API como secrets no GitHub para que o build de produção funcione corretamente.
 
-## Passo 1: Obter as Credenciais do Supabase
+## Passo 1: Obter as Credenciais
 
-1. Acesse o [Painel do Supabase](https://app.supabase.com)
-2. Selecione seu projeto
-3. Vá em **Settings** → **API**
-4. Copie os seguintes valores:
-   - **Project URL** (exemplo: `https://xxxxx.supabase.co`)
-   - **anon public key** (uma chave longa que começa com `eyJ...`)
+1. **URL base da API**: `http://opin.unifesp.br` (ou o endereço configurado no servidor)
+2. **Chave anônima (JWT)**: gerada junto com o PostgREST/storage
 
 ## Passo 2: Configurar Secrets no GitHub
 
@@ -18,13 +14,13 @@ Este guia explica como configurar as variáveis de ambiente do Supabase como sec
 3. Clique em **New repository secret**
 4. Adicione os seguintes secrets:
 
-### Secret 1: `VITE_SUPABASE_URL`
-- **Name**: `VITE_SUPABASE_URL`
-- **Value**: Cole a **Project URL** do Supabase (exemplo: `https://xxxxx.supabase.co`)
+### Secret 1: `VITE_API_URL`
+- **Name**: `VITE_API_URL`
+- **Value**: URL base do servidor (exemplo: `http://opin.unifesp.br`)
 
-### Secret 2: `VITE_SUPABASE_ANON_KEY`
-- **Name**: `VITE_SUPABASE_ANON_KEY`
-- **Value**: Cole a **anon public key** do Supabase
+### Secret 2: `VITE_API_ANON_KEY`
+- **Name**: `VITE_API_ANON_KEY`
+- **Value**: Chave JWT anônima do PostgREST
 
 ## Passo 3: Verificar a Configuração
 

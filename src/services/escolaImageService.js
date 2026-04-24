@@ -3,7 +3,7 @@ import logger from '../utils/logger';
 
 // Obter URL do Supabase das variáveis de ambiente
 const getSupabaseUrl = () => {
-  return import.meta.env.REACT_APP_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL || '';
+  return import.meta.env.REACT_APP_API_URL || import.meta.env.VITE_API_URL || '';
 };
 
 // Configurações para imagens das escolas

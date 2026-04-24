@@ -47,7 +47,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+      ANON_KEY: ${VITE_API_ANON_KEY}
       SERVICE_KEY: ${STORAGE_SERVICE_KEY}
       PGRST_JWT_SECRET: ${JWT_SECRET}
       # Conexao com o banco via variaveis separadas (evita problemas com caracteres especiais na senha)
@@ -83,8 +83,8 @@ services:
     build:
       context: .
       args:
-        - VITE_SUPABASE_URL=
-        - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY:-local-dev-key-ignore-auth}
+        - VITE_API_URL=
+        - VITE_API_ANON_KEY=${VITE_API_ANON_KEY:-local-dev-key-ignore-auth}
     container_name: opin_front
     restart: unless-stopped
     ports:

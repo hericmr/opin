@@ -32,11 +32,11 @@ Copie o arquivo de exemplo:
 cp .env.example .env.local
 ```
 
-Edite o arquivo `.env.local` com suas credenciais do Supabase:
+Edite o arquivo `.env.local` com as variáveis da API:
 
 ```env
-REACT_APP_SUPABASE_URL=sua_url_do_supabase
-REACT_APP_SUPABASE_ANON_KEY=sua_chave_anonima_do_supabase
+VITE_API_URL=http://opin.unifesp.br
+VITE_API_ANON_KEY=sua_chave_jwt_anonima
 REACT_APP_ADMIN_PASSWORD=sua_senha_admin
 REACT_APP_JWT_SECRET=sua_chave_jwt_secreta
 ```
