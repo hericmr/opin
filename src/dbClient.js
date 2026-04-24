@@ -20,7 +20,7 @@ if (supabaseUrl && supabaseUrl.startsWith('/') && typeof window !== 'undefined')
 
 // Se não houver URL, tenta um fallback seguro para não quebrar a compilação
 if (!supabaseUrl && typeof window !== 'undefined') {
-    supabaseUrl = `${window.location.origin}/opin`;
+    supabaseUrl = window.location.origin;
 }
 
 

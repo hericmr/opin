@@ -29,7 +29,7 @@ FROM nginx:alpine
 COPY config/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copiar os arquivos estáticos do build
-COPY --from=build /app/build /usr/share/nginx/html/opin
+COPY --from=build /app/build /usr/share/nginx/html
 
 EXPOSE 80
 

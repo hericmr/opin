@@ -83,14 +83,14 @@ services:
     build:
       context: .
       args:
-        - VITE_SUPABASE_URL=${VITE_SUPABASE_URL:-/opin}
+        - VITE_SUPABASE_URL=${VITE_SUPABASE_URL:-}
         - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY:-local-dev-key-ignore-auth}
     container_name: opin_front
     restart: unless-stopped
     ports:
       - "${PORT:-8080}:80"
     volumes:
-      - ./data/storage/opin:/usr/share/nginx/html/opin/data/storage/opin:ro
+      - ./data/storage/opin:/usr/share/nginx/html/data/storage/opin:ro
     depends_on:
       - api
       - storage

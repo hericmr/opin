@@ -46,18 +46,14 @@ export const getSupabaseStorageUrl = (bucket, path) => {
 
     const baseUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim().replace(/\/$/, '');
     
-    // Se estivermos em ambiente local (/opin), usamos o caminho estático direto
-    // que agora é servido pelo Nginx em /opin/data/storage/opin/
-    if (baseUrl === '/opin') {
-        // Garantir que não há barra dupla
+    // Modo Docker local: VITE_SUPABASE_URL vazio ou relativo — usa proxy Nginx em /storage/v1/
+    if (!baseUrl || baseUrl.startsWith('/')) {
         const cleanPath = path.startsWith('/') ? path.substring(1) : path;
-        return `${baseUrl}/data/storage/opin/${bucket}/${cleanPath}`;
+        return `/storage/v1/object/public/${bucket}/${cleanPath}`;
     }
 
-    // Fallback para Supabase Cloud ou outro baseUrl configurado
-    const finalBaseUrl = baseUrl || 'https://cbzwrxmcuhsxehdrsrvi.supabase.co';
-    
-    return `${finalBaseUrl}/storage/v1/object/public/${bucket}/${path}`;
+    // Modo Supabase Cloud
+    return `${baseUrl}/storage/v1/object/public/${bucket}/${path}`;
 };
 
 
@@ -104,9 +100,11 @@ export const getSecureImageUrl = (url) => {
 
     // 3. If it's already a full URL (http/https), return as is
     if (url.startsWith('http')) {
-        // Roteia URLs hardcoded do Supabase direto pro container de Storage Local
-        if (import.meta.env.VITE_SUPABASE_URL === '/opin' && url.includes('cbzwrxmcuhsxehdrsrvi.supabase.co')) {
-            return url.replace('https://cbzwrxmcuhsxehdrsrvi.supabase.co', '/opin');
+        // Em modo Docker local, roteia URLs do Supabase cloud para o proxy Nginx local
+        const supabaseEnvUrl = import.meta.env.VITE_SUPABASE_URL || '';
+        const isLocalMode = !supabaseEnvUrl || supabaseEnvUrl.startsWith('/');
+        if (isLocalMode && url.includes('cbzwrxmcuhsxehdrsrvi.supabase.co')) {
+            return url.replace('https://cbzwrxmcuhsxehdrsrvi.supabase.co', '');
         }
         return url;
     }
