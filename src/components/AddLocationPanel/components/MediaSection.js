@@ -73,7 +73,7 @@ const MediaSection = ({ type, preview, onUpload, onRemove, onUploadComplete }) =
             type="text"
             placeholder="Cole a URL do YouTube"
             className="w-full border rounded p-2 text-black"
-            onChange={onUpload}
+            onChange={(e) => { onUpload(e); onUploadComplete(e.target.value); }}
           />
           {preview && (
             <div className="mt-2">

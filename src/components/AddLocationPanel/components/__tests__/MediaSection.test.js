@@ -100,7 +100,7 @@ describe('MediaSection', () => {
         />
       );
 
-      expect(screen.getByText(/Áudio/i)).toBeInTheDocument();
+      expect(screen.getByText('Áudio')).toBeInTheDocument();
       expect(screen.getByText(/Escolher Arquivo de Áudio/i)).toBeInTheDocument();
     });
 
