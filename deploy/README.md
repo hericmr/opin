@@ -14,7 +14,7 @@ Instruções para a equipe de TI colocar o sistema no ar em `opin.unifesp.br`.
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://gitlab.com/SEU_NAMESPACE/opin.git /opt/opin
+git clone https://git.unifesp.br/lindi-opin/opin.git /opt/opin
 cd /opt/opin
 ```
 
@@ -31,7 +31,7 @@ A equipe de desenvolvimento fornecerá os valores de `VITE_API_ANON_KEY` e `FRON
 ### 3. Autenticar no registry do GitLab
 
 ```bash
-docker login registry.gitlab.com
+docker login git.unifesp.br:5050
 ```
 
 Use um **Deploy Token** gerado em: GitLab → Settings → Repository → Deploy tokens
