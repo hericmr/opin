@@ -1,6 +1,6 @@
 [
     {
-        "imagem": "fotos/edina.jpeg",
+        "imagem": "fotos/edina.webp",
         "nome": "Edina Jaxuka",
         "professor": "Edina Jaxuka",
         "aldeia": "Nhamandu Oua",
@@ -8,7 +8,7 @@
         "youtube": "https://www.youtube.com/embed/JBl34djaSHw?si=7vQxuu7FRNTO1G1D"
     },
     {
-        "imagem": "fotos/paula.jpeg",
+        "imagem": "fotos/paula.webp",
         "nome": "Paula Aparecida Baptista",
         "professor": "Paula Aparecida Baptista",
         "aldeia": "Aldeia Tangará",
@@ -16,7 +16,7 @@
         "povo":"Guarani Nhandewa/ Tupi Guarani"
     },
     {
-        "imagem": "fotos/renato.jpeg",
+        "imagem": "fotos/renato.webp",
         "nome": "Renato da Silva Mariano",
         "professor": "Renato da Silva Mariano",
         "uf": "SP",
@@ -26,7 +26,7 @@
         "povo": "Guarani Mbya"
     },
     {
-        "imagem": "fotos/andreia.jpeg",
+        "imagem": "fotos/andreia.webp",
         "nome": "Andreia Ribeiro dos Santos",
         "professor": "Andreia Ribeiro dos Santos",
         "aldeia": "Terra Indígena Djaiko Aty",
@@ -36,7 +36,7 @@
         "povo": "Guarani Nhandewa/ Tupi Guarani"
     },
     {
-        "imagem": "fotos/jonathan.jpeg",
+        "imagem": "fotos/jonathan.webp",
         "nome": "Jonathan Marcolino",
         "professor": "Jonathan Marcolino",
         "aldeia": "Aldeia Tereguá",
@@ -44,7 +44,7 @@
         "povo": "Guarani Nhandewa/ Tupi Guarani"
     },
     {
-        "imagem": "fotos/kerexu.jpeg",
+        "imagem": "fotos/kerexu.webp",
         "nome": "Kerexu Mirim da Silva",
         "professora": "Kerexu Mirim da Silva",
         "aldeia": "Aldeia Krukutu",
@@ -52,7 +52,7 @@
         "povo": "Guarani Mbya"
     },
     {
-        "imagem": "fotos/rodrigo.jpeg",
+        "imagem": "fotos/rodrigo.webp",
         "nome": "Rodrigo Vera Mirim da Silva",
         "professor": "Rodrigo Vera Mirim da Silva",
         "uf": "SP",
@@ -62,7 +62,7 @@
         "aldeia": "Aldeia Takuari-ty"
     },
     { 
-        "imagem": "fotos/mariza.jpeg",
+        "imagem": "fotos/mariza.webp",
         "nome": "Mariza da Silva",
         "professor": "Mariza da Silva",
         "uf": "SP",
@@ -71,7 +71,7 @@
         "povo": "Guarani Mbya"
     },
     {
-        "imagem": "fotos/abilio.jpeg",
+        "imagem": "fotos/abilio.webp",
         "nome": "Abílio",
         "professor": "Abílio Fernandes",
         "aldeia": "Aldeia Uru'ity.",
@@ -79,7 +79,7 @@
         "povo": "Guarani Mbya"
     },
     {
-        "imagem": "fotos/adao.jpeg",
+        "imagem": "fotos/adao.webp",
         "nome": "Adão Alves",
         "professor": "Adão Alves",
         "aldeia": "Aldeia Kopenoti (Avaí/SP)",
@@ -89,7 +89,7 @@
         "povo": "Terena"
     },
     {
-        "imagem": "fotos/iara.jpeg",
+        "imagem": "fotos/iara.webp",
         "nome": "Iara Mendonça Bolgarim",
         "professor": "Iara Mendonça Bolgarim",
         "uf": "SP",
@@ -99,7 +99,7 @@
         "aldeia": "Terra Indígena Jaraguá"
     },
     {
-        "imagem": "fotos/edson.jpeg",
+        "imagem": "fotos/edson.webp",
         "nome": "Edson Rodrigues",
         "professor": "Edson Rodrigues",
         "aldeia": "Terra indígena Amba Porã",
@@ -110,7 +110,7 @@
     },
 
     {
-        "imagem": "fotos/webp/claudinei.webp",
+        "imagem": "fotos/claudinei.webp",
         "nome": "Claudinei Fermino da Silva",
         "professor": "Claudinei Fermino da Silva",
         "uf": "SP",
@@ -120,7 +120,7 @@
         "aldeia": "Aldeia Nimuendaju"
     },
     {
-        "imagem": "fotos/cledinilson.jpeg",
+        "imagem": "fotos/cledinilson.webp",
         "nome": "Cledinilson Alves Marcolino",
         "professor": "Cledinilson Alves Marcolino",
         "uf": "SP",
@@ -130,7 +130,7 @@
         "aldeia": "Aldeia Nimuendaju"
     },
     {
-        "imagem": "fotos/ingrid.jpeg",
+        "imagem": "fotos/ingrid.webp",
         "nome": "Ingrid Ara I Santos da Silva",
         "professor": "Ingrid Ara I Santos da Silva",
         "uf": "SP",
@@ -140,7 +140,7 @@
         "aldeia": "Aldeia Boa Vista"
     },
     {
-        "imagem": "fotos/kamila.jpeg",
+        "imagem": "fotos/kamila.webp",
         "nome": "Kamila Ariellen Dina dos Santos",
         "professor": "Kamila Ariellen Dina dos Santos",
         "uf": "SP",
@@ -150,7 +150,7 @@
         "aldeia": "Aldeia Nhamandu Mirim"
     },
     {
-        "imagem": "fotos/leonardo.jpeg",
+        "imagem": "fotos/leonardo.webp",
         "nome": "Leonardo Edileno Wera Tupã Macena",
         "professor": "Leonardo Edileno Wera Tupã Macena",
         "uf": "SP",
@@ -160,7 +160,7 @@
         "aldeia": "Aldeia Rio Silveira"
     },
     {
-        "imagem": "fotos/lidiane.jpeg",
+        "imagem": "fotos/lidiane.webp",
         "nome": "Lidiane Damaceno Cotui Afonso",
         "professor": "Lidiane Damaceno Cotui Afonso",
         "uf": "SP",
@@ -170,7 +170,7 @@
         "povo": "Krenak"
     },
     {
-        "imagem": "fotos/marcelo.jpeg",
+        "imagem": "fotos/marcelo.webp",
         "nome": "Marcelo Papa Benite",
         "professor": "Marcelo Papa Benite",
         "uf": "SP",
@@ -180,7 +180,7 @@
         "aldeia": "Tekoa Mirim"
     },
     {
-        "imagem": "fotos/marcio.jpeg",
+        "imagem": "fotos/marcio.webp",
         "nome": "Marcio da Silva",
         "professor": "Marcio da Silva",
         "uf": "SP",
@@ -190,7 +190,7 @@
         "aldeia": "Aldeia Itapuã"
     },
     {
-        "imagem": "fotos/mariana.jpeg",
+        "imagem": "fotos/mariana.webp",
         "nome": "Mariana Benite",
         "professor": "Mariana Benite",
         "uf": "SP",
@@ -200,7 +200,7 @@
         "aldeia": "Aldeia Renascer"
     },
     {
-    "imagem": "fotos/roberto.jpeg",
+    "imagem": "fotos/roberto.webp",
     "nome": "Roberto Martin da Silva",
     "professor": "Roberto Martin da Silva",
     "uf": "SP",
@@ -210,7 +210,7 @@
     "aldeia": "Adeia Aguapeu"
 },
     {
-        "imagem": "fotos/marilene.jpeg",
+        "imagem": "fotos/marilene.webp",
         "nome": "Marilene Mendonça Bolgarim",
         "professor": "Marilene Mendonça Bolgarim",
         "uf": "SP",
@@ -220,7 +220,7 @@
         "aldeia": "Terra Indígena Jaraguá"
     },
     {
-        "imagem": "fotos/reinaldo.jpeg",
+        "imagem": "fotos/reinaldo.webp",
         "nome": "Reinaldo karai tukumbbo Peralta",
         "professor": "Reinaldo karai tukumbbo Peralta",
         "uf": "SP",
@@ -230,7 +230,7 @@
         "aldeia": "Tekoa Tupã reko"
     },
     {
-        "imagem": "fotos/rosangela.jpeg",
+        "imagem": "fotos/rosangela.webp",
         "nome": "Rosângela Barbosa",
         "professor": "Rosângela Barbosa",
         "uf": "SP",
@@ -240,7 +240,7 @@
         "aldeia": "Tekoa Arandu"
     },
     {
-        "imagem": "fotos/rosimeire.jpeg",
+        "imagem": "fotos/rosimeire.webp",
         "nome": "Rosimeire Iaiaiti Indubrasil",
         "professor": "Rosimeire Iaiaiti Indubrasil",
         "uf": "SP",
@@ -250,7 +250,7 @@
         "aldeia": "Aldeia Indigena Icatu"
     },
     {
-        "imagem": "fotos/severino.jpeg",
+        "imagem": "fotos/severino.webp",
         "nome": "Severino Cabral Ramires",
         "professor": "Severino Cabral Ramires",
         "uf": "SP",
@@ -260,7 +260,7 @@
         "aldeia": "Madenuá Porã"
     },
     {
-        "imagem": "fotos/joao.jpeg",
+        "imagem": "fotos/joao.webp",
         "nome": "João Batista Ortega",
         "professor": "João Batista Ortega",
         "uf": "SP",

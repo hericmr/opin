@@ -188,7 +188,7 @@ const Navbar = ({ dataPoints, openPainelFunction }) => {
                 aria-label="Ir para o Lindiflix"
               >
                 <img
-                  src={getLocalImageUrl(`${import.meta.env.BASE_URL}lindiflix_logo.png`)}
+                  src={getLocalImageUrl(`${import.meta.env.BASE_URL}lindiflix_logo.webp`)}
                   alt="Lindiflix – Das crianças e jovens das Aldeias de São Paulo para o mundo!"
                   className="h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 w-auto object-contain object-left"
                   style={{ display: 'block' }}
