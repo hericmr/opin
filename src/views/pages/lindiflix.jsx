@@ -25,8 +25,8 @@ function VideoCard({ professor }) {
 
   const nome = professor.professor || professor.professora || 'Professor(a)';
   const imgSrc = professor.imagem
-    ? `${baseUrl}/lindiflix_fotos/${professor.imagem.replace('fotos/', '')}`
-    : `${baseUrl}/lindiflix_fotos/default.webp`;
+    ? `${baseUrl}/${professor.imagem}`
+    : `${baseUrl}/fotos/default.webp`;
 
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col">
@@ -37,7 +37,7 @@ function VideoCard({ professor }) {
           alt={`Foto de ${nome}`}
           loading="lazy"
           className="w-28 h-28 rounded-full object-cover border-2 border-[#215A36]/30 flex-shrink-0"
-          onError={(e) => { e.target.src = `${baseUrl}/lindiflix_fotos/default.webp`; }}
+          onError={(e) => { e.target.src = `${baseUrl}/fotos/default.webp`; }}
         />
         <div className="min-w-0">
           <p className="font-semibold text-[#215A36] text-sm truncate">{nome}</p>
