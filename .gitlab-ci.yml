@@ -39,16 +39,8 @@ docker:
     VITE_API_ANON_KEY: $VITE_API_ANON_KEY
     VITE_ADMIN_PASSWORD: $VITE_ADMIN_PASSWORD
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build
-        --build-arg VITE_API_URL="$VITE_API_URL"
-        --build-arg VITE_API_ANON_KEY="$VITE_API_ANON_KEY"
-        --build-arg VITE_ADMIN_PASSWORD="$VITE_ADMIN_PASSWORD"
-        -t $CI_REGISTRY_IMAGE:latest
-        -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-        .
-    - docker push $CI_REGISTRY_IMAGE:latest
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker compose -f docker-compose.prod.yml build front
+    - docker compose -f docker-compose.prod.yml up -d --no-deps front
   only:
     - main
 
