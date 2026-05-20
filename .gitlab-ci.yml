@@ -39,9 +39,17 @@ docker:
     VITE_API_ANON_KEY: $VITE_API_ANON_KEY
     VITE_ADMIN_PASSWORD: $VITE_ADMIN_PASSWORD
   script:
+    # Verificar que as variáveis obrigatórias estão definidas antes de buildar
+    - |
+      if [ -z "$VITE_API_ANON_KEY" ]; then
+        echo "ERRO: VITE_API_ANON_KEY não está definida no CI/CD. Acesse Settings > CI/CD > Variables."
+        exit 1
+      fi
+    - echo "VITE_API_ANON_KEY está definida (${#VITE_API_ANON_KEY} caracteres)"
     # Garante que web_anon existe no banco com SELECT em todas as tabelas
     - docker exec opin_db_prod psql -U postgres -d opin_prod -c "DO \$\$ BEGIN IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'web_anon') THEN CREATE ROLE web_anon NOLOGIN; END IF; END \$\$; GRANT USAGE ON SCHEMA public TO web_anon; GRANT SELECT ON ALL TABLES IN SCHEMA public TO web_anon;"
-    - docker compose -f docker-compose.prod.yml build front
+    # --no-cache garante que o npm run build rode com as variáveis atuais (sem reutilizar layer antigo)
+    - docker compose -f docker-compose.prod.yml build --no-cache front
     - docker compose -f docker-compose.prod.yml up -d --no-deps front
     - docker compose -f docker-compose.prod.yml up -d --no-deps api
   only:
