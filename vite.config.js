@@ -48,12 +48,22 @@ export default defineConfig({
     },
   },
   server: {
-    // Usar uma porta diferente da API PostgREST (que roda em 3000)
-    // para evitar conflito entre o Vite dev server e o backend.
     port: 5173,
     open: false,
-    // Proxy removido: Em dev, conecta direto ao Supabase via URL.
-    // Em produção (Docker), o Nginx faz o proxy reverso.
+    proxy: {
+      // Espelha o proxy reverso do nginx em produção:
+      // /rest/v1/* → PostgREST em localhost:3000
+      '/rest/v1': {
+        target: 'http://localhost:3000',
+        rewrite: (path) => path.replace(/^\/rest\/v1/, ''),
+        changeOrigin: true,
+      },
+      // /storage/v1/* → Storage API em localhost:5000
+      '/storage/v1': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+    },
   },
   // Configuração para variáveis de ambiente e compatibilidade com CRA
   define: {
