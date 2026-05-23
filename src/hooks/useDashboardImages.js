@@ -36,13 +36,13 @@ export const useDashboardImages = () => {
           return;
         }
 
-        // Verificar se as credenciais do Supabase estão configuradas
+        // Verificar se as credenciais contêm placeholders (não impede URL vazia — em modo local
+        // o cliente usa window.location.origin e o proxy do Vite/nginx resolve o roteamento)
         const supabaseUrl = import.meta.env.REACT_APP_API_URL || import.meta.env.VITE_API_URL;
         const supabaseKey = import.meta.env.REACT_APP_API_ANON_KEY || import.meta.env.VITE_API_ANON_KEY;
-        
-        if (!supabaseUrl || !supabaseKey || 
-            supabaseUrl.includes('seu-projeto') || 
-            supabaseKey.includes('sua_chave_anonima')) {
+
+        if ((supabaseUrl && supabaseUrl.includes('seu-projeto')) ||
+            !supabaseKey || supabaseKey.includes('sua_chave_anonima')) {
           logger.warn('Credenciais do Supabase não configuradas. Pulando carregamento de imagens.');
           clearTimeout(timeoutId);
           setImagesPreloaded(true);

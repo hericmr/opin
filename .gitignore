@@ -49,6 +49,9 @@ storage_backup/
 *.zip
 *.tar.gz
 
+# Symlink de dev local (Vite não serve data/storage diretamente)
+/public/data/storage
+
 # Secrets and Local Data
 .env.supabase
 /data/
