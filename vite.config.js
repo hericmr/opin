@@ -58,11 +58,6 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/rest\/v1/, ''),
         changeOrigin: true,
       },
-      // /storage/v1/* → Storage API em localhost:5000
-      '/storage/v1': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-      },
     },
   },
   // Configuração para variáveis de ambiente e compatibilidade com CRA

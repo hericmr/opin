@@ -40,19 +40,6 @@ services:
       db:
         condition: service_healthy
 
-  storage:
-    build:
-      context: ./storage_server
-    container_name: opin_storage
-    restart: unless-stopped
-    ports:
-      - "5000:5000"
-    environment:
-      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
-      SERVER_PORT: 5000
-    volumes:
-      - ./data/storage:/var/lib/storage
-
   front:
     build:
       context: .
@@ -67,7 +54,6 @@ services:
       - ./data/storage/opin:/usr/share/nginx/html/data/storage/opin:ro
     depends_on:
       - api
-      - storage
 
 
 volumes:

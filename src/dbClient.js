@@ -158,9 +158,9 @@ class StorageBucket {
     return this._key ? { Authorization: `Bearer ${this._key}` } : {};
   }
 
-  // URL pública de um arquivo — servida como estático pelo nginx/Vite.
+  // URL pública de um arquivo — servida como estático pelo nginx (prod) ou Vite (dev).
   getPublicUrl(path) {
-    return { data: { publicUrl: `/storage/v1/object/public/${this._bucket}/${path}` } };
+    return { data: { publicUrl: `/data/storage/opin/${path}` } };
   }
 
   async upload(path, file, { cacheControl, upsert = false } = {}) {
