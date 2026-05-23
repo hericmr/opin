@@ -6,7 +6,6 @@
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
-    "@supabase/supabase-js": "^2.50.0",
     "clsx": "^2.1.1",
     "dompurify": "^3.2.6",
     "framer-motion": "^12.18.1",
