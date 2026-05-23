@@ -48,28 +48,11 @@ export const isLocalImage = (url) => {
     return !!imageMap[url];
 };
 
-/**
- * Build a fallback Supabase storage URL for a relative path.
- * Uses the environment variable VITE_API_URL.
- * @param {string} bucket - The storage bucket name
- * @param {string} path - The internal path (e.g. "4/image.jpg")
- * @returns {string} The full Supabase URL
- */
-export const getSupabaseStorageUrl = (bucket, path) => {
+export const getStorageUrl = (bucket, path) => {
     if (!path) return '';
     if (path.startsWith('http')) return path;
-
-    const baseUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '');
-
-    // Modo Docker local: VITE_API_URL vazio ou relativo
-    // Arquivos ficam em data/storage/opin/{escola_id}/arquivo (sem subdiretório de bucket)
-    if (!baseUrl || baseUrl.startsWith('/')) {
-        const cleanPath = path.startsWith('/') ? path.substring(1) : path;
-        return `/data/storage/opin/${cleanPath}`;
-    }
-
-    // Modo Supabase Cloud
-    return `${baseUrl}/storage/v1/object/public/${bucket}/${path}`;
+    const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+    return `/data/storage/opin/${cleanPath}`;
 };
 
 
@@ -102,45 +85,22 @@ export const isImageFailed = (url) => {
 export const getSecureImageUrl = (url) => {
     if (!url) return '';
 
-    // 1. Try local resolution first
+    // 1. Try imageMap resolution first (handles full Supabase cloud URLs and relative paths)
     const mapped = getLocalImageUrl(url);
     if (mapped !== url) return mapped;
 
-    // 2. Identify and fix double base URLs (common with /opin prefix)
-    const baseUrl = import.meta.env.BASE_URL || '/opin/';
-    const cleanBase = baseUrl.replace(/\/$/, ''); // e.g. /opin
-    
-    if (cleanBase && url.startsWith(`${cleanBase}${cleanBase}/`)) {
-        return url.replace(`${cleanBase}${cleanBase}/`, `${cleanBase}/`);
-    }
-
-    // 3. If it's already a full URL (http/https), return as is
+    // 2. Old Supabase cloud URL not in imageMap — redirect to local storage
     if (url.startsWith('http')) {
-        // Em modo Docker local, roteia URLs do Supabase cloud para os arquivos estáticos
-        const supabaseEnvUrl = import.meta.env.VITE_API_URL || '';
-        const isLocalMode = !supabaseEnvUrl || supabaseEnvUrl.startsWith('/');
-        if (isLocalMode && url.includes('cbzwrxmcuhsxehdrsrvi.supabase.co')) {
-            // https://PROJECT.supabase.co/storage/v1/object/public/BUCKET/PATH
-            // → /data/storage/opin/PATH (sem o nome do bucket — arquivos ficam por escola_id diretamente)
-            const bucketPathMatch = url.match(/\/storage\/v1\/object\/public\/[^/]+\/(.+)$/);
-            if (bucketPathMatch) return `/data/storage/opin/${bucketPathMatch[1]}`;
-            return url.replace(/https:\/\/[^/]+\/storage\/v1\/object\/public\/[^/]+/, '/data/storage/opin');
-        }
+        const bucketPathMatch = url.match(/\/storage\/v1\/object\/public\/[^/]+\/(.+)$/);
+        if (bucketPathMatch) return `/data/storage/opin/${bucketPathMatch[1]}`;
         return url;
     }
 
-    // 4. If it's a relative path starting with / (likely already local or starting with base)
-    if (url.startsWith('/')) {
-        // Ensure it has the baseUrl if it doesn't
-        if (cleanBase && !url.startsWith(cleanBase)) {
-            return `${cleanBase}${url}`;
-        }
-        return url;
-    }
+    // 3. Already a local absolute path
+    if (url.startsWith('/')) return url;
 
-    // 5. If it's a raw storage path (no http, no leading slash), 
-    // it's likely intended to be local relative to public dir or base path.
-    return `${cleanBase}/${url}`;
+    // 4. Raw relative path (escola_id/filename) — serve from local storage
+    return `/data/storage/opin/${url}`;
 };
 
 /**

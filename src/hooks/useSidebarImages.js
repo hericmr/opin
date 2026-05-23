@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useCallback } from 'react';
 import { supabase } from '../dbClient';
 import { getLegendaByImageUrlFlexivel } from '../services/legendasService';
 import useImagePreloader from './useImagePreloader';
-import { getLocalImageUrl, getSupabaseStorageUrl, getSecureImageUrl } from '../utils/imageUtils';
+import { getLocalImageUrl, getStorageUrl, getSecureImageUrl } from '../utils/imageUtils';
 import logger from '../utils/logger';
 import { hasContent } from '../utils/contentValidation';
 import { useRefresh } from '../contexts/RefreshContext';
@@ -14,7 +14,7 @@ import { useRefresh } from '../contexts/RefreshContext';
 const resolveStorageUrl = (url) => {
   if (!url) return url;
   if (url.startsWith('http') || url.startsWith('/')) return getSecureImageUrl(url);
-  return getSupabaseStorageUrl('imagens-das-escolas', url);
+  return getStorageUrl('imagens-das-escolas', url);
 };
 
 const useSidebarImages = ({ escolaId, showTeacher = true, showSchool = true, scrollProgress, headerUrl, onCurrentItemChange }) => {
@@ -63,7 +63,7 @@ const useSidebarImages = ({ escolaId, showTeacher = true, showSchool = true, scr
             if (legenda.imagem_url.trim().startsWith('http')) {
               publicUrl = getSecureImageUrl(legenda.imagem_url.trim());
             } else {
-              const storageUrl = getSupabaseStorageUrl('imagens-das-escolas', legenda.imagem_url.trim());
+              const storageUrl = getStorageUrl('imagens-das-escolas', legenda.imagem_url.trim());
               publicUrl = getSecureImageUrl(storageUrl);
             }
           }
@@ -115,7 +115,7 @@ const useSidebarImages = ({ escolaId, showTeacher = true, showSchool = true, scr
             if (img.imagem_url.trim().startsWith('http')) {
               publicUrl = getSecureImageUrl(img.imagem_url.trim());
             } else {
-              const storageUrl = getSupabaseStorageUrl('imagens-professores', img.imagem_url.trim());
+              const storageUrl = getStorageUrl('imagens-professores', img.imagem_url.trim());
               publicUrl = getSecureImageUrl(storageUrl);
             }
           }
