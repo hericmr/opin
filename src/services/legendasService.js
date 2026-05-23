@@ -306,7 +306,7 @@ export const transferLegendaToNewUrl = async (oldImageUrl, newImageUrl, escolaId
   }
 };
 
-import { getLocalImageUrl, getSupabaseStorageUrl, getSecureImageUrl } from '../utils/imageUtils';
+import { getLocalImageUrl, getStorageUrl, getSecureImageUrl } from '../utils/imageUtils';
 
 /**
  * Helper para adicionar URL pública ao item
@@ -326,7 +326,7 @@ const enrichWithPublicUrl = (item) => {
 
     // Tentar resolver via mapeamento local primeiro
     // Se não estiver no mapa, constrói a URL do Supabase via variável de ambiente
-    const storageUrl = getSupabaseStorageUrl(bucket, item.imagem_url);
+    const storageUrl = getStorageUrl(bucket, item.imagem_url);
     publicUrl = getSecureImageUrl(storageUrl);
   } else if (publicUrl) {
     // Se for URL completa, ainda passa pelo secure resolution para checar mapa local

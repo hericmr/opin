@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { RefreshCw } from 'lucide-react';
-import { getLocalImageUrl, isLocalImage, getSupabaseStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
+import { getLocalImageUrl, isLocalImage, getStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
 import { getLegendaByImageUrlFlexivel } from '../../../services/legendasService';
 import logger from '../../../utils/logger';
 import { hasContent } from '../../../utils/contentValidation';
@@ -112,7 +112,7 @@ const ImagensdasEscolas = ({ escola_id, isMaximized = false, hideInlineMedia = f
               publicUrl = getSecureImageUrl(legenda.imagem_url);
             } else {
               // Construir URL do Supabase via variável de ambiente para resolver via mapa local
-              const storageUrl = getSupabaseStorageUrl('imagens-das-escolas', legenda.imagem_url);
+              const storageUrl = getStorageUrl('imagens-das-escolas', legenda.imagem_url);
               publicUrl = getSecureImageUrl(storageUrl);
             }
           }

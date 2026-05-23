@@ -7,7 +7,7 @@ import SidebarMediaViewer from './SidebarMediaViewer';
 import usePainelVisibility from '../../hooks/usePainelVisibility';
 import { usePainelDimensions } from '../../hooks/usePainelDimensions';
 import useImagePreloader from '../../../hooks/useImagePreloader';
-import { getSupabaseStorageUrl } from '../../../utils/imageUtils';
+import { getStorageUrl } from '../../../utils/imageUtils';
 
 const PainelContainer = ({
   painelInfo,
@@ -40,7 +40,7 @@ const PainelContainer = ({
   // Preload header image immediately when panel becomes visible
   useEffect(() => {
     if (painelInfo?.imagem_header && isVisible) {
-      const resolvedUrl = getSupabaseStorageUrl('imagens-das-escolas', painelInfo.imagem_header);
+      const resolvedUrl = getStorageUrl('imagens-das-escolas', painelInfo.imagem_header);
       const img = new Image();
       img.src = resolvedUrl;
 
@@ -60,7 +60,7 @@ const PainelContainer = ({
   if (!painelInfo) return null;
 
   const resolvedImageHeader = painelInfo.imagem_header
-    ? getSupabaseStorageUrl('imagens-das-escolas', painelInfo.imagem_header)
+    ? getStorageUrl('imagens-das-escolas', painelInfo.imagem_header)
     : null;
 
   const baseClasses = `

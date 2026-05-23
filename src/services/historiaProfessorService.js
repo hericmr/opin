@@ -1,6 +1,6 @@
 import { supabase } from '../dbClient';
 import logger from '../utils/logger';
-import { getLocalImageUrl, getSupabaseStorageUrl, getSecureImageUrl } from '../utils/imageUtils';
+import { getLocalImageUrl, getStorageUrl, getSecureImageUrl } from '../utils/imageUtils';
 
 // Configurações para imagens das histórias do professor
 const HISTORIA_PROFESSOR_CONFIG = {
@@ -108,7 +108,7 @@ export const getHistoriasProfessor = async (escolaId) => {
 
           if (publicUrl && !publicUrl.startsWith('http')) {
             // Construir URL do Supabase via variável de ambiente
-            const storageUrl = getSupabaseStorageUrl(HISTORIA_PROFESSOR_CONFIG.BUCKET_NAME, historia.imagem_url);
+            const storageUrl = getStorageUrl(HISTORIA_PROFESSOR_CONFIG.BUCKET_NAME, historia.imagem_url);
             publicUrl = getSecureImageUrl(storageUrl);
           } else if (publicUrl) {
             // Se for URL completa, ainda passa pelo secure resolution para checar mapa local

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { supabase } from '../../../dbClient';
-import { getLocalImageUrl, isLocalImage, getSupabaseStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
+import { getLocalImageUrl, isLocalImage, getStorageUrl, getSecureImageUrl } from '../../../utils/imageUtils';
 import logger from '../../../utils/logger';
 import { hasContent } from '../../../utils/contentValidation';
 import { useRefresh } from '../../../contexts/RefreshContext';
@@ -91,7 +91,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, isMaximized = false, hideInlineM
             let publicUrl = img.imagem_url;
 
             if (publicUrl && !publicUrl.startsWith('http')) {
-              const storageUrl = getSupabaseStorageUrl('imagens-professores', img.imagem_url);
+              const storageUrl = getStorageUrl('imagens-professores', img.imagem_url);
               publicUrl = getSecureImageUrl(storageUrl);
             } else if (publicUrl && publicUrl.startsWith('http')) {
               publicUrl = getSecureImageUrl(publicUrl);
