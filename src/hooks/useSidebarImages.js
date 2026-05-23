@@ -11,13 +11,20 @@ import { useRefresh } from '../contexts/RefreshContext';
  * Hook que encapsula toda a lógica de dados e navegação do SidebarMediaViewer.
  * O componente fica responsável apenas pela renderização.
  */
+const resolveStorageUrl = (url) => {
+  if (!url) return url;
+  if (url.startsWith('http') || url.startsWith('/')) return getSecureImageUrl(url);
+  return getSupabaseStorageUrl('imagens-das-escolas', url);
+};
+
 const useSidebarImages = ({ escolaId, showTeacher = true, showSchool = true, scrollProgress, headerUrl, onCurrentItemChange }) => {
   const { refreshKey } = useRefresh();
   const { isImagePreloaded } = useImagePreloader(escolaId, true);
+  const resolvedHeaderUrl = resolveStorageUrl(headerUrl);
 
-  const initialHeaderItem = headerUrl ? [{
+  const initialHeaderItem = resolvedHeaderUrl ? [{
     id: `header-${escolaId || 'temp'}`,
-    url: getLocalImageUrl(headerUrl),
+    url: resolvedHeaderUrl,
     titulo: null,
     descricao: null,
     autor: null,
@@ -133,11 +140,11 @@ const useSidebarImages = ({ escolaId, showTeacher = true, showSchool = true, scr
 
   // Mostrar header imediatamente ao mudar, buscar legenda em background
   useEffect(() => {
-    if (hasContent(headerUrl)) {
+    if (hasContent(resolvedHeaderUrl)) {
       const headerId = `header-${escolaId || 'temp'}`;
       const headerItem = {
         id: headerId,
-        url: headerUrl,
+        url: resolvedHeaderUrl,
         titulo: null,
         descricao: null,
         autor: null,
@@ -146,7 +153,7 @@ const useSidebarImages = ({ escolaId, showTeacher = true, showSchool = true, scr
       };
 
       setItems(prev => {
-        const exists = prev.some(i => i.origem === 'capa' && i.url === headerUrl);
+        const exists = prev.some(i => i.origem === 'capa' && i.url === resolvedHeaderUrl);
         if (exists) return prev;
         const withoutHeader = prev.filter(i => i.origem !== 'capa');
         return [headerItem, ...withoutHeader];
@@ -193,12 +200,8 @@ const useSidebarImages = ({ escolaId, showTeacher = true, showSchool = true, scr
         const results = await Promise.all(promises);
         let combined = results.flat();
 
-        if (hasContent(headerUrl)) {
-          const normalizedHeaderUrl = getLocalImageUrl(headerUrl);
-          combined = combined.filter(i => {
-            const normalizedItemUrl = getLocalImageUrl(i.url);
-            return normalizedItemUrl !== normalizedHeaderUrl && i.url !== headerUrl;
-          });
+        if (hasContent(resolvedHeaderUrl)) {
+          combined = combined.filter(i => i.url !== resolvedHeaderUrl);
 
           let headerLegend = null;
           try {
@@ -209,7 +212,7 @@ const useSidebarImages = ({ escolaId, showTeacher = true, showSchool = true, scr
 
           combined = [{
             id: `header-${escolaId}`,
-            url: headerUrl,
+            url: resolvedHeaderUrl,
             titulo: hasContent(headerLegend?.legenda) ? headerLegend.legenda.trim() : null,
             descricao: hasContent(headerLegend?.descricao_detalhada) ? headerLegend.descricao_detalhada.trim() : null,
             autor: hasContent(headerLegend?.autor_foto) ? headerLegend.autor_foto.trim() : null,

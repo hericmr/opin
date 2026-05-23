@@ -7,6 +7,7 @@ import SidebarMediaViewer from './SidebarMediaViewer';
 import usePainelVisibility from '../../hooks/usePainelVisibility';
 import { usePainelDimensions } from '../../hooks/usePainelDimensions';
 import useImagePreloader from '../../../hooks/useImagePreloader';
+import { getSupabaseStorageUrl } from '../../../utils/imageUtils';
 
 const PainelContainer = ({
   painelInfo,
@@ -39,13 +40,14 @@ const PainelContainer = ({
   // Preload header image immediately when panel becomes visible
   useEffect(() => {
     if (painelInfo?.imagem_header && isVisible) {
+      const resolvedUrl = getSupabaseStorageUrl('imagens-das-escolas', painelInfo.imagem_header);
       const img = new Image();
-      img.src = painelInfo.imagem_header;
+      img.src = resolvedUrl;
 
       const link = document.createElement('link');
       link.rel = 'preload';
       link.as = 'image';
-      link.href = painelInfo.imagem_header;
+      link.href = resolvedUrl;
       if ('fetchPriority' in link) link.fetchPriority = 'high';
       document.head.appendChild(link);
 
@@ -56,6 +58,10 @@ const PainelContainer = ({
   }, [painelInfo?.imagem_header, isVisible]);
 
   if (!painelInfo) return null;
+
+  const resolvedImageHeader = painelInfo.imagem_header
+    ? getSupabaseStorageUrl('imagens-das-escolas', painelInfo.imagem_header)
+    : null;
 
   const baseClasses = `
     fixed
@@ -155,11 +161,11 @@ const PainelContainer = ({
         ) : (
           <div ref={contentRef} className="flex-1 overflow-y-auto mj-panel-content">
             {/* Header image — mesma proporção de antes */}
-            {painelInfo.imagem_header && (
+            {resolvedImageHeader && (
               <EscolaHeaderImage
-                imagemUrl={painelInfo.imagem_header}
+                imagemUrl={resolvedImageHeader}
                 className="h-56 sm:h-64 md:h-72 lg:h-80 xl:h-96 w-full"
-                isPreloaded={isImagePreloaded(painelInfo.imagem_header)}
+                isPreloaded={isImagePreloaded(resolvedImageHeader)}
               />
             )}
 
@@ -175,7 +181,7 @@ const PainelContainer = ({
       {/* Galeria — janela com mesma estrutura do painel, z-index acima */}
       <GaleriaPanel
         escolaId={painelInfo.id}
-        headerUrl={painelInfo.imagem_header}
+        headerUrl={resolvedImageHeader}
         titulo={painelInfo.titulo}
         isOpen={isGaleriaOpen}
         onClose={() => setIsGaleriaOpen(false)}
