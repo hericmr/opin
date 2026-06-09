@@ -55,6 +55,8 @@ services:
       - "${PORT:-80}:80"
     volumes:
       - ./data/storage/opin:/usr/share/nginx/html/data/storage/opin:ro
+      - ./config/nginx/sistemas.unifesp.br.crt:/etc/nginx/certs/sistemas.unifesp.br.crt
+      - ./config/nginx/sistemas.unifesp.br.key:/etc/nginx/certs/sistemas.unifesp.br.key
     depends_on:
       - api
 
