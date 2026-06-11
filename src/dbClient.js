@@ -15,13 +15,17 @@ function resolveBaseUrl() {
 
 // ─── PostgREST query builder ──────────────────────────────────────────────────
 
+const _anonKey = import.meta.env.VITE_API_ANON_KEY || import.meta.env.REACT_APP_API_ANON_KEY || '';
+
 class QueryBuilder {
   constructor(table) {
     this._table   = table;
     this._params  = new URLSearchParams();
     this._method  = 'GET';
     this._body    = null;
-    this._headers = {};
+    this._headers = _anonKey
+      ? { Authorization: `Bearer ${_anonKey}`, apikey: _anonKey }
+      : {};
     this._hasSelect = false;
   }
 
