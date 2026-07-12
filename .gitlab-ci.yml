@@ -34,6 +34,12 @@ docker:
   stage: docker
   needs:
     - build
+  # Só roda no runner marcado como "production" (registrado no servidor real,
+  # matera.unifesp.br). Sem essa tag, o job pode cair em qualquer runner
+  # disponível do projeto — inclusive um de desenvolvimento — e redeployar
+  # os containers _prod no lugar errado.
+  tags:
+    - production
   variables:
     VITE_API_URL: $VITE_API_URL
     VITE_API_ANON_KEY: $VITE_API_ANON_KEY
