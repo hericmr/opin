@@ -47,7 +47,7 @@ export const getProfessorImagesByEscola = async (escolaId) => {
   return (data || []).map(img => {
     let publicUrl = img.imagem_url;
     if (publicUrl && !publicUrl.startsWith('http')) {
-      const storageUrl = getStorageUrl('imagens-professores', img.imagem_url);
+      const storageUrl = getStorageUrl(img.imagem_url);
       publicUrl = getSecureImageUrl(storageUrl);
     } else if (publicUrl) {
       publicUrl = getSecureImageUrl(publicUrl);

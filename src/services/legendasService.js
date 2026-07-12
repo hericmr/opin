@@ -316,17 +316,8 @@ const enrichWithPublicUrl = (item) => {
 
   let publicUrl = item.imagem_url;
   if (publicUrl && !publicUrl.startsWith('http')) {
-    // Determinar bucket baseado na categoria ou tipo (garantindo que tipos de professores usem o bucket correto)
-    let bucket = 'imagens-das-escolas'; 
-    if (item.categoria === 'professor' || item.tipo_foto === 'professor') {
-      bucket = 'imagens-professores';
-    } else if (item.categoria === 'avatar') {
-      bucket = 'avatar';
-    }
-
     // Tentar resolver via mapeamento local primeiro
-    // Se não estiver no mapa, constrói a URL do Supabase via variável de ambiente
-    const storageUrl = getStorageUrl(bucket, item.imagem_url);
+    const storageUrl = getStorageUrl(item.imagem_url);
     publicUrl = getSecureImageUrl(storageUrl);
   } else if (publicUrl) {
     // Se for URL completa, ainda passa pelo secure resolution para checar mapa local

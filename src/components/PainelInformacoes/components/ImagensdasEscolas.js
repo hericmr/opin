@@ -111,8 +111,8 @@ const ImagensdasEscolas = ({ escola_id, isMaximized = false, hideInlineMedia = f
             if (legenda.imagem_url.startsWith('http')) {
               publicUrl = getSecureImageUrl(legenda.imagem_url);
             } else {
-              // Construir URL do Supabase via variável de ambiente para resolver via mapa local
-              const storageUrl = getStorageUrl('imagens-das-escolas', legenda.imagem_url);
+              // Resolver via mapa local
+              const storageUrl = getStorageUrl(legenda.imagem_url);
               publicUrl = getSecureImageUrl(storageUrl);
             }
           }

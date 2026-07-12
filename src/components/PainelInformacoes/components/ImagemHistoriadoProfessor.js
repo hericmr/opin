@@ -91,7 +91,7 @@ const ImagemHistoriadoProfessor = ({ escola_id, isMaximized = false, hideInlineM
             let publicUrl = img.imagem_url;
 
             if (publicUrl && !publicUrl.startsWith('http')) {
-              const storageUrl = getStorageUrl('imagens-professores', img.imagem_url);
+              const storageUrl = getStorageUrl(img.imagem_url);
               publicUrl = getSecureImageUrl(storageUrl);
             } else if (publicUrl && publicUrl.startsWith('http')) {
               publicUrl = getSecureImageUrl(publicUrl);

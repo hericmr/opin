@@ -14,7 +14,7 @@ import { useRefresh } from '../contexts/RefreshContext';
 const resolveStorageUrl = (url) => {
   if (!url) return url;
   if (url.startsWith('http') || url.startsWith('/')) return getSecureImageUrl(url);
-  return getStorageUrl('imagens-das-escolas', url);
+  return getSecureImageUrl(getStorageUrl(url));
 };
 
 const useSidebarImages = ({ escolaId, showTeacher = true, showSchool = true, scrollProgress, headerUrl, onCurrentItemChange }) => {
@@ -63,7 +63,7 @@ const useSidebarImages = ({ escolaId, showTeacher = true, showSchool = true, scr
             if (legenda.imagem_url.trim().startsWith('http')) {
               publicUrl = getSecureImageUrl(legenda.imagem_url.trim());
             } else {
-              const storageUrl = getStorageUrl('imagens-das-escolas', legenda.imagem_url.trim());
+              const storageUrl = getStorageUrl(legenda.imagem_url.trim());
               publicUrl = getSecureImageUrl(storageUrl);
             }
           }
@@ -115,7 +115,7 @@ const useSidebarImages = ({ escolaId, showTeacher = true, showSchool = true, scr
             if (img.imagem_url.trim().startsWith('http')) {
               publicUrl = getSecureImageUrl(img.imagem_url.trim());
             } else {
-              const storageUrl = getStorageUrl('imagens-professores', img.imagem_url.trim());
+              const storageUrl = getStorageUrl(img.imagem_url.trim());
               publicUrl = getSecureImageUrl(storageUrl);
             }
           }
