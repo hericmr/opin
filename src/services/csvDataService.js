@@ -85,6 +85,18 @@ class CSVDataService {
     }
   }
 
+  // Carrega a matriz de modalidades por escola (0/1 para as 42 EEIs).
+  // turmas_por_tipo.csv só cobre 12 escolas (contagem de turmas); este arquivo
+  // cobre as 42 e é usado para o gráfico "Tipos de Ensino". Ver coluna "fonte".
+  async loadModalidadesPorEscolaData() {
+    try {
+      const data = await this.loadCSV('modalidades_por_escola.csv');
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Processa dados para gráfico de alunos vs docentes
   async getAlunosVsDocentesData() {
     const escolasData = await this.loadEscolasData();
@@ -206,7 +218,9 @@ class CSVDataService {
 
   // Processa dados para gráfico de tipos de ensino
   async getTiposEnsinoData() {
-    const turmasData = await this.loadTurmasPorTipoData();
+    // Usa a matriz de modalidades (42 escolas) em vez de turmas_por_tipo.csv,
+    // que só tem 12 escolas e subrepresentava todas as modalidades.
+    const turmasData = await this.loadModalidadesPorEscolaData();
 
     const tiposEnsino = [
       'Anos_Iniciais',

@@ -1,0 +1,43 @@
+CIE_Escola,Nome,Municipio,Anos_Iniciais,Anos_Finais,Ensino_Medio,EJA_Anos_Iniciais,EJA_Anos_Finais,EJA_Ensino_Medio,Ensino_Infantil,fonte
+306526,ALDEIA TEKOAPORA,ITAPORANGA,1,1,0,1,1,1,1,turmas_por_tipo (real)
+434000,ALDEIA ITAPUA,IGUAPE,1,1,0,0,0,0,0,turmas_por_tipo (real)
+421868,INDIA VANUIRE,ARCO-IRIS,1,1,0,1,1,1,0,turmas_por_tipo (real)
+477783,ALDEIA ITAPU MIRIM,REGISTRO,1,1,0,1,0,0,0,turmas_por_tipo (real)
+100201,ALDEIA RENASCER,UBATUBA,1,1,0,1,1,1,0,turmas_por_tipo (real)
+100389,ALDEIA SANTA CRUZ,CANANEIA,1,0,0,0,0,0,0,turmas_por_tipo (real)
+100249,ALDEIA CAPOEIRAO,ITARIRI,1,1,0,1,1,1,1,turmas_por_tipo (real)
+469786,ALDEIA NHAMANDU MIRIM,PERUIBE,1,1,0,0,0,0,0,turmas_por_tipo (real)
+100341,ALDEIA TEREGUA,AVAI,1,1,1,1,1,1,1,escolas_completa (texto)
+469774,ALDEIA TANGARA,ITANHAEM,1,1,0,0,0,0,0,alunos_faixa_etaria
+568430,ALDEIA ARACA MIRIM,PARIQUERA-ACU,1,1,0,1,0,0,0,alunos_faixa_etaria
+8803,TXONDARO TEKOA  MBAE,BARAO DE ANTONINA,1,1,0,0,0,0,1,escolas_completa (texto)
+100407,ALDEIA RIO BRANCO II,CANANEIA,1,1,0,0,0,0,0,escolas_completa (texto)
+100110,ALDEIA KOPENOTI,AVAI,1,1,1,0,0,1,1,escolas_completa (texto)
+495219,ALDEIA TAKUARI TY,CANANEIA,1,1,1,0,0,0,0,escolas_completa (texto)
+417439,TXERU BA  e KUA  I,BERTIOGA,1,1,1,1,1,0,0,turmas_por_tipo (real)
+482419,ALDEIA YWY PYHAU,BARAO DE ANTONINA,1,1,0,0,0,0,0,escolas_completa (texto)
+127152,ALDEIA BOA VISTA,UBATUBA,1,1,0,1,1,1,0,alunos_faixa_etaria
+343316,KO e JU,MIRACATU,1,1,0,0,0,0,1,escolas_completa (texto)
+559118,ALDEIA PIACAGUERA,PERUIBE,1,1,0,0,0,0,1,escolas_completa (texto)
+559097,KUARAY O e A SOL NASCENTE,MONGAGUA,1,1,0,0,0,0,0,alunos_faixa_etaria
+469798,ALDEIA TEKOA MIRIM,PRAIA GRANDE,1,1,0,0,0,0,1,escolas_completa (texto)
+395365,INDIA MARIA ROSA,BRAUNA,1,1,0,0,0,0,1,escolas_completa (texto)
+566044,TAGUATO AGUIA,IGUAPE,1,1,0,0,0,0,1,escolas_completa (texto)
+559210,DJEKUPE AMBA ARANDY,SAO PAULO,1,1,1,1,1,1,1,turmas_por_tipo (real)
+127164,ALDEIA GWAWIRA,IGUAPE,1,1,0,0,0,0,1,escolas_completa (texto)
+100262,ALDEIA RIO DO AZEITE,ITARIRI,1,0,1,1,0,0,0,escolas_completa (texto)
+268574,ALDEIA KARUGWA,BARAO DE ANTONINA,1,1,0,1,1,0,0,alunos_faixa_etaria
+559076,ALDEIA PINDO TY,PARIQUERA-ACU,1,1,1,0,0,0,1,escolas_completa (texto)
+499523,ALDEIA TAQUARI,ELDORADO,1,1,1,0,0,0,1,escolas_completa (texto)
+559106,ALDEIA AGUAPEU,MONGAGUA,1,1,0,0,0,0,1,escolas_completa (texto)
+194906,ALDEIA DJAIKOATY,MIRACATU,1,1,1,0,0,0,1,escolas_completa (texto)
+127176,ALDEIA URU'ITY,MIRACATU,1,1,0,0,0,0,1,escolas_completa (texto)
+534924,ALDEIA BANANAL,PERUIBE,1,1,0,0,0,0,0,alunos_faixa_etaria
+100948,ALDEIA RIO BRANCO,ITANHAEM,1,1,0,0,0,0,1,escolas_completa (texto)
+100195,ALDEIA EKERUA,AVAI,1,1,1,0,0,1,1,escolas_completa (texto)
+100146,ALDEIA NIMUENDAJU,AVAI,1,1,1,0,1,1,1,escolas_completa (texto)
+559088,ALDEIA PEGUAO TY,SETE BARRAS,1,1,1,0,0,0,1,escolas_completa (texto)
+925135,INDIGENA GUARANI GWYRA PEPO,SAO PAULO,1,1,1,0,0,0,0,turmas_por_tipo (real)
+7734,CLASSES VINCULADAS A EE OMAR DONATO BASSANI,SAO BERNARDO DO CAMPO,1,1,0,1,1,1,0,alunos_faixa_etaria
+103100,KRUKUTU,SAO PAULO,1,1,1,0,0,0,0,turmas_por_tipo (real)
+SN,ALDEIA PARANAPUA,SAO VICENTE,1,0,0,0,0,0,0,manual (historia/descricao)
