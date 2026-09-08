@@ -91,6 +91,18 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
   const total = distribuicaoData.reduce((sum, item) => sum + item.value, 0);
   const dataWithTotal = distribuicaoData.map(item => ({ ...item, total }));
 
+  // Contagens por faixa de alunos (dinâmicas, derivadas de distribuicaoData) para o texto abaixo
+  const faixaEscolas = (nome) => distribuicaoData.find(item => item.name === nome)?.value || 0;
+  const fmtPct = (valor) => total
+    ? ((valor / total) * 100).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+    : '0,0';
+  const escAte10 = faixaEscolas('Até 10 alunos');
+  const esc11a25 = faixaEscolas('11 a 25 alunos');
+  const esc26a50 = faixaEscolas('26 a 50 alunos');
+  const esc51a100 = faixaEscolas('51 a 100 alunos');
+  const escMais100 = faixaEscolas('Mais de 100 alunos');
+  const escPequenas = escAte10 + esc11a25 + esc26a50;
+
   return (
     <div className="p-4 sm:p-6">
       {/* Título principal */}
@@ -122,7 +134,7 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
             fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
             letterSpacing: '0.01em'
           }}>
-            Dez escolas (24,4%) possuem até 10 alunos, 11 escolas (26,8%) atendem entre 11 e 25 alunos, e 12 escolas (29,3%) concentram de 26 a 50 alunos. Juntas, essas pequenas unidades representam 80,5% da rede, evidenciando o predomínio de escolas de porte reduzido.
+            {escAte10} escolas ({fmtPct(escAte10)}%) possuem até 10 alunos, {esc11a25} escolas ({fmtPct(esc11a25)}%) atendem entre 11 e 25 alunos, e {esc26a50} escolas ({fmtPct(esc26a50)}%) concentram de 26 a 50 alunos. Juntas, essas {escPequenas} unidades de porte reduzido representam {fmtPct(escPequenas)}% da rede, evidenciando o predomínio de escolas pequenas.
           </p>
           <p className="text-gray-800 text-left" style={{
             fontSize: '1.125rem',
@@ -131,7 +143,7 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
             fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
             letterSpacing: '0.01em'
           }}>
-            Em contraste, apenas quatro escolas (9,8%) atendem entre 51 e 100 alunos, e outras quatro (9,8%) possuem mais de 100 alunos, indicando que poucas unidades concentram grandes contingentes estudantis.
+            Em contraste, apenas {esc51a100} escolas ({fmtPct(esc51a100)}%) atendem entre 51 e 100 alunos, e outras {escMais100} ({fmtPct(escMais100)}%) possuem mais de 100 alunos, indicando que poucas unidades concentram grandes contingentes estudantis.
           </p>
         </div>
       </div>

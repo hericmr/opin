@@ -27,6 +27,19 @@ const AlunosPorEscolaChart = ({ data }) => {
     nome: normalizeSchoolName(item.nome)
   }));
 
+  // Distribuição por faixa de alunos (dinâmica) para o texto abaixo
+  const totalEscolas = data.length;
+  const contarFaixa = (predicado) => data.filter(item => predicado(item.alunos)).length;
+  const fmtPct = (valor) => totalEscolas
+    ? ((valor / totalEscolas) * 100).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+    : '0,0';
+  const escAte10 = contarFaixa((a) => a < 10);
+  const esc11a25 = contarFaixa((a) => a >= 10 && a < 25);
+  const esc26a50 = contarFaixa((a) => a >= 25 && a < 50);
+  const esc51a100 = contarFaixa((a) => a >= 50 && a < 100);
+  const escMais100 = contarFaixa((a) => a >= 100);
+  const escPequenas = escAte10 + esc11a25 + esc26a50;
+
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
@@ -50,7 +63,7 @@ const AlunosPorEscolaChart = ({ data }) => {
       {/* Texto introdutório */}
       <div className="mb-6 p-4 max-w-4xl mx-auto">
         <p className="text-gray-700 leading-relaxed text-justify">
-          A maioria das EEIs atende a um pequeno contingente de alunos. Dez escolas (24,4%) possuem até 10 alunos, 11 escolas (26,8%) atendem entre 11 e 25 alunos, e 12 escolas (29,3%) concentram de 26 a 50 alunos. Juntas, essas pequenas unidades representam 80,5% da rede, evidenciando o predomínio de escolas de porte reduzido. Em contraste, apenas quatro escolas (9,8%) atendem entre 51 e 100 alunos, e outras quatro (9,8%) possuem mais de 100 alunos, indicando que poucas unidades concentram grandes contingentes estudantis.
+          A maioria das EEIs atende a um pequeno contingente de alunos. {escAte10} escolas ({fmtPct(escAte10)}%) possuem até 10 alunos, {esc11a25} escolas ({fmtPct(esc11a25)}%) atendem entre 11 e 25 alunos, e {esc26a50} escolas ({fmtPct(esc26a50)}%) concentram de 26 a 50 alunos. Juntas, essas {escPequenas} unidades de porte reduzido representam {fmtPct(escPequenas)}% da rede, evidenciando o predomínio de escolas pequenas. Em contraste, apenas {esc51a100} escolas ({fmtPct(esc51a100)}%) atendem entre 51 e 100 alunos, e outras {escMais100} ({fmtPct(escMais100)}%) possuem mais de 100 alunos, indicando que poucas unidades concentram grandes contingentes estudantis.
         </p>
         
         <p className="text-gray-700 leading-relaxed mt-4 text-justify">
