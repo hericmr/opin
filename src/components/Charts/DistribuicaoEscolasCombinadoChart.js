@@ -261,7 +261,7 @@ const DistribuicaoEscolasCombinadoChart = ({ distribuicaoData, alunosPorEscolaDa
         color: '#4b5563',
         fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
       }}>
-        Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2025
+        Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2026
       </p>
     </div>
   );

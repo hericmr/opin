@@ -124,7 +124,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
             fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
             letterSpacing: '0.01em'
           }}>
-            Segundo os dados da SEDUC, em 2025, existem 42 escolas estaduais indígenas no estado de São Paulo, distribuídas entre a capital, o interior e o litoral, atendendo {total.toLocaleString()} estudantes. Essas escolas oferecem os anos iniciais e finais do Ensino Fundamental, o Ensino Médio e a Educação de Jovens e Adultos (EJA).
+            Segundo os dados da SEDUC, em 2026, existem 42 escolas estaduais indígenas no estado de São Paulo, distribuídas entre a capital, o interior e o litoral, atendendo {total.toLocaleString()} estudantes. Essas escolas oferecem os anos iniciais e finais do Ensino Fundamental, o Ensino Médio e a Educação de Jovens e Adultos (EJA).
           </p>
           <p className="text-gray-800 text-left" style={{
             fontSize: '1.125rem',
@@ -295,7 +295,7 @@ const DistribuicaoAlunosModalidadeChart = ({ data }) => {
         color: '#4b5563',
         fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
       }}>
-        Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2025
+        Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2026
       </p>
     </div>
   );

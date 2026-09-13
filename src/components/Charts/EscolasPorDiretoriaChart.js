@@ -28,7 +28,7 @@ const EscolasPorDiretoriaChart = ({ data }) => {
           <p className="text-gray-500">Nenhum dado disponível</p>
         </div>
         <p className="text-sm text-gray-500 mt-2 text-center">
-          Fonte: SEDUC 2025
+          Fonte: SEDUC 2026
         </p>
       </div>
     );
@@ -85,7 +85,7 @@ const EscolasPorDiretoriaChart = ({ data }) => {
         color: '#4b5563',
         fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
       }}>
-        Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2025
+        Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2026
       </p>
     </div>
   );

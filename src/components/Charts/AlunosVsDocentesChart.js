@@ -51,7 +51,7 @@ const AlunosVsDocentesChart = ({ data }) => {
         </ResponsiveContainer>
       </div>
       <p className="text-sm text-gray-500 mt-2 text-center">
-        Fonte: SEDUC 2025
+        Fonte: SEDUC 2026
       </p>
     </div>
   );

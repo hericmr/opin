@@ -98,7 +98,7 @@ const AlunosPorEscolaChart = ({ data }) => {
         </ResponsiveContainer>
       </div>
       <p className="text-sm text-gray-500 mt-2 text-center">
-        Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2025
+        Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2026
       </p>
     </div>
   );
