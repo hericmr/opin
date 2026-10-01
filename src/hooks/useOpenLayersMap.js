@@ -2,9 +2,6 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import ClusterSource from 'ol/source/Cluster';
 import XYZ from 'ol/source/XYZ';
 import { fromLonLat } from 'ol/proj';
 import { defaults as defaultControls } from 'ol/control';
@@ -12,9 +9,6 @@ import { MAP_CONFIG } from '../utils/mapConfig';
 
 export const useOpenLayersMap = (mapContainer, center = MAP_CONFIG.center, zoom = MAP_CONFIG.zoom) => {
   const map = useRef(null);
-  const vectorSource = useRef(null);
-  const clusterSource = useRef(null);
-  const vectorLayer = useRef(null);
   const baseLayer = useRef(null);
   const [mapInfo, setMapInfo] = useState({
     lng: center[0],
@@ -44,37 +38,16 @@ export const useOpenLayersMap = (mapContainer, center = MAP_CONFIG.center, zoom 
   useEffect(() => {
     if (map.current) return;
 
-    // Criar fonte vetorial para marcadores
-    vectorSource.current = new VectorSource();
-    
-    // Criar fonte de cluster
-    clusterSource.current = new ClusterSource({
-      distance: MAP_CONFIG.clusterDistance,
-      source: vectorSource.current,
-      geometryFunction: (feature) => {
-        const geometry = feature.getGeometry();
-        if (geometry.getType() === 'Point') {
-          return geometry;
-        }
-        return null;
-      }
-    });
-    
-    // Criar camada vetorial para marcadores com clustering
-    vectorLayer.current = new VectorLayer({
-      source: clusterSource.current,
-      zIndex: 100
-    });
-
-    // Criar camada base
+    // Criar camada base. As camadas de marcadores (escolas) e GeoJSON (terras
+    // indígenas / estado SP) são adicionadas pelos hooks useMapMarkers e
+    // useMapLayers, respectivamente, para manter uma única fonte de verdade.
     baseLayer.current = createBaseLayer();
 
     // Criar mapa
     map.current = new Map({
       target: mapContainer.current,
       layers: [
-        baseLayer.current,
-        vectorLayer.current
+        baseLayer.current
       ],
       view: new View({
         center: fromLonLat(center),
@@ -111,9 +84,6 @@ export const useOpenLayersMap = (mapContainer, center = MAP_CONFIG.center, zoom 
 
   return {
     map: map.current,
-    vectorSource: vectorSource.current,
-    clusterSource: clusterSource.current,
-    vectorLayer: vectorLayer.current,
     mapInfo,
     setMapInfo
   };

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { register } from 'ol/proj/proj4';
 import proj4 from 'proj4';
 import 'ol/ol.css';
@@ -7,6 +7,7 @@ import 'ol/ol.css';
 import { useOpenLayersMap } from '../../hooks/useOpenLayersMap';
 import { useMapMarkers } from '../../hooks/useMapMarkers';
 import { useMapLayers } from '../../hooks/useMapLayers';
+import { useMapClick } from '../../hooks/useMapClick';
 
 // Componentes
 import MapContainer from './MapContainer';
@@ -31,7 +32,10 @@ const OpenLayersMap = ({
   showEstadoSP = true,
   // Props para marcadores
   showMarcadores = true,
-  showNomesEscolas = false
+  showNomesEscolas = false,
+  // Callback disparado quando o mapa está pronto (usado pelo MapSelector para
+  // obter a instância do mapa — zoom pela busca, updateSize, etc.)
+  onMapReady
 }) => {
   const mapContainer = useRef(null);
 
@@ -39,10 +43,20 @@ const OpenLayersMap = ({
   const { map } = useOpenLayersMap(mapContainer, center, zoom);
 
   // Hook para marcadores e clusters
-  useMapMarkers(map, dataPoints, showMarcadores);
+  useMapMarkers(map, dataPoints, showMarcadores, showNomesEscolas);
 
   // Hook para camadas GeoJSON
   useMapLayers(map, terrasIndigenasData, estadoSPData, showTerrasIndigenas, showEstadoSP);
+
+  // Hook para clique nos marcadores (abre o painel da escola)
+  useMapClick(map, onPainelOpen);
+
+  // Avisar o container (MapSelector) quando a instância do mapa estiver pronta
+  useEffect(() => {
+    if (map && typeof onMapReady === 'function') {
+      onMapReady(map);
+    }
+  }, [map, onMapReady]);
 
   return (
     <MapContainer ref={mapContainer} className={className}>
