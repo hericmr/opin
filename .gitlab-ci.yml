@@ -1,6 +1,5 @@
 stages:
   - test
-  - build
   - docker
 
 cache:
@@ -18,25 +17,16 @@ test:
     - npm run lint
   allow_failure: true
 
-build:
-  stage: build
-  script:
-    - npm ci
-    - npm run build
-  artifacts:
-    paths:
-      - build/
-    expire_in: 7 days
-  only:
-    - main
-
 docker:
   stage: docker
   # NÃO declare `image` aqui: este job roda em um runner com executor "shell"
   # (gitlab-runner instalado no próprio servidor de produção), executando
   # `docker compose` direto no host onde o Docker já está instalado.
-  needs:
-    - build
+  #
+  # Não há stage `build` separado: o `vite build` de produção acontece DENTRO
+  # do Dockerfile (FROM node:20-alpine), via `docker compose build front`.
+  # Buildar no host seria redundante (o container refaz o build) e exigiria
+  # Node 20+ no servidor — que hoje tem Node 18.
   # Só roda no runner marcado como "production" (registrado no servidor real,
   # matera.unifesp.br). Sem essa tag, o job pode cair em qualquer runner
   # disponível do projeto — inclusive um de desenvolvimento — e redeployar
