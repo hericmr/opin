@@ -18,7 +18,7 @@ services:
       PGRST_JWT_SECRET: ${JWT_SECRET}
       # Precisa ser uma URI absoluta (esquema+host) — só afeta o campo "server" do
       # documento OpenAPI, não o roteamento real (isso é feito pelo nginx).
-      PGRST_OPENAPI_SERVER_PROXY_URI: https://matera.unifesp.br/opin
+      PGRST_OPENAPI_SERVER_PROXY_URI: https://opin.unifesp.br
 
   front:
     image: ${FRONT_IMAGE:-opin_front_prod_local}
