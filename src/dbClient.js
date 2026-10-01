@@ -17,6 +17,21 @@ function resolveBaseUrl() {
 
 const _anonKey = import.meta.env.VITE_API_ANON_KEY || import.meta.env.REACT_APP_API_ANON_KEY || '';
 
+// Esta implantação serve imagens como arquivos estáticos (nginx em
+// /data/storage/opin/...) e NÃO roda um serviço storage-api. Portanto as
+// operações de bucket (list/upload/remove/download) não têm backend: chamá-las
+// gera 405/404 no console. Deixe VITE_STORAGE_ENABLED como "true" apenas se um
+// storage-api compatível (ex.: supabase/storage-api) estiver atrás de
+// /storage/v1/. Por padrão fica desabilitado.
+const _storageEnabled = String(
+  import.meta.env.VITE_STORAGE_ENABLED ?? import.meta.env.REACT_APP_STORAGE_ENABLED ?? ''
+).toLowerCase() === 'true';
+
+const _storageDisabledError = {
+  message: 'Storage API não está habilitada nesta implantação (VITE_STORAGE_ENABLED!=true). Imagens são servidas como estáticos; operações de bucket indisponíveis.',
+  code: 'STORAGE_DISABLED',
+};
+
 class QueryBuilder {
   constructor(table) {
     this._table   = table;
@@ -168,6 +183,7 @@ class StorageBucket {
   }
 
   async upload(path, file, { cacheControl, upsert = false } = {}) {
+    if (!_storageEnabled) return { data: null, error: _storageDisabledError };
     const headers = { ...this._auth() };
     if (upsert) headers['x-upsert'] = 'true';
     try {
@@ -183,6 +199,7 @@ class StorageBucket {
   }
 
   async remove(paths) {
+    if (!_storageEnabled) return { data: null, error: _storageDisabledError };
     try {
       const resp = await fetch(`/storage/v1/object/${this._bucket}`, {
         method: 'DELETE',
@@ -198,6 +215,9 @@ class StorageBucket {
   }
 
   async list(prefix = '', { limit = 100, offset = 0, sortBy } = {}) {
+    // Sem storage-api: devolve lista vazia (não é erro) para que o preloader e
+    // afins degradem silenciosamente, sem bater num endpoint inexistente (405).
+    if (!_storageEnabled) return { data: [], error: null };
     try {
       const resp = await fetch(`/storage/v1/object/list/${this._bucket}`, {
         method: 'POST',
@@ -213,6 +233,7 @@ class StorageBucket {
   }
 
   async download(path) {
+    if (!_storageEnabled) return { data: null, error: _storageDisabledError };
     try {
       const resp = await fetch(`/storage/v1/object/${this._bucket}/${path}`, {
         headers: this._auth(),

@@ -365,23 +365,25 @@ export const getLegendasByEscola = async (escolaId, categoria = null) => {
  */
 export const getTituloByVideoUrl = async (videoUrl, escolaId) => {
   try {
+    // Não usamos .single() aqui: é comum não existir legenda para o vídeo, e o
+    // PostgREST responde 406 (Not Acceptable) quando .single() não encontra
+    // exatamente 1 linha. Buscamos uma lista com limit(1) e pegamos o primeiro.
     const { data, error } = await supabase
       .from('legendas_fotos')
       .select('*')
       .eq('imagem_url', videoUrl)
       .eq('escola_id', escolaId)
       .eq('categoria', 'video')
-      .single();
+      .limit(1);
 
     if (error) {
-      // Se não encontrar, retorna null (não é erro)
-      if (error.code === 'PGRST116') {
-        return null;
-      }
       throw error;
     }
 
-    return enrichWithPublicUrl(data);
+    const registro = Array.isArray(data) ? data[0] : data;
+    if (!registro) return null;
+
+    return enrichWithPublicUrl(registro);
   } catch (error) {
     logger.warn('Erro ao buscar título do vídeo:', error.message);
     return null;
