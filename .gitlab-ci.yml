@@ -32,6 +32,9 @@ build:
 
 docker:
   stage: docker
+  # NÃO declare `image` aqui: este job roda em um runner com executor "shell"
+  # (gitlab-runner instalado no próprio servidor de produção), executando
+  # `docker compose` direto no host onde o Docker já está instalado.
   needs:
     - build
   # Só roda no runner marcado como "production" (registrado no servidor real,
