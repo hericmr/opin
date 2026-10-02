@@ -6,8 +6,12 @@ WORKDIR /app
 # Copiar arquivos de dependências
 COPY package*.json ./
 
-# Instalar dependências
-RUN npm install
+# Instalar dependências a partir do package-lock.json (reprodutível).
+# Usamos `npm ci` em vez de `npm install` de propósito: o lock fixa as versões
+# exatas já resolvidas (ex.: baseline-browser-mapping@2.8.28), enquanto
+# `npm install` reavaliaria os ranges e poderia puxar uma versão mais nova cujo
+# tarball o registro não serve (causava E404 em baseline-browser-mapping@2.11.27).
+RUN npm ci
 
 # Copiar o resto do código
 COPY . .
