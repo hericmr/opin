@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { MapPin, Users, TreePine, Search } from 'lucide-react';
+import { MapPin, Search } from 'lucide-react';
 import PageHeader from '../../components/PageHeader';
 import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
 import Footer from '../../components/Footer';
@@ -43,8 +43,8 @@ const EscolasList = () => {
       <PageHeader
         title="Escolas Indígenas"
         showNavbar={true}
-        overlayColor="rgba(255, 170, 0, 0.9)"
-        blendMode="color"
+        overlayColor="rgba(255, 160, 0, 0.75)"
+        blendMode="normal"
         titlePosition="center"
       >
         <DashboardBreadcrumbs breadcrumbs={breadcrumbs} />
@@ -116,20 +116,6 @@ const EscolasList = () => {
                       <div className="flex items-start text-sm text-gray-600">
                         <MapPin className="w-4 h-4 text-[#215A36] mt-0.5 mr-2 flex-shrink-0" />
                         <span className="line-clamp-1">{escola.municipio}</span>
-                      </div>
-                    )}
-                    
-                    {escola.terra_indigena && (
-                      <div className="flex items-start text-sm text-gray-600">
-                        <TreePine className="w-4 h-4 text-[#215A36] mt-0.5 mr-2 flex-shrink-0" />
-                        <span className="line-clamp-1">{escola.terra_indigena}</span>
-                      </div>
-                    )}
-                    
-                    {escola.povos_indigenas && (
-                      <div className="flex items-start text-sm text-gray-600">
-                        <Users className="w-4 h-4 text-[#215A36] mt-0.5 mr-2 flex-shrink-0" />
-                        <span className="line-clamp-2">{escola.povos_indigenas}</span>
                       </div>
                     )}
                     
