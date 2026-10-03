@@ -22,11 +22,10 @@ reportWebVitals();
 // Registrar Service Worker para PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    // Usa o caminho base do projeto (/opin) se estiver configurado
-    const basePath = import.meta.env.BASE_URL || '/opin';
-    const swPath = `${basePath}/sw.js`;
-    
-    navigator.serviceWorker.register(swPath, { scope: `${basePath}/` })
+    const baseUrl = import.meta.env.BASE_URL || '/opin';
+    const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+    const swPath = `${cleanBase}/sw.js`;
+    navigator.serviceWorker.register(swPath, { scope: `${cleanBase}/` })
       .then((registration) => {
         console.log('Service Worker registrado com sucesso:', registration.scope);
       })

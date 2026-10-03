@@ -17,14 +17,28 @@ export const getLocalImageUrl = (url) => {
         return `${cleanBase}${localPath}`;
     };
 
-    // Direct match
-    if (imageMap[url]) return buildLocalPath(imageMap[url]);
+    const checkMap = (key) => {
+        if (imageMap[key]) return buildLocalPath(imageMap[key]);
+        // Tenta alternativas de extensão caso o banco tenha salvo como .webp mas o mapa tenha .jpg/.jpeg/.png
+        if (key.match(/\.(webp|jpg|jpeg|png)$/i)) {
+            const base = key.replace(/\.(webp|jpg|jpeg|png)$/i, '');
+            if (imageMap[`${base}.jpg`]) return buildLocalPath(imageMap[`${base}.jpg`]);
+            if (imageMap[`${base}.jpeg`]) return buildLocalPath(imageMap[`${base}.jpeg`]);
+            if (imageMap[`${base}.png`]) return buildLocalPath(imageMap[`${base}.png`]);
+            if (imageMap[`${base}.webp`]) return buildLocalPath(imageMap[`${base}.webp`]);
+        }
+        return null;
+    };
+
+    // Direct match with extension fallback
+    const directMatch = checkMap(url);
+    if (directMatch) return directMatch;
 
     // Handle storage URL pattern: /data/storage/opin/school_id/file
-    // The image_map keys use relative paths like "1/image.jpeg"
     if (url.startsWith(STORAGE_PREFIX)) {
         const afterPrefix = url.slice(STORAGE_PREFIX.length);
-        if (imageMap[afterPrefix]) return buildLocalPath(imageMap[afterPrefix]);
+        const prefixMatch = checkMap(afterPrefix);
+        if (prefixMatch) return prefixMatch;
     }
 
     return url;
