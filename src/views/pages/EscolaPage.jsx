@@ -11,6 +11,7 @@ import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumb
 import Footer from '../../components/Footer';
 import { useEscolaDetalhes } from '../../hooks/useEscolaDetalhes';
 import { useEscolasData } from '../../hooks/useEscolasData';
+import { getStorageUrl, getSecureImageUrl } from '../../utils/imageUtils';
 import HistoriaEscola from '../../components/PainelInformacoes/components/EscolaInfo/HistoriaEscola';
 import HistoriaTerraIndigena from '../../components/PainelInformacoes/components/EscolaInfo/HistoriaTerraIndigena';
 import HistoriadoProfessor from '../../components/PainelInformacoes/components/EscolaInfo/HistoriadoProfessor';
@@ -151,6 +152,10 @@ const EscolaPage = () => {
   const municipio = escola?.municipio || '';
   const terraIndigena = escola?.terra_indigena || '';
 
+  const resolvedHeaderImage = escola?.imagem_header
+    ? getSecureImageUrl(getStorageUrl(escola.imagem_header))
+    : null;
+
   const breadcrumbs = useMemo(() => [
     { label: 'Início', path: '/', active: false },
     { label: 'Mapa', path: '/mapa', active: false },
@@ -208,11 +213,11 @@ const EscolaPage = () => {
         <meta property="og:url" content={`${siteUrl}/escola/${slug}`} />
         <meta property="og:title" content={`${nome} – OPIN`} />
         <meta property="og:description" content={ogDescription} />
-        <meta property="og:image" content={escola?.imagem_header || `${siteUrl}/hero_grayscale.webp`} />
+        <meta property="og:image" content={resolvedHeaderImage || `${siteUrl}/hero_grayscale.webp`} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`${nome} – OPIN`} />
         <meta name="twitter:description" content={ogDescription} />
-        <meta name="twitter:image" content={escola?.imagem_header || `${siteUrl}/hero_grayscale.webp`} />
+        <meta name="twitter:image" content={resolvedHeaderImage || `${siteUrl}/hero_grayscale.webp`} />
       </Helmet>
 
       <PageHeader
@@ -221,7 +226,7 @@ const EscolaPage = () => {
         dataPoints={dataPoints || []}
         overlayColor="rgba(20, 81, 45, 0.4)"
         blendMode="normal"
-        backgroundImage={escola?.imagem_header || null}
+        backgroundImage={resolvedHeaderImage}
         minHeight="65vh"
         titlePosition="bottom-left"
       >
@@ -311,7 +316,7 @@ const EscolaPage = () => {
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
           <GaleriaEditorial
             escola_id={Number(id)}
-            headerUrl={escola?.imagem_header}
+            headerUrl={resolvedHeaderImage}
             titulo={nome}
             escolaNome={nome}
           />

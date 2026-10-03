@@ -136,6 +136,9 @@ const MinimalLoginModal = ({ isOpen, onClose, onSuccess }) => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-3">
+          {/* Campo oculto para acessibilidade (evita warning do DOM) */}
+          <input type="text" name="username" autoComplete="username" value="admin" className="hidden" readOnly />
+          
           <div className="space-y-3">
             {/* Campo de senha */}
             <div>

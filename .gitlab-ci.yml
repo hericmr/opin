@@ -44,9 +44,14 @@ docker:
     # ou redeployar db/api — sem isso, docker-compose.prod.yml sobe api/db com
     # PGPASSWORD vazio e derruba a produção em silêncio.
     - |
-      for var in VITE_API_ANON_KEY POSTGRES_PASSWORD JWT_SECRET; do
-        if [ -z "$(eval echo \$$var)" ]; then
-          echo "ERRO: $var não está definida no CI/CD. Acesse Settings > CI/CD > Variables."
+      for var in VITE_API_ANON_KEY POSTGRES_PASSWORD JWT_SECRET VITE_ADMIN_PASSWORD; do
+        val="$(eval echo \$$var)"
+        if [ -z "$val" ]; then
+          echo "ERRO: $var está vazia. Acesse Settings > CI/CD > Variables."
+          exit 1
+        fi
+        if [ "$val" = "\$$var" ]; then
+          echo "ERRO: $var não foi resolvida (ficou como literal '$val'). Adicione-a em Settings > CI/CD > Variables."
           exit 1
         fi
       done
