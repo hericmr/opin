@@ -1,7 +1,7 @@
 import logger from "../../utils/logger";
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getSecureImageUrl } from '../../utils/imageUtils';
+import { getLocalImageUrl } from '../../utils/imageUtils';
 
 /**
  * Componente de imagem otimizada - Versão simplificada
@@ -18,7 +18,7 @@ const OptimizedImage = ({
   onError,
   ...props
 }) => {
-  const localSrc = getSecureImageUrl(src);
+  const localSrc = getLocalImageUrl(src);
 
   // Se não há src válido, mostrar placeholder
   if (!src || typeof src !== 'string' || src.trim() === '') {
