@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { BookOpen, Leaf, Shield, LayoutGrid, Map, BarChart3, Film } from 'lucide-react';
+import { BookOpen, Leaf, Shield, LayoutGrid, Map, BarChart3, Film, School } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { prefetchPage } from '../../router';
 
@@ -17,6 +17,7 @@ const MobileMenu = ({
 }) => {
   const location = useLocation();
   const isLindiflixPage = location.pathname.startsWith('/lindiflix');
+  const isEscolasPage = location.pathname.startsWith('/escolas');
 
   const getActiveStyle = (isActive) => 
     isActive 
@@ -52,6 +53,20 @@ const MobileMenu = ({
                 <div className="flex items-center gap-3">
                   <Map className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
                   <span>Mapa das Escolas</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => onNavigation('/escolas')}
+                onMouseEnter={() => prefetchPage('escolas')}
+                onTouchStart={() => prefetchPage('escolas')}
+                className={`w-full text-left px-4 py-2.5 font-medium rounded transition-colors ${getActiveStyle(isEscolasPage)}`}
+                aria-label="Ver a lista de escolas indígenas"
+                aria-current={isEscolasPage ? 'page' : undefined}
+              >
+                <div className="flex items-center gap-3">
+                  <School className={isMobileLandscape ? "w-4 h-4" : "w-5 h-5"} />
+                  <span>Lista de Escolas</span>
                 </div>
               </button>
               

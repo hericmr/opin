@@ -40,6 +40,19 @@ const NavButtons = ({ isConteudoPage, isSearchPage, isAdminPage, isPainelPage, i
         Mapa
       </button>
 
+      {/* Botão Escolas */}
+      <button
+        onClick={() => navigate('/escolas')}
+        onMouseEnter={() => prefetchPage('escolas')}
+        onTouchStart={() => prefetchPage('escolas')}
+        className={getButtonStyle(isActive('/escolas'))}
+        title="Ver a lista de escolas indígenas"
+        aria-label="Ver a lista de escolas indígenas"
+        aria-current={isActive('/escolas') ? 'page' : undefined}
+      >
+        Escolas
+      </button>
+
       {/* Botão Materiais Didáticos */}
       <button
         onClick={() => navigate('/conteudo')}

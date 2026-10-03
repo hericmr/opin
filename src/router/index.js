@@ -17,6 +17,7 @@ const SearchResults = React.lazy(() => import("../views/pages/search"));
 const AdminPanel = React.lazy(() => import("../components/AdminPanel"));
 const Lindiflix = React.lazy(() => import("../views/pages/lindiflix"));
 const LindiflixContato = React.lazy(() => import("../views/pages/lindiflixContato"));
+const EscolasList = React.lazy(() => import("../views/pages/escolas"));
 const EscolaPage = React.lazy(() => import("../views/pages/EscolaPage"));
 const GaleriaPage = React.lazy(() => import("../views/pages/GaleriaPage"));
 
@@ -30,6 +31,7 @@ const lazyComponents = {
   admin: () => import("../components/AdminPanel"),
   lindiflix: () => import("../views/pages/lindiflix"),
   lindiflixContato: () => import("../views/pages/lindiflixContato"),
+  escolas: () => import("../views/pages/escolas"),
 };
 
 /**
@@ -99,6 +101,10 @@ export const createRoutes = (dataPoints, loading, onPainelOpen) => {
     {
       path: "/dados-escolas-indigenas",
       element: createRouteElement(Dashboard)
+    },
+    {
+      path: "/escolas",
+      element: createRouteElement(EscolasList)
     },
     {
       path: "/lindiflix",
