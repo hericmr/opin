@@ -41,7 +41,7 @@ storage_backup/
 
 # Imagens locais e pastas de backup (não devem estar no repositório)
 /public/images/local/
-/public/fotos/
+
 /public/backups/
 /public/exemplo*.webp
 
