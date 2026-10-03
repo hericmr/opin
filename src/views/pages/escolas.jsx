@@ -4,7 +4,6 @@ import { Helmet } from 'react-helmet-async';
 import { MapPin, Users, TreePine, Search } from 'lucide-react';
 import PageHeader from '../../components/PageHeader';
 import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
-import PageDescription from '../../components/PageDescription';
 import Footer from '../../components/Footer';
 import { useEscolasData } from '../../hooks/useEscolasData';
 import { getStorageUrl, getSecureImageUrl } from '../../utils/imageUtils';
@@ -35,7 +34,7 @@ const EscolasList = () => {
   }, [dataPoints, searchTerm]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen dashboard-scroll relative bg-gray-50 flex flex-col">
       <Helmet>
         <title>Escolas Indígenas – OPIN</title>
         <meta name="description" content="Conheça as escolas indígenas do estado de São Paulo." />
@@ -44,7 +43,7 @@ const EscolasList = () => {
       <PageHeader
         title="Escolas Indígenas"
         showNavbar={true}
-        overlayColor="rgba(20, 81, 45, 0.6)"
+        overlayColor="rgba(255, 180, 0, 0.85)"
         blendMode="normal"
         minHeight="40vh"
         titlePosition="center"
@@ -54,10 +53,6 @@ const EscolasList = () => {
 
       <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 -mt-6">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-10 relative z-10">
-          <PageDescription className="max-w-4xl mb-8">
-            Explore as escolas indígenas do estado de São Paulo. Conheça suas histórias, a cultura das comunidades onde estão inseridas, as terras indígenas e os professores que mantêm viva a sabedoria de seus povos.
-          </PageDescription>
-          
           <div className="relative max-w-lg mb-4">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400" />
