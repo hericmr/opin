@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../dbClient';
 import logger from '../utils/logger';
+import { getSecureImageUrl, getStorageUrl } from '../utils/imageUtils';
 
 /**
  * Hook para carregar e pré-carregar imagens de header do Dashboard
@@ -138,7 +139,7 @@ export const useDashboardImages = () => {
           setImagesReady(true);
           
           // PRÉ-CARREGAR imagens em background (não bloqueante)
-          const imageUrls = finalSelected.map(img => img.imagem_header).filter(Boolean);
+          const imageUrls = finalSelected.map(img => getSecureImageUrl(getStorageUrl(img.imagem_header))).filter(Boolean);
           
           // Pré-carregar imagens de forma não-bloqueante
           if (typeof document !== 'undefined' && imageUrls.length > 0) {

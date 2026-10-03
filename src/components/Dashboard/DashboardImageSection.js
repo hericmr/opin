@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import OptimizedImage from '../OptimizedImage';
+import { getSecureImageUrl, getStorageUrl } from '../../utils/imageUtils';
 
 /**
  * Componente de seção de imagem do Dashboard
@@ -17,10 +18,12 @@ const DashboardImageSection = memo(({ image, priority = 'normal' }) => {
     transition: 'filter 0.3s ease-in-out'
   };
 
+  const resolvedSrc = getSecureImageUrl(getStorageUrl(image.imagem_header));
+
   return (
     <section className="w-full h-64 sm:h-80 md:h-96 lg:h-[28rem] relative overflow-hidden">
       <OptimizedImage
-        src={image.imagem_header}
+        src={resolvedSrc}
         alt={image.Escola || 'Imagem da escola'}
         className="w-full h-full object-cover"
         style={imageStyle}
