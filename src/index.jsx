@@ -22,15 +22,11 @@ reportWebVitals();
 // Registrar Service Worker para PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    const baseUrl = import.meta.env.BASE_URL || '/opin';
-    const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-    const swPath = `${cleanBase}/sw.js`;
-    navigator.serviceWorker.register(swPath, { scope: `${cleanBase}/` })
-      .then((registration) => {
-        console.log('Service Worker registrado com sucesso:', registration.scope);
-      })
-      .catch((error) => {
-        console.log('Falha ao registrar Service Worker:', error);
-      });
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+        console.log('Service Worker removido com sucesso para evitar problemas de cache.');
+      }
+    });
   });
 }
