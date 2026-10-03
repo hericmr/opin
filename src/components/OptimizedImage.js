@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useImageLoader } from '../hooks/useImageLoader';
-import { getLocalImageUrl } from '../utils/imageUtils';
+import { getSecureImageUrl } from '../utils/imageUtils';
 
 const OptimizedImage = ({ 
   src, 
@@ -13,7 +13,7 @@ const OptimizedImage = ({
   ...props 
 }) => {
   // Resolve source URL using local mapping if available
-  const resolvedSrc = getLocalImageUrl(src);
+  const resolvedSrc = getSecureImageUrl(src);
 
   const {
     isLoaded,

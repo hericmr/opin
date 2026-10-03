@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Upload, X, User, AlertCircle } from 'lucide-react';
 import FotoProfessorService from '../../services/fotoProfessorService';
 import logger from '../../utils/logger';
+import { getSecureImageUrl } from '../../utils/imageUtils';
 
 const HistoriaProfessorForm = ({
   formData,
@@ -171,7 +172,7 @@ const HistoriaProfessorForm = ({
           <div className="mb-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
             <div className="flex items-center gap-4">
               <img 
-                src={formData.foto_rosto} 
+                src={getSecureImageUrl(formData.foto_rosto)} 
                 alt="Foto do professor(a)" 
                 className="w-20 h-20 object-cover rounded-full border-2 border-green-200 shadow-sm" 
               />

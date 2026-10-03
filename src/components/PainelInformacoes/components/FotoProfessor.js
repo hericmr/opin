@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Avatar from '../../shared/Avatar';
 import { avatarThemes } from '../../shared/AvatarThemes';
 import useImagePreloader from '../../../hooks/useImagePreloader';
-import { getLocalImageUrl } from '../../../utils/imageUtils';
+import { getSecureImageUrl } from '../../../utils/imageUtils';
 
 const FotoProfessor = ({
   fotoUrl,
@@ -49,7 +49,7 @@ const FotoProfessor = ({
   }
 
   // Check for local image URL
-  const localFotoUrl = getLocalImageUrl(fotoUrl);
+  const localFotoUrl = getSecureImageUrl(fotoUrl);
 
   return (
     <Avatar
