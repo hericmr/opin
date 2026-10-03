@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { getHistoriasProfessor } from '../../../../services/historiaProfessorService';
 import { useRefresh } from '../../../../contexts/RefreshContext';
-import { getSecureImageUrl } from '../../../../utils/imageUtils';
+import { getLocalImageUrl } from '../../../../utils/imageUtils';
 import ImagemHistoriadoProfessor from '../ImagemHistoriadoProfessor';
 import FotoProfessor from '../FotoProfessor';
 import './HistoriadoProfessor.css';
@@ -199,7 +199,7 @@ const HistoriadoProfessor = memo(({ escola, isMaximized = false, shouldHideInlin
             <figure className="my-6">
               <div className="relative">
                 <img
-                  src={getSecureImageUrl(currentHistoria.imagem_public_url)}
+                  src={getLocalImageUrl(currentHistoria.imagem_public_url)}
                   alt={currentHistoria.descricao_imagem || 'Imagem da história do professor'}
                   className="w-full max-w-2xl mx-auto rounded-xl shadow-lg cursor-pointer"
                   onClick={() => setImagemZoom(currentHistoria)}
@@ -259,7 +259,7 @@ const HistoriadoProfessor = memo(({ escola, isMaximized = false, shouldHideInlin
                 <X className="w-6 h-6" />
               </button>
               <img
-                src={getSecureImageUrl(imagemZoom.imagem_public_url)}
+                src={getLocalImageUrl(imagemZoom.imagem_public_url)}
                 alt={imagemZoom.descricao_imagem || 'Imagem da história do professor'}
                 className="max-w-full max-h-full object-contain rounded-xl shadow-2xl border-4 border-white"
               />

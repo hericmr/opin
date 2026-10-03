@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { X, ZoomIn, ZoomOut, RotateCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatDateForDisplay } from '../utils/dateUtils';
-import { getSecureImageUrl } from '../utils/imageUtils';
+import { getLocalImageUrl } from '../utils/imageUtils';
 import { hasContent } from '../utils/contentValidation';
 
 const ReusableImageZoom = ({
@@ -212,7 +212,7 @@ const ReusableImageZoom = ({
       <div className="image-zoom-container">
         <div className="image-zoom-image-wrapper">
           <img
-            src={getSecureImageUrl(currentImage.url || currentImage.publicURL || currentImage.imagem_public_url)}
+            src={getLocalImageUrl(currentImage.url || currentImage.publicURL || currentImage.imagem_public_url)}
             alt={currentImage.descricao || currentImage.descricao_imagem || 'Imagem'}
             className="image-zoom-image"
             style={{

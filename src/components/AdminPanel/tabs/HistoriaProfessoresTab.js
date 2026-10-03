@@ -5,7 +5,6 @@ import RichTextEditor from './RichTextEditor';
 import { Upload, X, User, AlertCircle } from 'lucide-react';
 import CardVisibilityToggle from '../components/CardVisibilityToggle';
 import logger from '../../../utils/logger';
-import { getSecureImageUrl } from '../../../utils/imageUtils';
 
 const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
   const [historias, setHistorias] = useState([]);
@@ -248,7 +247,7 @@ const HistoriaProfessoresTab = ({ editingLocation, setEditingLocation }) => {
                 <div className="mb-4 p-4 border border-gray-600 rounded-lg bg-gray-700">
                   <div className="flex items-center gap-4">
                     <img 
-                      src={getSecureImageUrl(editingHistoria.foto_rosto)} 
+                      src={editingHistoria.foto_rosto} 
                       alt="Foto do professor" 
                       className="w-20 h-20 object-cover rounded-full border-2 border-green-400 shadow-sm" 
                     />
