@@ -54,7 +54,7 @@ storage_backup/
 
 # Secrets and Local Data
 .env.supabase
-/data/
+/data/*
 !/data/storage/
 !/data/storage/opin/
 !/data/storage/opin/**
