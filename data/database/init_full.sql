@@ -1,14 +1,14 @@
 -- Ensure correct permissions for PostgREST on public schema
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgres;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO postgres;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO postgres;
+GRANT ALL ON SCHEMA public TO usu_opin;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO usu_opin;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO usu_opin;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO usu_opin;
 
 -- Schema necessario para o supabase/storage-api
 CREATE SCHEMA IF NOT EXISTS storage;
-GRANT ALL ON SCHEMA storage TO postgres;
-ALTER DEFAULT PRIVILEGES IN SCHEMA storage GRANT ALL ON TABLES TO postgres;
-ALTER DEFAULT PRIVILEGES IN SCHEMA storage GRANT ALL ON SEQUENCES TO postgres;
+GRANT ALL ON SCHEMA storage TO usu_opin;
+ALTER DEFAULT PRIVILEGES IN SCHEMA storage GRANT ALL ON TABLES TO usu_opin;
+ALTER DEFAULT PRIVILEGES IN SCHEMA storage GRANT ALL ON SEQUENCES TO usu_opin;
 
 -- Creating core storage tables that storage-api expects to exist before its own migrations
 CREATE TABLE IF NOT EXISTS storage.buckets (
@@ -95,6 +95,7 @@ CREATE TABLE escolas_completa (
     "imagem_header" TEXT,
     "cards_visibilidade" TEXT,
     "imagens_desenhos" TEXT,
+    "outras_informacoes" TEXT,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );

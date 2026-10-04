@@ -20,6 +20,17 @@ services:
       # documento OpenAPI, não o roteamento real (isso é feito pelo nginx).
       PGRST_OPENAPI_SERVER_PROXY_URI: https://opin.unifesp.br
 
+  storage:
+    build:
+      context: ./storage_server
+    container_name: opin_storage_prod
+    restart: always
+    environment:
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+      SERVER_PORT: 5000
+    volumes:
+      - ./data/storage:/var/lib/storage
+
   front:
     image: ${FRONT_IMAGE:-opin_front_prod_local}
     build:
@@ -28,6 +39,7 @@ services:
         - VITE_API_URL=${VITE_API_URL}
         - VITE_API_ANON_KEY=${VITE_API_ANON_KEY}
         - VITE_ADMIN_PASSWORD=${VITE_ADMIN_PASSWORD}
+        - VITE_STORAGE_ENABLED=${VITE_STORAGE_ENABLED}
     container_name: opin_front_prod
     restart: always
     ports:
@@ -39,6 +51,7 @@ services:
       - ./config/nginx/sistemas.unifesp.br.key:/etc/nginx/certs/sistemas.unifesp.br.key
     depends_on:
       - api
+      - storage
 
 volumes:
   opin_db_prod_data:
