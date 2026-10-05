@@ -314,14 +314,16 @@ import { getLocalImageUrl, getStorageUrl, getSecureImageUrl } from '../utils/ima
 const enrichWithPublicUrl = (item) => {
   if (!item) return item;
 
+  const bucket = item.tipo_foto === 'professor' ? 'imagens-professores' : 'imagens-das-escolas';
   let publicUrl = item.imagem_url;
+  
   if (publicUrl && !publicUrl.startsWith('http')) {
     // Tentar resolver via mapeamento local primeiro
-    const storageUrl = getStorageUrl(item.imagem_url);
-    publicUrl = getSecureImageUrl(storageUrl);
+    const storageUrl = getStorageUrl(item.imagem_url, bucket);
+    publicUrl = getSecureImageUrl(storageUrl, bucket);
   } else if (publicUrl) {
     // Se for URL completa, ainda passa pelo secure resolution para checar mapa local
-    publicUrl = getSecureImageUrl(publicUrl);
+    publicUrl = getSecureImageUrl(publicUrl, bucket);
   }
 
   return { ...item, publicUrl };

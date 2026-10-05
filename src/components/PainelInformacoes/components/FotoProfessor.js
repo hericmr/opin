@@ -49,7 +49,7 @@ const FotoProfessor = ({
   }
 
   // Check for local image URL
-  const localFotoUrl = getLocalImageUrl(fotoUrl);
+  const localFotoUrl = getLocalImageUrl(fotoUrl, 'avatar');
 
   return (
     <Avatar

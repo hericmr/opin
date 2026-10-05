@@ -107,11 +107,11 @@ export const getHistoriasProfessor = async (escolaId) => {
           let publicUrl = historia.imagem_url;
 
           if (publicUrl && !publicUrl.startsWith('http')) {
-            const storageUrl = getStorageUrl(historia.imagem_url);
-            publicUrl = getSecureImageUrl(storageUrl);
+            const storageUrl = getStorageUrl(historia.imagem_url, 'imagens-professores');
+            publicUrl = getSecureImageUrl(storageUrl, 'imagens-professores');
           } else if (publicUrl) {
             // Se for URL completa, ainda passa pelo secure resolution para checar mapa local
-            publicUrl = getSecureImageUrl(publicUrl);
+            publicUrl = getSecureImageUrl(publicUrl, 'imagens-professores');
           }
 
           return { ...historia, imagem_public_url: publicUrl };

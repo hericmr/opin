@@ -47,10 +47,10 @@ export const getProfessorImagesByEscola = async (escolaId) => {
   return (data || []).map(img => {
     let publicUrl = img.imagem_url;
     if (publicUrl && !publicUrl.startsWith('http')) {
-      const storageUrl = getStorageUrl(img.imagem_url);
-      publicUrl = getSecureImageUrl(storageUrl);
+      const storageUrl = getStorageUrl(img.imagem_url, 'imagens-professores');
+      publicUrl = getSecureImageUrl(storageUrl, 'imagens-professores');
     } else if (publicUrl) {
-      publicUrl = getSecureImageUrl(publicUrl);
+      publicUrl = getSecureImageUrl(publicUrl, 'imagens-professores');
     }
     return { ...img, publicUrl };
   });

@@ -9,7 +9,7 @@ const buildLocalPath = (localPath) => {
 /**
  * Resolve an image URL to a local path with .webp extension
  */
-export const getLocalImageUrl = (url) => {
+export const getLocalImageUrl = (url, bucket = 'imagens-das-escolas') => {
     if (!url) return url;
 
     // 1. Convert Supabase Storage URL directly to local storage path (.webp)
@@ -37,6 +37,11 @@ export const getLocalImageUrl = (url) => {
     // 3. Simple relative paths (e.g. 11/file.jpg) that likely belong to storage
     if (!url.startsWith('http') && !url.startsWith('/')) {
         let path = url;
+        if (!path.startsWith('imagens-das-escolas/') && 
+            !path.startsWith('imagens-professores/') &&
+            !path.startsWith('avatar/')) {
+            path = `${bucket}/${path}`;
+        }
         return buildLocalPath(`${STORAGE_PREFIX}${path}`);
     }
 
@@ -57,18 +62,25 @@ export const isLocalImage = (url) => {
 /**
  * Resolve path to storage URL.
  */
-export const getStorageUrl = (path) => {
+export const getStorageUrl = (path, bucket = 'imagens-das-escolas') => {
     if (!path) return '';
-    if (path.startsWith('http')) return getLocalImageUrl(path);
+    if (path.startsWith('http')) return getLocalImageUrl(path, bucket);
     const cleanPath = path.startsWith('/') ? path.substring(1) : path;
     const withWebp = cleanPath;
-    return `${STORAGE_PREFIX}${withWebp}`;
+    
+    if (withWebp.startsWith('imagens-das-escolas/') || 
+        withWebp.startsWith('imagens-professores/') ||
+        withWebp.startsWith('avatar/')) {
+        return `${STORAGE_PREFIX}${withWebp}`;
+    }
+    
+    return `${STORAGE_PREFIX}${bucket}/${withWebp}`;
 };
 
 /**
  * Resolve an image URL robustly.
  */
-export const getSecureImageUrl = (url) => {
-    return getLocalImageUrl(url);
+export const getSecureImageUrl = (url, bucket = 'imagens-das-escolas') => {
+    return getLocalImageUrl(url, bucket);
 };
 

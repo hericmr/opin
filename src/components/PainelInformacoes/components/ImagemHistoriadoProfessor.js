@@ -91,10 +91,10 @@ const ImagemHistoriadoProfessor = ({ escola_id, isMaximized = false, hideInlineM
             let publicUrl = img.imagem_url;
 
             if (publicUrl && !publicUrl.startsWith('http')) {
-              const storageUrl = getStorageUrl(img.imagem_url);
-              publicUrl = getSecureImageUrl(storageUrl);
+              const storageUrl = getStorageUrl(img.imagem_url, 'imagens-professores');
+              publicUrl = getSecureImageUrl(storageUrl, 'imagens-professores');
             } else if (publicUrl && publicUrl.startsWith('http')) {
-              publicUrl = getSecureImageUrl(publicUrl);
+              publicUrl = getSecureImageUrl(publicUrl, 'imagens-professores');
             }
 
             const fileName = img.nome_arquivo || img.imagem_url || '';
