@@ -96,6 +96,7 @@ CREATE TABLE escolas_completa (
     "cards_visibilidade" TEXT,
     "imagens_desenhos" TEXT,
     "outras_informacoes" TEXT,
+    "salas_vinculadas" TEXT,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );

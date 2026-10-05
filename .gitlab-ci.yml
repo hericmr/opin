@@ -61,8 +61,8 @@ docker:
     - docker compose -f docker-compose.prod.yml up -d --no-deps storage
     - docker compose -f docker-compose.prod.yml up -d --no-deps front
     - docker compose -f docker-compose.prod.yml up -d --no-deps api
-    # Garantir que a nova coluna existe no banco da Unifesp
-    - docker run --rm -e PGPASSWORD=$POSTGRES_PASSWORD postgres:16 psql -h madri.unifesp.br -U usu_opin -d opin -c "ALTER TABLE escolas_completa ADD COLUMN IF NOT EXISTS outras_informacoes TEXT;" || true
+    # Garantir que as novas colunas existem no banco da Unifesp
+    - docker run --rm -e PGPASSWORD=$POSTGRES_PASSWORD postgres:16 psql -h madri.unifesp.br -U usu_opin -d opin -c "ALTER TABLE escolas_completa ADD COLUMN IF NOT EXISTS outras_informacoes TEXT; ALTER TABLE escolas_completa ADD COLUMN IF NOT EXISTS salas_vinculadas TEXT;" || true
     # Atualiza o cache do schema do PostgREST sem derrubar a API (útil se o banco sofreu alterações)
     - docker kill -s SIGUSR1 opin_api_prod || true
   only:
