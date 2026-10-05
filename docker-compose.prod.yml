@@ -26,7 +26,7 @@ services:
     container_name: opin_storage_prod
     restart: always
     environment:
-      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage/opin
       SERVER_PORT: 5000
     volumes:
       - ./data/storage:/var/lib/storage

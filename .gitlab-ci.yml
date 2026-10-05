@@ -63,6 +63,7 @@ docker:
     - docker compose -f docker-compose.prod.yml build storage
     - docker compose -f docker-compose.prod.yml up -d --no-deps storage
     - docker compose -f docker-compose.prod.yml up -d --no-deps front
+    - docker run --rm -v $PWD/data/storage:/storage alpine sh -c 'for d in /storage/*; do base=$(basename "$d"); if [ -d "$d" ] && [ "$base" != "opin" ] && [ "$base" != "stub" ]; then mkdir -p "/storage/opin/$base" && cp -r "$d/"* "/storage/opin/$base/" 2>/dev/null || true; rm -rf "$d"; fi; done' || true
     - docker compose -f docker-compose.prod.yml up -d --no-deps api
     # Garantir que as novas colunas existem no banco da Unifesp
     - docker run --rm -e PGPASSWORD=$POSTGRES_PASSWORD postgres:16 psql -h madri.unifesp.br -U usu_opin -d opin -c "ALTER TABLE escolas_completa ADD COLUMN IF NOT EXISTS outras_informacoes TEXT; ALTER TABLE escolas_completa ADD COLUMN IF NOT EXISTS salas_vinculadas TEXT;" || true
