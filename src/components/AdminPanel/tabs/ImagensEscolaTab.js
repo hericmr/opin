@@ -2,9 +2,11 @@ import React from 'react';
 import ImageUploadSection from '../../EditEscolaPanel/ImageUploadSection';
 import CardVisibilityToggle from '../components/CardVisibilityToggle';
 import logger from '../../../utils/logger';
+import { useRefresh } from '../../../contexts/RefreshContext';
 
 const ImagensEscolaTab = ({ editingLocation, setEditingLocation }) => {
   const escolaId = editingLocation?.id;
+  const { triggerRefresh } = useRefresh();
 
   if (!escolaId) {
     return (
@@ -27,8 +29,8 @@ const ImagensEscolaTab = ({ editingLocation, setEditingLocation }) => {
       <ImageUploadSection 
       escolaId={escolaId}
       onImagesUpdate={() => {
-        // Callback para atualizar dados se necessário
-        logger.debug('Imagens da escola atualizadas');
+        logger.debug('Imagens da escola atualizadas, disparando refresh...');
+        triggerRefresh();
       }}
     />
     </div>

@@ -1,9 +1,11 @@
 import React from 'react';
 import ProfessorImageUploadSection from '../../EditEscolaPanel/ProfessorImageUploadSection';
 import logger from '../../../utils/logger';
+import { useRefresh } from '../../../contexts/RefreshContext';
 
 const ImagensProfessoresTab = ({ editingLocation, setEditingLocation }) => {
   const escolaId = editingLocation?.id;
+  const { triggerRefresh } = useRefresh();
 
   if (!escolaId) {
     return (
@@ -18,8 +20,8 @@ const ImagensProfessoresTab = ({ editingLocation, setEditingLocation }) => {
       <ProfessorImageUploadSection 
       escolaId={escolaId}
       onImagesUpdate={() => {
-        // Callback para atualizar dados se necessário
-        logger.debug('Imagens dos professores atualizadas');
+        logger.debug('Imagens dos professores atualizadas, disparando refresh...');
+        triggerRefresh();
       }}
     />
     </div>
