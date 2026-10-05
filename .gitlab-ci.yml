@@ -9,6 +9,9 @@ cache:
     files:
       - package-lock.json
 
+variables:
+  GIT_CLEAN_FLAGS: "-ffdx -e data/storage/"
+
 test:
   stage: test
   script:
