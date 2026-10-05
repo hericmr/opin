@@ -56,8 +56,9 @@ docker:
         fi
       done
     - echo "Variáveis obrigatórias definidas (VITE_API_ANON_KEY=${#VITE_API_ANON_KEY} chars, POSTGRES_PASSWORD=${#POSTGRES_PASSWORD} chars, JWT_SECRET=${#JWT_SECRET} chars)"
-    # --no-cache garante que o npm run build rode com as variáveis atuais (sem reutilizar layer antigo)
     - docker compose -f docker-compose.prod.yml build --no-cache front
+    - docker compose -f docker-compose.prod.yml build storage
+    - docker compose -f docker-compose.prod.yml up -d --no-deps storage
     - docker compose -f docker-compose.prod.yml up -d --no-deps front
     - docker compose -f docker-compose.prod.yml up -d --no-deps api
   only:
