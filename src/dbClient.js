@@ -179,7 +179,16 @@ class StorageBucket {
 
   // URL pública de um arquivo — servida como estático pelo nginx (prod) ou Vite (dev).
   getPublicUrl(path) {
-    return { data: { publicUrl: `/data/storage/opin/${path}` } };
+    let cleanPath = path;
+    if (cleanPath.startsWith('/data/storage/opin/')) {
+      cleanPath = cleanPath.slice('/data/storage/opin/'.length);
+    }
+    if (cleanPath.startsWith('imagens-das-escolas/') || 
+        cleanPath.startsWith('imagens-professores/') ||
+        cleanPath.startsWith('avatar/')) {
+      return { data: { publicUrl: `/data/storage/opin/${cleanPath}` } };
+    }
+    return { data: { publicUrl: `/data/storage/opin/${this._bucket}/${cleanPath}` } };
   }
 
   async upload(path, file, { cacheControl, upsert = false } = {}) {

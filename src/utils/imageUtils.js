@@ -12,21 +12,37 @@ const buildLocalPath = (localPath) => {
 export const getLocalImageUrl = (url, bucket = 'imagens-das-escolas') => {
     if (!url) return url;
 
+    // Helper to inject bucket if missing
+    const injectBucket = (path) => {
+        if (!path.startsWith('imagens-das-escolas/') && 
+            !path.startsWith('imagens-professores/') &&
+            !path.startsWith('avatar/')) {
+            return `${bucket}/${path}`;
+        }
+        return path;
+    };
+
     // 1. Convert Supabase Storage URL directly to local storage path (.webp)
     if (url.startsWith('http') && url.includes('/storage/v1/object/public/')) {
         const bucketPathMatch = url.match(/\/storage\/v1\/object\/public\/(.+)$/);
         if (bucketPathMatch) {
             let path = bucketPathMatch[1];
-            
             return buildLocalPath(`${STORAGE_PREFIX}${path}`);
         }
     }
 
-    // 2. Handle storage URL pattern prefix
+    // 1b. Handle HTTP URLs that contain STORAGE_PREFIX (e.g. https://opin.unifesp.br/data/storage/opin/23/xxx.webp)
+    if (url.startsWith('http') && url.includes(STORAGE_PREFIX)) {
+        const afterPrefix = url.split(STORAGE_PREFIX)[1];
+        if (afterPrefix) {
+            return buildLocalPath(`${STORAGE_PREFIX}${injectBucket(afterPrefix)}`);
+        }
+    }
+
+    // 2. Handle storage URL pattern prefix (e.g. /data/storage/opin/23/xxx.webp)
     if (url.startsWith(STORAGE_PREFIX)) {
         let afterPrefix = url.slice(STORAGE_PREFIX.length);
-        
-        return buildLocalPath(`${STORAGE_PREFIX}${afterPrefix}`);
+        return buildLocalPath(`${STORAGE_PREFIX}${injectBucket(afterPrefix)}`);
     }
 
     // Handle data: and blob: URLs directly
@@ -37,12 +53,7 @@ export const getLocalImageUrl = (url, bucket = 'imagens-das-escolas') => {
     // 3. Simple relative paths (e.g. 11/file.jpg) that likely belong to storage
     if (!url.startsWith('http') && !url.startsWith('/')) {
         let path = url;
-        if (!path.startsWith('imagens-das-escolas/') && 
-            !path.startsWith('imagens-professores/') &&
-            !path.startsWith('avatar/')) {
-            path = `${bucket}/${path}`;
-        }
-        return buildLocalPath(`${STORAGE_PREFIX}${path}`);
+        return buildLocalPath(`${STORAGE_PREFIX}${injectBucket(path)}`);
     }
 
     return url;
@@ -65,6 +76,8 @@ export const isLocalImage = (url) => {
 export const getStorageUrl = (path, bucket = 'imagens-das-escolas') => {
     if (!path) return '';
     if (path.startsWith('http')) return getLocalImageUrl(path, bucket);
+    if (path.startsWith(STORAGE_PREFIX)) return getLocalImageUrl(path, bucket);
+    
     const cleanPath = path.startsWith('/') ? path.substring(1) : path;
     const withWebp = cleanPath;
     
