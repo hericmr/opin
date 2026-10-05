@@ -17,7 +17,7 @@ export const getLocalImageUrl = (url) => {
         const bucketPathMatch = url.match(/\/storage\/v1\/object\/public\/(.+)$/);
         if (bucketPathMatch) {
             let path = bucketPathMatch[1];
-            path = path.replace(/\.(jpeg|jpg|png|gif)$/i, '.webp');
+            
             return buildLocalPath(`${STORAGE_PREFIX}${path}`);
         }
     }
@@ -25,7 +25,7 @@ export const getLocalImageUrl = (url) => {
     // 2. Handle storage URL pattern prefix
     if (url.startsWith(STORAGE_PREFIX)) {
         let afterPrefix = url.slice(STORAGE_PREFIX.length);
-        afterPrefix = afterPrefix.replace(/\.(jpeg|jpg|png|gif)$/i, '.webp');
+        
         return buildLocalPath(`${STORAGE_PREFIX}${afterPrefix}`);
     }
 
@@ -36,7 +36,7 @@ export const getLocalImageUrl = (url) => {
 
     // 3. Simple relative paths (e.g. 11/file.jpg) that likely belong to storage
     if (!url.startsWith('http') && !url.startsWith('/')) {
-        let path = url.replace(/\.(jpeg|jpg|png|gif)$/i, '.webp');
+        let path = url;
         return buildLocalPath(`${STORAGE_PREFIX}${path}`);
     }
 
@@ -61,7 +61,7 @@ export const getStorageUrl = (path) => {
     if (!path) return '';
     if (path.startsWith('http')) return getLocalImageUrl(path);
     const cleanPath = path.startsWith('/') ? path.substring(1) : path;
-    const withWebp = cleanPath.replace(/\.(jpeg|jpg|png|gif)$/i, '.webp');
+    const withWebp = cleanPath;
     return `${STORAGE_PREFIX}${withWebp}`;
 };
 
