@@ -11,7 +11,7 @@ COPY package*.json ./
 # exatas já resolvidas (ex.: baseline-browser-mapping@2.8.28), enquanto
 # `npm install` reavaliaria os ranges e poderia puxar uma versão mais nova cujo
 # tarball o registro não serve (causava E404 em baseline-browser-mapping@2.11.27).
-RUN npm ci
+RUN npm ci --include=dev
 
 # Copiar o resto do código
 COPY . .
