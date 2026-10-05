@@ -179,10 +179,10 @@ const PageHeader = ({
                     />
                     <div className="hidden sm:block w-px h-4 sm:h-6 md:h-8 bg-white/30 flex-shrink-0"></div>
                     <div className="hidden md:flex flex-col justify-center min-w-0">
-                      <span className="text-white text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl truncate" style={{ fontFamily: 'Cinzel, serif' }}>
+                      <span className="text-white text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl whitespace-normal break-words leading-tight" style={{ fontFamily: 'Cinzel, serif' }}>
                         Observatório dos Professores Indígenas
                       </span>
-                      <p className="text-xs sm:text-sm text-white/80 normal-case truncate">
+                      <p className="text-xs sm:text-sm text-white/80 normal-case whitespace-normal break-words mt-0.5">
                         do Estado de São Paulo
                       </p>
                     </div>
