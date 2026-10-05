@@ -61,6 +61,8 @@ docker:
     - docker compose -f docker-compose.prod.yml up -d --no-deps storage
     - docker compose -f docker-compose.prod.yml up -d --no-deps front
     - docker compose -f docker-compose.prod.yml up -d --no-deps api
+    # Atualiza o cache do schema do PostgREST sem derrubar a API (útil se o banco sofreu alterações)
+    - docker kill -s SIGUSR1 opin_api_prod || true
   only:
     - main
 
