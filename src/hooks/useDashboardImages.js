@@ -43,8 +43,8 @@ export const useDashboardImages = () => {
         const supabaseKey = import.meta.env.REACT_APP_API_ANON_KEY || import.meta.env.VITE_API_ANON_KEY;
 
         if ((supabaseUrl && supabaseUrl.includes('seu-projeto')) ||
-            !supabaseKey || supabaseKey.includes('sua_chave_anonima')) {
-          logger.warn('Credenciais do Supabase não configuradas. Pulando carregamento de imagens.');
+            (supabaseKey && supabaseKey.includes('sua_chave_anonima'))) {
+          logger.warn('Credenciais do Supabase usam placeholders. Pulando carregamento de imagens.');
           clearTimeout(timeoutId);
           setImagesPreloaded(true);
           setImagesReady(true);

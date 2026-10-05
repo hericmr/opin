@@ -90,8 +90,8 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {imagesReady && headerImages[1] && (
-          <DashboardImageSection image={headerImages[1]} priority="high" />
+        {imagesReady && headerImages[0] && (
+          <DashboardImageSection image={headerImages[0]} priority="high" />
         )}
 
         <section className="bg-white py-16 sm:py-24 border-b border-gray-100">
@@ -102,8 +102,8 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {imagesReady && headerImages[2] && (
-          <DashboardImageSection image={headerImages[2]} priority="normal" />
+        {imagesReady && headerImages[1] && (
+          <DashboardImageSection image={headerImages[1]} priority="normal" />
         )}
 
         <section className="bg-white py-16 sm:py-24 border-b border-gray-100">
@@ -117,8 +117,8 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {imagesReady && headerImages[3] && (
-          <DashboardImageSection image={headerImages[3]} priority="normal" />
+        {imagesReady && headerImages[2] && (
+          <DashboardImageSection image={headerImages[2]} priority="normal" />
         )}
 
         <section className="bg-white py-16 sm:py-24 border-b border-gray-100">
@@ -129,8 +129,8 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {imagesReady && headerImages[4] && (
-          <DashboardImageSection image={headerImages[4]} priority="normal" />
+        {imagesReady && headerImages[3] && (
+          <DashboardImageSection image={headerImages[3]} priority="normal" />
         )}
 
         <section className="bg-white py-16 sm:py-24">
