@@ -91,6 +91,10 @@ export const deleteFile = async (filePath, bucket = STORAGE_BUCKETS.PDFS) => {
       .remove([filePath]);
 
     if (error) {
+      if (error.code === 'STORAGE_DISABLED') {
+        logger.warn('Storage API desabilitada. Ignorando exclusão do arquivo no bucket.');
+        return;
+      }
       throw error;
     }
   } catch (error) {

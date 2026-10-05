@@ -263,6 +263,10 @@ export const deleteImage = async (imageId, filePath, bucketName) => {
       .remove([filePath]);
 
     if (storageError) {
+      if (storageError.code === 'STORAGE_DISABLED') {
+        logger.warn('Storage API desabilitada. Ignorando exclusão do arquivo no bucket.');
+        return true;
+      }
       throw new Error(`Erro ao deletar arquivo: ${storageError.message}`);
     }
 

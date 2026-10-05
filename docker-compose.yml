@@ -59,6 +59,8 @@ services:
       args:
         - VITE_API_URL=
         - VITE_API_ANON_KEY=${VITE_API_ANON_KEY:-local-dev-key-ignore-auth}
+        - VITE_ADMIN_PASSWORD=${VITE_ADMIN_PASSWORD}
+        - VITE_STORAGE_ENABLED=${VITE_STORAGE_ENABLED:-true}
     container_name: opin_front
     restart: unless-stopped
     ports:

@@ -39,7 +39,7 @@ services:
         - VITE_API_URL=${VITE_API_URL}
         - VITE_API_ANON_KEY=${VITE_API_ANON_KEY}
         - VITE_ADMIN_PASSWORD=${VITE_ADMIN_PASSWORD}
-        - VITE_STORAGE_ENABLED=${VITE_STORAGE_ENABLED}
+        - VITE_STORAGE_ENABLED=${VITE_STORAGE_ENABLED:-true}
     container_name: opin_front_prod
     restart: always
     ports:
