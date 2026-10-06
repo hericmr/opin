@@ -69,7 +69,7 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
       if (stored === 'true') return true;
       if (stored === 'false') return false;
     } catch {}
-    return true; // padrão: maximizado
+    return false; // padrão: não maximizado
   });
   
   const { gerarLinkCustomizado } = useShare(painelInfo);
@@ -98,12 +98,14 @@ const PainelInformacoes = ({ painelInfo, closePainel, escola_id }) => {
           localStorage.setItem('opin:painelIsMaximized', 'true');
         } catch {}
       } else {
-        // Caso contrário, respeitar o estado salvo
+        // Caso contrário, respeitar o estado salvo ou usar o padrão (não maximizado)
         try {
           const stored = localStorage.getItem('opin:painelIsMaximized');
           if (stored === 'true') setIsMaximized(true);
-          else if (stored === 'false') setIsMaximized(false);
-        } catch {}
+          else setIsMaximized(false);
+        } catch {
+          setIsMaximized(false);
+        }
       }
     }
   }, [painelInfo]);

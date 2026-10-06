@@ -6,7 +6,7 @@
 export const META_TAGS_CONFIG = {
   // Configurações básicas do site
   site: {
-    name: 'OPIN - Observatório dos Professores Indígenas',
+    name: 'OPIN - Observatório dos Professores Indígenas no Estado de São Paulo',
     url: 'https://hericmr.github.io/opin',
     description: 'Portal informativo interativo que mapeia e apresenta informações detalhadas sobre escolas indígenas no estado de São Paulo, Brasil.',
     locale: 'pt_BR',
@@ -54,14 +54,14 @@ export const META_TAGS_CONFIG = {
   structuredData: {
     organization: {
       '@type': 'Organization',
-      name: 'OPIN - Observatório dos Professores Indígenas',
+      name: 'OPIN - Observatório dos Professores Indígenas no Estado de São Paulo',
       url: 'https://hericmr.github.io/opin',
       logo: 'https://hericmr.github.io/opin/onça.svg',
       description: 'Portal informativo interativo que mapeia e apresenta informações detalhadas sobre escolas indígenas no estado de São Paulo, Brasil.'
     },
     website: {
       '@type': 'WebSite',
-      name: 'OPIN - Observatório dos Professores Indígenas',
+      name: 'OPIN - Observatório dos Professores Indígenas no Estado de São Paulo',
       url: 'https://hericmr.github.io/opin',
       description: 'Portal informativo interativo que mapeia e apresenta informações detalhadas sobre escolas indígenas no estado de São Paulo, Brasil.',
       inLanguage: 'pt-BR'

@@ -59,6 +59,14 @@ const Footer = () => (
           </ul>
         </div>
 
+        {/* Sobre */}
+        <div>
+          <h3 className="text-white text-lg font-semibold uppercase tracking-wider mb-5">Sobre</h3>
+          <ul className="space-y-3 text-lg">
+            <li><Link to="/sobre" className="hover:text-white transition-colors">Sobre o OPIN</Link></li>
+          </ul>
+        </div>
+
       </div>
 
       {/* Copyright */}

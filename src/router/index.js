@@ -20,6 +20,7 @@ const LindiflixContato = React.lazy(() => import("../views/pages/lindiflixContat
 const EscolasList = React.lazy(() => import("../views/pages/escolas"));
 const EscolaPage = React.lazy(() => import("../views/pages/EscolaPage"));
 const GaleriaPage = React.lazy(() => import("../views/pages/GaleriaPage"));
+const SobrePage = React.lazy(() => import("../views/pages/sobre"));
 
 // Mapa para facilitar o prefetch manual se necessário
 const lazyComponents = {
@@ -32,6 +33,7 @@ const lazyComponents = {
   lindiflix: () => import("../views/pages/lindiflix"),
   lindiflixContato: () => import("../views/pages/lindiflixContato"),
   escolas: () => import("../views/pages/escolas"),
+  sobre: () => import("../views/pages/sobre"),
 };
 
 /**
@@ -121,6 +123,10 @@ export const createRoutes = (dataPoints, loading, onPainelOpen) => {
     {
       path: "/galeria/:slug",
       element: createRouteElement(GaleriaPage)
+    },
+    {
+      path: "/sobre",
+      element: createRouteElement(SobrePage)
     }
   ];
 };

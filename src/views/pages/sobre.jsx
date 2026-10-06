@@ -37,7 +37,7 @@ const SobrePage = () => {
               <div className="flex items-center gap-3 text-[#215A36]">
                 <Info className="w-6 h-6" />
                 <h2 className="text-2xl font-semibold" style={{ fontFamily: 'Cinzel, serif' }}>
-                  O que é o OPIN?
+                  Sobre o OPIN
                 </h2>
               </div>
               <div className="text-gray-700 space-y-4 leading-relaxed">
@@ -59,20 +59,20 @@ const SobrePage = () => {
                 </h2>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                O conteúdo do OPIN é de autoria dos professores indígenas vinculados à Licenciatura Intercultural Indígena (LINDI) da UNIFESP. É a partir do trabalho, da língua e da experiência de cada um deles que o site ganha forma.
+                O conteúdo do OPIN é de autoria dos professores indígenas vinculados à Licenciatura Intercultural Indígena (LINDI) da UNIFESP. É a partir do trabalho e da experiência de cada um deles que o site ganha forma.
               </p>
             </section>
 
-            {/* Quem desenvolveu */}
+            {/* Quem desenvolve */}
             <section className="space-y-4">
               <div className="flex items-center gap-3 text-[#215A36]">
                 <Users className="w-6 h-6" />
                 <h2 className="text-2xl font-semibold" style={{ fontFamily: 'Cinzel, serif' }}>
-                  Quem desenvolveu?
+                  Quem desenvolve o OPIN?
                 </h2>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                O projeto é coordenado pela professora Valéria Macedo (UNIFESP), com apoio técnico de Héric Moura e equipe envolvida no desenvolvimento e estruturação da plataforma.
+                A plataforma é desenvolvida por Héric Moura, assistente social formado pela UNIFESP e desenvolvedor.
               </p>
             </section>
 
@@ -81,11 +81,11 @@ const SobrePage = () => {
               <div className="flex items-center gap-3 text-[#215A36]">
                 <Code className="w-6 h-6" />
                 <h2 className="text-2xl font-semibold" style={{ fontFamily: 'Cinzel, serif' }}>
-                  Qual tecnologia utilizada?
+                  Qual tecnologia é utilizada?
                 </h2>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                O OPIN é uma plataforma de código aberto, construída com React e Vite no frontend. O mapa interativo combina OpenLayers e Mapbox GL. Os dados são servidos por uma API PostgREST, com banco de dados PostgreSQL. O projeto é hospedado em servidor UNIFESP e distribuído sob licença MIT.
+                O OPIN é uma plataforma de código aberto, construída com React e Vite no frontend. O mapa interativo combina OpenLayers e Mapbox GL. Os dados são servidos por uma API PostgREST, com banco de dados PostgreSQL. O código está disponível em <a href="https://github.com/hericmr/opin" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 hover:underline">github.com/hericmr/opin</a>.
               </p>
             </section>
 
