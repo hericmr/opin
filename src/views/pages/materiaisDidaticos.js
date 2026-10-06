@@ -51,7 +51,7 @@ const MateriaisDidáticos = () => {
       </PageHeader>
 
       {/* Conteúdo principal com espaçamento para o hero */}
-      <div className="relative z-10 pb-20">
+      <div className="relative z-10 pt-10 sm:pt-14 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <BookGallery />
         </div>

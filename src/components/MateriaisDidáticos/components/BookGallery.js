@@ -58,15 +58,13 @@ const BookGallery = () => {
       {/* Intro section */}
       <div className="max-w-3xl mx-auto text-center space-y-6">
         <div className="mb-6">
-          <p></p>
           <img
             src={`${import.meta.env.BASE_URL}logo_saberes.webp`}
             alt="Logo Saberes Indígenas na Escola - UNIFESP"
             className="h-24 sm:h-32 w-auto mx-auto object-contain"
           />
         </div>
-        <p></p>
-        <h2 className="text-3xl font-bold text-gray-900 tracking-tight">
+        <h2 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'Cinzel, serif' }}>
           Saberes Indígenas na Escola - UNIFESP
         </h2>
         <p className="text-lg text-gray-600 leading-relaxed">

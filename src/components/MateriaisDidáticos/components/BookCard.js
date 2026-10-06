@@ -9,7 +9,7 @@ const BookCard = ({ book }) => {
   const pdfUrl = `${baseUrl}/materiais/${book.pdf_source}`;
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden flex flex-col h-full border border-gray-100 group">
+    <div className="bg-white rounded-lg overflow-hidden flex flex-col h-full border border-gray-100 group hover:shadow-lg transition-shadow duration-300">
       {/* Container da Capa */}
       <div className="relative bg-gray-100 rounded-md">
         <img
