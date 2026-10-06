@@ -94,39 +94,28 @@ const EscolasList = () => {
                 <Link 
                   key={escola.id} 
                   to={`/escola/${slug}`}
-                  className="group flex flex-col bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 transform hover:-translate-y-1"
+                  className="bg-white rounded-lg overflow-hidden flex flex-col h-full border border-gray-100 group hover:shadow-md transition-shadow duration-200"
                 >
-                  <div className="relative h-48 w-full overflow-hidden bg-gray-200">
+                  <div className="relative h-48 w-full bg-gray-100">
                     <img 
                       src={headerImg} 
                       alt={`Imagem de ${nome}`}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="w-full h-full object-cover block"
                       onError={(e) => { e.target.src = `${import.meta.env.BASE_URL}hero_grayscale.webp`; }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-80" />
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <h3 className="text-xl font-bold text-white leading-tight drop-shadow-md line-clamp-2">
-                        {nome}
-                      </h3>
-                    </div>
                   </div>
                   
-                  <div className="p-5 flex-grow flex flex-col gap-3">
+                  <div className="p-5 flex-1 flex flex-col">
+                    <h3 className="text-lg font-bold text-gray-900 leading-tight mb-2">
+                      {nome}
+                    </h3>
+                    
                     {escola.municipio && (
-                      <div className="flex items-start text-sm text-gray-600">
-                        <MapPin className="w-4 h-4 text-[#215A36] mt-0.5 mr-2 flex-shrink-0" />
+                      <div className="mt-auto pt-4 border-t border-gray-100 flex items-center text-sm text-gray-500">
+                        <MapPin className="w-4 h-4 text-[#215A36] mr-2 flex-shrink-0" />
                         <span className="line-clamp-1">{escola.municipio}</span>
                       </div>
                     )}
-                    
-                    <div className="mt-auto pt-4 border-t border-gray-50 flex justify-end">
-                      <span className="text-sm font-medium text-[#215A36] group-hover:text-[#184227] flex items-center transition-colors">
-                        Ver página
-                        <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </span>
-                    </div>
                   </div>
                 </Link>
               );
