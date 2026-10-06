@@ -1,17 +1,17 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { MapPin, Search } from 'lucide-react';
+import { MapPin, Search, X } from 'lucide-react';
 import PageHeader from '../../components/PageHeader';
 import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
 import Footer from '../../components/Footer';
 import { useEscolasData } from '../../hooks/useEscolasData';
 import { getStorageUrl, getSecureImageUrl } from '../../utils/imageUtils';
 import { escolaUrlSlug } from '../../utils/slug';
-import GlobalSearch from '../../components/GlobalSearch';
 
 const EscolasList = () => {
   const { dataPoints, loading } = useEscolasData();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const breadcrumbs = useMemo(() => [
     { label: 'Início', path: '/', active: false },
@@ -20,8 +20,19 @@ const EscolasList = () => {
 
   const sortedEscolas = useMemo(() => {
     if (!dataPoints) return [];
-    return [...dataPoints].sort((a, b) => (a.nome || a.Escola || '').localeCompare(b.nome || b.Escola || ''));
-  }, [dataPoints]);
+    
+    let filtered = dataPoints;
+    if (searchTerm) {
+      const lowerTerm = searchTerm.toLowerCase();
+      filtered = dataPoints.filter((escola) => {
+        const nome = (escola.nome || escola.Escola || '').toLowerCase();
+        const municipio = (escola.municipio || '').toLowerCase();
+        return nome.includes(lowerTerm) || municipio.includes(lowerTerm);
+      });
+    }
+
+    return [...filtered].sort((a, b) => (a.nome || a.Escola || '').localeCompare(b.nome || b.Escola || ''));
+  }, [dataPoints, searchTerm]);
 
   return (
     <div className="min-h-screen dashboard-scroll relative bg-gray-50 flex flex-col">
@@ -43,7 +54,27 @@ const EscolasList = () => {
       <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 -mt-6">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-10 relative z-10 flex justify-center">
           <div className="w-full max-w-2xl">
-            <GlobalSearch dataPoints={dataPoints} />
+            <div className="relative w-full">
+              <div className="rounded-full bg-white/90 border border-green-200 px-4 py-2 flex items-center gap-2">
+                <Search className="w-5 h-5 text-green-700 flex-shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Pesquisar escolas ou municípios..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full bg-transparent outline-none text-green-900 placeholder:text-green-800/60"
+                />
+                {searchTerm && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchTerm('')}
+                    className="text-green-700 hover:text-green-900 flex-shrink-0"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
