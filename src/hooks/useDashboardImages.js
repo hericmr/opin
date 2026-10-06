@@ -57,6 +57,8 @@ export const useDashboardImages = () => {
           .select('id, Escola, imagem_header')
           .not('imagem_header', 'is', null)
           .neq('imagem_header', '')
+          .not('Escola', 'is', null)
+          .neq('Escola', '')
           .limit(100);
 
         const queryTimeout = new Promise((resolve) => 
