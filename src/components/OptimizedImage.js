@@ -62,6 +62,14 @@ const OptimizedImage = ({
     return resolvedSrc || placeholder;
   };
 
+  const actualImgRef = React.useRef(null);
+
+  useEffect(() => {
+    if (isInView && !isLoaded && actualImgRef.current && actualImgRef.current.complete) {
+      handleImageLoad();
+    }
+  }, [isInView, resolvedSrc, isLoaded]);
+
   return (
     <div 
       ref={imgRef}
@@ -85,6 +93,7 @@ const OptimizedImage = ({
       {/* Imagem Principal */}
       {isInView && (
         <img
+          ref={actualImgRef}
           src={getImageSrc()}
           alt={alt}
           loading={loading}

@@ -21,20 +21,20 @@ export const useImageLoader = (src, priority = 'normal') => {
       case 'normal':
         return {
           loadImmediately: false,
-          rootMargin: '400px 0px', // Carrega bem antes
-          loading: 'lazy'
+          rootMargin: '400px', // Carrega bem antes
+          loading: 'eager'
         };
       case 'low':
         return {
           loadImmediately: false,
           rootMargin: '100px 0px',
-          loading: 'lazy'
+          loading: 'eager'
         };
       default:
         return {
           loadImmediately: false,
           rootMargin: '200px 0px',
-          loading: 'lazy'
+          loading: 'eager'
         };
     }
   };
