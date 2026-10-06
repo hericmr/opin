@@ -69,10 +69,7 @@ const Footer = () => (
 
       </div>
 
-      {/* Copyright */}
-      <div className="border-t border-zinc-700 mt-12 pt-6 text-base text-zinc-500">
-        <span>© {new Date().getFullYear()} OPIN / LINDI — UNIFESP</span>
-      </div>
+
     </div>
   </footer>
 );
