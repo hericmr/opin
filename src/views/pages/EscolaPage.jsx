@@ -367,11 +367,7 @@ const EscolaPage = () => {
             </section>
           )}
 
-          {/* Nota de fonte */}
-          <div className="py-8 border-t border-gray-100 text-xs text-gray-400 flex items-center gap-2">
-            <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" />
-            Dados coletados em pesquisa de campo pela equipe OPIN / UNIFESP. Informações podem estar desatualizadas.
-          </div>
+
 
         </div>
       </div>
