@@ -22,7 +22,7 @@ const SobrePage = () => {
         title="Sobre o OPIN"
         showNavbar={true}
         dataPoints={[]}
-        overlayColor="rgba(44, 85, 48, 0.75)"
+        overlayColor="rgba(35, 75, 115, 0.85)"
         blendMode="normal"
       >
         <DashboardBreadcrumbs breadcrumbs={breadcrumbs} />
