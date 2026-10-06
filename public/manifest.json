@@ -1,7 +1,7 @@
 {
   "short_name": "OPIN",
-  "name": "OPIN (Observatório dos Professores Indígenas no Estado de São Paulo)",
-  "description": "Observatório dos Professores Indígenas no Estado de São Paulo - Mapeamento das escolas indígenas no estado de São Paulo.",
+  "name": "OPIN (Observatório dos Professores Indígenas do Estado de São Paulo)",
+  "description": "Observatório dos Professores Indígenas do Estado de São Paulo - Mapeamento das escolas indígenas do estado de São Paulo.",
   "icons": [
     {
       "src": "favicon.ico",
