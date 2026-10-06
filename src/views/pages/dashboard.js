@@ -138,6 +138,11 @@ const Dashboard = () => {
             <ChartSuspenseWrapper>
               <EscolasPorDiretoriaChart data={data.escolasPorDiretoria} />
             </ChartSuspenseWrapper>
+            <div className="mt-12 text-lg sm:text-xl leading-loose text-neutral-700">
+              <p>
+                As 42 escolas estaduais indígenas estão distribuídas entre 12 Diretorias de Ensino, mas de forma bastante heterogênea. A concentração é maior no litoral e no Vale do Ribeira: as Diretorias de São Vicente (9 escolas), Miracatu (8) e Registro (8) reúnem juntas 25 escolas, o que equivale a cerca de 60% da rede. Em um segundo patamar aparecem Bauru e Itararé, com 4 escolas cada, seguidas por Caraguatatuba e Sul 3, com 2 cada. As demais, São Bernardo do Campo, Norte 1, Penápolis, Tupã e Santos, têm apenas uma escola indígena. Essa distribuição reflete a presença dos povos indígenas no território paulista e indica onde a gestão da educação escolar indígena é mais demandada.
+              </p>
+            </div>
           </div>
         </section>
       </div>
