@@ -85,7 +85,7 @@ const SobrePage = () => {
                 </h2>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                O OPIN é uma plataforma de código aberto, construída com React e Vite no frontend. O mapa interativo combina OpenLayers e Mapbox GL. Os dados são servidos por uma API PostgREST, com banco de dados PostgreSQL. O código está disponível em <a href="https://github.com/hericmr/opin" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 hover:underline">github.com/hericmr/opin</a>.
+                O OPIN é uma plataforma de código aberto, construída com React e Vite no frontend. O mapa interativo combina OpenLayers e Mapbox GL. Os dados são servidos por uma API PostgREST, com banco de dados PostgreSQL.
               </p>
             </section>
 
