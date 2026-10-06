@@ -84,7 +84,7 @@ export default function Homepage({ dataPoints = [] }) {
                   to="/escolas"
                   className="rounded-full bg-[#9ce66b] text-green-950 font-bold px-5 py-3 text-center hover:bg-[#85d15a] shadow-xl shadow-green-500/10 whitespace-nowrap"
                 >
-                  Explorar escolas
+                  Consultar escolas
                 </Link>
                 <Link
                   to="/mapa"
