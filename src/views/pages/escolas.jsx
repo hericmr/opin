@@ -43,8 +43,8 @@ const EscolasList = () => {
       <PageHeader
         title="Escolas Indígenas"
         showNavbar={true}
-        overlayColor="rgba(255, 160, 0, 0.75)"
-        blendMode="normal"
+        overlayColor="rgba(255, 160, 0, 0.85)"
+        blendMode="multiply"
         titlePosition="center"
       >
         <DashboardBreadcrumbs breadcrumbs={breadcrumbs} />
