@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Info, Users, Code, Mail } from 'lucide-react';
 import Footer from '../../components/Footer';
 import PageHeader from '../../components/PageHeader';
 import DashboardBreadcrumbs from '../../components/Dashboard/DashboardBreadcrumbs';
@@ -35,7 +34,6 @@ const SobrePage = () => {
             {/* O que é */}
             <section className="space-y-4">
               <div className="flex items-center gap-3 text-[#215A36]">
-                <Info className="w-6 h-6" />
                 <h2 className="text-2xl font-semibold" style={{ fontFamily: 'Cinzel, serif' }}>
                   Sobre o OPIN
                 </h2>
@@ -53,7 +51,6 @@ const SobrePage = () => {
             {/* Quem produz */}
             <section className="space-y-4">
               <div className="flex items-center gap-3 text-[#215A36]">
-                <Users className="w-6 h-6" />
                 <h2 className="text-2xl font-semibold" style={{ fontFamily: 'Cinzel, serif' }}>
                   Quem produz o conteúdo?
                 </h2>
@@ -66,20 +63,27 @@ const SobrePage = () => {
             {/* Quem desenvolve */}
             <section className="space-y-4">
               <div className="flex items-center gap-3 text-[#215A36]">
-                <Users className="w-6 h-6" />
                 <h2 className="text-2xl font-semibold" style={{ fontFamily: 'Cinzel, serif' }}>
                   Quem desenvolve o OPIN?
                 </h2>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                A plataforma é desenvolvida por Héric Moura, assistente social formado pela UNIFESP e desenvolvedor.
+                A plataforma é desenvolvida por{' '}
+                <a 
+                  href="https://github.com/hericmr" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-green-600 hover:text-green-800 hover:underline"
+                >
+                  Héric Moura
+                </a>
+                , assistente social formado pela UNIFESP e desenvolvedor.
               </p>
             </section>
 
             {/* Tecnologia */}
             <section className="space-y-4">
               <div className="flex items-center gap-3 text-[#215A36]">
-                <Code className="w-6 h-6" />
                 <h2 className="text-2xl font-semibold" style={{ fontFamily: 'Cinzel, serif' }}>
                   Qual tecnologia é utilizada?
                 </h2>
@@ -92,7 +96,6 @@ const SobrePage = () => {
             {/* Contato */}
             <section className="space-y-4 border-t border-gray-100 pt-8">
               <div className="flex items-center gap-3 text-[#215A36]">
-                <Mail className="w-6 h-6" />
                 <h2 className="text-2xl font-semibold" style={{ fontFamily: 'Cinzel, serif' }}>
                   Contato
                 </h2>
