@@ -4,7 +4,7 @@
       "id": "R00",
       "title": "No tempo das transformações - Nhembojeraa Jypy",
       "subtitle": "Historias Guarani Mbya",
-      "pdf_source": "CAPAS_Livro_R00_nhembojeraa.pdf",
+      "pdf_source": "livros/TRANSFORMACOES_LINDI.pdf",
       "cover_image": "CAPA_Livro_R00.webp",
       "collection": "Ação Saberes Indígenas na Escola | Núcleo UNIFESP"
     },
@@ -13,7 +13,7 @@
       "title": "Brincando com Palavras, Números e Conhecimentos",
       "subtitle": "Palavras em Jogo: Língua Guarani Mbya",
       "volume": 1,
-      "pdf_source": "CAPAS_Livros_R00_Jogos Vol1.pdf",
+      "pdf_source": "livros/MBYA_VOL_1_LINDI.pdf",
       "cover_image": "CAPA_Livro_R01.webp",
       "collection": "Ação Saberes Indígenas na Escola | Núcleo UNIFESP"
     },
@@ -22,7 +22,7 @@
       "title": "Brincando com Palavras, Números e Conhecimentos",
       "subtitle": "Palavras em Jogo: Línguas Kaingang, Krenak, Terena e Tupi Guarani / Nhandewa",
       "volume": 2,
-      "pdf_source": "CAPAS_Livros_R00_Jogos Vol2.pdf",
+      "pdf_source": "livros/POVOS_VOL_2_LINDI.pdf",
       "cover_image": "CAPA_Livro_R02.webp",
       "collection": "Ação Saberes Indígenas na Escola | Núcleo UNIFESP"
     },
@@ -31,7 +31,7 @@
       "title": "Brincando com Palavras, Números e Conhecimentos",
       "subtitle": "Percursos de Numeramento, Corpo e Território",
       "volume": 3,
-      "pdf_source": "CAPAS_Livros_R00_Jogos Vol3.pdf",
+      "pdf_source": "livros/PERCURSOS_VOL_3_LINDI.pdf",
       "cover_image": "CAPA_Livro_R03.webp",
       "collection": "Ação Saberes Indígenas na Escola | Núcleo UNIFESP"
     }
