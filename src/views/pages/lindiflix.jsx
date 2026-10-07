@@ -17,7 +17,7 @@ function VideoCard({ professor }) {
     if (!iframeRef.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { rootMargin: '200px' }
+      { rootMargin: '1000px' }
     );
     observer.observe(iframeRef.current);
     return () => observer.disconnect();
