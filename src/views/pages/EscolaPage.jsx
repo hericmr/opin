@@ -17,6 +17,8 @@ import HistoriaTerraIndigena from '../../components/PainelInformacoes/components
 import HistoriadoProfessor from '../../components/PainelInformacoes/components/EscolaInfo/HistoriadoProfessor';
 import GaleriaEditorial from '../../components/GaleriaEditorial';
 import { idFromEscolaSlug, escolaUrlSlug } from '../../utils/slug';
+import { getVideosEscola } from '../../services/videoService';
+import VideoPlayer from '../../components/PainelInformacoes/components/VideoPlayer';
 
 const siteUrl = 'https://hericmr.github.io/opin';
 
@@ -147,6 +149,33 @@ const EscolaPage = () => {
   const navigate = useNavigate();
   const { dataPoints } = useEscolasData();
   const { data: escola, loading, error } = useEscolaDetalhes(id);
+
+  const [hasVideos, setHasVideos] = useState(false);
+  const [videos, setVideos] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadVideos() {
+      try {
+        setHasVideos(false);
+        setVideos([]);
+        if (!id) return;
+        const escolaIdNum = Number(id);
+        const data = await getVideosEscola(escolaIdNum);
+        if (!mounted) return;
+        if (Array.isArray(data) && data.length > 0) {
+          setHasVideos(true);
+          setVideos(data);
+        }
+      } catch (_) {
+        if (!mounted) return;
+        setHasVideos(false);
+        setVideos([]);
+      }
+    }
+    loadVideos();
+    return () => { mounted = false; };
+  }, [id]);
 
   const nome = escola?.nome || '';
   const municipio = escola?.municipio || '';
@@ -339,6 +368,30 @@ const EscolaPage = () => {
           {/* Histórias dos Professores */}
           <Section id="historias-professores" title="Histórias dos Professores">
             <HistoriadoProfessor escola={escola} />
+          </Section>
+
+          {/* Vídeos */}
+          <Section id="videos" title="Produções Audiovisuais" show={hasVideos || !!escola?.link_para_videos}>
+            {hasVideos ? (
+              <div className="space-y-8">
+                {videos.map((video, index) => (
+                  <VideoPlayer 
+                    key={video.id || index}
+                    videoUrl={video.video_url}
+                    title={video.titulo || `Produção audiovisual da ${escola?.nome || 'escola'}`}
+                    escolaId={escola?.id}
+                  />
+                ))}
+              </div>
+            ) : (
+              escola?.link_para_videos && (
+                <VideoPlayer 
+                  videoUrl={escola.link_para_videos}
+                  title={`Produção audiovisual da ${escola?.nome || 'escola'}`}
+                  escolaId={escola?.id}
+                />
+              )
+            )}
           </Section>
 
           {/* Escolas relacionadas */}
