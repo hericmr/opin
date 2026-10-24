@@ -1,0 +1,62 @@
+services:
+  api:
+    image: postgrest/postgrest
+    container_name: opin_api_prod
+    restart: always
+    ports:
+      - "3000:3000" # Exposto apenas localmente, Nginx faz o proxy. Pode fechar se Nginx estiver na mesma rede (está).
+      # Porem, frontend container fala com api via rede interna 'api'.
+    environment:
+      PGRST_DB_URI: "postgresql://"
+      PGHOST: ${POSTGRES_HOST}
+      PGPORT: ${POSTGRES_PORT:-5432}
+      PGDATABASE: ${POSTGRES_DB:-opin}
+      PGUSER: ${POSTGRES_USER:-opin_user}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGRST_DB_SCHEMA: public
+      PGRST_DB_ANON_ROLE: ${POSTGRES_USER:-opin_user}
+      # Leitura liberada; escrita só com JWT "admin": true de rpc/login (ver migration 20261021)
+      PGRST_DB_PRE_REQUEST: privado.verificar_jwt
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      # Exposto ao SQL como app.settings.jwt_secret (usado por public.login)
+      PGRST_APP_SETTINGS_JWT_SECRET: ${JWT_SECRET}
+      # Precisa ser uma URI absoluta (esquema+host) — só afeta o campo "server" do
+      # documento OpenAPI, não o roteamento real (isso é feito pelo nginx).
+      PGRST_OPENAPI_SERVER_PROXY_URI: https://opin.unifesp.br
+
+  storage:
+    build:
+      context: ./storage_server
+    container_name: opin_storage_prod
+    restart: always
+    environment:
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage/opin
+      SERVER_PORT: 5000
+      JWT_SECRET: ${JWT_SECRET}
+    volumes:
+      - ./data/storage:/var/lib/storage
+
+  front:
+    image: ${FRONT_IMAGE:-opin_front_prod_local}
+    build:
+      context: .
+      args:
+        - VITE_API_URL=${VITE_API_URL}
+        - VITE_API_ANON_KEY=${VITE_API_ANON_KEY}
+        - VITE_STORAGE_ENABLED=${VITE_STORAGE_ENABLED:-true}
+    container_name: opin_front_prod
+    restart: always
+    ports:
+      - "${PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    volumes:
+      - ./data/storage/opin:/usr/share/nginx/html/data/storage/opin:ro
+      - ./config/nginx/server.crt:/etc/nginx/certs/server.crt
+      - ./config/nginx/server.key:/etc/nginx/certs/server.key
+    depends_on:
+      - api
+      - storage
+
+volumes:
+  opin_db_prod_data:
+    driver: local

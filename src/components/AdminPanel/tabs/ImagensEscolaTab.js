@@ -1,0 +1,40 @@
+import React from 'react';
+import ImageUploadSection from '../../EditEscolaPanel/ImageUploadSection';
+import CardVisibilityToggle from '../components/CardVisibilityToggle';
+import logger from '../../../utils/logger';
+import { useRefresh } from '../../../contexts/RefreshContext';
+
+const ImagensEscolaTab = ({ editingLocation, setEditingLocation }) => {
+  const escolaId = editingLocation?.id;
+  const { triggerRefresh } = useRefresh();
+
+  if (!escolaId) {
+    return (
+      <div className="flex items-center justify-center h-64 text-gray-500">
+        <p>Selecione uma escola para gerenciar suas imagens</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Toggle de Visibilidade */}
+      <CardVisibilityToggle
+        cardId="imagensEscola"
+        editingLocation={editingLocation}
+        setEditingLocation={setEditingLocation}
+        label="Visibilidade do Card: Imagens da Escola"
+      />
+      
+      <ImageUploadSection 
+      escolaId={escolaId}
+      onImagesUpdate={() => {
+        logger.debug('Imagens da escola atualizadas, disparando refresh...');
+        triggerRefresh();
+      }}
+    />
+    </div>
+  );
+};
+
+export default ImagensEscolaTab; 

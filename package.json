@@ -1,0 +1,87 @@
+{
+  "name": "opin-observatorio-professores-indigenas",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://opin.unifesp.br/",
+  "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "dompurify": "^3.2.6",
+    "framer-motion": "^12.18.1",
+    "jszip": "^3.10.1",
+    "lucide-react": "^0.553.0",
+    "ol": "^10.6.1",
+    "papaparse": "^5.5.3",
+    "proj4": "^2.19.4",
+    "quill": "^2.0.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-helmet-async": "^2.0.5",
+    "react-is": "^19.2.0",
+    "react-router-dom": "^7.6.2",
+    "recharts": "^3.2.1",
+    "web-vitals": "^5.1.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "postbuild": "node scripts/generate_static_meta.js",
+    "preview": "vite preview",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src",
+    "optimize-images": "node scripts/convert_to_webp.js",
+    "convert-storage": "node scripts/convert_storage_to_webp.js",
+    "db:migrate": "knex migrate:latest --knexfile config/knexfile.cjs",
+    "db:rollback": "knex migrate:rollback --knexfile config/knexfile.cjs"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-syntax-import-meta": "^7.10.4",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.27.1",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/vite": "^4.1.17",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.1.1",
+    "babel-jest": "^30.2.0",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.39.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "globals": "^14.0.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "knex": "^3.1.0",
+    "pg": "^8.12.0",
+    "sharp": "^0.34.5",
+    "tailwindcss": "^4.1.17",
+    "vite": "^7.2.2"
+  },
+  "overrides": {
+    "react-helmet-async": {
+      "react": "^19.2.0",
+      "react-dom": "^19.2.0"
+    }
+  }
+}

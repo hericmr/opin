@@ -1,0 +1,82 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.fixed {
+  transition: transform 0.3s ease-in-out;
+}
+.translate-x-0 {
+  transform: translateX(0);
+}
+
+/* Força a barra de rolagem no painel de dados */
+.dashboard-scroll {
+  overflow-y: scroll !important;
+  height: 100vh !important;
+}
+
+/* Garante que a barra de rolagem seja sempre visível em telas maiores */
+@media (min-width: 768px) {
+  .dashboard-scroll::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 6px;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+/* Oculta a barra de rolagem em dispositivos móveis */
+@media (max-width: 767px) {
+  .dashboard-scroll {
+    overflow-y: auto !important;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+  }
+  .dashboard-scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}

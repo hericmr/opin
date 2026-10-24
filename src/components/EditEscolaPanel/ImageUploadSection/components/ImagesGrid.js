@@ -1,0 +1,65 @@
+import React from 'react';
+import ImageCard from './ImageCard';
+
+/**
+ * Grid component for displaying images
+ * @param {Object} props
+ * @param {Array<Object>} props.images - Array of image objects
+ * @param {Function} props.onImageReorder - Callback when images are reordered (newOrder: Image[]) => void
+ * @param {Function} props.renderImageCard - Function to render each image card
+ * @param {Object} props.dragHandlers - Drag & drop handlers from useImageDragDrop
+ * @param {string|number} props.escolaId - School ID
+ * @param {Object} props.headerImage - Header image state and functions
+ * @param {Object} props.drawingsImage - Drawings image state and functions
+ * @param {Function} props.onDelete - Delete handler
+ * @param {Function} props.onReplace - Replace handler
+ * @param {Function} props.onLegendSave - Legend save handler
+ * @param {Function} props.onLegendChange - Legend change handler
+ */
+const ImagesGrid = ({
+  images,
+  onImageReorder,
+  dragHandlers,
+  escolaId,
+  headerImage,
+  drawingsImage,
+  onDelete,
+  onReplace,
+  onLegendSave,
+  onLegendChange,
+}) => {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h4 className="font-medium text-gray-100">
+          Imagens da Escola ({images.length})
+        </h4>
+        <p className="text-sm text-gray-400">Arraste as imagens para reordenar</p>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        {images.map((image, index) => (
+          <ImageCard
+            key={image.id}
+            image={image}
+            isHeader={headerImage?.headerImageUrl === image.publicURL}
+            isDrawing={drawingsImage?.isDrawingImage(image.publicURL)}
+            onDelete={onDelete}
+            onReplace={onReplace}
+            onSetHeader={headerImage?.setHeaderImage}
+            onRemoveHeader={headerImage?.removeHeaderImage}
+            onAddDrawing={drawingsImage?.addDrawingImage}
+            onRemoveDrawing={drawingsImage?.removeDrawingImage}
+            onLegendSave={onLegendSave}
+            onLegendChange={onLegendChange}
+            dragHandlers={dragHandlers}
+            index={index}
+            escolaId={escolaId}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ImagesGrid;
+

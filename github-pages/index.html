@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>OPIN mudou de endereço</title>
+  <!-- O site oficial é https://opin.unifesp.br; esta cópia antiga no GitHub Pages só redireciona.
+       O canonical e o refresh imediato fazem o Google tratar como redirecionamento permanente. -->
+  <link rel="canonical" href="https://opin.unifesp.br/" />
+  <meta http-equiv="refresh" content="0; url=https://opin.unifesp.br/" />
+  <script>
+    // Mantém a rota: /opin/escola/42-x → https://opin.unifesp.br/escola/42-x
+    var rota = window.location.pathname.replace(/^\/opin(?=\/|$)/, '') || '/';
+    window.location.replace('https://opin.unifesp.br' + rota + window.location.search + window.location.hash);
+  </script>
+</head>
+<body>
+  <p>O OPIN agora está em <a href="https://opin.unifesp.br/">opin.unifesp.br</a>.</p>
+</body>
+</html>

@@ -1,0 +1,73 @@
+import logger from "../../../../utils/logger";
+import { useState, useCallback } from 'react';
+import { replaceImage as replaceImageService } from '../services/imageUploadService';
+
+/**
+ * Hook for managing image replacement
+ * @param {string|number} escolaId - School ID
+ * @param {string} bucketName - Storage bucket name
+ * @returns {Object} Replace image state and functions
+ */
+export const useImageReplace = (escolaId, bucketName = 'imagens-das-escolas') => {
+  const [replacingImageId, setReplacingImageId] = useState(null);
+  const [replacementFile, setReplacementFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  const startReplace = useCallback((imageId) => {
+    setReplacingImageId(imageId);
+    setReplacementFile(null);
+  }, []);
+
+  const cancelReplace = useCallback(() => {
+    setReplacingImageId(null);
+    setReplacementFile(null);
+  }, []);
+
+  const selectReplacementFile = useCallback((file) => {
+    setReplacementFile(file);
+  }, []);
+
+  const replaceImage = useCallback(async (imageId, oldFilePath, descricao = '') => {
+    if (!replacementFile) {
+      throw new Error('Selecione uma nova imagem para substituir');
+    }
+
+    try {
+      setUploading(true);
+      
+      // Determine tipoFoto based on bucket
+      const tipoFoto = bucketName === 'imagens-professores' ? 'professor' : 'escola';
+      
+      const newImage = await replaceImageService(
+        replacementFile,
+        oldFilePath,
+        escolaId,
+        bucketName,
+        descricao,
+        { tipoFoto }
+      );
+
+      // Clear state
+      setReplacingImageId(null);
+      setReplacementFile(null);
+      setUploading(false);
+
+      return newImage;
+    } catch (err) {
+      logger.error('Erro ao substituir imagem:', err);
+      setUploading(false);
+      throw err;
+    }
+  }, [replacementFile, escolaId, bucketName]);
+
+  return {
+    replacingImageId,
+    replacementFile,
+    uploading,
+    startReplace,
+    cancelReplace,
+    selectReplacementFile,
+    replaceImage,
+  };
+};
+

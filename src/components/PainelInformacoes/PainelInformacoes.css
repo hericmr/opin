@@ -1,0 +1,416 @@
+.mj-panel {
+  /* ArcGIS Map Journal-inspired panel look */
+  background: #ffffff;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
+  hyphens: none;
+  word-break: normal;
+  overflow-wrap: break-word;
+  
+  /* Transição sinuosa (Quintic Out) para um deslize orgânico */
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), 
+              opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+              border-radius 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform, opacity;
+}
+
+/* Efeito de escala suave na entrada para dar profundidade sinuosa */
+.mj-panel:not(.translate-y-full) {
+  animation: mj-panel-entrance 0.65s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes mj-panel-entrance {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.mj-panel .mj-panel-content {
+  background: #ffffff;
+}
+
+/* Typography similar to Map Journal narrative - Enhanced for better readability */
+.mj-panel .mj-prose {
+  color: #1f2937; /* Better contrast: gray-800 instead of #2b2b2b */
+  line-height: 1.75; /* Increased from 1.7 for better readability */
+  font-size: 1rem; /* Base font size */
+}
+
+.mj-panel .mj-prose h1:not(.not-prose):not(.not-prose *),
+.mj-panel .mj-prose h2:not(.not-prose):not(.not-prose *),
+.mj-panel .mj-prose h3:not(.not-prose):not(.not-prose *),
+.mj-panel .mj-prose h4:not(.not-prose):not(.not-prose *) {
+  color: #166534; /* Green-800 for headings - matches theme */
+  font-weight: 700;
+  font-family: 'Sora', sans-serif !important;
+
+  line-height: 1.3; /* Tighter for headings */
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.mj-panel .mj-prose h1:not(.not-prose):not(.not-prose *) {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+.mj-panel .mj-prose h2:not(.not-prose):not(.not-prose *) {
+  font-size: 1.75rem;
+  border-bottom: 2px solid rgba(22, 101, 52, 0.15); /* Green tinted border */
+  padding-bottom: 0.5em;
+}
+
+.mj-panel .mj-prose h3:not(.not-prose):not(.not-prose *) {
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+
+.mj-panel .mj-prose h4:not(.not-prose):not(.not-prose *) {
+  font-size: 1.125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  opacity: 0.95; /* Slightly more visible */
+}
+
+.mj-panel .mj-prose p:not(.not-prose):not(.not-prose *) {
+  margin: 1em 0 1.25em; /* Increased spacing */
+  line-height: 1.75; /* Better line height for paragraphs */
+  color: #374151; /* gray-700 for better contrast */
+  text-align: left;
+}
+
+/* InfoGrid: flex-wrap para que item órfão (sozinho na linha) preencha todo o espaço */
+.mj-panel .info-grid > * {
+  flex: 1 1 var(--grid-basis, 130px);
+  min-width: 0;
+}
+
+/* Texto corrido em info-items e parágrafos fora do mj-prose */
+.mj-panel p,
+.mj-panel .info-paragraph {
+  text-align: left;
+}
+
+.mj-panel .mj-prose a:not(.not-prose):not(.not-prose *) {
+  color: #059669; /* Green-600 to match theme */
+  text-decoration: none;
+  border-bottom: 2px solid rgba(5, 150, 105, 0.3);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.mj-panel .mj-prose a:not(.not-prose):not(.not-prose *):hover {
+  color: #047857; /* Green-700 on hover */
+  border-bottom-color: rgba(4, 120, 87, 0.6);
+}
+
+.mj-panel .mj-prose ul:not(.not-prose):not(.not-prose *),
+.mj-panel .mj-prose ol:not(.not-prose):not(.not-prose *) {
+  padding-left: 1.5rem;
+  margin: 1rem 0 1.25rem;
+  line-height: 1.75;
+}
+
+.mj-panel .mj-prose li:not(.not-prose):not(.not-prose *) {
+  margin-bottom: 0.5rem;
+  color: #374151; /* Better contrast */
+}
+
+.mj-panel .mj-prose blockquote:not(.not-prose):not(.not-prose *) {
+  border-left: 4px solid #059669; /* Green to match theme */
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  color: #374151; /* Better contrast */
+  background: rgba(5, 150, 105, 0.08); /* Green tinted background */
+  border-radius: 0.375rem;
+  line-height: 1.75;
+}
+
+/* Media inside narrative */
+.mj-panel .mj-prose img:not(.not-prose):not(.not-prose):not(.not-prose *),
+.mj-panel .mj-prose video:not(.not-prose):not(.not-prose):not(.not-prose *) {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.mj-panel .mj-prose figure {
+  margin: 1rem 0;
+}
+
+.mj-panel .mj-prose figcaption {
+  font-size: 0.875rem;
+  color: #4b5563; /* Better contrast: gray-600 */
+  text-align: center;
+  margin-top: 0.5rem;
+  line-height: 1.6;
+}
+
+/* Remover uppercase das legendas das fotos */
+.mj-panel .mj-prose figcaption h4,
+.mj-panel figcaption h4,
+.mj-panel .mj-prose figure figcaption h4,
+.mj-panel figure figcaption h4 {
+  text-transform: none !important;
+  letter-spacing: normal;
+}
+
+/* Remover uppercase das legendas nas miniaturas e sidebar */
+.mj-panel [class*="sidebar"] h4,
+.mj-panel [class*="caption"] h4,
+.mj-panel [class*="legenda"] h4 {
+  text-transform: none !important;
+  letter-spacing: normal;
+}
+
+/* Section separators */
+.mj-panel .mj-section-separator {
+  height: 1px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0));
+  margin: 1rem 0 1.25rem;
+}
+
+/* Custom scrollbar global for all panel states */
+.mj-panel .mj-panel-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.mj-panel .mj-panel-content::-webkit-scrollbar-thumb {
+  background-color: rgba(5, 150, 105, 0.35); /* Subtle emerald-600 */
+  border-radius: 8px;
+  border: 2px solid #ffffff;
+}
+
+.mj-panel .mj-panel-content::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(5, 150, 105, 0.5);
+}
+
+.mj-panel .mj-panel-content::-webkit-scrollbar-track {
+  background: rgba(5, 150, 105, 0.04);
+}
+
+/* Mobile tweaks */
+@media (max-width: 640px) {
+  .mj-panel {
+    border-top-width: 3px;
+    box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.12);
+  }
+}
+
+
+/* Base split view behaviour for maximized panels (desktop + mobile landscape) */
+.mj-panel.mj-maximized .mj-split {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.mj-panel.mj-maximized .mj-split > * {
+  min-width: 0;
+  min-height: 0;
+}
+
+.mj-panel.mj-maximized .mj-split-left {
+  flex: 1 1 0;
+  background: #ffffff;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.mj-panel.mj-maximized .mj-split-right {
+  flex: 1 1 0;
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mj-panel.mj-maximized .mj-split-right .mj-panel-content {
+  overflow-y: auto;
+}
+
+.mj-panel.mj-maximized .mj-split-left img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+@media (orientation: landscape) {
+  .mj-panel.mj-maximized {
+    border-radius: 0;
+  }
+}
+
+@media (max-width: 1023px) and (orientation: landscape) {
+  .mj-panel.mj-maximized .mj-split-right {
+    padding-top: 0;
+  }
+
+  .mj-panel.mj-maximized .mj-split-right .mj-prose {
+    padding-right: 1rem;
+  }
+}
+
+.mj-panel.mj-maximized.mj-mobile-landscape header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  background: #ffffff;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(5, 150, 105, 0.1);
+}
+
+.mj-panel.mj-maximized.mj-mobile-landscape .mj-split-right .mj-panel-content {
+  padding-top: 0;
+}
+
+
+/* Split view for maximized desktop mode */
+@media (min-width: 1024px) {
+  /* When maximized, header should only occupy the right half */
+  .mj-panel.mj-maximized > header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    background: #ffffff;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(5, 150, 105, 0.1);
+  }
+  
+  /* Ensure header container and its content are above everything */
+  .mj-panel.mj-maximized > header .mj-header-half-right {
+    z-index: 1000;
+  }
+  
+  /* Ensure title has higher z-index than share buttons */
+  .mj-panel.mj-maximized > header h2,
+  .mj-panel.mj-maximized > header .space-y-1 {
+    position: relative;
+    z-index: 1015;
+  }
+  
+  /* Share buttons should be below title but still above other page elements */
+  .mj-panel.mj-maximized > header .absolute.top-2,
+  .mj-panel.mj-maximized > header .absolute.top-4 {
+    z-index: 1005;
+  }
+  
+  /* When maximized, constrain header content to the text half (right side in our layout) */
+  .mj-panel.mj-maximized .mj-header-half-right {
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .mj-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+  .mj-split > * { /* allow grid children to scroll properly */
+    min-height: 0;
+  }
+
+  .mj-split-left {
+    background: #ffffff;
+    overflow: hidden; /* a mídia se ajusta à altura; sem barra de rolagem */
+    position: relative;
+    width: 100%;
+  }
+
+  .mj-split-right {
+    border-left: 1px solid rgba(0, 0, 0, 0.06);
+    background: #fafafa;
+    padding: 0;
+    /* do not force overflow hidden; content div controls scrolling */
+    padding-top: 0; /* Header is absolutely positioned, so no padding needed */
+  }
+  
+  /* New structure: spacer in JS handles the top padding */
+  .mj-panel.mj-maximized .mj-split-right .mj-panel-content {
+    padding-top: 0;
+  }
+  
+  /* Ensure images on the left fit completely without clipping */
+  .mj-split-left img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain !important;
+  }
+  
+  /* Ensure teachers' testimony appears only in right half, no grid */
+  .mj-panel.mj-maximized .mj-split-right .historia-professor-header {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    grid-column: none !important;
+    position: relative !important;
+    z-index: 1 !important; /* Lower than panel header (z-index: 10) */
+  }
+  
+  /* Ensure school history appears only in right half, no grid - same format as teachers' testimony */
+  .mj-panel.mj-maximized .mj-split-right .historia-escola-header {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    grid-column: none !important;
+    position: relative !important;
+    z-index: 1 !important; /* Lower than panel header (z-index: 10) */
+  }
+  
+  /* Ensure the testimony container doesn't create grid */
+  .mj-panel.mj-maximized .mj-split-right > div > div:last-child {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Using consolidated emerald scrollbar style globally */
+  .mj-panel .mj-panel-content,
+  .mj-panel .mj-split-right .mj-panel-content {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: rgba(5, 150, 105, 0.4) rgba(5, 150, 105, 0.05);
+  }
+}
+
+/* General z-index rules for all panel states - ensure header is above everything */
+.mj-panel > header {
+  z-index: 1000;
+}
+
+.mj-panel > header .mj-header-half-right,
+.mj-panel > header > div:first-child {
+  position: relative;
+  z-index: 1000;
+}
+
+/* Title should be above share buttons */
+.mj-panel > header h2,
+.mj-panel > header .space-y-1 {
+  position: relative;
+  z-index: 1015;
+}
+
+/* Share buttons should be below title but still above other page elements */
+.mj-panel > header .absolute.top-2,
+.mj-panel > header .absolute.top-4 {
+  z-index: 1005;
+}
+

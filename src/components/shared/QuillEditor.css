@@ -1,0 +1,161 @@
+/* Estilos customizados para o React Quill */
+.rich-text-editor .ql-container {
+  border: none;
+  background-color: #1f2937;
+  color: #f3f4f6;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.rich-text-editor .ql-toolbar {
+  border: none;
+  border-bottom: 1px solid #374151;
+  background-color: #374151;
+  border-radius: 8px 8px 0 0;
+}
+
+.rich-text-editor .ql-editor {
+  min-height: 250px;
+  padding: 16px;
+  background-color: #1f2937;
+  color: #f3f4f6;
+}
+
+.rich-text-editor .ql-editor.ql-blank::before {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.rich-text-editor .ql-stroke {
+  stroke: #f3f4f6;
+}
+
+.rich-text-editor .ql-fill {
+  fill: #f3f4f6;
+}
+
+.rich-text-editor .ql-picker {
+  color: #f3f4f6;
+}
+
+.rich-text-editor .ql-picker-options {
+  background-color: #374151;
+  border: 1px solid #4b5563;
+}
+
+.rich-text-editor .ql-picker-item {
+  color: #f3f4f6;
+}
+
+.rich-text-editor .ql-picker-item:hover {
+  background-color: #4b5563;
+}
+
+.rich-text-editor .ql-picker-label {
+  color: #f3f4f6;
+}
+
+.rich-text-editor .ql-picker-label:hover {
+  color: #fbbf24;
+}
+
+.rich-text-editor .ql-active {
+  color: #fbbf24;
+}
+
+.rich-text-editor .ql-tooltip {
+  background-color: #374151;
+  border: 1px solid #4b5563;
+  color: #f3f4f6;
+}
+
+.rich-text-editor .ql-tooltip input[type=text] {
+  background-color: #1f2937;
+  border: 1px solid #4b5563;
+  color: #f3f4f6;
+}
+
+.rich-text-editor .ql-tooltip a {
+  color: #fbbf24;
+}
+
+.rich-text-editor .ql-tooltip a:hover {
+  color: #f59e0b;
+}
+
+/* Hover effects para botões da toolbar */
+.rich-text-editor .ql-toolbar button:hover {
+  color: #fbbf24;
+}
+
+.rich-text-editor .ql-toolbar button:hover .ql-stroke {
+  stroke: #fbbf24;
+}
+
+.rich-text-editor .ql-toolbar button:hover .ql-fill {
+  fill: #fbbf24;
+}
+
+/* Estilos para links no editor */
+.rich-text-editor .ql-editor a {
+  color: #fbbf24;
+  text-decoration: underline;
+}
+
+.rich-text-editor .ql-editor a:hover {
+  color: #f59e0b;
+}
+
+/* Estilos para listas */
+.rich-text-editor .ql-editor ul,
+.rich-text-editor .ql-editor ol {
+  padding-left: 20px;
+}
+
+.rich-text-editor .ql-editor li {
+  margin-bottom: 4px;
+}
+
+/* Estilos para headers */
+.rich-text-editor .ql-editor h1,
+.rich-text-editor .ql-editor h2,
+.rich-text-editor .ql-editor h3 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.rich-text-editor .ql-editor h1 {
+  font-size: 24px;
+  color: #fbbf24;
+}
+
+.rich-text-editor .ql-editor h2 {
+  font-size: 20px;
+  color: #fbbf24;
+}
+
+.rich-text-editor .ql-editor h3 {
+  font-size: 18px;
+  color: #fbbf24;
+}
+
+/* Estilos para imagens no editor */
+.rich-text-editor .ql-editor img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 8px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rich-text-editor .ql-editor img:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease;
+}
+
+/* Loading state para imagens */
+.rich-text-editor .ql-editor img[src*="data:image/gif;base64"] {
+  opacity: 0.5;
+  filter: grayscale(100%);
+}

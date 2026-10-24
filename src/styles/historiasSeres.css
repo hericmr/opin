@@ -1,0 +1,66 @@
+/* Animações lúdicas das páginas de histórias (/historias e /historia/:slug) */
+
+@keyframes ser-flutuar {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+
+@keyframes ser-mancha {
+  0%, 100% { border-radius: 58% 42% 55% 45% / 48% 60% 40% 52%; transform: rotate(0deg); }
+  50% { border-radius: 42% 58% 45% 55% / 60% 44% 56% 40%; transform: rotate(14deg); }
+}
+
+.ser-flutua {
+  animation: ser-flutuar 4.2s ease-in-out infinite;
+}
+
+.ser-mancha {
+  opacity: 0.35;
+  border-radius: 58% 42% 55% 45% / 48% 60% 40% 52%;
+  animation: ser-mancha 9s ease-in-out infinite;
+}
+
+.ser-card {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+}
+
+/* Ilustrações como páginas coladas no caderno */
+.ser-pagina {
+  transition: transform 0.3s ease;
+}
+
+.ser-pagina:hover {
+  transform: rotate(0deg) scale(1.01);
+}
+
+/* Ser que espia na chamada para a próxima história */
+.ser-espia {
+  transform: translateY(35%) rotate(-8deg);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ser-proxima:hover .ser-espia,
+.ser-proxima:focus-visible .ser-espia {
+  transform: translateY(8%) rotate(4deg);
+}
+
+/* Card da história anterior: o ser espia pelo lado esquerdo, inclinado ao contrário */
+.ser-espia-esquerda {
+  transform: translateY(35%) rotate(8deg);
+}
+
+.ser-proxima:hover .ser-espia-esquerda,
+.ser-proxima:focus-visible .ser-espia-esquerda {
+  transform: translateY(8%) rotate(-4deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ser-flutua,
+  .ser-mancha {
+    animation: none;
+  }
+  .ser-espia,
+  .ser-pagina {
+    transition: none;
+  }
+}

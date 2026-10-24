@@ -1,0 +1,109 @@
+import React from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-white p-4 border border-gray-300 rounded shadow-lg" style={{
+        fontFamily: '"Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+      }}>
+        <p className="font-semibold mb-1 text-base sm:text-lg leading-relaxed max-w-4xl mx-auto" >{data.equipamento}</p>
+        <p className="text-sm text-gray-600 leading-relaxed">Quantidade: {data.quantidade}</p>
+      </div>
+    );
+  }
+  return null;
+};
+
+const EquipamentosChart = ({ data }) => {
+  // Se não há dados, mostra mensagem
+  if (!data || data.length === 0) {
+    return (
+      <div className="p-6">
+        <h3 className="text-lg sm:text-xl font-medium text-gray-500 uppercase tracking-wide mb-6 text-center">
+          Gráfico 6: Distribuição de Equipamentos nas Escolas
+        </h3>
+        <div className="h-96 flex items-center justify-center">
+          <p className="text-gray-600">Nenhum dado disponível</p>
+        </div>
+        <p className="mt-6 text-xs text-gray-400 text-center uppercase tracking-wider">
+          Fonte: SEDUC 2026
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-4 sm:p-6">
+      {/* Texto sobre infraestrutura tecnológica */}
+      <div className="mb-6">
+        <h4 className="text-base sm:text-lg font-medium text-gray-500 text-center mb-4">
+          Infraestrutura Tecnológica
+        </h4>
+        
+        <div className="p-4 sm:p-6">
+          <div className="max-w-4xl mx-auto">
+            <p className="text-gray-800 text-left mb-5 text-base sm:text-lg leading-relaxed max-w-4xl mx-auto" >
+              A infraestrutura tecnológica das escolas estaduais indígenas evidencia desigualdades significativas no acesso a equipamentos e conectividade. O recurso mais presente é o tablet para alunos, disponível em 653 unidades, seguido por computadores portáteis (110) e computadores destinados aos alunos (98).
+            </p>
+            <p className="text-gray-800 text-left mb-5 text-base sm:text-lg leading-relaxed max-w-4xl mx-auto" >
+              Outros recursos, como aparelhos de TV (57), computadores para uso administrativo (56), aparelhos de Wi-Fi/access points (33) e rede local (18), estão presentes em proporções muito inferiores.
+            </p>
+            <p className="text-gray-800 text-left mb-5 text-base sm:text-lg leading-relaxed max-w-4xl mx-auto" >
+              O acesso à internet é muito restrito. Para uso pedagógico e administrativo, está disponível em apenas 22 escolas. Para uso pelos alunos, são apenas 19 escolas. Isso mostra que a maior parte das escolas ainda não dispõe de conectividade adequada para práticas digitais.
+            </p>
+            <p className="text-gray-800 text-left text-base sm:text-lg leading-relaxed max-w-4xl mx-auto" >
+              Embora a tecnologia esteja presente em diversas escolas, seu uso pedagógico efetivo continua limitado. Essa limitação compromete a qualidade do ensino e dificulta a inclusão digital de professores e estudantes.
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <h3 className="text-lg sm:text-xl font-medium text-gray-500 uppercase tracking-wide mb-6 text-center">
+        Gráfico 6: Distribuição de Equipamentos nas Escolas
+      </h3>
+      
+        <div className="h-96 w-full" style={{ minWidth: '300px', minHeight: '384px', width: '100%', height: '100%' }}>
+          <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={384}>
+            <BarChart
+              data={data}
+              margin={{
+                top: 20,
+                right: 10,
+                left: 10,
+                bottom: 80,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                dataKey="equipamento"
+                angle={-45}
+                textAnchor="end"
+                height={100}
+                interval={0}
+                tick={{ fontSize: 12, fill: '#374151' }}
+              />
+              <YAxis 
+                label={{ value: 'Quantidade Total', angle: -90, position: 'insideLeft', style: { fontSize: '0.875rem', fill: '#374151' } }}
+                tick={{ fontSize: 12, fill: '#374151' }}
+              />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar isAnimationActive={false} dataKey="quantidade">
+                {data.map((entry, index) => {
+                  const colors = ['#FF805A', '#234B73', '#FFA000', '#783CA0', '#14512D', '#4C1D95', '#2C5530', '#0EA5E9', '#F43F5E', '#10B981'];
+                  return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
+                })}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      
+      <p className="mt-6 text-xs text-gray-400 text-center uppercase tracking-wider">
+        Fonte: Héric Moura LINDI(UNIFESP), a partir de dados da SEDUC 2026
+      </p>
+    </div>
+  );
+};
+
+export default EquipamentosChart;

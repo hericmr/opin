@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https: http://127.0.0.1:* ws://127.0.0.1:* http://localhost:* ws://localhost:*; frame-src 'self' https://drive.google.com https://docs.google.com https://www.youtube.com https://youtube.com;" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="icon" href="/opin/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Observatório dos Professores Indígenas - histórias, escolas e experiências indígenas narradas pelos próprios professores e comunidades indígenas do Estado de São Paulo."
+    />
+    <link rel="apple-touch-icon" href="/opin/logo192.webp"/>
+    <link rel="manifest" href="/opin/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>OPIN - Observatório dos Professores Indígenas do Estado de São Paulo</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://opin.unifesp.br/" />
+    <meta property="og:title" content="OPIN - Observatório dos Professores Indígenas do Estado de São Paulo" />
+    <meta property="og:description" content="Observatório dos Professores Indígenas - histórias, escolas e experiências indígenas narradas pelos próprios professores e comunidades indígenas do Estado de São Paulo." />
+    <meta property="og:image" content="https://opin.unifesp.br/opin/opin.webp" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://opin.unifesp.br/" />
+    <meta property="twitter:title" content="OPIN - Observatório dos Professores Indígenas do Estado de São Paulo" />
+    <meta property="twitter:description" content="Observatório dos Professores Indígenas - histórias, escolas e experiências indígenas narradas pelos próprios professores e comunidades indígenas do Estado de São Paulo." />
+    <meta property="twitter:image" content="https://opin.unifesp.br/opin/opin.webp" />
+    <style>
+      /* Critical CSS */
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      Você precisa ativar o JavaScript para visualizar este aplicativo.
+      <div>
+        <h1>OPIN (Observatório dos Professores Indígenas do Estado de São Paulo)</h1>
+        <div>
+          <p>
+            Este é um observatório que busca mapear as escolas indígenas do estado
+            de São Paulo, destacando suas localizações, características educacionais,
+            infraestrutura e outros aspectos relevantes para o entendimento da
+            educação indígena no estado.
+          </p>
+          <br>
+          <p>
+            Entre os elementos mapeados, estão informações sobre os povos
+            indígenas atendidos, línguas faladas, modalidades de ensino
+            e outros aspectos importantes para a compreensão da educação
+            indígena na região.
+          </p>
+          <br>
+        </div>
+      </div>
+    </noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>
+

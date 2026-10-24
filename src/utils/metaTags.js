@@ -1,0 +1,132 @@
+/**
+ * Utilitários para geração de meta tags dinâmicas
+ * Sistema modular e expansível para compartilhamento social
+ */
+
+import { criarSlug } from './slug';
+import { META_TAGS_CONFIG } from '../config/metaTagsConfig';
+
+/**
+ * Gera URL completa para uma escola específica
+ * @param {Object} escola - Dados da escola
+ * @returns {string} URL completa
+ */
+export const gerarUrlEscola = (escola) => {
+  if (!escola?.titulo) return META_TAGS_CONFIG.site.url;
+  
+  const slug = criarSlug(escola.titulo);
+  return `${META_TAGS_CONFIG.site.url}/mapa?panel=${slug}`;
+};
+
+/**
+ * Gera título otimizado para compartilhamento
+ * @param {Object} escola - Dados da escola
+ * @returns {string} Título otimizado
+ */
+export const gerarTituloEscola = (escola) => {
+  if (!escola?.titulo) return META_TAGS_CONFIG.site.name;
+  
+  return `${escola.titulo} - Escola Indígena`;
+};
+
+/**
+ * Gera descrição otimizada para compartilhamento
+ * @param {Object} escola - Dados da escola
+ * @returns {string} Descrição otimizada
+ */
+export const gerarDescricaoEscola = (escola) => {
+  if (!escola) return META_TAGS_CONFIG.site.description;
+  
+  let descricao = `Escola Indígena: ${escola.titulo}`;
+  
+  // Adicionar informações relevantes se disponíveis
+  if (escola['Município']) {
+    descricao += ` - ${escola['Município']}`;
+  }
+  
+  if (escola['Modalidade de Ensino/turnos de funcionamento']) {
+    descricao += ` | Modalidade: ${escola['Modalidade de Ensino/turnos de funcionamento']}`;
+  }
+  
+  descricao += ' | Observatório de Professores Indígenas';
+  
+  // Limitar tamanho para redes sociais (ideal: 150-160 caracteres)
+  if (descricao.length > 160) {
+    descricao = descricao.substring(0, 157) + '...';
+  }
+  
+  return descricao;
+};
+
+/**
+ * Gera palavras-chave para SEO
+ * @param {Object} escola - Dados da escola
+ * @returns {string} Palavras-chave separadas por vírgula
+ */
+export const gerarKeywordsEscola = (escola) => {
+  if (!escola) return 'escola indígena, educação indígena, São Paulo, OPIN';
+  
+  const keywords = [
+    'escola indígena',
+    'educação indígena',
+    'São Paulo',
+    'OPIN',
+    'Observatório Professores Indígenas'
+  ];
+  
+  if (escola.titulo) {
+    keywords.push(escola.titulo.toLowerCase());
+  }
+  
+  if (escola['Município']) {
+    keywords.push(escola['Município'].toLowerCase());
+  }
+  
+  return keywords.join(', ');
+};
+
+/**
+ * Gera imagem otimizada para compartilhamento
+ * @param {Object} escola - Dados da escola
+ * @returns {string} URL da imagem
+ */
+export const gerarImagemEscola = (escola) => {
+  // TODO: Implementar lógica para buscar imagem específica da escola
+  // Por enquanto, usar imagem padrão
+  return `${META_TAGS_CONFIG.site.url}${META_TAGS_CONFIG.images.default}`;
+};
+
+/**
+ * Gera dados estruturados (JSON-LD) para SEO
+ * @param {Object} escola - Dados da escola
+ * @returns {Object} Dados estruturados
+ */
+export const gerarStructuredData = (escola) => {
+  if (!escola) return null;
+  
+  return {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": escola.titulo,
+    "description": gerarDescricaoEscola(escola),
+    "url": gerarUrlEscola(escola),
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": escola['Município'] || '',
+      "addressRegion": "São Paulo",
+      "addressCountry": "BR"
+    },
+    "geo": escola.Latitude && escola.Longitude ? {
+      "@type": "GeoCoordinates",
+      "latitude": escola.Latitude,
+      "longitude": escola.Longitude
+    } : undefined,
+    "educationalLevel": escola['Modalidade de Ensino/turnos de funcionamento'] || '',
+    "numberOfStudents": escola['Numero de alunos'] || '',
+    "provider": {
+      "@type": "Organization",
+      "name": META_TAGS_CONFIG.site.name,
+      "url": META_TAGS_CONFIG.site.url
+    }
+  };
+};

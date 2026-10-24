@@ -1,0 +1,49 @@
+# Estágio de Build
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+# Copiar arquivos de dependências
+COPY package*.json ./
+
+# Instalar dependências a partir do package-lock.json (reprodutível).
+# Usamos `npm ci` em vez de `npm install` de propósito: o lock fixa as versões
+# exatas já resolvidas (ex.: baseline-browser-mapping@2.8.28), enquanto
+# `npm install` reavaliaria os ranges e poderia puxar uma versão mais nova cujo
+# tarball o registro não serve (causava E404 em baseline-browser-mapping@2.11.27).
+RUN npm ci --include=dev
+
+# Copiar o resto do código
+COPY . .
+
+# Remover arquivos de ambiente locais para que o build use apenas as build-args/ENV
+# (impede que .env.supabase embuta a URL cloud no bundle Docker)
+RUN rm -f .env.supabase .env.local .env.development.local .env.production.local
+
+# Build da aplicação
+# Definir argumento de build para a URL do Backend (pode ser relativo ou absoluto)
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
+ARG VITE_API_ANON_KEY
+ENV VITE_API_ANON_KEY=$VITE_API_ANON_KEY
+
+
+ARG VITE_STORAGE_ENABLED
+ENV VITE_STORAGE_ENABLED=$VITE_STORAGE_ENABLED
+
+RUN npm run build
+
+# Estágio de Produção
+FROM nginx:alpine
+
+# Copiar a configuração do Nginx
+COPY config/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copiar os arquivos estáticos do build
+COPY --from=build /app/build /usr/share/nginx/html
+
+EXPOSE 80
+EXPOSE 443
+
+CMD ["nginx", "-g", "daemon off;"]

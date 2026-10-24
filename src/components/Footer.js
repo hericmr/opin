@@ -1,0 +1,86 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const Footer = () => (
+  <footer className="bg-zinc-900 text-zinc-300 mt-auto">
+    <div className="w-full px-6 sm:px-8 lg:px-16 py-14 sm:py-20">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+
+        {/* Logo + descrição */}
+        <div className="lg:col-span-1">
+          <div className="flex items-center gap-4 flex-wrap">
+            <Link to="/">
+              <img
+                src={`${import.meta.env.BASE_URL}logo.webp`}
+                alt="OPIN"
+                className="h-14 w-auto hover:opacity-80 transition-opacity"
+              />
+            </Link>
+            <a href="https://www.unifesp.br/" target="_blank" rel="noopener noreferrer">
+              <img
+                src={`${import.meta.env.BASE_URL}lindi.svg`}
+                alt="LINDI"
+                className="h-24 w-auto hover:opacity-80 transition-opacity"
+              />
+            </a>
+            <Link to="/conteudo">
+              <img
+                src={`${import.meta.env.BASE_URL}logo_saberes.webp`}
+                alt="Saberes"
+                className="h-28 w-auto hover:opacity-80 transition-opacity"
+                style={{ filter: 'invert(1)' }}
+              />
+            </Link>
+          </div>
+          <p className="mt-4 text-lg text-zinc-400 leading-relaxed">
+            Observatório dos Professores Indígenas de São Paulo. Um projeto da{' '}
+            <a
+              href="https://www.unifesp.br/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-green-400 hover:text-green-300 transition-colors"
+            >
+              LINDI/UNIFESP
+            </a>
+            .
+          </p>
+        </div>
+
+        {/* Explorar */}
+        <div>
+          <h3 className="text-white text-lg font-semibold uppercase tracking-wider mb-5">Explorar</h3>
+          <ul className="space-y-3 text-lg">
+            <li><Link to="/mapa" className="hover:text-white transition-colors">Mapa de Escolas</Link></li>
+            <li><Link to="/escolas" className="hover:text-white transition-colors">Escolas</Link></li>
+            <li><Link to="/search" className="hover:text-white transition-colors">Busca</Link></li>
+            <li><Link to="/algunsdados" className="hover:text-white transition-colors">Alguns Dados</Link></li>
+          </ul>
+        </div>
+
+        {/* Recursos */}
+        <div>
+          <h3 className="text-white text-lg font-semibold uppercase tracking-wider mb-5">Recursos</h3>
+          <ul className="space-y-3 text-lg">
+            <li><Link to="/historias" className="hover:text-white transition-colors">Histórias</Link></li>
+            <li><Link to="/conteudo" className="hover:text-white transition-colors">Materiais Didáticos</Link></li>
+            <li><Link to="/jogos" className="hover:text-white transition-colors">Jogos</Link></li>
+            <li><Link to="/lindiflix" className="hover:text-white transition-colors">Lindiflix</Link></li>
+          </ul>
+        </div>
+
+        {/* Sobre */}
+        <div>
+          <h3 className="text-white text-lg font-semibold uppercase tracking-wider mb-5">Sobre</h3>
+          <ul className="space-y-3 text-lg">
+            <li><Link to="/sobre" className="hover:text-white transition-colors">Sobre o OPIN</Link></li>
+          </ul>
+        </div>
+
+      </div>
+
+
+    </div>
+  </footer>
+);
+
+export default Footer;

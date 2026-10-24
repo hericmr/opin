@@ -1,0 +1,347 @@
+/* AdminPanel.css - Estilos específicos para o painel de administração */
+
+/* Scrollbar personalizada */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(75 85 99) rgb(31 41 55);
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgb(31 41 55);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgb(75 85 99);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgb(107 114 128);
+}
+
+/* Scrollbar horizontal específica para abas */
+.scrollbar-thumb-gray-600::-webkit-scrollbar-thumb {
+  background: rgb(75 85 99);
+}
+
+.scrollbar-track-gray-800::-webkit-scrollbar-track {
+  background: rgb(31 41 55);
+}
+
+/* Garantir que as abas tenham scroll horizontal */
+.tabs-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(75 85 99) rgb(31 41 55);
+}
+
+.tabs-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tabs-container::-webkit-scrollbar-track {
+  background: rgb(31 41 55);
+  border-radius: 3px;
+}
+
+.tabs-container::-webkit-scrollbar-thumb {
+  background: rgb(75 85 99);
+  border-radius: 3px;
+}
+
+.tabs-container::-webkit-scrollbar-thumb:hover {
+  background: rgb(107 114 128);
+}
+
+/* Melhorar a experiência de scroll em dispositivos móveis */
+@media (max-width: 768px) {
+  .tabs-container {
+    scrollbar-width: none;
+  }
+  
+  .tabs-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Adicionar indicadores visuais de scroll */
+  .tabs-container::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(to right, transparent, rgb(31 41 55));
+    pointer-events: none;
+  }
+}
+
+/* Animações suaves */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Classes de animação */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Efeitos de hover melhorados */
+.hover-lift {
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Gradientes personalizados */
+.gradient-border {
+  position: relative;
+  background: linear-gradient(135deg, rgb(31 41 55), rgb(17 24 39));
+  border-radius: 1rem;
+  padding: 1px;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  padding: 1px;
+  background: linear-gradient(135deg, rgb(34 197 94), rgb(16 185 129));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gradient-border:hover::before {
+  opacity: 1;
+}
+
+/* Estados de loading */
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgb(31 41 55) 0%,
+    rgb(55 65 81) 50%,
+    rgb(31 41 55) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Melhorias de acessibilidade */
+.focus-visible:focus {
+  outline: 2px solid rgb(34 197 94);
+  outline-offset: 2px;
+}
+
+/* Responsividade melhorada */
+@media (max-width: 768px) {
+  .admin-panel-container {
+    padding: 1rem;
+  }
+  
+  .admin-sidebar {
+    width: 100vw;
+    max-width: 320px;
+  }
+}
+
+/* Dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+  .admin-panel {
+    color-scheme: dark;
+  }
+}
+
+/* Ensure images display correctly in EditEscolaPanel */
+.ImageUploadSection img,
+.ProfessorImageUploadSection img,
+.EditEscolaPanel img,
+[class*="ImageUploadSection"] img,
+[class*="ProfessorImageUploadSection"] img {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  max-width: 100% !important;
+  pointer-events: auto !important;
+  /* Não forçar position - deixar componente controlar */
+  /* Não forçar max-height - deixar aspect-ratio controlar */
+}
+
+/* Specific rule for images in aspect ratio containers */
+/* CORRIGIDO: Permitir position absolute para imagens dentro de containers com aspect-ratio */
+.ImageUploadSection .aspect-\[4\/3\] img,
+.ProfessorImageUploadSection .aspect-\[4\/3\] img,
+.ImageUploadSection [class*="aspect"] img,
+.ProfessorImageUploadSection [class*="aspect"] img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  /* position pode ser absolute ou relative - deixar componente decidir */
+  /* z-index controlado pelo componente */
+}
+
+/* Ensure image containers have proper dimensions */
+.ImageUploadSection .aspect-\[4\/3\],
+.ProfessorImageUploadSection .aspect-\[4\/3\] {
+  position: relative !important;
+  width: 100% !important;
+  min-height: 200px !important;
+  /* Garantir que imagens dentro sejam visíveis */
+}
+
+/* Garantir que imagens dentro de containers aspect-ratio sejam sempre visíveis */
+.ImageUploadSection .aspect-\[4\/3\] > img,
+.ProfessorImageUploadSection .aspect-\[4\/3\] > img {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+/* CRÍTICO: Garantir que overlays não bloqueiem imagens quando não estão em hover */
+.ImageUploadSection .aspect-\[4\/3\] > div[aria-hidden="true"],
+.ProfessorImageUploadSection .aspect-\[4\/3\] > div[aria-hidden="true"] {
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Overlay pode aparecer acima apenas quando em hover - CRÍTICO: permitir pointer-events */
+.ImageUploadSection .group:hover .aspect-\[4\/3\] > div[aria-hidden="true"],
+.ProfessorImageUploadSection .group:hover .aspect-\[4\/3\] > div[aria-hidden="true"] {
+  z-index: 10 !important;
+  pointer-events: auto !important;
+}
+
+/* Garantir que botões dentro do overlay sejam clicáveis quando overlay está visível */
+.ImageUploadSection .group:hover .aspect-\[4\/3\] > div[aria-hidden="true"] button,
+.ProfessorImageUploadSection .group:hover .aspect-\[4\/3\] > div[aria-hidden="true"] button {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Print styles */
+@media print {
+  .admin-panel {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .admin-sidebar,
+  .admin-toolbar {
+    display: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Campos do editor de escola
+   As abas foram escritas em épocas diferentes e cada uma estiliza os
+   campos de um jeito; aqui eles ganham uma aparência única. Só cores,
+   borda, raio e foco são uniformizados: espaçamentos continuam com as
+   abas (campos com ícone dependem do padding próprio).
+   ------------------------------------------------------------------ */
+.admin-panel {
+  color-scheme: dark;
+}
+
+.admin-form :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), textarea, select) {
+  background-color: rgb(3 7 18);
+  border: 1px solid rgb(55 65 81);
+  border-radius: 0.5rem;
+  color: rgb(243 244 246);
+  backdrop-filter: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-form :is(input, textarea)::placeholder {
+  color: rgb(107 114 128);
+}
+
+.admin-form :is(input, textarea, select):hover:not(:focus):not(:disabled) {
+  border-color: rgb(75 85 99);
+}
+
+.admin-form :is(input, textarea, select):focus {
+  outline: none;
+  border-color: rgb(16 185 129);
+  --tw-ring-color: rgb(16 185 129 / 0.35);
+  box-shadow: 0 0 0 3px rgb(16 185 129 / 0.25);
+}
+
+.admin-form textarea {
+  resize: vertical;
+}
+
+.admin-form :is(input[type="checkbox"], input[type="radio"]) {
+  accent-color: rgb(16 185 129);
+}
+
+.admin-form label {
+  color: rgb(209 213 219);
+}
